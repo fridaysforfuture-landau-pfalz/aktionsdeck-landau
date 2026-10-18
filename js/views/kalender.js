@@ -16,12 +16,16 @@ import { zeitText as stempelText } from './material-rechnen.js';
 import { normDatum, heuteIso, datumText } from './todos-rechnen.js';
 import {
   baueTermine, filtereTermine, kommende, vergangene, standardFilter,
-  zeitNorm, zeitText, datumsText, sichereUrl, istUeberfaellig, MONATE
+  zeitNorm, zeitText, datumsText, sichereUrl, istUeberfaellig, MONATE,
+  monatsRaster, monatTitel, imZeitraum, WOCHENTAGE, wochentagNr
 } from './kalender-rechnen.js';
 import { zeigeVorlagen } from './kalender-vorlagen.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
-let merk = { token: '', filter: null, alteAuf: false };
+let merk = {
+  token: '', filter: null, alteAuf: false,
+  ansicht: 'liste', jahr: 0, monat: 0, tag: ''
+};
 
 const MAX_VERGANGEN = 30;
 
@@ -46,8 +50,8 @@ function markeText(t) {
   if (t.quelle === 'deadline') return 'Deadline';
   if (t.quelle === 'meilenstein') return 'Meilenstein';
   if (t.quelle === 'todo') return 'ToDo';
+  if (t.quelle === 'balken') return 'Projektzeitraum';
   return '';
-}
 
 function monatVon(tag) {
   const m = Number(String(tag).slice(5, 7));
@@ -59,7 +63,11 @@ export async function render(container, ctx) {
   leeren(container);
 
   if (merk.token !== s.token) {
-    merk = { token: s.token, filter: standardFilter(getName()), alteAuf: false };
+    const h = heuteIso();
+    merk = {
+      token: s.token, filter: standardFilter(getName()), alteAuf: false,
+      ansicht: 'liste', jahr: Number(h.slice(0, 4)), monat: Number(h.slice(5, 7)) - 1, tag: h
+    };
   }
   const f = merk.filter;
   f.name = getName();
@@ -76,6 +84,17 @@ export async function render(container, ctx) {
   const filterBox = el('div', { class: 'kal-filter' });
   const kommBox = el('div');
   const vergBox = el('div');
+  const monatBox = el('div', { class: 'kal-monat' });
+  const listeTitel = el('h2', { class: 'liste-titel', text: 'Kommende Termine' });
+  const listenKnopf = el('button', {
+    class: 'knopf', type: 'button', text: 'Liste',
+    onclick: function () { ansichtSetzen('liste'); }
+  });
+  const monatKnopf = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Monat',
+    onclick: function () { ansichtSetzen('monat'); }
+  });
+  const ansichtZeile = el('div', { class: 'kal-ansicht' }, listenKnopf, monatKnopf);
 
   const neuKnopf = el('button', {
     class: 'knopf', type: 'button', text: '+ Veranstaltung',
@@ -108,10 +127,12 @@ export async function render(container, ctx) {
       el('h1', { text: 'Kalender' }),
       el('div', { class: 'kopf-knoepfe' }, vorlagenKnopf, neuKnopf)
     ),
+    ansichtZeile,
     suche,
     filterBox,
     status,
-    el('h2', { class: 'liste-titel', text: 'Kommende Termine' }),
+    monatBox,
+    listeTitel,
     kommBox,
     vergBox
   ));
@@ -197,6 +218,13 @@ export async function render(container, ctx) {
     const komm = kommende(liste);
     const verg = vergangene(liste);
 
+    ansichtAnzeige();
+    if (merk.ansicht === 'monat') {
+      zeichneMonat(liste);
+      statusZeigen();
+      return;
+    }
+
     leeren(kommBox);
     if (!komm.length) {
       kommBox.append(el('p', {
@@ -237,6 +265,165 @@ export async function render(container, ctx) {
     statusZeigen();
   }
 
+  // ---- Monatsansicht ----
+
+  function ansichtAnzeige() {
+    const m = merk.ansicht === 'monat';
+    monatBox.hidden = !m;
+    listeTitel.hidden = m;
+    kommBox.hidden = m;
+    vergBox.hidden = m;
+    listenKnopf.className = 'knopf' + (m ? ' knopf-hell' : '');
+    monatKnopf.className = 'knopf' + (m ? '' : ' knopf-hell');
+    listenKnopf.setAttribute('aria-pressed', String(!m));
+    monatKnopf.setAttribute('aria-pressed', String(m));
+  }
+
+  function ansichtSetzen(a) {
+    merk.ansicht = a;
+    zeichne();
+  }
+
+  function monatWechseln(delta, liste) {
+    let m = merk.monat + delta;
+    let j = merk.jahr;
+    if (m < 0) { m = 11; j -= 1; }
+    if (m > 11) { m = 0; j += 1; }
+    merk.monat = m;
+    merk.jahr = j;
+    merk.tag = '';
+    zeichneMonat(liste);
+  }
+
+  function zuHeute(liste) {
+    const h = heuteIso();
+    merk.jahr = Number(h.slice(0, 4));
+    merk.monat = Number(h.slice(5, 7)) - 1;
+    merk.tag = h;
+    zeichneMonat(liste);
+  }
+
+  // Ein Tag im Raster: Zahl, Streifen für Projektzeiträume, Punkte (Handy), Kurztitel (PC)
+  function tagesZelle(d, spalte, termine, liste) {
+    const normal = termine.filter(function (t) { return t.quelle !== 'balken'; });
+    const balken = termine.filter(function (t) { return t.quelle === 'balken'; });
+
+    const streifen = balken.slice(0, 2).map(function (t) {
+      const b = el('span', {
+        class: 'kal-streifen',
+        title: t.titel,
+        'aria-hidden': 'true',
+        text: (d.tag === t.von || spalte === 0) ? t.titel : '\u00a0'
+      });
+      b.style.borderTopColor = t.farbe;
+      return b;
+    });
+
+    const punkte = el('span', { class: 'kal-punkte', 'aria-hidden': 'true' });
+    normal.slice(0, 4).forEach(function (t) {
+      const p = el('span', { class: 'kal-punkt' });
+      p.style.background = istUeberfaellig(t) ? '#b3261e' : t.farbe;
+      punkte.append(p);
+    });
+
+    const chips = el('span', { class: 'kal-chips', 'aria-hidden': 'true' });
+    normal.slice(0, 3).forEach(function (t) {
+      const c = el('span', {
+        class: 'kal-chip' + (istUeberfaellig(t) ? ' ueber' : ''),
+        text: t.titel
+      });
+      c.style.borderLeftColor = istUeberfaellig(t) ? '#b3261e' : t.farbe;
+      chips.append(c);
+    });
+    if (normal.length > 3) {
+      chips.append(el('span', {
+        class: 'kal-chip-mehr leise', text: '+ ' + (normal.length - 3) + ' weitere'
+      }));
+    }
+
+    const n = termine.length;
+    return el('button', {
+      class: 'kal-tag' + (d.imMonat ? '' : ' kal-fremd') + (d.heute ? ' kal-heute' : '') +
+        (merk.tag === d.tag ? ' kal-gewaehlt' : ''),
+      type: 'button',
+      'aria-label': datumText(d.tag) + ': ' + n + (n === 1 ? ' Termin' : ' Termine'),
+      'aria-pressed': String(merk.tag === d.tag),
+      onclick: function () {
+        merk.tag = d.tag;
+        zeichneMonat(liste);
+      }
+    },
+      el('span', { class: 'kal-nr', text: String(Number(d.tag.slice(8, 10))) }),
+      ...streifen,
+      punkte,
+      chips
+    );
+  }
+
+  function zeichneMonat(liste) {
+    leeren(monatBox);
+    const wochen = monatsRaster(merk.jahr, merk.monat);
+    const erster = wochen[0][0].tag;
+    const letzter = wochen[wochen.length - 1][6].tag;
+    const imRaum = imZeitraum(liste, erster, letzter);
+    const proTag = {};
+    wochen.forEach(function (w) {
+      w.forEach(function (d) {
+        proTag[d.tag] = imRaum.filter(function (t) { return t.von <= d.tag && t.bis >= d.tag; });
+      });
+    });
+
+    monatBox.append(el('div', { class: 'kal-monat-kopf' },
+      el('button', {
+        class: 'knopf knopf-hell', type: 'button', text: '←', 'aria-label': 'Vorheriger Monat',
+        onclick: function () { monatWechseln(-1, liste); }
+      }),
+      el('h2', { text: monatTitel(merk.jahr, merk.monat) }),
+      el('button', {
+        class: 'knopf knopf-hell', type: 'button', text: '→', 'aria-label': 'Nächster Monat',
+        onclick: function () { monatWechseln(1, liste); }
+      }),
+      el('button', {
+        class: 'knopf knopf-hell', type: 'button', text: 'Heute',
+        onclick: function () { zuHeute(liste); }
+      })
+    ));
+
+    const raster = el('div', { class: 'kal-raster' });
+    ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].forEach(function (k) {
+      raster.append(el('span', { class: 'kal-wt', text: k }));
+    });
+    wochen.forEach(function (w) {
+      w.forEach(function (d, i) {
+        raster.append(tagesZelle(d, i, proTag[d.tag], liste));
+      });
+    });
+    monatBox.append(raster);
+
+    // Termine des gewählten Tages
+    const tag = merk.tag;
+    if (!tag || !proTag[tag]) {
+      monatBox.append(el('p', { class: 'leise kal-hinweis', text: 'Tippe auf einen Tag, um seine Termine zu sehen.' }));
+      return;
+    }
+    const heutige = proTag[tag];
+    const tagesBox = el('div', { class: 'kal-tagesliste' },
+      el('h3', { text: WOCHENTAGE[wochentagNr(tag)] + ', ' + datumText(tag) })
+    );
+    if (heutige.length) {
+      tagesBox.append(el('ul', { class: 'dash-todo-liste' }, ...heutige.map(zeile)));
+    } else {
+      tagesBox.append(el('p', { class: 'leise', text: 'Keine Termine an diesem Tag.' }));
+    }
+    tagesBox.append(el('div', { class: 'teil-aktionen' },
+      el('button', {
+        class: 'knopf knopf-hell', type: 'button', text: 'Veranstaltung an diesem Tag',
+        onclick: function () { formZeigen(null, { datum: tag }); }
+      })
+    ));
+    monatBox.append(tagesBox);
+  }
+  
   // ---- Veranstaltung: Formular (v = null heißt neu) ----
 
   function formZeigen(v, vorgabe) {
