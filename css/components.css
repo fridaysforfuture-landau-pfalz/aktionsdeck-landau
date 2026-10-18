@@ -1558,3 +1558,96 @@ p.notiz.erledigt {
   font-size: 14px;
   font-weight: 600;
 }
+/* ---- 0.28.2: Monatsansicht ---- */
+.kal-ansicht { display: flex; gap: 8px; margin-bottom: 12px; }
+
+.kal-monat-kopf {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.kal-monat-kopf h2 { flex: 1; margin: 0; font-size: 18px; text-align: center; }
+.kal-monat-kopf .knopf { padding: 0 12px; }
+
+.kal-raster {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.kal-wt {
+  padding: 4px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-leise);
+}
+
+.kal-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+  min-height: 60px;
+  padding: 4px;
+  border: 1px solid var(--rand);
+  border-radius: 6px;
+  background: var(--flaeche);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.kal-tag:hover { background: var(--gruen-hell); }
+.kal-tag:focus-visible { outline: 2px solid var(--gruppe); }
+.kal-fremd { opacity: 0.5; }
+.kal-heute { box-shadow: inset 0 0 0 2px var(--gruppe); }
+.kal-gewaehlt { background: var(--gruen-hell); border-color: var(--gruppe); }
+
+.kal-nr { font-size: 13px; font-weight: 600; }
+
+.kal-punkte { display: flex; flex-wrap: wrap; gap: 3px; }
+.kal-punkt { width: 8px; height: 8px; border-radius: 50%; }
+
+.kal-chips { display: none; }
+
+.kal-streifen {
+  display: block;
+  border-top: 5px solid var(--gruppe);
+  font-size: 0;
+  line-height: 1.2;
+  color: var(--text-leise);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kal-chip {
+  display: block;
+  padding: 1px 4px;
+  border-left: 4px solid var(--gruppe);
+  border-radius: 3px;
+  background: var(--gruen-hell);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kal-chip.ueber { color: #b3261e; font-weight: 600; }
+.kal-chip-mehr { font-size: 12px; }
+
+.kal-tagesliste { margin-top: 16px; }
+.kal-tagesliste h3 { margin: 0 0 6px; }
+.kal-hinweis { margin-top: 12px; }
+
+@media (min-width: 600px) {
+  .kal-tag { min-height: 104px; }
+  .kal-punkte { display: none; }
+  .kal-chips { display: flex; flex-direction: column; gap: 2px; }
+  .kal-streifen { font-size: 11px; }
+}
