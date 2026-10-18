@@ -31,6 +31,26 @@ function farbeOk(f) {
 function farbeVon(f, ersatz) {
   return farbeOk(f) ? txt(f) : (ersatz || STANDARD_FARBE);
 }
+// Weiß oder Dunkelgrau, je nachdem, was auf der Farbe besser lesbar ist
+export function schriftfarbe(hex) {
+  const h = farbeVon(hex);
+  const kanal = function (i) {
+    const c = parseInt(h.slice(1 + i * 2, 3 + i * 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  };
+  const l = 0.2126 * kanal(0) + 0.7152 * kanal(1) + 0.0722 * kanal(2);
+  return 1.05 / (l + 0.05) >= (l + 0.05) / 0.0625 ? '#ffffff' : '#1a1e20';
+}
+
+// Sehr helle Version einer Farbe (für Deadline-Kästen)
+export function pastell(hex) {
+  const h = farbeVon(hex);
+  const mix = function (i) {
+    const c = parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
+    return Math.round(c + (255 - c) * 0.82);
+  };
+  return 'rgb(' + mix(0) + ',' + mix(1) + ',' + mix(2) + ')';
+}
 
 // Nur http(s)-Links sind erlaubt
 export function sichereUrl(u) {
@@ -119,10 +139,13 @@ export function baueTermine(daten, opt) {
   const todos = daten.todos || [];
 
   function neu(feld) {
-    return Object.assign({
+    const t = Object.assign({
       art: '', ort: '', zeitVon: '', zeitBis: '', farbe: eigeneFarbe, gruppe: '', link: '', url: '',
       projektId: '', projektTitel: '', erledigt: false, verantwortlich: '', marken: [], roh: null
     }, feld);
+    // zu = gehört zu einem abgeschlossenen Projekt (wird grau gezeigt)
+    t.zu = !!t.projektId && projektOffen[t.projektId] === false;
+    return t;
   }
 
   const projektTitel = {};
@@ -156,6 +179,7 @@ export function baueTermine(daten, opt) {
       zeitVon: zeitNorm(v.zeit_von),
       zeitBis: zeitNorm(v.zeit_bis),
       ort: txt(v.ort),
+      farbe: farbeVon(v.farbe, eigeneFarbe),
       url: sichereUrl(v.link),
       roh: v
     }));
@@ -189,7 +213,7 @@ export function baueTermine(daten, opt) {
   projekte.forEach(function (p) {
     const pid = String(p.id);
     const st = txt(p.status) || 'planung';
-    if (!o.abgeschlossene && st !== 'aktiv') return;
+    if (st === 'planung' || (istAbgeschlossen(p) && !o.abgeschlossene)) return;
     const titel = txt(p.titel);
     const aktion = normDatum(p.aktionsdatum);
     const deadline = normDatum(p.deadline);
@@ -253,7 +277,7 @@ export function baueTermine(daten, opt) {
     liste.push(neu({
       key: 't' + t.id,
       quelle: 'todo',
-      titel: kurz(t.text, 80),
+      titel: '✅ ' + kurz(t.text, 80),
       von: d,
       bis: d,
       link: pid ? projektLink(pid) : basis + 'todos',
@@ -289,6 +313,7 @@ export function standardFilter(name) {
     meilensteine: true,
     todos: true,
     nurMeine: false,
+    archivProjekte: false,
     name: name || ''
   };
 }
@@ -314,7 +339,7 @@ export function filtereTermine(liste, f) {
 
 // Offene ToDos und noch nicht erreichte Meilensteine bleiben bei "Kommende", auch wenn sie überfällig sind
 export function istUeberfaellig(t, ab) {
-  return (t.quelle === 'todo' || t.quelle === 'meilenstein') && !t.erledigt &&
+  return (t.quelle === 'todo' || t.quelle === 'meilenstein') && !t.erledigt && !t.zu &&
     t.bis < (ab || heuteIso());
 }
 
