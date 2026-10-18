@@ -1770,3 +1770,76 @@ p.notiz.erledigt {
   gap: 10px;
   margin-top: -6px;
 }
+/* ---- 0.28.5: Monatsansicht ---- */
+.formfeld-bool[hidden] { display: none; }
+
+/* Pfeile direkt neben dem Monatsnamen, ohne Knopfrahmen */
+.kal-monat-kopf { flex-wrap: wrap; justify-content: center; gap: 4px 16px; }
+.kal-nav { display: flex; align-items: center; gap: 2px; }
+.kal-nav h2 { flex: none; min-width: 11ch; margin: 0; font-size: 18px; text-align: center; }
+
+.kal-pfeil {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.kal-pfeil::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 13px;
+  height: 13px;
+  border: solid var(--text);
+}
+
+.kal-pfeil-links::before {
+  border-width: 0 0 4px 4px;
+  transform: translate(-35%, -50%) rotate(45deg);
+}
+
+.kal-pfeil-rechts::before {
+  border-width: 4px 4px 0 0;
+  transform: translate(-65%, -50%) rotate(45deg);
+}
+
+.kal-pfeil:hover::before { border-color: var(--gruppe); }
+.kal-pfeil:focus-visible { outline: 2px solid var(--gruppe); border-radius: var(--radius); }
+
+/* Raster ohne Lücken, damit sich die Projektbalken berühren */
+.kal-raster { gap: 0; }
+
+.kal-tag {
+  border: 0;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 1px var(--rand);
+}
+
+.kal-heute { box-shadow: inset 0 0 0 2px var(--gruppe); }
+.kal-gewaehlt { background: var(--gruen-hell); box-shadow: inset 0 0 0 2px var(--gruppe); }
+
+/* Balken laufen über die ganze Breite des Tages */
+.kal-streifen { margin: 0 -4px; padding: 0 4px; }
+.kal-leer { border-top-color: transparent; }
+
+/* Deadline-Tag: pink */
+.kal-frist-tag {
+  background: #fbd5e3;
+  color: #7a0b34;
+  font-weight: 700;
+}
+
+/* Veranstaltungen im Tag: Farbe als Hintergrund */
+.kal-chip-voll { border-left-color: transparent; font-weight: 600; }
+
+/* Vorbei oder abgeschlossenes Projekt: grau */
+.kal-chip-grau {
+  border-left-color: #8a9490;
+  background: #eceeed;
+  color: var(--text-leise);
+}
