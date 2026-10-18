@@ -16,8 +16,9 @@ import { zeitText as stempelText } from './material-rechnen.js';
 import { normDatum, heuteIso } from './todos-rechnen.js';
 import {
   baueTermine, filtereTermine, kommende, vergangene, standardFilter,
-  zeitNorm, zeitText, datumsText, sichereUrl, MONATE
+  zeitNorm, zeitText, datumsText, sichereUrl, istUeberfaellig, MONATE
 } from './kalender-rechnen.js';
+import { zeigeVorlagen } from './kalender-vorlagen.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = { token: '', filter: null, alteAuf: false };
@@ -80,6 +81,17 @@ export async function render(container, ctx) {
     class: 'knopf', type: 'button', text: '+ Veranstaltung',
     onclick: function () { formZeigen(null); }
   });
+  const vorlagenKnopf = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Vorlagen',
+    onclick: function () {
+      zeigeVorlagen({
+        ctx: ctx,
+        token: s.token,
+        kurzname: s.kurzname,
+        neueAusVorlage: function (vorgabe) { formZeigen(null, vorgabe); }
+      });
+    }
+  });
 
   SCHALTER.forEach(function (sch) {
     const cb = el('input', { type: 'checkbox' });
@@ -92,7 +104,10 @@ export async function render(container, ctx) {
   });
 
   container.append(el('div', { class: 'seite' },
-    el('div', { class: 'kopfzeile' }, el('h1', { text: 'Kalender' }), neuKnopf),
+    el('div', { class: 'kopfzeile' },
+      el('h1', { text: 'Kalender' }),
+      el('div', { class: 'kopf-knoepfe' }, vorlagenKnopf, neuKnopf)
+    ),
     suche,
     filterBox,
     status,
@@ -118,9 +133,10 @@ export async function render(container, ctx) {
 
   function zeile(t) {
     const istV = t.quelle === 'veranstaltung';
+    const ueber = istUeberfaellig(t);
     const mitProjekt = (t.quelle === 'meilenstein' || t.quelle === 'todo') && t.projektTitel;
     const info = [
-      datumsText(t),
+      datumsText(t) + (ueber ? ' (überfällig)' : ''),
       zeitText(t),
       t.ort,
       mitProjekt ? 'Projekt: ' + t.projektTitel : '',
@@ -128,7 +144,7 @@ export async function render(container, ctx) {
     ].filter(Boolean).join(' · ');
 
     const knopf = el('button', {
-      class: 'dash-todo pt-todo', type: 'button',
+      class: 'dash-todo pt-todo' + (ueber ? ' ueberfaellig' : ''), type: 'button',
       onclick: function () {
         if (istV) formZeigen(t.roh);
         else if (t.link) location.hash = t.link;
@@ -140,7 +156,7 @@ export async function render(container, ctx) {
     );
 
     const li = el('li', { class: 'dash-zeile kal-zeile' }, knopf);
-    li.style.borderLeftColor = t.farbe;
+    li.style.borderLeftColor = ueber ? '#b3261e' : t.farbe;
     if (t.url) {
       li.append(el('a', {
         class: 'kal-link', href: t.url, target: '_blank', rel: 'noopener noreferrer',
@@ -223,7 +239,7 @@ export async function render(container, ctx) {
 
   // ---- Veranstaltung: Formular (v = null heißt neu) ----
 
-  function formZeigen(v) {
+  function formZeigen(v, vorgabe) {
     let fenster = null;
     const start = v
       ? Object.assign({}, v, {
@@ -233,8 +249,8 @@ export async function render(container, ctx) {
         zeit_bis: zeitNorm(v.zeit_bis),
         oeffentlich: istWahr(v.oeffentlich)
       })
-      : { art: 'intern', datum: heuteIso(), oeffentlich: false };
-
+      : Object.assign({ art: 'intern', datum: heuteIso(), oeffentlich: false }, vorgabe || {});
+    
     const form = baueFormular(SCHEMA.Veranstaltungen.felder, start, {
       speichernText: v ? 'Speichern' : 'Anlegen',
       onSpeichern: function (d) { return speichern(v, d, fenster); },
