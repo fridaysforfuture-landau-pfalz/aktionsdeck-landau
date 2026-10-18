@@ -55,7 +55,37 @@ function eingabe(f, wert, vorschlaege, fotoFn) {
     cb.checked = wert === undefined || wert === null ? true : !istFalsch(wert);
     return { feld: cb, lesen: function () { return cb.checked; } };
   }
-
+  if (f.typ === 'farbe') {
+    const gesetzt = /^#[0-9a-fA-F]{6}$/.test(text(wert).trim());
+    const cs = getComputedStyle(document.documentElement).getPropertyValue('--gruppe').trim();
+    const gruppe = /^#[0-9a-fA-F]{6}$/.test(cs) ? cs : '#368469';
+    const fa = el('input', { class: 'farbfeld', type: 'color', name: f.name });
+    fa.value = gesetzt ? text(wert).trim() : gruppe;
+    if (!gesetzt) fa.setAttribute('data-leer', '1');
+    const hinweis = el('span', { class: 'leise' });
+    function hinweisZeigen() {
+      hinweis.textContent = fa.hasAttribute('data-leer') ? 'Es gilt die Gruppenfarbe.' : '';
+    }
+    hinweisZeigen();
+    fa.addEventListener('input', function () {
+      fa.removeAttribute('data-leer');
+      hinweisZeigen();
+    });
+    const zurueck = el('button', {
+      class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Gruppenfarbe',
+      onclick: function () {
+        fa.value = gruppe;
+        fa.setAttribute('data-leer', '1');
+        hinweisZeigen();
+      }
+    });
+    return {
+      feld: fa,
+      zusatz: el('div', { class: 'farb-zusatz' }, zurueck, hinweis),
+      lesen: function () { return fa.hasAttribute('data-leer') ? '' : fa.value.toLowerCase(); }
+    };
+  }
+  
   let feld;
   let extra = null;
   let zusatz = null;
