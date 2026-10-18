@@ -312,20 +312,18 @@ export function filtereTermine(liste, f) {
 
 // ---- Zeiträume ----
 
-// Alle Termine, die den Zeitraum von..bis (JJJJ-MM-TT, einschließlich) berühren
-export function imZeitraum(liste, von, bis) {
-  return liste.filter(function (t) { return t.von <= bis && t.bis >= von; });
+// Offene ToDos und noch nicht erreichte Meilensteine bleiben bei "Kommende", auch wenn sie überfällig sind
+export function istUeberfaellig(t, ab) {
+  return (t.quelle === 'todo' || t.quelle === 'meilenstein') && !t.erledigt &&
+    t.bis < (ab || heuteIso());
 }
 
-export function amTag(liste, tag) {
-  return imZeitraum(liste, tag, tag);
-}
-
-// Kommende Termine: nicht vorbei, nach Anfang sortiert. Der Balken eines Projekts zählt nicht mit.
+// Kommende Termine: nicht vorbei (oder überfällig und offen), nach Anfang sortiert.
+// Der Balken eines Projekts zählt nicht mit.
 export function kommende(liste, ab) {
   const heute = ab || heuteIso();
   return sortiereTermine(liste.filter(function (t) {
-    return t.quelle !== 'balken' && t.bis >= heute;
+    return t.quelle !== 'balken' && (t.bis >= heute || istUeberfaellig(t, heute));
   }));
 }
 
@@ -333,7 +331,7 @@ export function kommende(liste, ab) {
 export function vergangene(liste, ab) {
   const heute = ab || heuteIso();
   return liste.filter(function (t) {
-    return t.quelle !== 'balken' && t.bis < heute;
+    return t.quelle !== 'balken' && t.bis < heute && !istUeberfaellig(t, heute);
   }).sort(function (a, b) { return a.von < b.von ? 1 : (a.von > b.von ? -1 : 0); });
 }
 
