@@ -302,6 +302,10 @@ export async function render(container, ctx) {
 
   function kachelnZeichnen(termine) {
     leeren(kachelBox);
+    if (merk.ansicht === 'monat' || merk.archiv) {
+      kachelBox.hidden = true;
+      return;
+    }
     const extern = termine.filter(function (t) {
       return t.quelle === 'veranstaltung' && t.art === 'extern' && !istVorbei(t);
     });
@@ -386,36 +390,70 @@ export async function render(container, ctx) {
     zeichneMonat(liste);
   }
 
-  // Ein Tag im Raster: Zahl, Streifen für Projektzeiträume, Punkte (Handy), Kurztitel (PC)
-  function tagesZelle(d, spalte, termine, liste) {
-    const normal = termine.filter(function (t) { return t.quelle !== 'balken'; });
+  // Grau: gehört zu einem abgeschlossenen Projekt oder ist vorbei (offene überfällige nicht)
+  function istGrau(t) {
+    return !!t.zu || (!istUeberfaellig(t) && istVorbei(t));
+  }
+
+  // Veranstaltungen zuerst, dann Projekt-Aktionen, dann der Rest
+  function rang(t) {
+    return t.quelle === 'veranstaltung' ? 0 : (t.quelle === 'aktion' ? 1 : 2);
+  }
+
+  // Ein Tag im Raster: Zahl, Balken in festen Bahnen, Punkte (Handy), Kurztitel (PC)
+  function tagesZelle(d, spalte, termine, liste, bahn, nBahn) {
+    const normal = termine.filter(function (t) {
+      return t.quelle !== 'balken' && t.quelle !== 'deadline';
+    }).sort(function (a, b) { return rang(a) - rang(b); });
     const balken = termine.filter(function (t) { return t.quelle === 'balken'; });
 
-    const streifen = balken.slice(0, 2).map(function (t) {
+    const streifen = [];
+    for (let i = 0; i < nBahn; i++) {
+      const t = balken.find(function (b) { return bahn[b.key] === i; });
+      const fristTag = !!t && !!f.deadlines && d.tag === t.bis;
+      if (!t || !(f.projekte || fristTag)) {
+        streifen.push(el('span', {
+          class: 'kal-streifen kal-leer', 'aria-hidden': 'true', text: '\u00a0'
+        }));
+        continue;
+      }
+      const rosa = fristTag && !t.zu;
+      let beschriftung = '\u00a0';
+      if (fristTag) beschriftung = 'Deadline: ' + t.projektTitel;
+      else if (d.tag === t.von || spalte === 0) beschriftung = t.titel;
       const b = el('span', {
-        class: 'kal-streifen',
-        title: t.titel,
+        class: 'kal-streifen' + (rosa ? ' kal-frist-tag' : ''),
+        title: fristTag ? 'Deadline: ' + t.projektTitel : t.titel,
         'aria-hidden': 'true',
-        text: (d.tag === t.von || spalte === 0) ? t.titel : '\u00a0'
+        text: beschriftung
       });
-      b.style.borderTopColor = t.farbe;
-      return b;
-    });
+      b.style.borderTopColor = rosa ? '#d81b60' : (t.zu ? '#8a9490' : t.farbe);
+      streifen.push(b);
+    }
 
     const punkte = el('span', { class: 'kal-punkte', 'aria-hidden': 'true' });
     normal.slice(0, 4).forEach(function (t) {
       const p = el('span', { class: 'kal-punkt' });
-      p.style.background = istUeberfaellig(t) ? '#b3261e' : t.farbe;
+      p.style.background = istUeberfaellig(t) ? '#b3261e' : (istGrau(t) ? '#8a9490' : t.farbe);
       punkte.append(p);
     });
 
     const chips = el('span', { class: 'kal-chips', 'aria-hidden': 'true' });
     normal.slice(0, 3).forEach(function (t) {
+      const ueber = istUeberfaellig(t);
+      const grau = istGrau(t);
+      const hervor = !grau && (t.quelle === 'veranstaltung' || t.quelle === 'aktion');
       const c = el('span', {
-        class: 'kal-chip' + (istUeberfaellig(t) ? ' ueber' : ''),
+        class: 'kal-chip' + (ueber ? ' ueber' : '') + (hervor ? ' kal-chip-voll' : '') +
+          (grau ? ' kal-chip-grau' : ''),
         text: t.titel
       });
-      c.style.borderLeftColor = istUeberfaellig(t) ? '#b3261e' : t.farbe;
+      if (hervor) {
+        c.style.background = t.farbe;
+        c.style.color = schriftfarbe(t.farbe);
+      } else {
+        c.style.borderLeftColor = ueber ? '#b3261e' : (grau ? '#8a9490' : t.farbe);
+      }
       chips.append(c);
     });
     if (normal.length > 3) {
@@ -456,16 +494,29 @@ export async function render(container, ctx) {
       });
     });
 
+    // Balken in feste Bahnen legen, damit sie von Tag zu Tag auf einer Höhe bleiben
+    const bahn = {};
+    const bahnEnde = [];
+    imRaum.filter(function (b) { return b.quelle === 'balken'; }).forEach(function (b) {
+      let i = 0;
+      while (i < bahnEnde.length && bahnEnde[i] >= b.von) i += 1;
+      bahnEnde[i] = b.bis;
+      bahn[b.key] = i;
+    });
+    const nBahn = Math.min(3, bahnEnde.length);
+
     monatBox.append(el('div', { class: 'kal-monat-kopf' },
-      el('button', {
-        class: 'knopf knopf-hell', type: 'button', text: '←', 'aria-label': 'Vorheriger Monat',
-        onclick: function () { monatWechseln(-1, liste); }
-      }),
-      el('h2', { text: monatTitel(merk.jahr, merk.monat) }),
-      el('button', {
-        class: 'knopf knopf-hell', type: 'button', text: '→', 'aria-label': 'Nächster Monat',
-        onclick: function () { monatWechseln(1, liste); }
-      }),
+      el('div', { class: 'kal-nav' },
+        el('button', {
+          class: 'kal-pfeil kal-pfeil-links', type: 'button', 'aria-label': 'Vorheriger Monat',
+          onclick: function () { monatWechseln(-1, liste); }
+        }),
+        el('h2', { text: monatTitel(merk.jahr, merk.monat) }),
+        el('button', {
+          class: 'kal-pfeil kal-pfeil-rechts', type: 'button', 'aria-label': 'Nächster Monat',
+          onclick: function () { monatWechseln(1, liste); }
+        })
+      ),
       el('button', {
         class: 'knopf knopf-hell', type: 'button', text: 'Heute',
         onclick: function () { zuHeute(liste); }
@@ -478,7 +529,7 @@ export async function render(container, ctx) {
     });
     wochen.forEach(function (w) {
       w.forEach(function (d, i) {
-        raster.append(tagesZelle(d, i, proTag[d.tag], liste));
+        raster.append(tagesZelle(d, i, proTag[d.tag], liste, bahn, nBahn));
       });
     });
     monatBox.append(raster);
@@ -526,6 +577,16 @@ export async function render(container, ctx) {
       onSpeichern: function (d) { return speichern(v, d, fenster); },
       onAbbrechen: function () { fenster.schliessen(); }
     });
+    // "Veröffentlichen" gibt es nur bei Art extern
+    const artWahl = form.querySelector('select[name="art"]');
+    const oeffBox = form.querySelector('input[name="oeffentlich"]');
+    const oeffZeile = oeffBox ? oeffBox.closest('label') : null;
+    function oeffAnzeige() {
+      if (oeffZeile) oeffZeile.hidden = !artWahl || artWahl.value !== 'extern';
+    }
+    if (artWahl) artWahl.addEventListener('change', oeffAnzeige);
+    oeffAnzeige();
+
     const inhalt = el('div', null, form);
     if (v) {
       inhalt.append(el('div', { class: 'fenster-loeschen' },
