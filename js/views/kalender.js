@@ -13,7 +13,7 @@ import { toast } from '../ui/toast.js';
 import { getName } from '../store.js';
 import { SCHEMA, istWahr } from '../schema.js';
 import { zeitText as stempelText } from './material-rechnen.js';
-import { normDatum, heuteIso } from './todos-rechnen.js';
+import { normDatum, heuteIso, datumText } from './todos-rechnen.js';
 import {
   baueTermine, filtereTermine, kommende, vergangene, standardFilter,
   zeitNorm, zeitText, datumsText, sichereUrl, istUeberfaellig, MONATE
