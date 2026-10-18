@@ -235,12 +235,13 @@ export function baueTermine(daten, opt) {
         link: projektLink(pid), projektId: pid, projektTitel: titel, roh: p
       }));
     }
-    // Balken nur mit Anfang UND Deadline
-    if (start && deadline && start < deadline) {
+    // Balken mit Deadline: ab Start, ohne Start nur der Deadline-Tag
+    if (deadline) {
+      const balkenVon = (start && start < deadline) ? start : deadline;
       liste.push(neu({
-        key: 'b' + pid, quelle: 'balken', titel: titel, von: start, bis: deadline,
+        key: 'b' + pid, quelle: 'balken', titel: titel, von: balkenVon, bis: deadline,
         link: projektLink(pid), projektId: pid, projektTitel: titel,
-        marken: mDaten.filter(function (d) { return d >= start && d <= deadline; }),
+        marken: mDaten.filter(function (d) { return d >= balkenVon && d <= deadline; }),
         roh: p
       }));
     }
@@ -322,8 +323,8 @@ export function passt(t, f) {
   switch (t.quelle) {
     case 'veranstaltung': return t.art === 'intern' ? !!f.intern : !!f.extern;
     case 'oeffentlich': return !!f.oeffentlich;
-    case 'aktion':
-    case 'balken': return !!f.projekte;
+    case 'aktion': return !!f.projekte;
+    case 'balken': return !!f.projekte || !!f.deadlines;
     case 'deadline': return !!f.deadlines;
     case 'meilenstein': return !!f.meilensteine;
     case 'todo': return !!f.todos && (!f.nurMeine || istMeins(t.roh, f.name));
