@@ -17,14 +17,15 @@ import { normDatum, heuteIso, datumText } from './todos-rechnen.js';
 import {
   baueTermine, filtereTermine, kommende, vergangene, standardFilter,
   zeitNorm, zeitText, datumsText, sichereUrl, istUeberfaellig, MONATE,
-  monatsRaster, monatTitel, imZeitraum, WOCHENTAGE, wochentagNr
+  monatsRaster, monatTitel, imZeitraum, WOCHENTAGE, wochentagNr,
+  istVorbei, schriftfarbe, pastell
 } from './kalender-rechnen.js';
 import { zeigeVorlagen } from './kalender-vorlagen.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = {
   token: '', filter: null, alteAuf: false,
-  ansicht: 'liste', jahr: 0, monat: 0, tag: ''
+  ansicht: 'monat', archiv: false, jahr: 0, monat: 0, tag: ''
 };
 
 const MAX_VERGANGEN = 30;
@@ -37,7 +38,8 @@ const SCHALTER = [
   ['deadlines', 'Deadlines'],
   ['meilensteine', 'Meilensteine'],
   ['todos', 'ToDos'],
-  ['nurMeine', 'Nur meine ToDos']
+  ['nurMeine', 'Nur meine ToDos'],
+  ['archivProjekte', 'Archiv-Projekte']
 ];
 
 function txt(v) {
@@ -67,7 +69,8 @@ export async function render(container, ctx) {
     const h = heuteIso();
     merk = {
       token: s.token, filter: standardFilter(getName()), alteAuf: false,
-      ansicht: 'liste', jahr: Number(h.slice(0, 4)), monat: Number(h.slice(5, 7)) - 1, tag: h
+      ansicht: 'monat', archiv: false,
+      jahr: Number(h.slice(0, 4)), monat: Number(h.slice(5, 7)) - 1, tag: h
     };
   }
   const f = merk.filter;
@@ -85,6 +88,11 @@ export async function render(container, ctx) {
   const filterBox = el('div', { class: 'kal-filter' });
   const kommBox = el('div');
   const vergBox = el('div');
+  const kachelBox = el('div', { class: 'kal-kacheln' });
+  const archivKnopf = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Archiv',
+    onclick: function () { merk.archiv = !merk.archiv; zeichne(); }
+  });
   const monatBox = el('div', { class: 'kal-monat' });
   const listeTitel = el('h2', { class: 'liste-titel', text: 'Kommende Termine' });
   const listenKnopf = el('button', {
@@ -126,11 +134,12 @@ export async function render(container, ctx) {
   container.append(el('div', { class: 'seite' },
     el('div', { class: 'kopfzeile' },
       el('h1', { text: 'Kalender' }),
-      el('div', { class: 'kopf-knoepfe' }, vorlagenKnopf, neuKnopf)
+      el('div', { class: 'kopf-knoepfe' }, archivKnopf, vorlagenKnopf, neuKnopf)
     ),
     ansichtZeile,
     suche,
     filterBox,
+    kachelBox,
     status,
     monatBox,
     listeTitel,
@@ -156,6 +165,10 @@ export async function render(container, ctx) {
   function zeile(t) {
     const istV = t.quelle === 'veranstaltung';
     const ueber = istUeberfaellig(t);
+    const grau = !!t.zu || (!ueber && istVorbei(t));
+    const voll = !grau && (istV || t.quelle === 'aktion');
+    const frist = !grau && t.quelle === 'deadline';
+    const symbol = (istV || t.quelle === 'aktion') ? '📅 ' : (t.quelle === 'deadline' ? '⏰ ' : '');
     const mitProjekt = (t.quelle === 'meilenstein' || t.quelle === 'todo') && t.projektTitel;
     const info = [
       datumsText(t) + (ueber ? ' (überfällig)' : ''),
@@ -173,12 +186,20 @@ export async function render(container, ctx) {
       }
     },
       el('span', { class: 'kal-marke leise', text: markeText(t) }),
-      el('strong', { text: t.titel }),
+      el('strong', { text: symbol + t.titel }),
       info ? el('span', { class: 'leise', text: info }) : null
     );
 
-    const li = el('li', { class: 'dash-zeile kal-zeile' }, knopf);
-    li.style.borderLeftColor = ueber ? '#b3261e' : t.farbe;
+    const li = el('li', {
+      class: 'dash-zeile kal-zeile' + (grau ? ' kal-grau' : '') +
+        (voll ? ' kal-voll' : '') + (frist ? ' kal-frist' : '')
+    }, knopf);
+    li.style.borderLeftColor = grau ? '#8a9490' : (ueber ? '#b3261e' : t.farbe);
+    if (voll) {
+      li.style.background = t.farbe;
+      li.style.color = schriftfarbe(t.farbe);
+    }
+    if (frist) li.style.background = pastell(t.farbe);
     if (t.url) {
       li.append(el('a', {
         class: 'kal-link', href: t.url, target: '_blank', rel: 'noopener noreferrer',
@@ -207,7 +228,7 @@ export async function render(container, ctx) {
 
   function zeichne() {
     const termine = baueTermine(daten, {
-      basis: basis, farbe: s.farbe, eigeneKurz: s.kurzname
+      basis: basis, farbe: s.farbe, eigeneKurz: s.kurzname, abgeschlossene: !!f.archivProjekte
     });
     let liste = filtereTermine(termine, f);
     const q = suche.value.trim().toLowerCase();
@@ -218,10 +239,22 @@ export async function render(container, ctx) {
     }
     const komm = kommende(liste);
     const verg = vergangene(liste);
+    archivKnopf.textContent = merk.archiv
+      ? '← Zurück zu den Terminen'
+      : 'Archiv' + (verg.length ? ' (' + verg.length + ')' : '');
+    listeTitel.textContent = merk.archiv ? 'Archiv: vergangene Termine' : 'Kommende Termine';
+    kachelnZeichnen(termine);
 
     ansichtAnzeige();
     if (merk.ansicht === 'monat') {
       zeichneMonat(liste);
+      statusZeigen();
+      return;
+    }
+    if (merk.archiv) {
+      zeichneArchiv(verg);
+      leeren(vergBox);
+      vergBox.hidden = true;
       statusZeigen();
       return;
     }
@@ -239,39 +272,88 @@ export async function render(container, ctx) {
     }
 
     leeren(vergBox);
-    vergBox.hidden = !verg.length;
-    if (verg.length) {
-      const d = el('details', { class: 'projekt-teil' });
-      if (merk.alteAuf) d.open = true;
-      d.addEventListener('toggle', function () { merk.alteAuf = d.open; });
-      const gezeigt = verg.slice(0, MAX_VERGANGEN);
-      d.append(
-        el('summary', null,
-          el('span', { class: 'teil-pfeil', 'aria-hidden': 'true', text: '▸' }),
-          el('strong', { text: 'Vergangene Termine' }),
-          el('span', { class: 'leise', text: String(verg.length) })
-        ),
-        el('div', { class: 'projekt-teil-body' },
-          el('ul', { class: 'dash-todo-liste' }, ...gezeigt.map(zeile)),
-          verg.length > MAX_VERGANGEN
-            ? el('p', {
-              class: 'leise',
-              text: '… und ' + (verg.length - MAX_VERGANGEN) + ' ältere. Mit der Suche findest du sie.'
-            })
-            : null
-        )
-      );
-      vergBox.append(d);
-    }
+    vergBox.hidden = true;
     statusZeigen();
   }
 
+  // ---- Kacheln (extern) und Archiv ----
+
+  // Veröffentlichen per Klick auf die Kachel: speichert sofort
+  async function veroeffentlichen(v, wert, cb) {
+    cb.disabled = true;
+    try {
+      await api('update', {
+        tabelle: 'Veranstaltungen', id: v.id, daten: { oeffentlich: wert }, bekannt: v.geaendert_am
+      }, s.token);
+      toast(wert ? 'Veröffentlicht.' : 'Nicht mehr veröffentlicht.');
+      await laden(false);
+    } catch (e) {
+      cb.checked = !wert;
+      cb.disabled = false;
+      if (ctx.behandleFehler(e)) return;
+      if (e.code === 'konflikt' || e.code === 'nicht_gefunden') {
+        toast('Jemand anderes hat dies gerade geändert. Bitte noch einmal versuchen.');
+        laden(false);
+      } else {
+        toast(e.message);
+      }
+    }
+  }
+
+  function kachelnZeichnen(termine) {
+    leeren(kachelBox);
+    const extern = termine.filter(function (t) {
+      return t.quelle === 'veranstaltung' && t.art === 'extern' && !istVorbei(t);
+    });
+    kachelBox.hidden = !extern.length;
+    if (!extern.length) return;
+    const reihe = el('div', { class: 'kal-kacheln-liste' });
+    extern.forEach(function (t) {
+      const cb = el('input', { type: 'checkbox', 'aria-label': t.titel + ' veröffentlichen' });
+      cb.checked = istWahr(t.roh.oeffentlich);
+      cb.addEventListener('change', function () { veroeffentlichen(t.roh, cb.checked, cb); });
+      const k = el('div', { class: 'kal-kachel' },
+        el('button', {
+          class: 'kal-kachel-titel', type: 'button', text: t.titel,
+          onclick: function () { formZeigen(t.roh); }
+        }),
+        el('span', { class: 'kal-kachel-datum', text: datumsText(t) }),
+        el('label', null, cb, el('span', { text: 'Veröffentlichen' }))
+      );
+      k.style.background = t.farbe;
+      k.style.color = schriftfarbe(t.farbe);
+      reihe.append(k);
+    });
+    kachelBox.append(
+      el('p', { class: 'leise', text: 'Externe Veranstaltungen: hier veröffentlichen' }),
+      reihe
+    );
+  }
+
+  function zeichneArchiv(verg) {
+    leeren(kommBox);
+    if (!verg.length) {
+      kommBox.append(el('p', {
+        class: 'leise', text: 'Das Archiv ist leer. Vergangene Termine stehen hier.'
+      }));
+      return;
+    }
+    kommBox.append(listeMitMonaten(verg.slice(0, 200)));
+    if (verg.length > 200) {
+      kommBox.append(el('p', {
+        class: 'leise',
+        text: '… und ' + (verg.length - 200) + ' ältere. Mit der Suche findest du sie.'
+      }));
+    }
+  }
+  
   // ---- Monatsansicht ----
 
   function ansichtAnzeige() {
     const m = merk.ansicht === 'monat';
     monatBox.hidden = !m;
     listeTitel.hidden = m;
+    archivKnopf.hidden = m;
     kommBox.hidden = m;
     vergBox.hidden = m;
     listenKnopf.className = 'knopf' + (m ? ' knopf-hell' : '');
@@ -469,9 +551,7 @@ export async function render(container, ctx) {
     if (d.link && !sichereUrl(d.link)) {
       throw new Error('Der Link muss mit https:// oder http:// beginnen.');
     }
-    if (d.oeffentlich && d.art !== 'extern') {
-      throw new Error('„Öffentlich“ geht nur bei Art „extern“.');
-    }
+    if (d.art !== 'extern') d.oeffentlich = false;
     try {
       if (!v) {
         await api('create', { tabelle: 'Veranstaltungen', daten: d }, s.token);
