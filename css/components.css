@@ -1539,3 +1539,22 @@ p.notiz.erledigt {
 @media (min-width: 960px) {
   .archiv-zwei { grid-template-columns: 1fr 1fr; }
 }
+/* ---- 0.28.0: Kalender ---- */
+.kal-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 16px;
+  margin: 8px 0 12px;
+}
+
+.kal-filter .formfeld-bool { font-size: 14px; }
+
+.kal-zeile { border-left: 6px solid var(--gruppe); padding-right: 8px; }
+.kal-zeile .dash-todo { border-left: 0; }
+.kal-marke { font-size: 13px; }
+
+.kal-link {
+  flex: none;
+  font-size: 14px;
+  font-weight: 600;
+}
