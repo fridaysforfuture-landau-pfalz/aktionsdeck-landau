@@ -52,6 +52,7 @@ function markeText(t) {
   if (t.quelle === 'todo') return 'ToDo';
   if (t.quelle === 'balken') return 'Projektzeitraum';
   return '';
+}
 
 function monatVon(tag) {
   const m = Number(String(tag).slice(5, 7));
