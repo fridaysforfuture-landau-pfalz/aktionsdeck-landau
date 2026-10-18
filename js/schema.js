@@ -154,7 +154,8 @@ export const SCHEMA = {
       { name: 'beschreibung', label: 'Beschreibung', typ: 'langtext' },
       { name: 'veranstalter', label: 'Veranstalter (leer = unsere Gruppe)', typ: 'text' },
       { name: 'link', label: 'Link (https://…)', typ: 'text' },
-      { name: 'oeffentlich', label: 'Öffentlich (nur bei extern: erscheint ohne PIN auf der Termine-Seite)', typ: 'bool' }
+      { name: 'farbe', label: 'Farbe (ohne Auswahl: Gruppenfarbe)', typ: 'farbe' },
+      { name: 'oeffentlich', label: 'Veröffentlichen (nur bei extern: erscheint ohne PIN auf der Termine-Seite)', typ: 'bool' }
     ]
   },
   Termin_Vorlagen: {
