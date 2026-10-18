@@ -335,6 +335,14 @@ export function vergangene(liste, ab) {
   }).sort(function (a, b) { return a.von < b.von ? 1 : (a.von > b.von ? -1 : 0); });
 }
 
+// Alle Termine, die den Zeitraum von..bis (JJJJ-MM-TT) berühren, nach Anfang sortiert.
+// Der Projektbalken zählt hier mit (er wird im Monatsraster als Streifen gezeigt).
+export function imZeitraum(liste, von, bis) {
+  return sortiereTermine(liste.filter(function (t) {
+    return t.von <= bis && t.bis >= von;
+  }));
+}
+
 // ---- Monatsraster ----
 
 // monat0: 0 = Januar. Gibt Wochen zurück, jede Woche 7 Tage ab Montag:
