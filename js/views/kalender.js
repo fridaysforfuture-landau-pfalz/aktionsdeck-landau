@@ -162,7 +162,7 @@ export async function render(container, ctx) {
       : 'Zwischengespeichert von ' + stempelText(meta.stand) + '. Aktualisiere …';
   }
 
-  function zeile(t) {
+  function zeile(t, vorher) {
     const istV = t.quelle === 'veranstaltung';
     const ueber = istUeberfaellig(t);
     const grau = !!t.zu || (!ueber && istVorbei(t));
@@ -181,6 +181,7 @@ export async function render(container, ctx) {
     const knopf = el('button', {
       class: 'dash-todo pt-todo' + (ueber ? ' ueberfaellig' : ''), type: 'button',
       onclick: function () {
+        if (typeof vorher === 'function') vorher();
         if (istV) formZeigen(t.roh);
         else if (t.link) location.hash = t.link;
       }
@@ -246,7 +247,7 @@ export async function render(container, ctx) {
     kachelnZeichnen(termine);
 
     ansichtAnzeige();
-    if (merk.ansicht === 'monat') {
+    if (merk.ansicht === 'monat' && !merk.archiv) {
       zeichneMonat(liste);
       statusZeigen();
       return;
@@ -307,7 +308,8 @@ export async function render(container, ctx) {
       return;
     }
     const extern = termine.filter(function (t) {
-      return t.quelle === 'veranstaltung' && t.art === 'extern' && !istVorbei(t);
+      return t.quelle === 'veranstaltung' && t.art === 'extern' && !istVorbei(t) &&
+        !istWahr(t.roh.oeffentlich);
     });
     kachelBox.hidden = !extern.length;
     if (!extern.length) return;
@@ -329,7 +331,7 @@ export async function render(container, ctx) {
       reihe.append(k);
     });
     kachelBox.append(
-      el('p', { class: 'leise', text: 'Externe Veranstaltungen: hier veröffentlichen' }),
+      el('p', { class: 'leise', text: 'Externe Veranstaltungen, noch nicht veröffentlicht:' }),
       reihe
     );
   }
@@ -354,20 +356,21 @@ export async function render(container, ctx) {
   // ---- Monatsansicht ----
 
   function ansichtAnzeige() {
-    const m = merk.ansicht === 'monat';
+    const monat = merk.ansicht === 'monat';
+    const m = monat && !merk.archiv;   // Raster nur, wenn das Archiv nicht offen ist
     monatBox.hidden = !m;
     listeTitel.hidden = m;
-    archivKnopf.hidden = m;
     kommBox.hidden = m;
     vergBox.hidden = m;
-    listenKnopf.className = 'knopf' + (m ? ' knopf-hell' : '');
-    monatKnopf.className = 'knopf' + (m ? '' : ' knopf-hell');
-    listenKnopf.setAttribute('aria-pressed', String(!m));
-    monatKnopf.setAttribute('aria-pressed', String(m));
+    listenKnopf.className = 'knopf' + (monat ? ' knopf-hell' : '');
+    monatKnopf.className = 'knopf' + (monat ? '' : ' knopf-hell');
+    listenKnopf.setAttribute('aria-pressed', String(!monat));
+    monatKnopf.setAttribute('aria-pressed', String(monat));
   }
-
+  
   function ansichtSetzen(a) {
     merk.ansicht = a;
+    merk.archiv = false;
     zeichne();
   }
 
@@ -472,6 +475,7 @@ export async function render(container, ctx) {
       onclick: function () {
         merk.tag = d.tag;
         zeichneMonat(liste);
+        if (breit()) tagOeffnen(d.tag, termine);
       }
     },
       el('span', { class: 'kal-nr', text: String(Number(d.tag.slice(8, 10))) }),
@@ -481,6 +485,61 @@ export async function render(container, ctx) {
     );
   }
 
+  function breit() {
+    return window.matchMedia('(min-width: 600px)').matches;
+  }
+
+  // Großes Fenster mit allen Terminen eines Tages (am Handy gilt die Liste unter dem Raster)
+  function tagOeffnen(tag, termine) {
+    let fenster = null;
+    const sortiert = termine.slice().sort(function (a, b) { return rang(a) - rang(b); });
+    const inhalt = el('div', { class: 'kal-gross' });
+    if (sortiert.length) {
+      inhalt.append(el('ul', { class: 'dash-todo-liste' },
+        ...sortiert.map(function (t) {
+          return zeile(t, function () { fenster.schliessen(); });
+        })));
+    } else {
+      inhalt.append(el('p', { class: 'leise', text: 'Keine Termine an diesem Tag.' }));
+    }
+    inhalt.append(el('div', { class: 'fenster-loeschen form-knoepfe' },
+      el('button', {
+        class: 'knopf', type: 'button', text: '+ Veranstaltungen an diesem Tag',
+        onclick: function () { fenster.schliessen(); formZeigen(null, { datum: tag }); }
+      }),
+      el('button', {
+        class: 'knopf knopf-hell', type: 'button', text: 'Schließen',
+        onclick: function () { fenster.schliessen(); }
+      })
+    ));
+    fenster = zeigeFenster(
+      WOCHENTAGE[wochentagNr(tag)] + ', ' + datumText(tag), inhalt, null, { aussenKlick: true }
+    );
+  }
+
+  // Kalender-Symbol: freie Datumswahl (der Knopf ist ein Datumsfeld, das unsichtbar darüber liegt)
+  function datumWahlBauen(liste) {
+    const eingabe = el('input', { type: 'date', 'aria-label': 'Datum wählen' });
+    eingabe.value = merk.tag || heuteIso();
+    eingabe.addEventListener('click', function () {
+      try {
+        if (typeof eingabe.showPicker === 'function') eingabe.showPicker();
+      } catch (e) { /* ignorieren */ }
+    });
+    eingabe.addEventListener('change', function () {
+      const d = normDatum(eingabe.value);
+      if (!d) return;
+      merk.jahr = Number(d.slice(0, 4));
+      merk.monat = Number(d.slice(5, 7)) - 1;
+      merk.tag = d;
+      zeichneMonat(liste);
+    });
+    return el('label', { class: 'knopf knopf-hell kal-datum', title: 'Datum wählen' },
+      el('span', { 'aria-hidden': 'true', text: '📅' }),
+      eingabe
+    );
+  }
+  
   function zeichneMonat(liste) {
     leeren(monatBox);
     const wochen = monatsRaster(merk.jahr, merk.monat);
@@ -517,10 +576,13 @@ export async function render(container, ctx) {
           onclick: function () { monatWechseln(1, liste); }
         })
       ),
-      el('button', {
-        class: 'knopf knopf-hell', type: 'button', text: 'Heute',
-        onclick: function () { zuHeute(liste); }
-      })
+      el('div', { class: 'kal-rechts' },
+        el('button', {
+          class: 'knopf knopf-hell', type: 'button', text: 'Heute',
+          onclick: function () { zuHeute(liste); }
+        }),
+        datumWahlBauen(liste)
+      )
     ));
 
     const raster = el('div', { class: 'kal-raster' });
@@ -551,7 +613,7 @@ export async function render(container, ctx) {
     }
     tagesBox.append(el('div', { class: 'teil-aktionen' },
       el('button', {
-        class: 'knopf knopf-hell', type: 'button', text: 'Veranstaltung an diesem Tag',
+        class: 'knopf knopf-hell', type: 'button', text: '+ Veranstaltungen an diesem Tag',
         onclick: function () { formZeigen(null, { datum: tag }); }
       })
     ));
