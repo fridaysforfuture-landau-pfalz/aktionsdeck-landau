@@ -1896,3 +1896,7 @@ p.notiz.erledigt {
 
 /* Großes Tagesfenster */
 .kal-gross .dash-todo-liste { margin: 0; }
+/* ---- 0.28.8: Anheften-Knopf in der Liste ---- */
+.kal-zeile { flex-wrap: wrap; }
+.kal-zeile .dash-todo { flex: 1 1 200px; }
+.kal-heften { flex: none; margin: 0 4px; }
