@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.27.2 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.28.8 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/KlimastreikLandau/aktionsdeck-landau
 Seite: https://klimastreiklandau.github.io/aktionsdeck-landau/
 
@@ -9,13 +9,19 @@ Seite: https://klimastreiklandau.github.io/aktionsdeck-landau/
 - Etappe 4 komplett (0.18.0 bis 0.25.x): Projekte, ToDos und Meilensteine im Projekt, Meilenstein-Vorlagen, Hüte, Material im Projekt, Finanzen, Planung und Abschluss, Learnings, Aufräumen.
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart, Korrekturen 4.7.1. Alle Prüfpunkte bis 0.26.2 bestätigt. 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren") ist noch zu prüfen.
 - Das Sheet wurde vor 0.26.0 komplett geleert (keine Testdaten). Danach sind beim Testen von Etappe 5 neue Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen): vor dem Echtbetrieb im Sheet löschen.
-## Stand Etappe 6 (0.27.0 bis 0.27.2)
-- Erledigt: 5.10 komplett (Was ist neu mit Glocke und Gliederung, Mitteilung-Merker über Kommentare.angeheftet, Brett-Kachel nur mit angehefteten, Archiv in zwei Spalten mit Suche, Klick auf aktiven Reiter baut Ansicht neu auf).
-- 6.1 und 6.1b erledigt: Sheet-Tabs Veranstaltungen und Termin_Vorlagen, Schema.gs und js/schema.js (Feldtyp "zeit" in form.js). Vorlagen gehören je Gruppe (gruppe_id).
-- 6.2 erledigt: js/views/kalender-rechnen.js (baueTermine, filtereTermine, kommende, vergangene, monatsRaster, naechsterWochentag, sichereUrl). Noch nicht benutzt.
-- Offen: In kalender-rechnen.js zeigt der Abschnitt "3) Projekte" nur Projekte mit Status aktiv (Planung nicht). Meilensteine und ToDos bleiben, nur die abgeschlossener Projekte nicht.
-- Nächste Schritte: 6.3a Reiter Kalender (js/views/kalender.js: Liste Kommende/Vergangene, Filterleiste, Veranstaltung anlegen/ändern/löschen mit Uhrzeit und mehreren Tagen), 6.3b Vorlagen (js/views/kalender-vorlagen.js; Plenum FFF: KHG, Moltkestraße 9, Landau, Donnerstag, 18:30; Plenum GP: gleicher Ort, Dienstag, 19:00; bearbeitbar, neu anlegbar, keine Serie), 6.4 Monatsansicht auch am Handy (Hochformat, Tipp auf Tag zeigt Details), 6.5 Anheften (extern: Pinnwand-Eintrag, jede externe; intern: automatisch angeheftete Mitteilung; beide mit Doppelt-Prüfung), 6.6 Skript Termine.gs (Aktion termine ohne Login, nur art extern und oeffentlich TRUE, nur kommende, Gruppenname/Kurzname/Farbe, GET mit Filter gruppe=fff für fremde Webseiten, optional .ics, kurz zwischenspeichern), 6.7 öffentliche Seite js/views/termine.js (#/termine) und alle kommenden öffentlichen Termine auf der Gruppenwahl, vergangene sofort ausblenden (mehrtägige bis letzter Tag), 6.8 Veranstaltungen als Quelle in "Was ist neu" (keine Extra-Kachel), 6.9 Test, Sicherheitsprüfung, Aufräumen.
-- Festlegungen Kalender: Reiter heißt weiter Kalender (Posts bleibt bis Etappe 7). Filter: Veranstaltungen intern/extern, öffentliche anderer Gruppen (Schalter, in Gruppenfarbe), Projekte, Deadlines, Meilensteine, ToDos (alle offenen der Gruppe, Schalter "nur meine"). Klick auf ToDo/Meilenstein springt ins Projekt. Projektbalken von Start bis Deadline (ohne Start ab erstem Meilenstein, ohne Deadline kein Balken), Meilensteine als Striche. Mobi-Kalender (Etappe 7) nutzt dieselbe Logik mit voreingestelltem Filter.
+## Stand Etappe 6 (0.27.0 bis 0.28.8)
+- Erledigt: 5.10 komplett. 6.1 und 6.1b (Tabs Veranstaltungen und Termin_Vorlagen, Schema.gs und js/schema.js, Feldtypen "zeit" und "farbe" in form.js; Veranstaltungen haben zusätzlich die Spalte farbe). 6.2 js/views/kalender-rechnen.js.
+- 6.3a bis 6.5b erledigt (0.28.0 bis 0.28.8), 6.5 und 6.5b noch zu prüfen:
+  - js/views/kalender.js: Ansichten Liste und Monat (Monat ist die Startansicht; Ansicht, Monat, Tag und Filter bleiben beim Reiterwechsel im Merker, an das Token gebunden). Filter: Intern, Extern, Projekte, Deadlines, Meilensteine, ToDos, Nur meine ToDos, Archiv-Projekte (weiße abgerundete Kästchen mit Haken in Gruppenfarbe). Suche.
+  - Liste: Kommende nach Monaten. Überfällige offene ToDos und Meilensteine bleiben bei Kommende (rot), bis sie erledigt sind. Archiv-Knopf (Liste und Monat) zeigt alle vergangenen Termine grau mit Suche. Kacheln für externe, noch nicht veröffentlichte Veranstaltungen nur in der Liste (Haken "Veröffentlichen" speichert sofort, danach verschwindet die Kachel).
+  - Veranstaltung anlegen/ändern/löschen, mit Uhrzeit, mehreren Tagen und freier Farbe (leer = Gruppenfarbe). "Veröffentlichen" (Spalte oeffentlich) im Formular nur bei Art extern, bei intern wird FALSE gespeichert. Ganzer Kasten in Veranstaltungsfarbe mit 📅. Deadline: ⏰, Pastell-Kasten. ToDos ✅, Meilensteine 🏁.
+  - Projekte in Planung nie im Kalender. Abgeschlossene Projekte samt ToDos und Meilensteinen nur mit Filter Archiv-Projekte, dann grau.
+  - Monat: Pfeile neben dem Monatsnamen, "Heute" und 📅 (freie Datumswahl) rechts. Veranstaltungen im Tag oben und in Farbe, Vergangene grau. Projektbalken in festen Bahnen (höchstens 3), berühren sich. Der Deadline-Abschnitt ist pink mit "Deadline: Projekt". Ohne Start zeigt der Balken nur den Deadline-Tag. Ab 600 px öffnet ein Klick auf einen Tag ein großes Fenster mit allen Terminen (anklickbar). Die Tagesliste darunter bleibt immer, am Handy gibt es kein Fenster (so gewollt). Knopf "+ Veranstaltungen an diesem Tag".
+  - js/views/kalender-vorlagen.js: Termin-Vorlagen je Gruppe, "Termin anlegen" füllt das Formular vor (nächster Wochentag), Standard-Vorlagen Plenum FFF (Donnerstag 18:30) und Plenum GP (Dienstag 19:00), beide KHG, Moltkestraße 9, Landau. KB braucht keine.
+  - 6.5 (0.28.7): Anheften im Bearbeiten-Fenster. Extern = Kommentar auf der Pinnwand (bezug_art pinnwand), intern = angeheftete Mitteilung. Beide mit Doppelt-Prüfung. 6.5b (0.28.8): derselbe Knopf rechts in jeder kommenden Veranstaltungszeile.
+- Nächste Schritte: 6.6 Skript Termine.gs (Aktion termine ohne Login, nur art extern und oeffentlich TRUE, nur kommende, Gruppenname/Kurzname/Farbe, GET mit Filter gruppe=fff für fremde Webseiten, optional .ics, kurz zwischenspeichern; neue Datei im Apps-Script-Editor, in Code.gs verteile() eintragen, neu bereitstellen). 6.7 öffentliche Seite js/views/termine.js (#/termine, ohne Login) und alle kommenden öffentlichen Termine als Seitenleiste auf der Gruppenwahl; vergangene sofort ausblenden (mehrtägige bis zum letzten Tag); danach Schalter "Öffentliche Termine anderer Gruppen" im Kalender (baueTermine kennt daten.oeffentlich schon, Filter oeffentlich). 6.8 Veranstaltungen als Quelle in "Was ist neu" (keine Extra-Kachel). 6.9 Test, Sicherheitsprüfung, Aufräumen.
+- Offene Wünsche: keine. Bei neuer Anzeige-Kritik gesammelt melden.
+- Mobi-Kalender (Etappe 7) nutzt dieselbe Logik mit voreingestelltem Filter.
 
 ## Plan Etappen 6 bis 11
 Neue Reiter: Start, Projekte, ToDos, Material, Mobi, Veranstaltungen, Team, Wiki. "Posts" wird Mobi, "Hilfe" wird Wiki, der Reiter Kalender entfällt (Kalender steckt in Mobi und Veranstaltungen). Untere Leiste am Handy bleibt: Start, Projekte, ToDos, Material, Mehr. Auf dem Start-Dashboard sind die Kacheln Material, Kalender, Posts schon entfallen.
@@ -84,15 +90,15 @@ Neue Reiter: Start, Projekte, ToDos, Material, Mobi, Veranstaltungen, Team, Wiki
 - Mögliche Ursache für einmalige Fehler "Cannot read properties of undefined (reading 'forEach')": beschädigte Kopfzeile in einem Sheet-Tab.
 - GitHub Pages hält Dateien bis zu ca. 10 Minuten im Zwischenspeicher: warten und zweimal neu laden.
 - Der Reiter Projekte lädt neun bis zehn Tabellen auf einmal und kann langsam sein. Bei Bedarf Material und Finanzen erst beim Aufklappen laden.
-- Testdaten aus Etappe 5 im Sheet vor dem Echtbetrieb löschen.
+- Testdaten aus Etappe 5 im Sheet vor dem Echtbetrieb löschen. Dasselbe gilt für Testveranstaltungen, Vorlagen und angeheftete Testeinträge aus Etappe 6.
 
 ## Dateiübersicht
 - index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.26.3 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare
-- js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen
-- Noch nicht vorhanden: posts/mobi, kalender, Veranstaltungen, Team, Wiki, Protokoll, "Was ist neu"-Fenster.
+- js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen
+- Noch nicht vorhanden: posts/mobi, Veranstaltungen-Öffentlich (termine.js), Team, Wiki, Protokoll.
 
 ## Hinweise
 - config.js enthält die echte API_URL: nie ersetzen, nur VERSION ändern.
@@ -105,3 +111,4 @@ Neue Reiter: Start, Projekte, ToDos, Material, Mobi, Veranstaltungen, Team, Wiki
 - Zwischenspeicher je Reiter: ladeMitCache(key, ladeFn, anzeigen, zuerstCache), Schlüssel gruppe_id:<name> (Start: :todos, :projekteliste, :startextra). Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in zeigen() Fehlendes ergänzen.
 - Formulare: js/ui/form.js (Feldtypen text, zahl, datum, langtext, auswahl, bool, foto; Datumsfeld öffnet per Klick den Kalender). Listen: zeigeListe in js/ui/table.js.
 - Arbeitsweise im Chat: neue Dateien ganz, bei bestehenden Dateien nur die zitierten Änderungen (erste und letzte Zeile des Bereichs, vollständig mit Klammern und Semikolons), CSS ans Ende anhängen. Am Ende Prüfliste und Tabelle "Wenn etwas nicht klappt". Der Nutzer arbeitet nur im Browser, Konsole gesperrt, und sammelt Anmerkungen zur Anzeige.
+- Neue Spalte farbe im Tab Veranstaltungen (Schema.gs): im Sheet von Hand ergänzt, formatieren() ausgeführt, neu bereitgestellt.
