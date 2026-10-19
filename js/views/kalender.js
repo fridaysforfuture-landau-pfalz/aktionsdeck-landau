@@ -619,6 +619,92 @@ export async function render(container, ctx) {
     ));
     monatBox.append(tagesBox);
   }
+
+  // ---- Anheften (Pinnwand für extern, Mitteilung für intern) ----
+
+  function norm(x) {
+    return txt(x).replace(/\s+/g, ' ').toLowerCase();
+  }
+
+  // "12.09.2026 · 18:30 – 20:00 Uhr · Ort"
+  function terminZeile(v) {
+    const von = normDatum(v.datum);
+    const bis = normDatum(v.datum_ende);
+    const tag = bis && bis > von ? datumText(von) + ' – ' + datumText(bis) : datumText(von);
+    const vz = zeitNorm(v.zeit_von);
+    const bz = zeitNorm(v.zeit_bis);
+    const zeit = vz ? (bz ? vz + ' – ' + bz + ' Uhr' : 'ab ' + vz + ' Uhr') : '';
+    return [tag, zeit, txt(v.ort)].filter(Boolean).join(' · ');
+  }
+
+  async function anheften(v, fenster) {
+    const extern = txt(v.art) === 'extern';
+    const zeile1 = terminZeile(v);
+    const weitere = [
+      txt(v.veranstalter) ? 'Veranstalter: ' + txt(v.veranstalter) : '',
+      sichereUrl(v.link)
+    ].filter(Boolean);
+
+    let r;
+    try {
+      r = await api('listMehrere', { tabellen: ['Kommentare', 'Mitteilungen'] }, s.token);
+    } catch (e) {
+      if (ctx.behandleFehler(e)) return;
+      toast(e.message);
+      return;
+    }
+    const t = (r && r.tabellen) || {};
+
+    if (extern) {
+      const text = ('📅 ' + txt(v.titel) + ' · ' + [zeile1].concat(weitere).join(' · ')).slice(0, 1000);
+      const da = (t.Kommentare || []).find(function (k) {
+        return txt(k.bezug_art) === 'pinnwand' && norm(k.text) === norm(text);
+      });
+      if (da && !window.confirm(
+        'Diese Veranstaltung steht schon auf der Pinnwand.\n\nTrotzdem noch einmal anlegen?'
+      )) return;
+      try {
+        await api('create', {
+          tabelle: 'Kommentare',
+          daten: { projekt_id: '', bezug_art: 'pinnwand', bezug_id: '', text: text }
+        }, s.token);
+      } catch (e) {
+        if (ctx.behandleFehler(e)) return;
+        toast(e.message);
+        return;
+      }
+      fenster.schliessen();
+      toast('Auf der Pinnwand angeheftet.');
+      return;
+    }
+
+    const titel = txt(v.titel);
+    const text = [zeile1].concat(txt(v.beschreibung) ? [txt(v.beschreibung)] : [], weitere)
+      .join('\n').slice(0, 4000);
+    const da = (t.Mitteilungen || []).find(function (m) {
+      return norm(m.titel) === norm(titel) && norm(m.text) === norm(text);
+    });
+    if (da) {
+      const frage = istWahr(da.angeheftet)
+        ? 'Diese Veranstaltung hängt schon als Mitteilung am Schwarzen Brett.\n\nTrotzdem eine neue anlegen?'
+        : 'Dazu gibt es schon eine Mitteilung, die nicht mehr angeheftet ist. ' +
+          'Du findest sie im Archiv auf dem Start und kannst sie dort wieder anheften.\n\n' +
+          'Trotzdem eine neue anlegen?';
+      if (!window.confirm(frage)) return;
+    }
+    try {
+      await api('create', {
+        tabelle: 'Mitteilungen',
+        daten: { titel: titel, text: text, angeheftet: true }
+      }, s.token);
+    } catch (e) {
+      if (ctx.behandleFehler(e)) return;
+      toast(e.message);
+      return;
+    }
+    fenster.schliessen();
+    toast('Als Mitteilung angeheftet.');
+  }
   
   // ---- Veranstaltung: Formular (v = null heißt neu) ----
 
@@ -651,7 +737,12 @@ export async function render(container, ctx) {
 
     const inhalt = el('div', null, form);
     if (v) {
-      inhalt.append(el('div', { class: 'fenster-loeschen' },
+      inhalt.append(el('div', { class: 'fenster-loeschen form-knoepfe' },
+        el('button', {
+          class: 'knopf knopf-hell', type: 'button',
+          text: txt(v.art) === 'extern' ? 'An Pinnwand heften' : 'Als Mitteilung anheften',
+          onclick: function () { anheften(v, fenster); }
+        }),
         el('button', {
           class: 'knopf knopf-gefahr', type: 'button', text: 'Löschen',
           onclick: function () { loeschen(v, fenster); }
