@@ -207,6 +207,14 @@ export async function render(container, ctx) {
         text: 'Link öffnen'
       }));
     }
+    if (istV && !istVorbei(t)) {
+      const extern = txt(t.roh.art) === 'extern';
+      li.append(el('button', {
+        class: 'knopf knopf-hell knopf-klein kal-heften', type: 'button',
+        text: extern ? 'An Pinnwand heften' : 'Als Mitteilung anheften',
+        onclick: function () { anheften(t.roh, null); }
+      }));
+    }
     return li;
   }
 
@@ -673,7 +681,7 @@ export async function render(container, ctx) {
         toast(e.message);
         return;
       }
-      fenster.schliessen();
+      if (fenster) fenster.schliessen();
       toast('Auf der Pinnwand angeheftet.');
       return;
     }
@@ -702,7 +710,7 @@ export async function render(container, ctx) {
       toast(e.message);
       return;
     }
-    fenster.schliessen();
+    if (fenster) fenster.schliessen();
     toast('Als Mitteilung angeheftet.');
   }
   
