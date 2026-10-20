@@ -10,6 +10,7 @@ import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { SCHEMA, istWahr } from '../schema.js';
 import { datumText } from './todos-rechnen.js';
+import { pastell } from './kalender-rechnen.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -17,6 +18,10 @@ function txt(v) {
 
 function norm(v) {
   return txt(v).replace(/\s+/g, ' ').toLowerCase();
+}
+
+function farbeOk(f) {
+  return /^#[0-9a-fA-F]{6}$/.test(txt(f));
 }
 
 function neuesteZuerst(a, b) {
@@ -55,7 +60,10 @@ function formZeigen(m, opt, vorgabe, nachher) {
   let fenster = null;
   const form = baueFormular(SCHEMA.Mitteilungen.felder, m || vorgabe || { angeheftet: true }, {
     speichernText: m ? 'Speichern' : 'Veröffentlichen',
-    onSpeichern: function (d) { return speichern(m, d, fenster, opt, nachher); },
+    onSpeichern: function (d) {
+      if (!m && vorgabe && vorgabe.farbe) d.farbe = vorgabe.farbe;
+      return speichern(m, d, fenster, opt, nachher);
+    },
     onAbbrechen: function () { fenster.schliessen(); }
   });
   const inhalt = el('div', null, form);
@@ -119,7 +127,7 @@ function mitteilung(m, opt) {
   const fest = istWahr(m.angeheftet);
   const wer = [txt(m.erstellt_von), m.erstellt_am ? datumText(m.erstellt_am) : '']
     .filter(Boolean).join(' · ');
-  return el('div', { class: 'mitteilung' + (fest ? ' angeheftet' : '') },
+  const box = el('div', { class: 'mitteilung' + (fest ? ' angeheftet' : '') },
     el('div', { class: 'mitteilung-kopf' },
       el('div', { class: 'umfrage-titel' },
         el('strong', { text: (fest ? '📌 ' : '') + txt(m.titel) }),
@@ -139,6 +147,12 @@ function mitteilung(m, opt) {
     ),
     txt(m.text) ? el('p', { class: 'notiz', text: txt(m.text) }) : null
   );
+  // Veranstaltung: Rand und Hintergrund in der Veranstaltungsfarbe, Layout bleibt gleich
+  if (farbeOk(m.farbe)) {
+    box.style.borderLeftColor = txt(m.farbe);
+    box.style.background = pastell(txt(m.farbe));
+  }
+  return box;
 }
 
 // Kachel auf dem Start: nur angeheftete. Gibt es keine, bleibt die Kachel versteckt.
@@ -210,6 +224,6 @@ export function neueMitteilung(opt) {
 
 // Aus einem Pinnwand-Kommentar eine angeheftete Mitteilung machen (Formular ist vorausgefüllt).
 // nachher wird nach dem Anlegen aufgerufen.
-export function mitteilungAus(opt, titel, text, nachher) {
-  formZeigen(null, opt, { titel: titel, text: text, angeheftet: true }, nachher);
+export function mitteilungAus(opt, titel, text, nachher, farbe) {
+  formZeigen(null, opt, { titel: titel, text: text, angeheftet: true, farbe: farbe || '' }, nachher);
 }
