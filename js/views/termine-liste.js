@@ -1,16 +1,25 @@
 // js/views/termine-liste.js
-// Gemeinsame Teile für die öffentlichen Termine: Laden, Aufräumen, Karte, Seitenleiste.
+// Gemeinsame Teile für die öffentlichen Termine: Laden, Aufräumen, Kacheln, Detailfenster,
+// Anheften, Seitenleiste und der "Aktionskalender" (Seite #/termine und Ansicht im Reiter Kalender).
 // Die Termine kommen ohne Login vom Skript (Aktion "termine") und liegen im Zwischenspeicher.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
 import { API_URL } from '../config.js';
 import { ladeMitCache } from '../cache.js';
+import { zeigeFenster } from '../ui/fenster.js';
+import { toast } from '../ui/toast.js';
 import { normDatum, datumText, heuteIso } from './todos-rechnen.js';
-import { schriftfarbe, sichereUrl, WOCHENTAGE_KURZ, wochentagNr } from './kalender-rechnen.js';
+import {
+  schriftfarbe, sichereUrl, WOCHENTAGE_KURZ, wochentagNr, MONATE
+} from './kalender-rechnen.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
+}
+
+function norm(v) {
+  return txt(v).replace(/\s+/g, ' ').toLowerCase();
 }
 
 function farbeVon(f) {
@@ -40,7 +49,11 @@ export function bereinige(roh) {
       url: sichereUrl(v.link),
       gruppe: txt(v.gruppe_name),
       kurz: txt(v.kurzname),
-      farbe: farbeVon(v.farbe)
+      farbe: farbeVon(v.farbe),
+      web: sichereUrl(v.gruppe_web),
+      insta: sichereUrl(v.gruppe_instagram),
+      links: (Array.isArray(v.gruppe_links) ? v.gruppe_links : [])
+        .map(sichereUrl).filter(Boolean)
     });
   });
   liste.sort(function (a, b) {
@@ -82,8 +95,10 @@ export function abonnierLink(kurz) {
   return API_URL + '?aktion=termine&format=ics' + (kurz ? '&gruppe=' + encodeURIComponent(kurz) : '');
 }
 
-// Ein Termin als Kasten in der Veranstaltungsfarbe
-export function terminKarte(t, kompakt) {
+// ---- Kacheln ----
+
+// Kleine Karte (Seitenleiste auf der Gruppenwahl)
+export function terminKarte(t) {
   const info = [zeitText(t), t.ort].filter(Boolean).join(' · ');
   const k = el('article', { class: 'oeff-termin' },
     el('span', { class: 'oeff-datum', text: datumsText(t) }),
@@ -94,20 +109,162 @@ export function terminKarte(t, kompakt) {
       text: t.veranstalter ? 'Veranstalter: ' + t.veranstalter : t.gruppe
     })
   );
-  if (!kompakt) {
-    if (t.beschreibung) k.append(el('p', { class: 'notiz', text: t.beschreibung }));
-    if (t.url) {
-      k.append(el('p', null, el('a', {
-        href: t.url, target: '_blank', rel: 'noopener noreferrer', text: 'Mehr Infos'
-      })));
-    }
-  }
   k.style.background = t.farbe;
   k.style.color = schriftfarbe(t.farbe);
   return k;
 }
 
-// Seitenleiste auf der Gruppenwahl. Ohne Termine bleibt sie versteckt.
+// Feste Kachel: Datum, Titel, Uhrzeit, Ort, Gruppe. Fehlende Angaben bleiben als leere Zeile,
+// damit alle Kacheln gleich groß sind. Ein Klick öffnet das Detailfenster.
+export function terminKachel(t, beiKlick) {
+  const leer = '\u00a0';
+  const k = el('button', {
+    class: 'oeff-kachel', type: 'button',
+    onclick: function () { beiKlick(t); }
+  },
+    el('span', { class: 'oeff-datum', text: datumsText(t) }),
+    el('strong', { text: t.titel || leer }),
+    el('span', { text: zeitText(t) || leer }),
+    el('span', { text: t.ort || leer }),
+    el('span', { text: t.gruppe || leer })
+  );
+  k.style.background = t.farbe;
+  k.style.color = schriftfarbe(t.farbe);
+  return k;
+}
+
+// ---- Anheften (nur für Angemeldete) ----
+
+function istEigen(t, session) {
+  return !!session && txt(t.kurz) === txt(session.kurzname) && !t.veranstalter;
+}
+
+function terminZeile(t) {
+  const tag = t.bis > t.von ? datumText(t.von) + ' – ' + datumText(t.bis) : datumText(t.von);
+  return [tag, zeitText(t), t.ort].filter(Boolean).join(' · ');
+}
+
+// Gruppeneigen (Veranstalter leer): Mitteilung am Schwarzen Brett. Sonst: Kommentar an der Pinnwand.
+// Gibt true zurück, wenn angeheftet wurde.
+async function anheften(t, session, ctx) {
+  const eigen = istEigen(t, session);
+  const zeile1 = terminZeile(t);
+  const weitere = eigen
+    ? [t.url].filter(Boolean)
+    : ['Veranstalter: ' + (t.veranstalter || t.gruppe), t.url].filter(Boolean);
+
+  let r;
+  try {
+    r = await api('listMehrere', { tabellen: ['Kommentare', 'Mitteilungen'] }, session.token);
+  } catch (e) {
+    if (ctx.behandleFehler(e)) return false;
+    toast(e.message);
+    return false;
+  }
+  const tb = (r && r.tabellen) || {};
+
+  if (!eigen) {
+    const text = ('📅 ' + t.titel + ' · ' + [zeile1].concat(weitere).join(' · ')).slice(0, 1000);
+    const da = (tb.Kommentare || []).find(function (k) {
+      return txt(k.bezug_art) === 'pinnwand' && norm(k.text) === norm(text);
+    });
+    if (da && !window.confirm(
+      'Diese Veranstaltung steht schon auf der Pinnwand.\n\nTrotzdem noch einmal anlegen?'
+    )) return false;
+    try {
+      await api('create', {
+        tabelle: 'Kommentare',
+        daten: { projekt_id: '', bezug_art: 'pinnwand', bezug_id: '', text: text, farbe: t.farbe }
+      }, session.token);
+    } catch (e) {
+      if (ctx.behandleFehler(e)) return false;
+      toast(e.message);
+      return false;
+    }
+    toast('Auf der Pinnwand angeheftet.');
+    return true;
+  }
+
+  const text = [zeile1].concat(t.beschreibung ? [t.beschreibung] : [], weitere)
+    .join('\n').slice(0, 4000);
+  const da = (tb.Mitteilungen || []).find(function (m) {
+    return norm(m.titel) === norm(t.titel) && norm(m.text) === norm(text);
+  });
+  if (da && !window.confirm(
+    'Diese Veranstaltung gibt es schon als Mitteilung (vielleicht im Archiv auf dem Start).\n\n' +
+    'Trotzdem eine neue anlegen?'
+  )) return false;
+  try {
+    await api('create', {
+      tabelle: 'Mitteilungen',
+      daten: { titel: t.titel, text: text, angeheftet: true, farbe: t.farbe }
+    }, session.token);
+  } catch (e) {
+    if (ctx.behandleFehler(e)) return false;
+    toast(e.message);
+    return false;
+  }
+  toast('Als Mitteilung angeheftet.');
+  return true;
+}
+
+// ---- Detailfenster ----
+
+function linkName(u) {
+  try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return u; }
+}
+
+export function zeigeTerminDetail(t, session, ctx) {
+  let fenster = null;
+  const info = [datumsText(t), zeitText(t), t.ort].filter(Boolean).join(' · ');
+
+  const links = el('ul', { class: 'oeff-links-liste' });
+  function linkZu(label, url) {
+    if (!url) return;
+    links.append(el('li', null, el('a', {
+      href: url, target: '_blank', rel: 'noopener noreferrer', text: label
+    })));
+  }
+  linkZu('Webseite', t.web);
+  linkZu('Instagram', t.insta);
+  t.links.forEach(function (u) { linkZu(linkName(u), u); });
+  const hatLinks = links.childNodes.length > 0;
+
+  const knoepfe = el('div', { class: 'fenster-loeschen form-knoepfe' });
+  if (session) {
+    knoepfe.append(el('button', {
+      class: 'knopf', type: 'button',
+      text: istEigen(t, session) ? 'Als Mitteilung anheften' : 'An Pinnwand heften',
+      onclick: async function () {
+        const ok = await anheften(t, session, ctx);
+        if (ok) fenster.schliessen();
+      }
+    }));
+  }
+  knoepfe.append(el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Schließen',
+    onclick: function () { fenster.schliessen(); }
+  }));
+
+  const inhalt = el('div', null,
+    el('p', { class: 'leise', text: info }),
+    el('p', { class: 'leise', text: 'Veranstalter: ' + (t.veranstalter || t.gruppe) }),
+    t.beschreibung ? el('p', { class: 'notiz', text: t.beschreibung }) : null,
+    t.url
+      ? el('p', null, el('a', {
+        href: t.url, target: '_blank', rel: 'noopener noreferrer', text: 'Zur Veranstaltung'
+      }))
+      : null,
+    hatLinks ? el('h3', { text: 'Die Gruppe: ' + t.gruppe }) : null,
+    hatLinks ? links : null,
+    knoepfe
+  );
+  fenster = zeigeFenster(t.titel, inhalt, null, { aussenKlick: true });
+}
+
+// ---- Seitenleiste auf der Gruppenwahl ----
+
+// Die nächsten Termine zuerst. Ohne Termine bleibt die Leiste versteckt.
 export function zeichneSeitenleiste(box, liste) {
   leeren(box);
   box.hidden = !liste.length;
@@ -116,10 +273,121 @@ export function zeichneSeitenleiste(box, liste) {
   box.append(
     el('h2', { text: 'Öffentliche Termine' }),
     el('ul', { class: 'oeff-liste' },
-      ...liste.slice(0, MAX).map(function (t) { return el('li', null, terminKarte(t, true)); }))
+      ...liste.slice(0, MAX).map(function (t) { return el('li', null, terminKarte(t)); }))
   );
   if (liste.length > MAX) {
     box.append(el('p', { class: 'leise', text: '… und ' + (liste.length - MAX) + ' weitere' }));
   }
   box.append(el('a', { class: 'knopf knopf-hell', href: '#/termine', text: 'Alle Termine →' }));
+}
+
+// ---- Aktionskalender: Auswahl, Kacheln, Abo-Adresse ----
+// session: Anmeldung oder null (öffentliche Seite ohne Login). ctx: für behandleFehler.
+// Gibt { el, laden } zurück.
+
+export function baueAktionskalender(session, ctx) {
+  let alle = [];
+
+  const status = el('p', { class: 'leise', text: 'Lade Termine …' });
+  const wahl = el('select', { class: 'feld', 'aria-label': 'Gruppe' });
+  const liste = el('div');
+  const aboLink = el('a', {
+    class: 'knopf knopf-hell', target: '_blank', rel: 'noopener noreferrer',
+    text: 'Kalender-Datei öffnen'
+  });
+  const aboUrl = el('span', { class: 'leise oeff-url' });
+
+  const box = el('div', null,
+    wahl,
+    status,
+    liste,
+    el('section', { class: 'karte' },
+      el('h2', { text: 'Im eigenen Kalender abonnieren' }),
+      el('p', {
+        class: 'leise',
+        text: 'Diese Adresse in Google Kalender, Outlook oder den Handy-Kalender kopieren ' +
+          '(„Kalender per URL hinzufügen“). Neue Termine erscheinen dann von selbst.'
+      }),
+      aboUrl,
+      el('p', null, aboLink)
+    )
+  );
+
+  function aboZeigen() {
+    const url = abonnierLink(wahl.value);
+    aboLink.href = url;
+    aboUrl.textContent = url;
+  }
+
+  function wahlAufbauen() {
+    const alt = wahl.value;
+    const gruppen = [];
+    alle.forEach(function (t) {
+      if (t.kurz && !gruppen.some(function (g) { return g.kurz === t.kurz; })) {
+        gruppen.push({ kurz: t.kurz, name: t.gruppe });
+      }
+    });
+    gruppen.sort(function (a, b) { return a.name.localeCompare(b.name, 'de'); });
+    leeren(wahl);
+    wahl.append(el('option', { value: '', text: 'Alle Gruppen' }));
+    gruppen.forEach(function (g) {
+      wahl.append(el('option', { value: g.kurz, text: g.name }));
+    });
+    wahl.value = gruppen.some(function (g) { return g.kurz === alt; }) ? alt : '';
+    wahl.hidden = gruppen.length < 2;
+  }
+
+  function zeichne() {
+    const k = wahl.value;
+    const zeilen = alle.filter(function (t) { return !k || t.kurz === k; });
+    leeren(liste);
+    if (!zeilen.length) {
+      liste.append(el('p', {
+        class: 'leise', text: 'Zurzeit sind keine öffentlichen Termine eingetragen.'
+      }));
+    }
+    let monat = '';
+    let ul = null;
+    zeilen.forEach(function (t) {
+      const m = MONATE[Number(t.von.slice(5, 7)) - 1] + ' ' + t.von.slice(0, 4);
+      if (m !== monat) {
+        monat = m;
+        liste.append(el('h2', { class: 'teil-titel-klein', text: m }));
+        ul = el('ul', { class: 'oeff-liste oeff-gross' });
+        liste.append(ul);
+      }
+      ul.append(el('li', null, terminKachel(t, function (x) {
+        zeigeTerminDetail(x, session, ctx);
+      })));
+    });
+    aboZeigen();
+  }
+
+  function zeigen(daten, meta) {
+    if (!box.isConnected) return;   // Seite wurde inzwischen gewechselt
+    alle = daten;
+    wahlAufbauen();
+    zeichne();
+    status.className = 'leise';
+    status.textContent = alle.length + (alle.length === 1 ? ' kommender Termin' : ' kommende Termine') +
+      (meta.aktuell ? '' : ' · Zwischengespeichert, aktualisiere …');
+  }
+
+  async function laden() {
+    try {
+      const ok = await ladeOeffentlich(zeigen);
+      if (!ok && box.isConnected) {
+        status.className = 'fehler';
+        status.textContent = 'Keine Verbindung. Du siehst den letzten Stand.';
+      }
+    } catch (e) {
+      if (!box.isConnected) return;
+      status.className = 'fehler';
+      status.textContent = 'Die Termine konnten nicht geladen werden: ' + e.message;
+    }
+  }
+
+  wahl.addEventListener('change', zeichne);
+  aboZeigen();
+  return { el: box, laden: laden };
 }
