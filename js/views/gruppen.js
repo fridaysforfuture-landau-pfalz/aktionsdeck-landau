@@ -36,10 +36,26 @@ export async function render(container, ctx) {
   const raster = el('div', { class: 'gruppen-raster' });
   const meldung = el('div');
 
+  const termineBox = el('aside', { class: 'start-termine', 'aria-label': 'Öffentliche Termine' });
+  termineBox.hidden = true;
+
   container.append(
     balken(),
-    el('div', { class: 'start-seite' }, raster, meldung, infoKnoepfe())
+    el('div', { class: 'start-seite start-breit' },
+      el('div', { class: 'start-zwei' },
+        el('div', { class: 'start-haupt' }, raster, meldung),
+        termineBox
+      ),
+      infoKnoepfe()
+    )
   );
+
+  // Öffentliche Termine (ohne Login). Klappt etwas nicht, bleibt die Seitenleiste einfach weg.
+  import('./termine-liste.js').then(function (m) {
+    return m.ladeOeffentlich(function (liste) {
+      if (container.contains(termineBox)) m.zeichneSeitenleiste(termineBox, liste);
+    });
+  }).catch(function (e) { console.warn('Öffentliche Termine:', e); });
 
   function zeige(liste) {
     leeren(raster);
