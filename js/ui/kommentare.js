@@ -9,9 +9,14 @@ import { el, leeren } from './dom.js';
 import { api } from '../api.js';
 import { toast } from './toast.js';
 import { istWahr } from '../schema.js';
+import { schriftfarbe } from '../views/kalender-rechnen.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
+}
+
+function farbeOk(f) {
+  return /^#[0-9a-fA-F]{6}$/.test(txt(f));
 }
 
 function zeitKurz(iso) {
@@ -73,11 +78,16 @@ export function baueKommentare(opt) {
         class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Löschen',
         onclick: function () { loeschen(k); }
       }));
-      liste.append(el('li', { class: 'kommentar' },
+      const li = el('li', { class: 'kommentar' + (farbeOk(k.farbe) ? ' kommentar-ver' : '') },
         el('span', { class: 'leise', text: kopf }),
         el('span', { class: 'notiz', text: txt(k.text) }),
         knoepfe
-      ));
+      );
+      if (farbeOk(k.farbe)) {
+        li.style.background = txt(k.farbe);
+        li.style.color = schriftfarbe(txt(k.farbe));
+      }
+      liste.append(li);
     });
   }
 
@@ -85,7 +95,10 @@ export function baueKommentare(opt) {
     try {
       const r = await api('list', { tabelle: 'Kommentare' }, opt.token);
       const passend = r.zeilen.filter(function (k) {
-        return txt(k.bezug_art) === art && txt(k.bezug_id) === bezug;
+        if (txt(k.bezug_art) !== art || txt(k.bezug_id) !== bezug) return false;
+        // Veranstaltung (hat Farbe), die schon als Mitteilung hängt: nicht doppelt auf der Pinnwand
+        if (art === 'pinnwand' && farbeOk(k.farbe) && istWahr(k.angeheftet)) return false;
+        return true;
       }).sort(function (a, b) {
         return String(a.erstellt_am).localeCompare(String(b.erstellt_am));
       });
