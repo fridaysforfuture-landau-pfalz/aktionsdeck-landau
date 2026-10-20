@@ -2046,3 +2046,104 @@ p.notiz.erledigt {
 }
 
 .oeff-url { display: block; margin-bottom: 8px; font-size: 13px; word-break: break-all; }
+/* ---- 0.28.12: Aktionskalender, Seitenleiste, Kalender-Layout ---- */
+
+/* Gruppenwahl: Termine links in eigener Leiste, Gruppen daneben */
+.start-zwei { display: flex; flex-direction: column; gap: 24px; }
+.start-haupt { order: 1; min-width: 0; }
+
+.start-termine {
+  order: 2;
+  margin-top: 0;
+  padding: 14px;
+  background: var(--flaeche);
+  border: 1px solid var(--rand);
+  border-top: 5px solid var(--gruppe);
+  border-radius: var(--radius);
+}
+
+@media (min-width: 960px) {
+  .start-zwei { flex-direction: row; align-items: flex-start; }
+  .start-termine {
+    order: 0;
+    flex: none;
+    width: 320px;
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+  .start-haupt { order: 1; flex: 1; }
+  /* Mit Terminen: zwei Gruppen pro Reihe */
+  .start-zwei.mit-termine .gruppen-raster { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Feste Kacheln auf der Termine-Seite */
+.oeff-kachel {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: var(--radius);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.oeff-kachel > * {
+  display: block;
+  min-height: 1.45em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oeff-kachel:hover { filter: brightness(0.95); }
+.oeff-kachel:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+
+@media (min-width: 960px) {
+  .oeff-liste.oeff-gross { grid-template-columns: repeat(3, 1fr); }
+}
+
+.oeff-links-liste {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.oeff-links-liste a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+/* Kalender: Liste, Monat, Aktionskalender links. Archiv, Vorlagen, + Veranstaltung rechts */
+.kal-ansicht { justify-content: space-between; align-items: center; }
+.kal-ansicht-gruppe { display: flex; gap: 6px; }
+.kal-ansicht-rechts { margin-left: auto; }
+.kal-ansicht .knopf { flex: none; padding: 0 9px; font-size: 13px; }
+
+@media (min-width: 600px) {
+  .kal-ansicht .knopf { padding: 0 16px; font-size: 15px; }
+}
+
+/* Monatskopf: Monat mit Pfeilen mittig, Heute und Datumswahl rechtsbündig */
+.kal-kopf { align-items: stretch; }
+.kal-kopf-rechts { justify-content: flex-end; }
+
+@media (min-width: 600px) {
+  .kal-kopf {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    justify-content: stretch;
+    align-items: center;
+    gap: 8px;
+  }
+  .kal-monatsnav { grid-column: 2; }
+  .kal-kopf-rechts { grid-column: 3; }
+}
