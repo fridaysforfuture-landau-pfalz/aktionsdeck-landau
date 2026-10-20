@@ -181,7 +181,7 @@ export async function render(container, ctx) {
         return api('update', {
           tabelle: 'Kommentare', id: k.id, daten: { angeheftet: true }
         }, s.token).then(function () { return pinnwand.laden(); }).catch(function () { return null; });
-      });
+      }, String(k.farbe || ''));
     },
     max: 30
   });
