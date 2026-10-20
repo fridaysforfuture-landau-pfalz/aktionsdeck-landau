@@ -1900,3 +1900,114 @@ p.notiz.erledigt {
 .kal-zeile { flex-wrap: wrap; }
 .kal-zeile .dash-todo { flex: 1 1 200px; }
 .kal-heften { flex: none; margin: 0 4px; }
+/* ---- 0.28.9: Anheften in Farbe, Kalender am Handy ---- */
+
+/* Pinnwand: Veranstaltung als Kasten in der Veranstaltungsfarbe */
+.kommentar.kommentar-ver {
+  margin: 6px 0;
+  padding: 8px 10px;
+  border-bottom: 0;
+  border-radius: var(--radius);
+}
+
+.kommentar-ver .leise { color: inherit; opacity: 0.85; }
+
+/* Kalender: Knopfreihe (Liste, Monat, Archiv, Vorlagen, Veranstaltung) */
+.kal-ansicht { flex-wrap: wrap; gap: 6px; }
+
+.kal-ansicht .knopf {
+  flex: 1 1 auto;
+  padding: 0 6px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+@media (min-width: 600px) {
+  .kal-ansicht .knopf { flex: none; padding: 0 18px; font-size: 16px; }
+}
+
+/* Kalender: Suche mit Filter-Symbol */
+.kal-suchzeile { display: flex; align-items: center; gap: 8px; }
+.kal-suchzeile .feld { flex: 1; min-width: 0; }
+.kal-filterknopf { flex: none; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; }
+
+.kal-filter[hidden] { display: none; }
+
+@media (min-width: 600px) {
+  /* Am PC bleiben die Häkchen immer sichtbar */
+  .kal-filterknopf { display: none; }
+  .kal-filter[hidden] { display: flex; }
+}
+
+/* Monat am Handy: Veranstaltungen als Streifen über die ganze Tagesbreite */
+.kal-punkt-voll {
+  flex: none;
+  width: calc(100% + 8px);
+  height: 8px;
+  margin: 0 -4px;
+  border-radius: 0;
+}
+
+/* Kopf der Monatsansicht: Monat mit Pfeilen, darunter Heute und Datumswahl */
+.kal-kopf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.kal-monatsnav { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.kal-monatsnav h2 { margin: 0; min-width: 11ch; font-size: 18px; text-align: center; }
+
+.kal-taste {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--gruppe);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--text);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.kal-taste:focus-visible { outline: 3px solid var(--gruppe); outline-offset: 2px; }
+
+.kal-kopf-rechts { display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+.kal-datumknopf {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  padding: 0;
+  overflow: hidden;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.kal-datumknopf input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+@media (min-width: 600px) {
+  .kal-kopf { flex-direction: row; justify-content: center; gap: 28px; }
+}
