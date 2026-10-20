@@ -43,6 +43,20 @@ function tLink(u) {
   return /^https?:\/\/\S+$/i.test(t) ? t : '';
 }
 
+// Instagram: ganzer Link oder nur der Name (mit oder ohne @)
+function tInstagram(s) {
+  var t = String(s === undefined || s === null ? '' : s).trim();
+  if (tLink(t)) return t;
+  t = t.replace(/^@/, '');
+  return /^[A-Za-z0-9._]{1,30}$/.test(t) ? 'https://www.instagram.com/' + t : '';
+}
+
+// Weitere Links: durch Leerzeichen, Komma oder Zeilenumbruch getrennt, höchstens 5
+function tLinks(s) {
+  return String(s === undefined || s === null ? '' : s).split(/[\s,]+/)
+    .filter(function (x) { return tLink(x) !== ''; }).slice(0, 5);
+}
+
 function tHeute() {
   return Utilities.formatDate(new Date(), 'Europe/Berlin', 'yyyy-MM-dd');
 }
@@ -87,8 +101,11 @@ function termineListe(kurz) {
       link: tLink(v.link),
       gruppe_name: String(g.name),
       kurzname: String(g.kurzname),
-      farbe: tFarbe(v.farbe) || tFarbe(g.farbe)
-    });
+      farbe: tFarbe(v.farbe) || tFarbe(g.farbe),
+         gruppe_web: tLink(g.webseite),
+         gruppe_instagram: tInstagram(g.instagram),
+         gruppe_links: tLinks(g.weitere_links)
+      });
   });
 
   liste.sort(function (a, b) {
