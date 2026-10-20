@@ -2011,3 +2011,38 @@ p.notiz.erledigt {
 @media (min-width: 600px) {
   .kal-kopf { flex-direction: row; justify-content: center; gap: 28px; }
 }
+/* ---- 0.28.11: Öffentliche Termine ---- */
+
+/* Gruppenwahl: Gruppen links, Termine rechts (Handy: darunter) */
+.start-seite.start-breit { max-width: 1200px; }
+.start-haupt { min-width: 0; }
+.start-termine { margin-top: 24px; }
+.start-termine[hidden] { display: none; }
+.start-termine h2 { margin: 0 0 10px; font-size: 18px; }
+
+@media (min-width: 960px) {
+  .start-zwei { display: flex; gap: 24px; align-items: flex-start; }
+  .start-haupt { flex: 1; }
+  .start-termine { flex: none; width: 320px; margin-top: 0; }
+}
+
+/* Termin-Kästen */
+.oeff-liste { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 8px; }
+
+.oeff-termin {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+}
+
+.oeff-datum { font-size: 13px; font-weight: 600; opacity: 0.9; }
+.oeff-info { font-size: 14px; opacity: 0.9; }
+.oeff-termin p { margin: 6px 0 0; }
+.oeff-termin a { color: inherit; font-weight: 600; }
+
+@media (min-width: 600px) {
+  .oeff-liste.oeff-gross { grid-template-columns: repeat(2, 1fr); }
+}
+
+.oeff-url { display: block; margin-bottom: 8px; font-size: 13px; word-break: break-all; }
