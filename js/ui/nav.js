@@ -88,7 +88,7 @@ export function baueGeruest(container, ctx) {
   const untenleiste = el('nav', { class: 'untenleiste', 'aria-label': 'Hauptmenü' },
     ...tabs.filter(function (t) { return UNTEN.indexOf(t.id) >= 0; })
       .map(function (t) { return eintrag('nav-unten', basis, t, aktiv, ctx.neuLaden); }),
-    eintrag('nav-unten', basis, MEHR, mehrAktiv, ctx.neuLaden)
+    eintrag('nav-unten', basis, MEHR, mehrAktiv, aktiv === 'mehr' ? ctx.neuLaden : null)
   );
 
   const inhalt = el('main', { class: 'inhalt', id: 'inhalt' });
