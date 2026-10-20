@@ -25,7 +25,7 @@ import { zeigeVorlagen } from './kalender-vorlagen.js';
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = {
   token: '', filter: null, alteAuf: false,
-  ansicht: 'monat', archiv: false, jahr: 0, monat: 0, tag: ''
+  ansicht: 'monat', archiv: false, filterAuf: false, jahr: 0, monat: 0, tag: ''
 };
 
 const MAX_VERGANGEN = 30;
@@ -44,6 +44,38 @@ const SCHALTER = [
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
+}
+
+// Gruppeneigene externe Veranstaltung (Veranstalter leer) = Mitteilung am Schwarzen Brett.
+// Intern oder von anderen = Kommentar an der Pinnwand.
+function aufsBrett(v) {
+  return txt(v.art) === 'extern' && !txt(v.veranstalter);
+}
+
+// Farbe der Veranstaltung (leer = Gruppenfarbe)
+function eventFarbe(v, gruppe) {
+  const ok = function (f) { return /^#[0-9a-fA-F]{6}$/.test(txt(f)); };
+  if (ok(v.farbe)) return txt(v.farbe);
+  return ok(gruppe) ? txt(gruppe) : '#368469';
+}
+
+// Trichter-Symbol für den Filter-Knopf
+function filterIcon() {
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = document.createElementNS(NS, 'svg');
+  sv.setAttribute('viewBox', '0 0 24 24');
+  sv.setAttribute('width', '22');
+  sv.setAttribute('height', '22');
+  sv.setAttribute('fill', 'none');
+  sv.setAttribute('stroke', 'currentColor');
+  sv.setAttribute('stroke-width', '2');
+  sv.setAttribute('stroke-linecap', 'round');
+  sv.setAttribute('stroke-linejoin', 'round');
+  sv.setAttribute('aria-hidden', 'true');
+  const p = document.createElementNS(NS, 'path');
+  p.setAttribute('d', 'M3 4h18l-7 8v7l-4 2v-9z');
+  sv.append(p);
+  return sv;
 }
 
 function markeText(t) {
@@ -69,7 +101,7 @@ export async function render(container, ctx) {
     const h = heuteIso();
     merk = {
       token: s.token, filter: standardFilter(getName()), alteAuf: false,
-      ansicht: 'monat', archiv: false,
+      ansicht: 'monat', archiv: false, filterAuf: false,
       jahr: Number(h.slice(0, 4)), monat: Number(h.slice(5, 7)) - 1, tag: h
     };
   }
@@ -121,6 +153,22 @@ export async function render(container, ctx) {
     }
   });
 
+  // Archiv, Vorlagen und Veranstaltung stehen in einer Reihe mit Liste und Monat
+  ansichtZeile.append(archivKnopf, vorlagenKnopf, neuKnopf);
+
+  // Filter: Symbol rechts neben der Suche, klappt die Häkchen auf (am PC immer sichtbar)
+  const filterKnopf = el('button', {
+    class: 'knopf knopf-hell kal-filterknopf', type: 'button',
+    'aria-label': 'Filter', title: 'Filter',
+    onclick: function () { merk.filterAuf = !merk.filterAuf; filterAnzeige(); }
+  }, filterIcon());
+  function filterAnzeige() {
+    filterBox.hidden = !merk.filterAuf;
+    filterKnopf.setAttribute('aria-expanded', String(!!merk.filterAuf));
+    filterKnopf.className = 'knopf kal-filterknopf' + (merk.filterAuf ? '' : ' knopf-hell');
+  }
+  const suchZeile = el('div', { class: 'kal-suchzeile' }, suche, filterKnopf);container.append(...)
+  
   SCHALTER.forEach(function (sch) {
     const cb = el('input', { type: 'checkbox' });
     cb.checked = !!f[sch[0]];
@@ -132,12 +180,9 @@ export async function render(container, ctx) {
   });
 
   container.append(el('div', { class: 'seite' },
-    el('div', { class: 'kopfzeile' },
-      el('h1', { text: 'Kalender' }),
-      el('div', { class: 'kopf-knoepfe' }, archivKnopf, vorlagenKnopf, neuKnopf)
-    ),
+    el('div', { class: 'kopfzeile' }, el('h1', { text: 'Kalender' })),
     ansichtZeile,
-    suche,
+    suchZeile,
     filterBox,
     kachelBox,
     status,
@@ -146,6 +191,7 @@ export async function render(container, ctx) {
     kommBox,
     vergBox
   ));
+  filterAnzeige();
 
   // ---- Zeichnen ----
 
@@ -208,10 +254,9 @@ export async function render(container, ctx) {
       }));
     }
     if (istV && !istVorbei(t)) {
-      const extern = txt(t.roh.art) === 'extern';
       li.append(el('button', {
         class: 'knopf knopf-hell knopf-klein kal-heften', type: 'button',
-        text: extern ? 'An Pinnwand heften' : 'Als Mitteilung anheften',
+        text: aufsBrett(t.roh) ? 'Als Mitteilung anheften' : 'An Pinnwand heften',
         onclick: function () { anheften(t.roh, null); }
       }));
     }
@@ -249,7 +294,7 @@ export async function render(container, ctx) {
     const komm = kommende(liste);
     const verg = vergangene(liste);
     archivKnopf.textContent = merk.archiv
-      ? '← Zurück zu den Terminen'
+      ? '← Termine'
       : 'Archiv' + (verg.length ? ' (' + verg.length + ')' : '');
     listeTitel.textContent = merk.archiv ? 'Archiv: vergangene Termine' : 'Kommende Termine';
     kachelnZeichnen(termine);
@@ -443,9 +488,19 @@ export async function render(container, ctx) {
     }
 
     const punkte = el('span', { class: 'kal-punkte', 'aria-hidden': 'true' });
-    normal.slice(0, 4).forEach(function (t) {
+    const punktFarbe = function (t) {
+      return istUeberfaellig(t) ? '#b3261e' : (istGrau(t) ? '#8a9490' : t.farbe);
+    };
+    // Veranstaltungen und Aktionen: Streifen über die ganze Breite des Tages
+    normal.filter(function (t) { return rang(t) < 2; }).slice(0, 3).forEach(function (t) {
+      const p = el('span', { class: 'kal-punkt kal-punkt-voll' });
+      p.style.background = punktFarbe(t);
+      punkte.append(p);
+    });
+    // Übrige Termine: kleine Punkte
+    normal.filter(function (t) { return rang(t) >= 2; }).slice(0, 4).forEach(function (t) {
       const p = el('span', { class: 'kal-punkt' });
-      p.style.background = istUeberfaellig(t) ? '#b3261e' : (istGrau(t) ? '#8a9490' : t.farbe);
+      p.style.background = punktFarbe(t);
       punkte.append(p);
     });
 
@@ -542,7 +597,7 @@ export async function render(container, ctx) {
       merk.tag = d;
       zeichneMonat(liste);
     });
-    return el('label', { class: 'knopf knopf-hell kal-datum', title: 'Datum wählen' },
+    return el('label', { class: 'knopf knopf-hell kal-datumknopf', title: 'Datum wählen' },
       el('span', { 'aria-hidden': 'true', text: '📅' }),
       eingabe
     );
@@ -572,19 +627,19 @@ export async function render(container, ctx) {
     });
     const nBahn = Math.min(3, bahnEnde.length);
 
-    monatBox.append(el('div', { class: 'kal-monat-kopf' },
-      el('div', { class: 'kal-nav' },
+    monatBox.append(el('div', { class: 'kal-kopf' },
+      el('div', { class: 'kal-monatsnav' },
         el('button', {
-          class: 'kal-pfeil kal-pfeil-links', type: 'button', 'aria-label': 'Vorheriger Monat',
+          class: 'kal-taste', type: 'button', text: '‹', 'aria-label': 'Vorheriger Monat',
           onclick: function () { monatWechseln(-1, liste); }
         }),
         el('h2', { text: monatTitel(merk.jahr, merk.monat) }),
         el('button', {
-          class: 'kal-pfeil kal-pfeil-rechts', type: 'button', 'aria-label': 'Nächster Monat',
+          class: 'kal-taste', type: 'button', text: '›', 'aria-label': 'Nächster Monat',
           onclick: function () { monatWechseln(1, liste); }
         })
       ),
-      el('div', { class: 'kal-rechts' },
+      el('div', { class: 'kal-kopf-rechts' },
         el('button', {
           class: 'knopf knopf-hell', type: 'button', text: 'Heute',
           onclick: function () { zuHeute(liste); }
@@ -646,7 +701,7 @@ export async function render(container, ctx) {
   }
 
   async function anheften(v, fenster) {
-    const extern = txt(v.art) === 'extern';
+    const pinnwand = !aufsBrett(v);
     const zeile1 = terminZeile(v);
     const weitere = [
       txt(v.veranstalter) ? 'Veranstalter: ' + txt(v.veranstalter) : '',
@@ -663,7 +718,7 @@ export async function render(container, ctx) {
     }
     const t = (r && r.tabellen) || {};
 
-    if (extern) {
+    if (pinnwand) {
       const text = ('📅 ' + txt(v.titel) + ' · ' + [zeile1].concat(weitere).join(' · ')).slice(0, 1000);
       const da = (t.Kommentare || []).find(function (k) {
         return txt(k.bezug_art) === 'pinnwand' && norm(k.text) === norm(text);
@@ -674,7 +729,10 @@ export async function render(container, ctx) {
       try {
         await api('create', {
           tabelle: 'Kommentare',
-          daten: { projekt_id: '', bezug_art: 'pinnwand', bezug_id: '', text: text }
+          daten: {
+            projekt_id: '', bezug_art: 'pinnwand', bezug_id: '', text: text,
+            farbe: eventFarbe(v, s.farbe)
+          }
         }, s.token);
       } catch (e) {
         if (ctx.behandleFehler(e)) return;
@@ -703,7 +761,7 @@ export async function render(container, ctx) {
     try {
       await api('create', {
         tabelle: 'Mitteilungen',
-        daten: { titel: titel, text: text, angeheftet: true }
+        daten: { titel: titel, text: text, angeheftet: true, farbe: eventFarbe(v, s.farbe) }
       }, s.token);
     } catch (e) {
       if (ctx.behandleFehler(e)) return;
@@ -748,7 +806,7 @@ export async function render(container, ctx) {
       inhalt.append(el('div', { class: 'fenster-loeschen form-knoepfe' },
         el('button', {
           class: 'knopf knopf-hell', type: 'button',
-          text: txt(v.art) === 'extern' ? 'An Pinnwand heften' : 'Als Mitteilung anheften',
+          text: aufsBrett(v) ? 'Als Mitteilung anheften' : 'An Pinnwand heften',
           onclick: function () { anheften(v, fenster); }
         }),
         el('button', {
