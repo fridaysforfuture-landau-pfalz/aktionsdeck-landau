@@ -39,7 +39,8 @@ const SCHALTER = [
   ['meilensteine', 'Meilensteine'],
   ['todos', 'ToDos'],
   ['nurMeine', 'Nur meine ToDos'],
-  ['archivProjekte', 'Archiv-Projekte']
+  ['archivProjekte', 'Archiv-Projekte'],
+  ['oeffentlich', 'Öffentliche Termine anderer Gruppen']
 ];
 
 function txt(v) {
@@ -80,6 +81,7 @@ function filterIcon() {
 
 function markeText(t) {
   if (t.quelle === 'veranstaltung') return t.art === 'extern' ? 'Extern' : 'Intern';
+  if (t.quelle === 'oeffentlich') return t.gruppe || 'Öffentlich';
   if (t.quelle === 'aktion') return 'Projekt-Aktion';
   if (t.quelle === 'deadline') return 'Deadline';
   if (t.quelle === 'meilenstein') return 'Meilenstein';
@@ -109,7 +111,7 @@ export async function render(container, ctx) {
   f.name = getName();
   const basis = '#/g/' + encodeURIComponent(s.kurzname) + '/';
 
-  let daten = { veranstaltungen: [], projekte: [], meilensteine: [], todos: [] };
+  let daten = { veranstaltungen: [], projekte: [], meilensteine: [], todos: [], oeffentlich: [] };
   let meta = null;
   let offline = false;
 
@@ -229,6 +231,7 @@ export async function render(container, ctx) {
       onclick: function () {
         if (typeof vorher === 'function') vorher();
         if (istV) formZeigen(t.roh);
+        else if (t.quelle === 'oeffentlich') oeffInfo(t);
         else if (t.link) location.hash = t.link;
       }
     },
@@ -683,6 +686,30 @@ export async function render(container, ctx) {
     monatBox.append(tagesBox);
   }
 
+  // ---- Öffentlicher Termin einer anderen Gruppe: nur ansehen ----
+
+  function oeffInfo(t) {
+    let fenster = null;
+    const r = t.roh || {};
+    const inhalt = el('div', null,
+      el('p', { class: 'leise', text: [datumsText(t), zeitText(t), t.ort].filter(Boolean).join(' · ') }),
+      el('p', { class: 'leise', text: 'Veranstalter: ' + (txt(r.veranstalter) || t.gruppe) }),
+      txt(r.beschreibung) ? el('p', { class: 'notiz', text: txt(r.beschreibung) }) : null,
+      t.url
+        ? el('p', null, el('a', {
+          href: t.url, target: '_blank', rel: 'noopener noreferrer', text: 'Link öffnen'
+        }))
+        : null,
+      el('div', { class: 'fenster-loeschen' },
+        el('button', {
+          class: 'knopf knopf-hell', type: 'button', text: 'Schließen',
+          onclick: function () { fenster.schliessen(); }
+        })
+      )
+    );
+    fenster = zeigeFenster(t.titel, inhalt, null, { aussenKlick: true });
+  }
+  
   // ---- Anheften (Pinnwand für extern, Mitteilung für intern) ----
 
   function norm(x) {
@@ -884,6 +911,7 @@ export async function render(container, ctx) {
     if (!neu.projekte) neu.projekte = [];
     if (!neu.meilensteine) neu.meilensteine = [];
     if (!neu.todos) neu.todos = [];
+    if (!neu.oeffentlich) neu.oeffentlich = [];
     daten = neu;
     meta = m;
     offline = false;
@@ -898,12 +926,19 @@ export async function render(container, ctx) {
           const r = await api('listMehrere', {
             tabellen: ['Veranstaltungen', 'Projekte', 'Meilensteine', 'ToDos']
           }, s.token);
+          // Öffentliche Termine anderer Gruppen (ohne Login). Klappt es nicht, bleibt die Liste leer.
+          let oeff = [];
+          try {
+            const o = await api('termine', {});
+            if (Array.isArray(o)) oeff = o;
+          } catch (e2) { /* ignorieren */ }
           const t = (r && r.tabellen) || {};
           return {
             veranstaltungen: t.Veranstaltungen || [],
             projekte: t.Projekte || [],
             meilensteine: t.Meilensteine || [],
-            todos: t.ToDos || []
+            todos: t.ToDos || [],
+            oeffentlich: oeff
           };
         },
         zeigen,
