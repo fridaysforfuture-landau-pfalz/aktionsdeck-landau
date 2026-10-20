@@ -35,7 +35,7 @@ var TABELLEN = {
 
 // System-Tabs (über die API nicht direkt änderbar)
 var SYSTEM = {
-  Gruppen: ['gruppe_id', 'name', 'kurzname', 'farbe', 'sortierung', 'aktiv'],
+  Gruppen: ['gruppe_id', 'name', 'kurzname', 'farbe', 'sortierung', 'aktiv', 'webseite', 'instagram', 'weitere_links'],
   Zugang: ['zugang_id', 'gruppe_id', 'pin_salt', 'pin_hash', 'aktiv', 'gueltig_bis'],
   Einstellungen: ['schluessel', 'wert'],
   Log: ['zeit', 'gruppe_id', 'aktion', 'tabelle', 'datensatz_id', 'anzeigename']
