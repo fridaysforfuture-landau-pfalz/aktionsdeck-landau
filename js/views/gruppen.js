@@ -38,22 +38,22 @@ export async function render(container, ctx) {
 
   const termineBox = el('aside', { class: 'start-termine', 'aria-label': 'Öffentliche Termine' });
   termineBox.hidden = true;
+  const zwei = el('div', { class: 'start-zwei' },
+    termineBox,
+    el('div', { class: 'start-haupt' }, raster, meldung)
+  );
 
   container.append(
     balken(),
-    el('div', { class: 'start-seite start-breit' },
-      el('div', { class: 'start-zwei' },
-        el('div', { class: 'start-haupt' }, raster, meldung),
-        termineBox
-      ),
-      infoKnoepfe()
-    )
+    el('div', { class: 'start-seite start-breit' }, zwei, infoKnoepfe())
   );
 
   // Öffentliche Termine (ohne Login). Klappt etwas nicht, bleibt die Seitenleiste einfach weg.
   import('./termine-liste.js').then(function (m) {
     return m.ladeOeffentlich(function (liste) {
-      if (container.contains(termineBox)) m.zeichneSeitenleiste(termineBox, liste);
+      if (!container.contains(termineBox)) return;
+      m.zeichneSeitenleiste(termineBox, liste);
+      zwei.classList.toggle('mit-termine', liste.length > 0);
     });
   }).catch(function (e) { console.warn('Öffentliche Termine:', e); });
 
