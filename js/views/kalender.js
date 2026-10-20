@@ -167,7 +167,7 @@ export async function render(container, ctx) {
     filterKnopf.setAttribute('aria-expanded', String(!!merk.filterAuf));
     filterKnopf.className = 'knopf kal-filterknopf' + (merk.filterAuf ? '' : ' knopf-hell');
   }
-  const suchZeile = el('div', { class: 'kal-suchzeile' }, suche, filterKnopf);container.append(...)
+  const suchZeile = el('div', { class: 'kal-suchzeile' }, suche, filterKnopf);
   
   SCHALTER.forEach(function (sch) {
     const cb = el('input', { type: 'checkbox' });
