@@ -8,7 +8,7 @@ import { api } from '../api.js';
 import { zeigeFenster } from './fenster.js';
 import { getName, getLetzterBesuch, setLetzterBesuch } from '../store.js';
 import { istWahr } from '../schema.js';
-import { kurz } from '../views/todos-rechnen.js';
+import { kurz, normDatum, heuteIso } from '../views/todos-rechnen.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -27,7 +27,7 @@ export async function holeNeu(token, gruppeId, kurzname) {
   const alt = getLetzterBesuch(gruppeId);
   const seit = alt || new Date().toISOString();
   const r = await api('listMehrere', {
-    tabellen: ['ToDos', 'Meilensteine', 'Mitteilungen', 'Umfragen', 'Kommentare', 'Projekte'],
+    tabellen: ['ToDos', 'Meilensteine', 'Mitteilungen', 'Umfragen', 'Kommentare', 'Projekte', 'Veranstaltungen'],
     seit: seit
   }, token);
   const stand = (r && r.serverzeit) || new Date().toISOString();
@@ -118,6 +118,18 @@ export async function holeNeu(token, gruppeId, kurzname) {
       link: basis + 'start'
     };
   });
+  sammeln(t.Veranstaltungen, 'veranstaltung', function (z, neu) {
+    const von = normDatum(z.datum);
+    if (!von) return null;
+    const bis = normDatum(z.datum_ende) || von;
+    if (bis < heuteIso()) return null;   // vorbei: nicht mehr wichtig
+    return {
+      art: 'Veranstaltung',
+      was: neu ? 'neu' : 'geändert',
+      titel: '📅 ' + kurz(z.titel, 60) + ' · ' + von.split('-').reverse().join('.'),
+      link: basis + 'kalender'
+    };
+  });
   sammeln(t.Kommentare, 'kommentar', function (z, neu) {
     if (!neu) return null;
     return {
@@ -176,6 +188,7 @@ export function zeigeNeu(items, beiZu) {
     function von(b) { return items.filter(function (i) { return i.bereich === b; }); }
     abschnitt(titelText('Umfragen'), von('umfrage'));
     abschnitt(titelText('Mitteilungen'), von('mitteilung'));
+    abschnitt(titelText('Veranstaltungen'), von('veranstaltung'));
     abschnitt(titelText('Kommentare'), von('kommentar'));
 
     // Projekte: je Projekt eine Überschrift, darunter Projekt, Meilensteine und ToDos
