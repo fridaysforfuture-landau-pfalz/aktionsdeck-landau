@@ -21,6 +21,7 @@ import {
   istVorbei, schriftfarbe, pastell
 } from './kalender-rechnen.js';
 import { zeigeVorlagen } from './kalender-vorlagen.js';
+import { baueAktionskalender } from './termine-liste.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = {
@@ -137,7 +138,13 @@ export async function render(container, ctx) {
     class: 'knopf knopf-hell', type: 'button', text: 'Monat',
     onclick: function () { ansichtSetzen('monat'); }
   });
-  const ansichtZeile = el('div', { class: 'kal-ansicht' }, listenKnopf, monatKnopf);
+  const aktionKnopf = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Aktionskalender',
+    onclick: function () { aktionSchalten(true); }
+  });
+  const ansichtLinks = el('div', { class: 'kal-ansicht-gruppe' }, listenKnopf, monatKnopf, aktionKnopf);
+  const ansichtRechts = el('div', { class: 'kal-ansicht-gruppe kal-ansicht-rechts' });
+  const ansichtZeile = el('div', { class: 'kal-ansicht' }, ansichtLinks, ansichtRechts);
 
   const neuKnopf = el('button', {
     class: 'knopf', type: 'button', text: '+ Veranstaltung',
@@ -156,7 +163,7 @@ export async function render(container, ctx) {
   });
 
   // Archiv, Vorlagen und Veranstaltung stehen in einer Reihe mit Liste und Monat
-  ansichtZeile.append(archivKnopf, vorlagenKnopf, neuKnopf);
+  ansichtRechts.append(archivKnopf, vorlagenKnopf, neuKnopf);
 
   // Filter: Symbol rechts neben der Suche, klappt die Häkchen auf (am PC immer sichtbar)
   const filterKnopf = el('button', {
@@ -181,8 +188,8 @@ export async function render(container, ctx) {
     filterBox.append(el('label', { class: 'formfeld-bool' }, cb, el('span', { text: sch[1] })));
   });
 
-  container.append(el('div', { class: 'seite' },
-    el('div', { class: 'kopfzeile' }, el('h1', { text: 'Kalender' })),
+  // Alles Bisherige liegt in kalenderBox. Der Aktionskalender ersetzt es zeitweise (Reiter bleiben links).
+  const kalenderBox = el('div', null,
     ansichtZeile,
     suchZeile,
     filterBox,
@@ -192,8 +199,41 @@ export async function render(container, ctx) {
     listeTitel,
     kommBox,
     vergBox
+  );
+  const aktionBox = el('div');
+  aktionBox.hidden = true;
+  let aktionInhalt = null;
+
+  container.append(el('div', { class: 'seite' },
+    el('div', { class: 'kopfzeile' }, el('h1', { text: 'Kalender' })),
+    kalenderBox,
+    aktionBox
   ));
   filterAnzeige();
+
+  // Aktionskalender = Seite "Öffentliche Termine" mitten im Reiter
+  function aktionSchalten(an) {
+    kalenderBox.hidden = an;
+    aktionBox.hidden = !an;
+    if (!an) return;
+    if (!aktionInhalt) aktionInhalt = baueAktionskalender(s, ctx);
+    leeren(aktionBox);
+    aktionBox.append(
+      el('div', { class: 'kopfzeile' },
+        el('h2', { text: 'Aktionskalender' }),
+        el('button', {
+          class: 'knopf knopf-hell', type: 'button', text: '← Zurück zum Kalender',
+          onclick: function () { aktionSchalten(false); }
+        })
+      ),
+      el('p', {
+        class: 'leise',
+        text: 'Öffentliche Veranstaltungen aller Klima-Gruppen. Klicke auf eine Kachel für Details.'
+      }),
+      aktionInhalt.el
+    );
+    aktionInhalt.laden();
+  }
 
   // ---- Zeichnen ----
 
