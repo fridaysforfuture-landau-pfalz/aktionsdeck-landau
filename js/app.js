@@ -140,6 +140,19 @@ async function route() {
     return;
   }
 
+  // Öffentliche Termine: ohne Login (wird erst bei Bedarf geladen)
+  if (teile[0] === 'termine') {
+    setzeFarbe('');
+    try {
+      const tm = await import('./views/termine.js');
+      if (nummer !== laufNummer) return;
+      await tm.render(container, ctx);
+    } catch (e) {
+      container.textContent = 'Die Termine konnten nicht geladen werden.';
+    }
+    return;
+  }
+
   if (teile[0] === 'g' && teile[1]) {
     const finde = function (liste) {
       return liste && liste.find(function (x) { return x.kurzname === teile[1]; });
