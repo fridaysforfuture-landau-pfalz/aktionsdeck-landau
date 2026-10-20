@@ -13,7 +13,8 @@ function doPost(e) {
 }
 
 // Nur zum Testen im Browser (zeigt, dass die Web-App läuft).
-function doGet() {
+function doGet(e) {
+  if (e && e.parameter && e.parameter.aktion === 'termine') return termineGet(e.parameter);
   return ContentService.createTextOutput(
     JSON.stringify({ ok: true, data: 'AktionsDeck API läuft', error: null })
   ).setMimeType(ContentService.MimeType.JSON);
@@ -25,6 +26,7 @@ function verteile(p) {
   // Ohne Login
   if (p.aktion === 'gruppen') return aktionGruppen(p);
   if (p.aktion === 'login') return aktionLogin(p);
+  if (p.aktion === 'termine') return aktionTermine(p);
 
   // Mit Login: Token, Gruppe und Zugang werden bei JEDEM Aufruf geprüft
   var ctx = tokenPruefen(p.token);
