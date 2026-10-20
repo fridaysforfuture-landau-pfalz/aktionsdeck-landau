@@ -61,6 +61,8 @@ const HUELLE = [
   'js/views/kalender-rechnen.js',
   'js/views/kalender.js',
   'js/views/kalender-vorlagen.js',
+  'js/views/termine-liste.js',
+  'js/views/termine.js',
   'js/views/todos-hut.js',
   'icons/icon.svg',
   'icons/logo.svg'
