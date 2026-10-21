@@ -52,21 +52,3 @@ export function kanalInfo(name) {
   const k = KANAELE.find(function (x) { return x.name.toLowerCase() === n; });
   return k || Object.assign({}, UNBEKANNT, { name: String(name || '').trim() });
 }
-
-// Gespeichert im Projekt (Spalte kanaele) als Text: "instagram=h,facebook=z"
-// h = Hauptkanal, z = Zusatzkanal. Gibt { instagram: 'h', ... } zurück.
-export function leseKanaele(text) {
-  const m = {};
-  String(text || '').split(',').forEach(function (t) {
-    const p = t.split('=');
-    const id = (p[0] || '').trim();
-    const w = (p[1] || '').trim();
-    if (id && (w === 'h' || w === 'z')) m[id] = w;
-  });
-  return m;
-}
-
-export function schreibeKanaele(m) {
-  return Object.keys(m).filter(function (id) { return m[id] === 'h' || m[id] === 'z'; })
-    .map(function (id) { return id + '=' + m[id]; }).join(',');
-}

@@ -32,12 +32,21 @@ export function faelligStatus(b) {
   return '';
 }
 
-// Offene zuerst (nach Datum und Uhrzeit, ohne Datum zuletzt), dann Veröffentlichte (neueste zuerst)
+// Reihenfolge: zuerst überfällige (ältestes Datum zuerst), dann heute fällige,
+// dann die übrigen offenen nach Datum und Uhrzeit (ohne Datum zuletzt),
+// danach Veröffentlichte (neueste zuerst).
+const FAELLIG_RANG = { ueberfaellig: 0, heute: 1 };
+
 export function sortiereBeitraege(liste) {
   return liste.slice().sort(function (a, b) {
     const va = istVeroeffentlicht(a);
     const vb = istVeroeffentlicht(b);
     if (va !== vb) return va ? 1 : -1;
+    if (!va) {
+      const ra = FAELLIG_RANG[faelligStatus(a)] !== undefined ? FAELLIG_RANG[faelligStatus(a)] : 2;
+      const rb = FAELLIG_RANG[faelligStatus(b)] !== undefined ? FAELLIG_RANG[faelligStatus(b)] : 2;
+      if (ra !== rb) return ra - rb;
+    }
     const da = normDatum(a.datum);
     const db = normDatum(b.datum);
     if (da !== db) {

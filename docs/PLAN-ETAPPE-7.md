@@ -54,7 +54,7 @@ Bitte zuerst prüfen, ob das wirklich im Repo steht. Prüfe `js/config.js` (VERS
 **Bestätigt:** A ja (Pressemitteilung und Fördermitglieder-Mail gehören zu „Digital"). C ja (ein Sammel-ToDo pro Projekt und Kanal).
 D ja (Verantwortliche anzeigen, „Hut frei" bei offenem Beitrag ohne Verantwortliche). E ja (Instagram-Satz passt, Platzhalter für die anderen Kanäle sind in Ordnung).
 Die Person hat 7.4 (0.29.4) umgesetzt, es ist im Repo.
-**Noch offen:** B (Bausteine aus 7.4 entfernen?). Bis zur Antwort baust du in 7.5 nur „+ Beiträge" und führst den Rückbau **nicht** aus. Frage am Ende nach.
+**B ja (bestätigt am 21.10.2026):** Die ToDo-Bausteine aus 7.4 werden in Schritt 7.5 zurückgebaut (siehe 7.5, Punkt 4). Vorher (zum Beispiel in 7.4a und 7.4b) wird nichts davon entfernt.
 
 Die Tabelle unten zeigt die ursprünglichen Fragen.
 

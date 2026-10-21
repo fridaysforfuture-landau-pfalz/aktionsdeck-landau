@@ -1,6 +1,6 @@
 // js/views/mobi-plan.js
 // Teil "Mobi" eines Projekts: Analyse (Zielgruppe, Art der Werbung, Ziel, Aufruf),
-// Kanal-Checkliste (Hauptkanal / Zusatzkanal / nicht genutzt) und Beitragsliste mit Haken "veröffentlicht".
+// Zeile mit der Anzahl Beiträge je Kanal und Beitragsliste mit Haken "veröffentlicht".
 //
 // opt: { ctx, token, projekt, holeDaten() -> { mobi, todos }, arbeitet (Objekt),
 //        offen, beiToggle(offen), neuZeichnen(), neuLaden() -> Promise, merken() }
@@ -11,7 +11,7 @@ import { zeigeFenster } from '../ui/fenster.js';
 import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { getName } from '../store.js';
-import { kanaeleFuer, kanalInfo, leseKanaele, schreibeKanaele } from '../kanaele.js';
+import { kanaeleFuer, kanalInfo } from '../kanaele.js';
 import {
   istVeroeffentlicht, faelligStatus, sortiereBeitraege, beitragInfo
 } from './mobi-rechnen.js';
@@ -41,7 +41,6 @@ export function baueMobiTeil(opt) {
     return txt(b.projekt_id) === pid;
   }));
   const fertigAnzahl = alle.filter(istVeroeffentlicht).length;
-  const rollen = leseKanaele(p.kanaele);
 
   function knopf(text, hell, fn) {
     return el('button', {
@@ -128,53 +127,28 @@ export function baueMobiTeil(opt) {
     return dl;
   }
 
-  // ---- Kanal-Checkliste (speichert sofort, ohne Konfliktprüfung) ----
+  // ---- Kanäle: Anzahl Beiträge je Kanal (nur Kanäle mit Beiträgen) ----
 
-  async function rolleSetzen(k, wert, auswahl) {
-    const id = 'k' + pid;
-    if (opt.arbeitet[id]) { auswahl.value = rollen[k.id] || ''; return; }
-    opt.arbeitet[id] = true;
-    const neu = Object.assign({}, rollen);
-    if (wert) neu[k.id] = wert;
-    else delete neu[k.id];
-    try {
-      const r = await api('update', {
-        tabelle: 'Projekte', id: p.id, daten: { kanaele: schreibeKanaele(neu) }
-      }, token);
-      if (r && r.eintrag) Object.assign(p, r.eintrag);
-      opt.merken();
-    } catch (e) {
-      auswahl.value = rollen[k.id] || '';
-      if (!ctx.behandleFehler(e)) toast(e.message);
-    }
-    delete opt.arbeitet[id];
-    opt.neuZeichnen();
-  }
-
-  function kanalZeile(k) {
-    const anzahl = alle.filter(function (b) { return kanalInfo(b.kanal).id === k.id; }).length;
-    const rolle = rollen[k.id] || '';
-    const auswahl = el('select', { class: 'feld mobi-rolle', 'aria-label': k.name + ': Rolle' },
-      el('option', { value: '', text: 'Nicht genutzt' }),
-      el('option', { value: 'h', text: 'Hauptkanal' }),
-      el('option', { value: 'z', text: 'Zusatzkanal' })
-    );
-    auswahl.value = rolle;
-    auswahl.addEventListener('change', function () { rolleSetzen(k, auswahl.value, auswahl); });
-
-    const punkt = el('span', { class: 'mobi-punkt', 'aria-hidden': 'true' });
-    punkt.style.background = k.farbe;
-    const luecke = rolle && !anzahl;
-    return el('li', { class: 'dash-zeile mobi-kanal' },
-      punkt,
-      el('span', { class: 'mobi-kanal-text' },
-        el('strong', { text: k.name }),
-        luecke
-          ? el('span', { class: 'mobi-luecke', text: 'Noch kein Beitrag geplant' })
-          : el('span', { class: 'leise', text: anzahl ? anzahl + (anzahl === 1 ? ' Beitrag' : ' Beiträge') : k.bereich })
-      ),
-      auswahl
-    );
+  function kanalZeile() {
+    // Reihenfolge wie in kanaele.js, unbekannte Kanalnamen (alte Daten) danach
+    const namen = kanaeleFuer(kurzname).map(function (k) { return k.name; });
+    const anzahl = {};
+    alle.forEach(function (b) {
+      const n = kanalInfo(b.kanal).name || 'Ohne Kanal';
+      if (!anzahl[n]) {
+        anzahl[n] = 0;
+        if (namen.indexOf(n) < 0) namen.push(n);
+      }
+      anzahl[n] += 1;
+    });
+    const zeile = el('p', { class: 'mobi-kanaele' }, el('span', { text: 'Kanäle: ' }));
+    namen.filter(function (n) { return anzahl[n]; }).forEach(function (n, i) {
+      const punkt = el('span', { class: 'mobi-punkt', 'aria-hidden': 'true' });
+      punkt.style.background = kanalInfo(n).farbe;
+      if (i) zeile.append(el('span', { text: ' · ' }));
+      zeile.append(el('span', { class: 'mobi-kanal-zahl' }, punkt, el('span', { text: n + ' ' + anzahl[n] })));
+    });
+    return zeile;
   }
 
   // ---- Beiträge ----
@@ -222,14 +196,13 @@ export function baueMobiTeil(opt) {
 
     const klassen = ['dash-todo', 'pt-todo'];
     if (fertig) klassen.push('erledigt');
-    if (st) klassen.push(st);
     const li = el('li', { class: 'dash-zeile' + (fertig ? ' erledigt' : '') },
       cb,
       el('button', {
         class: klassen.join(' '), type: 'button',
         onclick: function () { zeigeBeitragFormular(formOpt, b); }
       },
-        el('strong', { text: txt(b.titel) }),
+        el('strong', { class: st ? 'mobi-titel-' + st : '', text: txt(b.titel) }),
         el('span', { class: 'leise', text: beitragInfo(b) })
       )
     );
@@ -245,8 +218,6 @@ export function baueMobiTeil(opt) {
       knopf('Analyse bearbeiten', true, analyseBearbeiten)
     ),
     analyseAnzeige(),
-    el('h3', { class: 'teil-titel-klein', text: 'Kanäle' }),
-    el('ul', { class: 'dash-todo-liste' }, ...kanaeleFuer(kurzname).map(kanalZeile)),
     el('h3', { class: 'teil-titel-klein', text: 'Beiträge' })
   );
   if (!alle.length) {
@@ -255,7 +226,7 @@ export function baueMobiTeil(opt) {
       text: 'Noch keine Beiträge. Mit „+ Beitrag“ planst du, was wann auf welchem Kanal erscheint.'
     }));
   } else {
-    body.append(el('ul', { class: 'dash-todo-liste' }, ...alle.map(beitragZeile)));
+    body.append(kanalZeile(), el('ul', { class: 'dash-todo-liste' }, ...alle.map(beitragZeile)));
   }
 
   const teil = el('details', { class: 'projekt-teil' });
