@@ -46,8 +46,10 @@ async function speichern(opt, b, d, fenster) {
   }
   try {
     if (!b) {
-      d.projekt_id = opt.projektId || '';
-      d.veranstaltung_id = opt.veranstaltungId || '';
+      const bez = d._bezug || '';
+      delete d._bezug;
+      d.projekt_id = bez ? (bez.indexOf('p:') === 0 ? bez.slice(2) : '') : (opt.projektId || '');
+      d.veranstaltung_id = bez ? (bez.indexOf('v:') === 0 ? bez.slice(2) : '') : (opt.veranstaltungId || '');
       await api('create', { tabelle: 'Mobi_Plan', daten: d }, opt.token);
       toast('Beitrag angelegt.');
     } else {
@@ -96,6 +98,12 @@ export function zeigeBeitragFormular(opt, b, vorgabe) {
     if (f.name === 'kanal') return Object.assign({}, f, { typ: 'auswahl', optionen: namen });
     return f;
   });
+  if (!b && opt.bezuege) {
+    felder.unshift({
+      name: '_bezug', label: 'Gehört zu (Projekt oder Veranstaltung)', typ: 'auswahl',
+      optionen: opt.bezuege, pflicht: true
+    });
+  }
   const start = b
     ? Object.assign({}, b, { datum: normDatum(b.datum), uhrzeit: zeitNorm(b.uhrzeit) })
     : Object.assign({ status: 'idee', format: 'beitrag' }, vorgabe || {});
