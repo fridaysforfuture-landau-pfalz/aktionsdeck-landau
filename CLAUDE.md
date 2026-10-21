@@ -1,7 +1,8 @@
 # CLAUDE.md – Arbeitsregeln für AktionsDeck Landau
 
 Diese Datei liest du (der Agent) zuerst. Sie gilt für jede Aufgabe in diesem Repo.
-Der aktuelle Projektstand steht in `docs/STAND.md`, der Plan für die laufende Etappe in `docs/PLAN-ETAPPE-7.md`.
+Der aktuelle Projektstand steht in `docs/STAND.md`, der Plan für die laufende Etappe in `docs/PLAN-ETAPPE-<Nummer>.md`
+(zurzeit `docs/PLAN-ETAPPE-8.md`).
 
 ## 1. Worum es geht
 
@@ -21,7 +22,7 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
 
 ## 3. So arbeitest du an einer Aufgabe
 
-1. Lies `docs/STAND.md`, dann `docs/PLAN-ETAPPE-7.md`, dann genau die Dateien, die du für den Schritt brauchst.
+1. Lies `docs/STAND.md`, dann den Plan der laufenden Etappe (`docs/PLAN-ETAPPE-<Nummer>.md`), dann genau die Dateien, die du für den Schritt brauchst.
 2. Rate nie. Fehlt eine Datei, widersprechen sich Stand und Code, oder wirkt der Stand veraltet: Schreibe es klar in den
    Pull-Request-Text und arbeite nur an dem weiter, was sicher ist.
 3. Prüfe zuerst `js/config.js` (VERSION) gegen `docs/STAND.md`. Weichen sie ab, melde es.

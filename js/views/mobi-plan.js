@@ -17,7 +17,8 @@ import {
 } from './mobi-rechnen.js';
 import { kommentarMarke, normDatum, heuteIso, datumText } from './todos-rechnen.js';
 import { addTage } from './kalender-rechnen.js';
-import { baueZeitstrahl } from './mobi-zeitstrahl.js';
+import { baueZeitbalken } from './mobi-zeitstrahl.js';
+import { oeffneMobiAnsicht } from './mobi-todo.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
 import { zeigeBeitragFormular } from './mobi-eintrag.js';
 import { zeigeSammlung } from './mobi-sammlung.js';
@@ -264,12 +265,16 @@ export function baueMobiTeil(opt) {
     }));
   } else {
     body.append(kanalZeile());
-    const strahl = baueZeitstrahl(alle, p.aktionsdatum, function (b) { zeigeBeitragFormular(formOpt, b); });
-    if (strahl) {
-      const zs = el('details', { class: 'mobi-zs-box' });
-      zs.open = true;
-      zs.append(el('summary', { text: 'Zeitstrahl' }), strahl);
-      body.append(zs);
+    // Ein Balken mit Aktion und Heute; der ganze Zeitstrahl steht im Reiter Mobi
+    const balken = baueZeitbalken(alle, p.aktionsdatum);
+    if (balken) {
+      body.append(el('div', { class: 'mobi-zs-box' },
+        balken,
+        el('button', {
+          class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Ganzer Zeitstrahl im Reiter Mobi →',
+          onclick: function () { oeffneMobiAnsicht(ctx, pid, 'zeitstrahl'); }
+        })
+      ));
     }
     body.append(el('ul', { class: 'dash-todo-liste' }, ...alle.map(beitragZeile)));
   }

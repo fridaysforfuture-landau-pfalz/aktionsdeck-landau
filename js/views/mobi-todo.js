@@ -125,6 +125,12 @@ export function nimmMobiVorgabe() {
   return v;
 }
 
+// Reiter Mobi in einer Ansicht öffnen ('liste' | 'kanban' | 'zeitstrahl'), gefiltert auf ein Projekt
+export function oeffneMobiAnsicht(ctx, projektId, ansicht) {
+  vorgabe = { projekt: String(projektId || ''), kanal: '', ansicht: ansicht };
+  location.hash = '#/g/' + encodeURIComponent(ctx.session.kurzname) + '/mobi';
+}
+
 export function oeffneSammel(ctx, t) {
   vorgabe = { projekt: String(t.projekt_id), kanal: t._kanalId || '', ansicht: 'kanban' };
   location.hash = '#/g/' + encodeURIComponent(ctx.session.kurzname) + '/mobi';

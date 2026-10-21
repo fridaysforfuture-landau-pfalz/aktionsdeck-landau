@@ -1,6 +1,7 @@
 // js/views/mobi.js
 // Reiter Mobi: alle Beiträge der Gruppe, über alle Projekte und Veranstaltungen.
-// Ansichten: Liste (Kacheln in Spalten nach Kanalgruppe, darunter "Veröffentlicht, letzte 2 Wochen") und Kanban.
+// Ansichten: Liste (Kacheln in Spalten nach Kanalgruppe, darunter "Veröffentlicht, letzte 2 Wochen"), Kanban
+// und Zeitstrahl (je Projekt oder Veranstaltung eine Bahn je Kanal, js/views/mobi-zeitstrahl.js).
 // Filter, Sammelbearbeitung (Status, Verantwortliche), Archiv, Zählzeile mit Wochenzahl.
 // Die Ansicht bleibt beim Reiterwechsel erhalten (Merker außerhalb von render).
 
@@ -27,6 +28,7 @@ import { zeigeBeitragFormular } from './mobi-eintrag.js';
 import { baueSpalten, baueKachelFlaeche } from './mobi-kachel.js';
 import { zeigeSammlung } from './mobi-sammlung.js';
 import { nimmMobiVorgabe } from './mobi-todo.js';
+import { baueZeitstrahl } from './mobi-zeitstrahl.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = { token: '', ansicht: 'liste' };
@@ -102,6 +104,10 @@ export async function render(container, ctx) {
     class: 'knopf knopf-hell', type: 'button', text: 'Kanban',
     onclick: function () { ansichtSetzen('kanban'); }
   });
+  const zeitKnopf = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Zeitstrahl',
+    onclick: function () { ansichtSetzen('zeitstrahl'); }
+  });
   // Kalender: öffnet den Reiter Kalender als Mobi-Kalender (Beiträge, Aktionen, Deadlines)
   const kalenderKnopf = el('button', {
     class: 'knopf knopf-hell', type: 'button', text: 'Kalender',
@@ -142,6 +148,7 @@ export async function render(container, ctx) {
   const kopfFertig = el('h2', { class: 'liste-titel' });
   const boxFertig = el('div', { class: 'liste-erledigt' });
   const boxKanban = el('div');
+  const boxZeit = el('div', { class: 'mobi-zeit-liste' });
 
   const zaehler = el('strong');
   const okKnopf = el('button', {
@@ -166,6 +173,7 @@ export async function render(container, ctx) {
   );
   leiste.hidden = true;
   boxKanban.hidden = true;
+  boxZeit.hidden = true;
   kopfFertig.hidden = true;
   boxFertig.hidden = true;
 
@@ -174,7 +182,7 @@ export async function render(container, ctx) {
       el('h1', { text: 'Mobi' }),
       el('div', { class: 'kopf-knoepfe' }, archivKnopf, mehrereKnopf, sammelKnopf, neuKnopf)
     ),
-    el('div', { class: 'mobi-ansicht' }, listenKnopf, kanbanKnopf, kalenderKnopf),
+    el('div', { class: 'mobi-ansicht' }, listenKnopf, kanbanKnopf, zeitKnopf, kalenderKnopf),
     zahlen,
     warnBox,
     el('div', { class: 'filterzeile filter-todos' },
@@ -184,6 +192,7 @@ export async function render(container, ctx) {
     kopfFertig,
     boxFertig,
     boxKanban,
+    boxZeit,
     leiste
   ));
 
@@ -739,7 +748,7 @@ export async function render(container, ctx) {
 
   function ansichtSetzen(a) {
     merk.ansicht = a;
-    if (a === 'kanban') {
+    if (a !== 'liste') {
       archivModus = false;
       auswahlModus = false;
       gewaehlt = {};
@@ -784,6 +793,45 @@ export async function render(container, ctx) {
     }
   }
 
+  // Zeitstrahl: je Projekt oder Veranstaltung (mit Beiträgen mit Datum) ein eigener Strahl
+  function zeitstrahlZeichnen(passend) {
+    leeren(boxZeit);
+    const gruppen = [];
+    const index = {};
+    passend.forEach(function (b) {
+      const pid = txt(b.projekt_id);
+      const vid = txt(b.veranstaltung_id);
+      const key = pid ? 'p:' + pid : (vid ? 'v:' + vid : '');
+      if (!key) return;
+      if (!index[key]) {
+        index[key] = { key: key, liste: [] };
+        gruppen.push(index[key]);
+      }
+      index[key].liste.push(b);
+    });
+    let gezeigt = 0;
+    gruppen.forEach(function (g) {
+      const id = g.key.slice(2);
+      const istProjekt = g.key.charAt(0) === 'p';
+      const quelle = istProjekt ? daten.projekte : daten.veranstaltungen;
+      const x = quelle.find(function (y) { return String(y.id) === id; }) || {};
+      const strahl = baueZeitstrahl(g.liste, istProjekt ? x.aktionsdatum : x.datum, beitragOeffnen,
+        istProjekt ? 'Aktion' : 'Veranstaltung');
+      if (!strahl) return;
+      gezeigt += 1;
+      boxZeit.append(el('section', { class: 'mobi-zeit-gruppe' },
+        el('h3', { class: 'teil-titel-klein', text: istProjekt ? (projektTitel[id] || 'Projekt') : '📅 ' + (veranstTitel[id] || 'Veranstaltung') }),
+        strahl
+      ));
+    });
+    if (!gezeigt) {
+      boxZeit.append(el('p', {
+        class: 'leise',
+        text: 'Keine Beiträge mit Datum gefunden. Der Zeitstrahl zeigt Beiträge, die ein Datum haben.'
+      }));
+    }
+  }
+
   function zaehlenZeile(sicht) {
     zahlen.hidden = !sicht.length;
     if (!sicht.length) return;
@@ -817,28 +865,39 @@ export async function render(container, ctx) {
 
   function zeichne() {
     const kanban = merk.ansicht === 'kanban';
+    const zeit = merk.ansicht === 'zeitstrahl';
+    const andere = kanban || zeit;   // nicht die Liste
     const sicht = daten.mobi.filter(function (b) { return !projektZu(b); });
     const archivListe = daten.mobi.filter(function (b) { return istArchiv(b) || projektZu(b); });
 
-    listenKnopf.className = 'knopf' + (kanban ? ' knopf-hell' : '');
-    kanbanKnopf.className = 'knopf' + (kanban ? '' : ' knopf-hell');
-    listenKnopf.setAttribute('aria-pressed', String(!kanban));
-    kanbanKnopf.setAttribute('aria-pressed', String(kanban));
-    statusWahl.style.display = kanban ? 'none' : '';
-    archivKnopf.hidden = kanban;
+    [[listenKnopf, !andere], [kanbanKnopf, kanban], [zeitKnopf, zeit]].forEach(function (x) {
+      x[0].className = 'knopf' + (x[1] ? '' : ' knopf-hell');
+      x[0].setAttribute('aria-pressed', String(x[1]));
+    });
+    statusWahl.style.display = andere ? 'none' : '';
+    archivKnopf.hidden = andere;
     archivKnopf.textContent = archivModus
       ? '← Zurück zu Mobi'
       : 'Archiv' + (archivListe.length ? ' (' + archivListe.length + ')' : '');
-    mehrereKnopf.hidden = kanban || archivModus || auswahlModus;
+    mehrereKnopf.hidden = andere || archivModus || auswahlModus;
     neuKnopf.disabled = auswahlModus;
     sammelKnopf.disabled = auswahlModus;
 
     zaehlenZeile(sicht);
     warnungenZeichnen();
 
-    boxListe.hidden = kanban;
+    boxListe.hidden = andere;
     boxKanban.hidden = !kanban;
+    boxZeit.hidden = !zeit;
     leiste.hidden = !auswahlModus;
+
+    if (zeit) {
+      kopfFertig.hidden = true;
+      boxFertig.hidden = true;
+      zeitstrahlZeichnen(sicht.filter(function (b) { return trifft(b, false); }));
+      statusZeigen();
+      return;
+    }
 
     if (kanban) {
       kopfFertig.hidden = true;

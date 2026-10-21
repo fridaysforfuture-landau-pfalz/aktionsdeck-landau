@@ -2528,7 +2528,6 @@ p.notiz.erledigt {
 }
 
 .mobi-zs-box { margin: 8px 0; }
-.mobi-zs-box > summary { cursor: pointer; font-weight: 600; font-size: 14px; }
 .mobi-zeitstrahl { display: grid; gap: 2px; margin-top: 6px; }
 .mz-zeile { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 8px; min-height: 30px; }
 .mz-name { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
@@ -2536,8 +2535,6 @@ p.notiz.erledigt {
 .mz-bahn { position: relative; height: 30px; margin: 0 12px; border-bottom: 1px solid var(--rand); }
 .mz-achse { height: 18px; border-bottom: 0; font-size: 12px; color: var(--text-leise); }
 .mz-datum { position: absolute; top: 0; white-space: nowrap; }
-.mz-start { left: 0; transform: translateX(-30%); }
-.mz-ende { right: 0; transform: translateX(30%); }
 .mz-aktion-text { transform: translateX(-50%); color: #368469; font-weight: 600; }
 .mz-linie { position: absolute; top: 0; bottom: 0; width: 0; }
 .mz-aktion { border-left: 2px solid #368469; }
@@ -2574,4 +2571,34 @@ p.notiz.erledigt {
 .mz-name > span:last-child { overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 599px) {
   .mz-aktion-text { font-size: 11px; }
+}
+
+/* ---- 0.29.12: Zeitstrahl im Reiter Mobi, Balken im Projekt ---- */
+.mz-datum { transform: translateX(-50%); font-size: 12px; }
+.mz-heute-text { color: var(--text-leise); font-weight: 600; }
+.mz-achse { height: 30px; }
+.mz-strich { position: absolute; bottom: 0; width: 1px; height: 5px; background: #b8c0bc; }
+.mz-strich-mo { height: 10px; background: #8a9490; }
+.mz-woche { border-left: 1px solid #e2e7e4; }
+.mobi-zeit-gruppe { margin-bottom: 20px; }
+.mobi-zeit-gruppe .teil-titel-klein { margin-bottom: 4px; }
+
+.mobi-zs-box { display: grid; gap: 6px; justify-items: start; margin: 8px 0 12px; }
+.mobi-zeitbalken { width: 100%; padding: 0 14px; box-sizing: border-box; }
+.mzb-balken {
+  position: relative;
+  height: 16px;
+  border-radius: 8px;
+  background: #e7ece9;
+  overflow: hidden;
+}
+.mzb-abschnitt { position: absolute; top: 0; bottom: 0; min-width: 4px; background: #b8c0bc; }
+.mzb-abschnitt.mzb-fertig { background: #b8c0bc; }
+.mzb-linie { position: absolute; top: 0; bottom: 0; width: 0; }
+.mzb-aktion { border-left: 3px solid #368469; }
+.mzb-heute { border-left: 2px dashed #1a1e20; }
+.mzb-achse { position: relative; height: 18px; margin-top: 2px; color: var(--text-leise); }
+.mz-mo-text { color: var(--text-leise); }
+@media (max-width: 599px) {
+  .mz-mo-text { display: none; }
 }
