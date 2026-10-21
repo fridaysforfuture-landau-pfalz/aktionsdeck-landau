@@ -3,6 +3,14 @@
 // Gibt { schliessen } zurück. beiZu wird beim Schließen einmal aufgerufen.
 
 import { el } from './dom.js';
+// ✕-Knopf oben rechts. Wird auch von anderen Fenstern benutzt (modal.js, material-buchen.js ...).
+export function xKnopf(beiKlick) {
+  return el('button', {
+    class: 'fenster-x', type: 'button', 'aria-label': 'Fenster schließen', title: 'Schließen',
+    text: '✕',
+    onclick: function () { beiKlick(); }
+  });
+}
 
 export function zeigeFenster(titel, inhalt, beiZu, optionen) {
   const vorher = document.activeElement;
@@ -32,6 +40,7 @@ export function zeigeFenster(titel, inhalt, beiZu, optionen) {
     inhalt
   );
   hintergrund.append(box);
+  box.append(xKnopf(zu));
   if (optionen && optionen.aussenKlick) {
     hintergrund.addEventListener('click', function (ev) {
       if (ev.target === hintergrund) zu();
