@@ -26,7 +26,7 @@ Bitte zuerst prüfen, ob das wirklich im Repo steht. Prüfe `js/config.js` (VERS
   Zeichenzähler, „Haupt-Text übernehmen", „Text kopieren", Löschen, Kommentare mit `bezug_art` = `mobi`),
   `js/views/mobi-plan.js` (Teil „Mobi" im Projekt), `js/views/mobi-rechnen.js`. Reiter „Posts" heißt jetzt „Mobi".
 - **7.3 (0.29.3):** `js/views/mobi.js` (Reiter Mobi: Liste und Kanban, Filter, „Mehrere bearbeiten", Archiv, Zählzeile).
-- **7.4 (0.29.4), Stand unklar:** Vorlagen „Mobi: Demo / Großaktion" und „Mobi: Infostand / kleine Aktion" mit Bausteinen
+- **7.4 (0.29.4), laut Person im Repo (21.10.2026):** Vorlagen „Mobi: Demo / Großaktion" und „Mobi: Infostand / kleine Aktion" mit Bausteinen
   (`js/vorlagen.js`, `js/views/mobi-vorlage.js`, Änderungen in `projekt-todos.js` und `todos-abhaken.js`), Tausch in der unteren
   Leiste (Mobi statt Material), Abschnitt „Zugehörige ToDos" im Beitrag.
   **Ob 7.4 im Repo ist, ist nicht sicher.** Steht VERSION auf 0.29.3 oder tiefer, ist 7.4 nicht drin.
@@ -49,7 +49,14 @@ Bitte zuerst prüfen, ob das wirklich im Repo steht. Prüfe `js/config.js` (VERS
     Überfällige stehen ganz oben, die am längsten überfälligen zuerst.
 11. Kanal-Farben (Instagram pink, Facebook blau, Presse grau, …) wie in `js/kanaele.js`.
 
-## 4. Noch offen (Vorschläge, noch nicht bestätigt)
+## 4. Entscheidungen vom 21.10.2026 und noch Offenes
+
+**Bestätigt:** A ja (Pressemitteilung und Fördermitglieder-Mail gehören zu „Digital"). C ja (ein Sammel-ToDo pro Projekt und Kanal).
+D ja (Verantwortliche anzeigen, „Hut frei" bei offenem Beitrag ohne Verantwortliche). E ja (Instagram-Satz passt, Platzhalter für die anderen Kanäle sind in Ordnung).
+Die Person hat 7.4 (0.29.4) umgesetzt, es ist im Repo.
+**Noch offen:** B (Bausteine aus 7.4 entfernen?). Bis zur Antwort baust du in 7.5 nur „+ Beiträge" und führst den Rückbau **nicht** aus. Frage am Ende nach.
+
+Die Tabelle unten zeigt die ursprünglichen Fragen.
 
 Für diese Punkte baust du den Vorschlag, markierst ihn im Pull Request als „Vorschlag" und fragst am Ende nach.
 Vor 7.5 und 7.6 stellst du die Fragen zu den dort genannten Punkten **zuerst** und baust erst nach der Antwort.
