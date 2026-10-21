@@ -24,7 +24,7 @@ export const OEFFENTLICH = [
 ];
 
 const MEHR = { id: 'mehr', label: 'Mehr', icon: '⋯' };
-const UNTEN = ['start', 'projekte', 'todos', 'material'];
+const UNTEN = ['start', 'projekte', 'todos', 'mobi'];
 
 export function sichtbareTabs() {
   return TABS.filter(function (t) { return features[t.id] !== false; });
