@@ -81,3 +81,20 @@ function testzeilenAnzeigen() {
   Logger.log('Projekte mit "test" im Titel: ' +
     p.map(function (z) { return 'Zeile ' + z._zeile + ' (' + z.titel + ')'; }).join(', '));
 }
+// Im Editor ausführen: zeigt alle Einträge der Etappen 5 und 6 mit Zeilennummer, damit du
+// Testdaten im Sheet von Hand löschen kannst. Löscht nichts.
+function testdatenListe() {
+  var felder = {
+    Umfragen: 'frage', Umfrage_Antworten: 'person', Mitteilungen: 'titel', Kommentare: 'text',
+    Ideen: 'titel', Veranstaltungen: 'titel', Termin_Vorlagen: 'name'
+  };
+  Object.keys(felder).forEach(function (tab) {
+    var t = lies(tab);
+    var zeilen = t.zeilen.filter(function (z) { return !truthy(z.geloescht); });
+    Logger.log('== ' + tab + ': ' + zeilen.length + ' Einträge');
+    zeilen.forEach(function (z) {
+      Logger.log('  Zeile ' + z._zeile + ' | ' + String(z[felder[tab]]).slice(0, 50) +
+        ' | von ' + z.erstellt_von);
+    });
+  });
+}
