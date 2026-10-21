@@ -168,3 +168,32 @@ function testenMobi() {
     Logger.log('6) FEHLER beim Löschen: ' + e6.message);
   }
 }
+
+// Legt einen Beitrag mit ToDo an, löscht den Beitrag und prüft, dass das ToDo mitgeht.
+function testenMobiLoeschen() {
+  var g = lies('Gruppen').zeilen[0];
+  var ctx = { gruppe_id: g.gruppe_id };
+  var pr = lies('Projekte').zeilen.filter(function (z) {
+    return String(z.gruppe_id) === String(g.gruppe_id) && !truthy(z.geloescht);
+  })[0];
+  if (!pr) { Logger.log('Kein Projekt in der ersten Gruppe. Bitte erst eins in der App anlegen.'); return; }
+
+  var b = aktionCreate(ctx, {
+    tabelle: 'Mobi_Plan', anzeigename: 'Test (Editor)',
+    daten: { projekt_id: pr.id, kanal: 'Instagram', format: 'story', titel: 'Test Löschen', status: 'idee' }
+  });
+  var t = aktionCreate(ctx, {
+    tabelle: 'ToDos', anzeigename: 'Test (Editor)',
+    daten: { projekt_id: pr.id, text: 'Test Veröffentlichen', mobi_id: b.id }
+  });
+  Logger.log('1) Beitrag ' + b.id + ' und ToDo ' + t.id + ' angelegt.');
+
+  aktionDelete(ctx, { tabelle: 'Mobi_Plan', id: b.id, anzeigename: 'Test (Editor)' });
+
+  var nochDa = lies('ToDos').zeilen.filter(function (r) {
+    return String(r.id) === String(t.id) && !truthy(r.geloescht);
+  }).length;
+  Logger.log(nochDa === 0
+    ? '2) Gut: Das ToDo wurde mitgelöscht.'
+    : '2) FEHLER: Das ToDo ist noch da!');
+}
