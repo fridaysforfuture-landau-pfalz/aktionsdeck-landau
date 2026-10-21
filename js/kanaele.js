@@ -37,6 +37,52 @@ export const KANAELE = [
   { id: 'sonstiges', name: 'Sonstiges', farbe: '#596360', gruppe: 'sonstiges', limit: 0, schritte: S }
 ];
 
+// Standard-Beiträge je Kanal (Kennung aus KANAELE) für „+ Beiträge“.
+// tage_vorher = so viele Tage VOR dem Bezugsdatum (Aktionsdatum oder Veranstaltungsdatum), negativ = danach.
+// Alle Tage sind Platzhalter und leicht änderbar. Nachlesen: docs/MOBI-STANDARD-BEITRAEGE.md (bei Änderung mitpflegen).
+// Sonstiges hat keinen Satz: dort gibt die Person einen eigenen Titel ein.
+export const STANDARD_BEITRAEGE = {
+  instagram: [
+    { name: 'Heute Demo', format: 'beitrag', tage_vorher: 0 },
+    { name: 'Packliste', format: 'beitrag', tage_vorher: 1 },
+    { name: 'Awarenesskonzept', format: 'beitrag', tage_vorher: 5 },
+    { name: 'Demosprüche', format: 'beitrag', tage_vorher: 4 },
+    { name: 'Reel 1', format: 'reel', tage_vorher: 10 },
+    { name: 'Reel 2', format: 'reel', tage_vorher: 7 },
+    { name: 'Reel 3', format: 'reel', tage_vorher: 3 },
+    { name: 'Thema-Post 1', format: 'beitrag', tage_vorher: 7 },
+    { name: 'Thema-Post 2', format: 'beitrag', tage_vorher: 6 },
+    { name: 'Thema-Post 3', format: 'beitrag', tage_vorher: 5 },
+    { name: 'Thema-Post 4', format: 'beitrag', tage_vorher: 4 },
+    { name: 'Thema-Post 5', format: 'beitrag', tage_vorher: 3 },
+    { name: 'Thema-Post 6', format: 'beitrag', tage_vorher: 2 },
+    { name: 'Story 1', format: 'story', tage_vorher: 3 },
+    { name: 'Story 2', format: 'story', tage_vorher: 1 },
+    { name: 'Story 3 (am Tag)', format: 'story', tage_vorher: 0 }
+  ],
+  presse: [{ name: 'Pressemitteilung', format: 'text', tage_vorher: 7 }],
+  plakate: [{ name: 'Plakate und Flyer', format: 'sonstiges', tage_vorher: 14 }],
+  kreide: [{ name: 'Kreideaktion', format: 'sonstiges', tage_vorher: 1 }],
+  messenger: [
+    { name: 'Ankündigung', format: 'text', tage_vorher: 7 },
+    { name: 'Erinnerung', format: 'text', tage_vorher: 1 }
+  ],
+  unimail: [{ name: 'Unimail', format: 'text', tage_vorher: 5 }],
+  newsletter: [{ name: 'Newsletter', format: 'text', tage_vorher: 5 }],
+  facebook: [
+    { name: 'Veranstaltung', format: 'beitrag', tage_vorher: 10 },
+    { name: 'Erinnerung', format: 'beitrag', tage_vorher: 1 }
+  ],
+  tiktok: [
+    { name: 'Video 1', format: 'video', tage_vorher: 7 },
+    { name: 'Video 2', format: 'video', tage_vorher: 2 }
+  ],
+  web: [{ name: 'Ankündigung auf der Webseite', format: 'text', tage_vorher: 10 }],
+  gruppen: [{ name: 'Anfrage an andere Gruppen', format: 'text', tage_vorher: 10 }],
+  schuldelis: [{ name: 'Schuldelis informieren', format: 'text', tage_vorher: 7 }],
+  foerder: [{ name: 'Mail an Fördermitglieder', format: 'text', tage_vorher: 5 }]
+};
+
 export const FORMAT_TEXT = {
   beitrag: 'Beitrag',
   reel: 'Reel',

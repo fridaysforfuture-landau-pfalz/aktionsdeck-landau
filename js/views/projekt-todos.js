@@ -16,8 +16,7 @@ import { toast } from '../ui/toast.js';
 import { baueKommentare } from '../ui/kommentare.js';
 import { getName } from '../store.js';
 import { SCHEMA, istWahr } from '../schema.js';
-import { VORLAGEN, faelligAus, bausteinText, vorlageAnzahl } from '../vorlagen.js';
-import { legeBausteineAn } from './mobi-vorlage.js';
+import { VORLAGEN, faelligAus } from '../vorlagen.js';
 import { abhakWerte, abhakenSpeichern } from './todos-abhaken.js';
 import {
   kurz, faelligStatus, faelligText, prioText, sortieren, zahlenText, datumText,
@@ -251,7 +250,7 @@ export function baueTodoTeil(opt) {
         label: 'Vorlage (legt ToDos gleich mit an)',
         typ: 'auswahl',
         optionen: VORLAGEN.map(function (v) {
-          return { wert: v.id, label: v.name + ' (' + vorlageAnzahl(v) + ')' };
+          return { wert: v.id, label: v.name + ' (' + v.schritte.length + ' ToDos)' };
         })
       });
     }
@@ -259,8 +258,7 @@ export function baueTodoTeil(opt) {
       speichernText: m ? 'Speichern' : 'Anlegen',
       vorschlaege: { verantwortlich: personen() },
       onSpeichern: function (d) {
-        const gewaehlt = zeilen.filter(function (z) { return z.cb.checked; });
-        const schritte = gewaehlt.filter(function (z) { return !!z.sch; })
+        const schritte = zeilen.filter(function (z) { return z.cb.checked; })
           .map(function (z) {
             return {
               text: z.textFeld ? z.textFeld.value.trim() : z.sch.text,
@@ -269,10 +267,8 @@ export function baueTodoTeil(opt) {
             };
           })
           .filter(function (x) { return x.text !== ''; });
-        const bausteine = gewaehlt.filter(function (z) { return !!z.bs; })
-          .map(function (z) { return { bs: z.bs, datum: z.datum.value }; });
         delete d._vorlage;
-        return meilensteinSpeichern(m, d, fenster, schritte, bausteine);
+        return meilensteinSpeichern(m, d, fenster, schritte);
       },
       onAbbrechen: function () { fenster.schliessen(); }
     });
@@ -289,7 +285,7 @@ export function baueTodoTeil(opt) {
       // Meilenstein-Datum geändert: nur Fristen neu rechnen, die du nicht selbst geändert hast
       function fristen() {
         zeilen.forEach(function (z) {
-          if (!z.manuell) z.datum.value = faelligAus(datum.value, z.tage);
+          if (!z.manuell) z.datum.value = faelligAus(datum.value, z.sch.tage_vorher);
         });
       }
 
@@ -306,14 +302,14 @@ export function baueTodoTeil(opt) {
           text: 'Haken weg = ToDo wird nicht angelegt. Die Fälligkeit wird vom Datum des Meilensteins ' +
             'zurückgerechnet und kann hier geändert werden.'
         }));
-        (v.schritte || []).forEach(function (sch) {
+        v.schritte.forEach(function (sch) {
           const cb = el('input', { type: 'checkbox', class: 'auswahl-box', 'aria-label': sch.text });
           cb.checked = true;
           const dat = el('input', {
             class: 'feld vorlage-datum', type: 'date', 'aria-label': 'Fällig: ' + sch.text
           });
           dat.value = faelligAus(datum.value, sch.tage_vorher);
-          const z = { sch: sch, tage: sch.tage_vorher, cb: cb, datum: dat, manuell: false };
+          const z = { sch: sch, cb: cb, datum: dat, manuell: false };
           dat.addEventListener('input', function () { z.manuell = true; });
           dat.addEventListener('click', function () {
             try { if (typeof dat.showPicker === 'function') dat.showPicker(); } catch (e) { /* ignorieren */ }
@@ -324,32 +320,6 @@ export function baueTodoTeil(opt) {
             el('div', { class: 'vorlage-text' }, el('strong', { text: sch.text }), dat)
           ));
         });
-        const kn = String(ctx.session.kurzname || '').toLowerCase();
-        (v.bausteine || []).filter(function (bs) {
-          return !bs.nur || bs.nur.indexOf(kn) >= 0;
-        }).forEach(function (bs) {
-          const cb = el('input', { type: 'checkbox', class: 'auswahl-box', 'aria-label': bs.name });
-          cb.checked = true;
-          const dat = el('input', {
-            class: 'feld vorlage-datum', type: 'date', 'aria-label': 'Veröffentlichen: ' + bs.name
-          });
-          dat.value = faelligAus(datum.value, bs.tage_vorher);
-          const z = { bs: bs, tage: bs.tage_vorher, cb: cb, datum: dat, manuell: false };
-          dat.addEventListener('input', function () { z.manuell = true; });
-          dat.addEventListener('click', function () {
-            try { if (typeof dat.showPicker === 'function') dat.showPicker(); } catch (e) { /* ignorieren */ }
-          });
-          zeilen.push(z);
-          liste.append(el('div', { class: 'vorlage-zeile' },
-            cb,
-            el('div', { class: 'vorlage-text' },
-              el('strong', { text: bs.name }),
-              el('span', { class: 'leise', text: bausteinText(bs) + ' · Datum = Veröffentlichung' }),
-              dat
-            )
-          ));
-        });
-
         const eigenKnopf = el('button', {
           class: 'knopf knopf-hell knopf-klein', type: 'button', text: '+ Eigener Schritt',
           onclick: function () {
@@ -365,7 +335,7 @@ export function baueTodoTeil(opt) {
             dat.addEventListener('click', function () {
               try { if (typeof dat.showPicker === 'function') dat.showPicker(); } catch (e) { /* ignorieren */ }
             });
-            zeilen.push({ sch: { text: '' }, textFeld: text, tage: 0, cb: cb, datum: dat, manuell: true });
+            zeilen.push({ sch: { text: '', tage_vorher: 0 }, textFeld: text, cb: cb, datum: dat, manuell: true });
             liste.insertBefore(el('div', { class: 'vorlage-zeile' },
               cb,
               el('div', { class: 'vorlage-text' }, text, dat)
@@ -388,7 +358,7 @@ export function baueTodoTeil(opt) {
     );
   }
   
-  async function meilensteinSpeichern(m, d, fenster, schritte, bausteine) {
+  async function meilensteinSpeichern(m, d, fenster, schritte) {
     d.projekt_id = pid;
     try {
       if (!m) {
@@ -417,24 +387,9 @@ export function baueTodoTeil(opt) {
             return;
           }
         }
-        let mobiZahl = { beitraege: 0, todos: 0 };
-        if (bausteine && bausteine.length) {
-          try {
-            mobiZahl = await legeBausteineAn(token, pid, String(o.id), bausteine);
-          } catch (e3) {
-            fenster.schliessen();
-            opt.beiToggle(true);
-            if (ctx.behandleFehler(e3)) return;
-            toast('Meilenstein angelegt, aber die Mobi-Beiträge nicht: ' + e3.message);
-            await opt.neuLaden();
-            return;
-          }
-        }
         fenster.schliessen();
-        const anzahl = schritte.length + mobiZahl.todos;
-        toast(anzahl
-          ? 'Meilenstein mit ' + anzahl + ' ToDos' +
-            (mobiZahl.beitraege ? ' und ' + mobiZahl.beitraege + ' Mobi-Beiträgen' : '') + ' angelegt.'
+        toast(schritte.length
+          ? 'Meilenstein mit ' + schritte.length + ' ToDos angelegt.'
           : 'Meilenstein angelegt.');
       } else {
         const r = await api('update', {

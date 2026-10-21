@@ -1,7 +1,7 @@
 // js/views/mobi-eintrag.js
 // Fenster für einen Mobi-Beitrag: Anlegen, Ändern, Löschen, Text kopieren, Kommentare.
 // opt: { ctx, token, kurzname, projektId, veranstaltungId, personen() -> Namensliste,
-//        todoAnzahl(b) -> Zahl verknüpfter ToDos, neuLaden() -> Promise, beiFertig() -> Promise }
+//        neuLaden() -> Promise, beiFertig() -> Promise }
 
 import { el } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -12,8 +12,7 @@ import { baueKommentare } from '../ui/kommentare.js';
 import { SCHEMA } from '../schema.js';
 import { kanaeleFuer, kanalInfo, FORMAT_TEXT, FORMAT_HINWEIS } from '../kanaele.js';
 import { statusText, statiFuer } from './mobi-rechnen.js';
-import { normDatum, datumText, kurz } from './todos-rechnen.js';
-import { istWahr } from '../schema.js';
+import { normDatum } from './todos-rechnen.js';
 import { zeitNorm, sichereUrl } from './kalender-rechnen.js';
 
 function txt(v) {
@@ -69,10 +68,7 @@ async function speichern(opt, b, d, fenster) {
 }
 
 async function loeschen(opt, b, fenster) {
-  const n = opt.todoAnzahl ? opt.todoAnzahl(b) : 0;
-  const frage = 'Diesen Beitrag wirklich löschen?\n\n„' + txt(b.titel) + '“' +
-    (n ? '\n\nDabei werden auch ' + n + (n === 1 ? ' verknüpftes ToDo' : ' verknüpfte ToDos') +
-      ' gelöscht.' : '');
+  const frage = 'Diesen Beitrag wirklich löschen?\n\n„' + txt(b.titel) + '“';
   if (!window.confirm(frage)) return;
   try {
     await api('delete', { tabelle: 'Mobi_Plan', id: b.id, bekannt: b.geaendert_am }, opt.token);
@@ -196,19 +192,6 @@ export function zeigeBeitragFormular(opt, b, vorgabe) {
         onclick: function () { loeschen(opt, b, fenster); }
       })
     ));
-    const zt = opt.todosVon ? opt.todosVon(b) : [];
-    if (zt.length) {
-      inhalt.append(
-        el('h3', { text: 'Zugehörige ToDos' }),
-        el('ul', { class: 'verlauf' }, ...zt.map(function (t) {
-          return el('li', {
-            text: (istWahr(t.erledigt) ? '✔ ' : '☐ ') + kurz(t.text, 70) +
-              (t.faellig_am ? ' · ' + datumText(t.faellig_am) : '') +
-              (txt(t.verantwortlich) ? ' · ' + txt(t.verantwortlich) : ' · Hut frei')
-          });
-        }))
-      );
-    }
     inhalt.append(baueKommentare({
       ctx: opt.ctx, token: opt.token, art: 'mobi', bezugId: b.id, projektId: txt(b.projekt_id)
     }).el);

@@ -25,6 +25,7 @@ import {
 } from './mobi-rechnen.js';
 import { zeigeBeitragFormular } from './mobi-eintrag.js';
 import { baueSpalten, baueKachelFlaeche } from './mobi-kachel.js';
+import { zeigeSammlung } from './mobi-sammlung.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = { token: '', ansicht: 'liste' };
@@ -112,6 +113,10 @@ export async function render(container, ctx) {
     class: 'knopf', type: 'button', text: '+ Beitrag',
     onclick: function () { neuerBeitrag(); }
   });
+  const sammelKnopf = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: '+ Beiträge',
+    onclick: function () { neueBeitraege(); }
+  });
 
   const boxListe = el('div');
   const kopfFertig = el('h2', { class: 'liste-titel' });
@@ -147,7 +152,7 @@ export async function render(container, ctx) {
   container.append(el('div', { class: 'seite' },
     el('div', { class: 'kopfzeile' },
       el('h1', { text: 'Mobi' }),
-      el('div', { class: 'kopf-knoepfe' }, archivKnopf, mehrereKnopf, neuKnopf)
+      el('div', { class: 'kopf-knoepfe' }, archivKnopf, mehrereKnopf, sammelKnopf, neuKnopf)
     ),
     el('div', { class: 'mobi-ansicht' }, listenKnopf, kanbanKnopf),
     zahlen,
@@ -217,12 +222,6 @@ export async function render(container, ctx) {
       kurzname: s.kurzname,
       personen: personen,
       bezuege: bezuege(),
-      todosVon: function (b) {
-        return daten.todos.filter(function (t) { return txt(t.mobi_id) === String(b.id); });
-      },
-      todoAnzahl: function (b) {
-        return daten.todos.filter(function (t) { return txt(t.mobi_id) === String(b.id); }).length;
-      },
       neuLaden: function () { return laden(false); },
       beiFertig: function () {
         cacheSet(s.gruppe_id + ':projekte', null);
@@ -241,6 +240,37 @@ export async function render(container, ctx) {
       return;
     }
     zeigeBeitragFormular(formOpt(), null);
+  }
+
+  // „+ Beiträge“ nur mit gewähltem Projekt oder gewählter Veranstaltung (Filter oben)
+  function neueBeitraege() {
+    const wert = bezugWahl.value;
+    if (!wert) {
+      toast('Wähle zuerst oben ein Projekt oder eine Veranstaltung. ' +
+        'Für ein neues Projekt geht es im Reiter Projekte im Teil „Mobi“.');
+      return;
+    }
+    const id = wert.slice(2);
+    const istProjekt = wert.charAt(0) === 'p';
+    const quelle = istProjekt ? daten.projekte : daten.veranstaltungen;
+    const x = quelle.find(function (y) { return String(y.id) === id; });
+    if (!x) {
+      toast('Das gibt es nicht mehr. Bitte neu laden.');
+      return;
+    }
+    const feld = istProjekt ? 'projekt_id' : 'veranstaltung_id';
+    zeigeSammlung({
+      ctx: ctx,
+      token: s.token,
+      kurzname: s.kurzname,
+      bezug: {
+        feld: feld, id: id, titel: txt(x.titel),
+        datum: istProjekt ? x.aktionsdatum : x.datum,
+        datumName: istProjekt ? 'Aktionsdatum' : 'Veranstaltungsdatum'
+      },
+      vorhandene: daten.mobi.filter(function (b) { return txt(b[feld]) === id; }),
+      beiFertig: formOpt().beiFertig
+    });
   }
 
   function cacheAuffrischen() {
@@ -660,6 +690,7 @@ export async function render(container, ctx) {
       : 'Archiv' + (archivListe.length ? ' (' + archivListe.length + ')' : '');
     mehrereKnopf.hidden = kanban || archivModus || auswahlModus;
     neuKnopf.disabled = auswahlModus;
+    sammelKnopf.disabled = auswahlModus;
 
     zaehlenZeile(sicht);
 

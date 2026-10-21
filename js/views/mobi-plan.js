@@ -16,6 +16,7 @@ import {
   istVeroeffentlicht, faelligStatus, sortiereBeitraege, beitragInfo
 } from './mobi-rechnen.js';
 import { zeigeBeitragFormular } from './mobi-eintrag.js';
+import { zeigeSammlung } from './mobi-sammlung.js';
 
 const ANALYSE = [
   { name: 'zielgruppe', label: 'Zielgruppe (wen wollen wir erreichen?)', typ: 'langtext' },
@@ -69,12 +70,6 @@ export function baueMobiTeil(opt) {
     kurzname: kurzname,
     projektId: pid,
     personen: personen,
-    todosVon: function (b) {
-      return (daten().todos || []).filter(function (t) { return txt(t.mobi_id) === String(b.id); });
-    },
-    todoAnzahl: function (b) {
-      return (daten().todos || []).filter(function (t) { return txt(t.mobi_id) === String(b.id); }).length;
-    },
     neuLaden: function () { return opt.neuLaden(); },
     beiFertig: function () { opt.beiToggle(true); return opt.neuLaden(); }
   };
@@ -215,6 +210,18 @@ export function baueMobiTeil(opt) {
   const body = el('div', { class: 'projekt-teil-body' },
     el('div', { class: 'teil-aktionen' },
       knopf('+ Beitrag', false, function () { zeigeBeitragFormular(formOpt, null); }),
+      knopf('+ Beiträge', true, function () {
+        zeigeSammlung({
+          ctx: ctx,
+          token: token,
+          kurzname: kurzname,
+          bezug: {
+            feld: 'projekt_id', id: pid, titel: txt(p.titel), datum: p.aktionsdatum, datumName: 'Aktionsdatum'
+          },
+          vorhandene: alle,
+          beiFertig: formOpt.beiFertig
+        });
+      }),
       knopf('Analyse bearbeiten', true, analyseBearbeiten)
     ),
     analyseAnzeige(),
