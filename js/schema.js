@@ -169,6 +169,24 @@ export const SCHEMA = {
       { name: 'ort', label: 'Ort', typ: 'text' },
       { name: 'beschreibung', label: 'Beschreibung', typ: 'langtext' }
     ]
+  },
+  Mobi_Plan: {
+    titel: 'Mobi',
+    felder: [
+      { name: 'kanal', label: 'Kanal', typ: 'text', pflicht: true },
+      { name: 'format', label: 'Format', typ: 'auswahl', optionen: ['beitrag', 'reel', 'story', 'video', 'text', 'sonstiges'] },
+      { name: 'titel', label: 'Thema / Titel', typ: 'text', pflicht: true },
+      { name: 'text', label: 'Haupt-Text', typ: 'langtext' },
+      { name: 'kanal_text', label: 'Text für diesen Kanal', typ: 'langtext' },
+      { name: 'hashtags', label: 'Hashtags', typ: 'text' },
+      { name: 'datum', label: 'Datum', typ: 'datum' },
+      { name: 'uhrzeit', label: 'Uhrzeit', typ: 'zeit' },
+      { name: 'status', label: 'Status', typ: 'auswahl', optionen: ['idee', 'entwurf', 'review', 'bereit', 'veroeffentlicht'] },
+      { name: 'verantwortlich', label: 'Verantwortlich', typ: 'text' },
+      { name: 'canva_link', label: 'Canva-Link (https://…)', typ: 'text' },
+      { name: 'ergebnis', label: 'Ergebnis (z. B. Reichweite, freiwillig)', typ: 'text' },
+      { name: 'notiz', label: 'Notiz', typ: 'langtext' }
+    ]
   }
 };
 
