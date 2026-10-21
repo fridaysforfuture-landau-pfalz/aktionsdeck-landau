@@ -163,8 +163,8 @@ export async function render(container, ctx) {
   });
 
   // Archiv, Vorlagen und Veranstaltung stehen in einer Reihe mit Liste und Monat
-  ansichtRechts.append(archivKnopf, vorlagenKnopf, neuKnopf);
-
+  ansichtRechts.append(vorlagenKnopf, neuKnopf);
+  
   // Filter: Symbol rechts neben der Suche, klappt die Häkchen auf (am PC immer sichtbar)
   const filterKnopf = el('button', {
     class: 'knopf knopf-hell kal-filterknopf', type: 'button',
@@ -205,7 +205,7 @@ export async function render(container, ctx) {
   let aktionInhalt = null;
 
   container.append(el('div', { class: 'seite' },
-    el('div', { class: 'kopfzeile' }, el('h1', { text: 'Kalender' })),
+    el('div', { class: 'kopfzeile' }, el('h1', { text: 'Kalender' }), archivKnopf),
     kalenderBox,
     aktionBox
   ));
@@ -215,6 +215,7 @@ export async function render(container, ctx) {
   function aktionSchalten(an) {
     kalenderBox.hidden = an;
     aktionBox.hidden = !an;
+    archivKnopf.hidden = an;
     if (!an) return;
     if (!aktionInhalt) aktionInhalt = baueAktionskalender(s, ctx);
     leeren(aktionBox);
