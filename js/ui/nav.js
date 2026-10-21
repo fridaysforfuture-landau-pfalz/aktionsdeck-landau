@@ -11,7 +11,7 @@ export const TABS = [
   { id: 'projekte', label: 'Projekte', icon: '📁' },
   { id: 'todos', label: 'ToDos', icon: '✅' },
   { id: 'material', label: 'Material', icon: '📦' },
-  { id: 'posts', label: 'Posts', icon: '📣' },
+  { id: 'mobi', label: 'Mobi', icon: '📣' },
   { id: 'kalender', label: 'Kalender', icon: '📅' },
   { id: 'hilfe', label: 'Hilfe', icon: '❓' }
 ];
