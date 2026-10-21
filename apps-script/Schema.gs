@@ -13,8 +13,8 @@ var TABELLEN = {
   Personen: ['name', 'aktiv'],
   Material: ['name', 'kategorie', 'unterkategorie', 'anzahl', 'einheit', 'ort', 'foto_id', 'notiz', 'aktiv', 'typ'],
   Ausleihe: ['material_id', 'projekt_id', 'person', 'art', 'anzahl', 'datum', 'notiz'],
-  ToDos: ['projekt_id', 'post_id', 'text', 'verantwortlich', 'faellig_am', 'erledigt', 'erledigt_am', 'erledigt_von', 'prioritaet', 'sortierung', 'details', 'meilenstein_id'],
-  Projekte: ['titel', 'beschreibung', 'ort', 'status', 'start_datum', 'aktionsdatum', 'deadline', 'budget_geplant', 'aktionsart'],
+  ToDos: ['projekt_id', 'post_id', 'text', 'verantwortlich', 'faellig_am', 'erledigt', 'erledigt_am', 'erledigt_von', 'prioritaet', 'sortierung', 'details', 'meilenstein_id', 'mobi_id'],
+  Projekte: ['titel', 'beschreibung', 'ort', 'status', 'start_datum', 'aktionsdatum', 'deadline', 'budget_geplant', 'aktionsart','zielgruppe', 'werbeart', 'kampagnenziel', 'handlungsaufruf', 'kanaele'],
   Meilensteine: ['projekt_id', 'titel', 'datum', 'verantwortlich', 'erledigt'],
   Projekt_Team: ['projekt_id', 'person', 'zustaendigkeit'],
   Projekt_Material: ['projekt_id', 'material_id', 'name', 'kategorie', 'menge', 'beschaffung', 'beschafft', 'notiz'],
@@ -29,8 +29,12 @@ var TABELLEN = {
   Mitteilungen: ['titel', 'text', 'angeheftet', 'farbe'],
   Ideen: ['titel', 'beschreibung', 'aktionsart', 'projekt_id'],
   Veranstaltungen: ['titel', 'art', 'datum', 'datum_ende', 'zeit_von', 'zeit_bis', 'ort',
-                    'beschreibung', 'veranstalter', 'link', 'oeffentlich', 'farbe'],
-  Termin_Vorlagen: ['name', 'art', 'wochentag', 'zeit_von', 'zeit_bis', 'ort', 'beschreibung']
+                    'beschreibung', 'veranstalter', 'link', 'oeffentlich', 'farbe'], 
+  Termin_Vorlagen: ['name', 'art', 'wochentag', 'zeit_von', 'zeit_bis', 'ort', 'beschreibung'],
+  // Mobi_Plan: ein Beitrag je Kanal. Gehört zu einem Projekt oder einer Veranstaltung.
+  // status = idee | entwurf | review | bereit | veroeffentlicht. datum JJJJ-MM-TT, uhrzeit HH:MM (Text).
+  Mobi_Plan: ['projekt_id', 'veranstaltung_id', 'kanal', 'format', 'titel', 'text', 'kanal_text', 'hashtags',
+              'datum', 'uhrzeit', 'status', 'verantwortlich', 'canva_link', 'ergebnis', 'notiz']
 };
 
 // System-Tabs (über die API nicht direkt änderbar)
