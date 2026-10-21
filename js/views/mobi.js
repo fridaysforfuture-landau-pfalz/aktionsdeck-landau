@@ -431,21 +431,23 @@ export async function render(container, ctx) {
     }
   };
 
-  // Kanalfarbe, Überfällig (rot) und Erledigt (grau) an Zeilen und Karten setzen
+  // Kanalfarbe (Balken bleibt immer in Kanalfarbe), Erledigt (grau) an Zeilen und Karten setzen.
+  // Überfällig: Titel rot und fett. Heute fällig: Titel orange und fett.
   function markieren(box, zeilen) {
     const reihen = box.querySelectorAll('tbody tr');
     const karten = box.querySelectorAll('.karten-liste .karte');
     zeilen.forEach(function (z, i) {
-      const klassen = [];
-      if (istVeroeffentlicht(z)) klassen.push('erledigt');
+      if (istVeroeffentlicht(z)) {
+        if (reihen[i]) reihen[i].classList.add('erledigt');
+        if (karten[i]) karten[i].classList.add('erledigt');
+      }
       const st = faelligStatus(z);
-      if (st) klassen.push(st);
-      klassen.forEach(function (k) {
-        if (reihen[i]) reihen[i].classList.add(k);
-        if (karten[i]) karten[i].classList.add(k);
-      });
       const farbe = kanalInfo(z.kanal).farbe;
-      if (karten[i] && !st) karten[i].style.borderLeft = '6px solid ' + farbe;
+      if (karten[i]) {
+        karten[i].style.borderLeft = '6px solid ' + farbe;
+        const titel = karten[i].querySelector('.karten-text strong');
+        if (titel && st) titel.classList.add('mobi-titel-' + st);
+      }
       if (reihen[i]) {
         const zellen = reihen[i].querySelectorAll('td');
         const zelle = zellen[0] && zellen[0].classList.contains('auswahl-spalte') ? zellen[1] : zellen[0];
@@ -453,6 +455,8 @@ export async function render(container, ctx) {
           const p = el('span', { class: 'mobi-punkt', 'aria-hidden': 'true' });
           p.style.background = farbe;
           zelle.prepend(p);
+          // Spalte nach "Kanal" ist der Titel
+          if (st && zelle.nextElementSibling) zelle.nextElementSibling.classList.add('mobi-titel-' + st);
         }
       }
     });
@@ -502,7 +506,7 @@ export async function render(container, ctx) {
         class: 'kanban-titel', type: 'button',
         onclick: function () { beitragOeffnen(b); }
       },
-        el('strong', { text: txt(b.titel) }),
+        el('strong', { class: st ? 'mobi-titel-' + st : '', text: txt(b.titel) }),
         el('span', { class: 'leise', text: [txt(b.kanal), FORMAT_TEXT[txt(b.format)] || ''].filter(Boolean).join(' · ') }),
         el('span', { class: 'leise ' + st, text: datumZeile(b) }),
         el('span', { class: 'leise', text: [bezugText(b), txt(b.verantwortlich)].filter(Boolean).join(' · ') })

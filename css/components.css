@@ -2235,11 +2235,8 @@ p.notiz.erledigt {
 .oeff-heften { justify-self: start; margin: 0 12px 10px; }
 
 /* ---- 0.29.2: Mobi ---- */
-.mobi-kanal { flex-wrap: wrap; gap: 8px 10px; padding: 6px 0; }
 .mobi-punkt { width: 14px; height: 14px; flex: none; margin-left: 4px; border-radius: 50%; }
 .mobi-kanal-text { display: grid; flex: 1; min-width: 140px; }
-.mobi-rolle { width: auto; min-width: 150px; }
-.mobi-luecke { color: #b3261e; font-size: 13px; font-weight: 600; }
 .mobi-zaehler { font-size: 13px; }
 .mobi-zaehler.ueber { color: #b3261e; font-weight: 600; }
 .mobi-analyse dd { white-space: pre-wrap; }
@@ -2303,3 +2300,12 @@ p.notiz.erledigt {
 /* ---- 0.29.4: Mobi-Vorlagen ---- */
 .vorlage-text .leise { font-size: 13px; }
 .vorlage-liste > .knopf-klein { justify-self: start; margin-top: 6px; }
+
+/* ---- 0.29.5: Mobi Kanalzeile und überfällige Beiträge ---- */
+.mobi-kanaele { margin: 4px 0 8px; font-size: 14px; line-height: 1.8; }
+.mobi-kanal-zahl { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; vertical-align: middle; }
+.mobi-kanaele .mobi-punkt { width: 10px; height: 10px; margin-left: 0; }
+.mobi-titel-ueberfaellig,
+.tabelle td.mobi-titel-ueberfaellig { color: #b3261e; font-weight: 700; }
+.mobi-titel-heute,
+.tabelle td.mobi-titel-heute { color: #c77c00; font-weight: 700; }

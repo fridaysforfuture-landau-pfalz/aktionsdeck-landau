@@ -174,14 +174,21 @@ export const SCHEMA = {
     titel: 'Mobi',
     felder: [
       { name: 'kanal', label: 'Kanal', typ: 'text', pflicht: true },
-      { name: 'format', label: 'Format', typ: 'auswahl', optionen: ['beitrag', 'reel', 'story', 'video', 'text', 'sonstiges'] },
+      // Angezeigt groß, gespeichert klein
+      { name: 'format', label: 'Format', typ: 'auswahl', optionen: [
+        { wert: 'beitrag', label: 'Beitrag' }, { wert: 'reel', label: 'Reel' }, { wert: 'story', label: 'Story' },
+        { wert: 'video', label: 'Video' }, { wert: 'text', label: 'Text' }, { wert: 'sonstiges', label: 'Sonstiges' }
+      ] },
       { name: 'titel', label: 'Thema / Titel', typ: 'text', pflicht: true },
       { name: 'text', label: 'Haupt-Text', typ: 'langtext' },
       { name: 'kanal_text', label: 'Text für diesen Kanal', typ: 'langtext' },
       { name: 'hashtags', label: 'Hashtags', typ: 'text' },
       { name: 'datum', label: 'Datum', typ: 'datum' },
       { name: 'uhrzeit', label: 'Uhrzeit', typ: 'zeit' },
-      { name: 'status', label: 'Status', typ: 'auswahl', optionen: ['idee', 'entwurf', 'review', 'bereit', 'veroeffentlicht'] },
+      { name: 'status', label: 'Status', typ: 'auswahl', optionen: [
+        { wert: 'idee', label: 'Idee' }, { wert: 'entwurf', label: 'Entwurf' }, { wert: 'review', label: 'Review' },
+        { wert: 'bereit', label: 'Bereit' }, { wert: 'veroeffentlicht', label: 'Veröffentlicht' }
+      ] },
       { name: 'verantwortlich', label: 'Verantwortlich', typ: 'text' },
       { name: 'canva_link', label: 'Canva-Link (https://…)', typ: 'text' },
       { name: 'ergebnis', label: 'Ergebnis (z. B. Reichweite, freiwillig)', typ: 'text' },
