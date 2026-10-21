@@ -2,6 +2,7 @@
 // Start-Reiter: Dashboard. Kachel Projekte zeigt die laufenden Projekte (Aktiv zuerst, dann Planung)
 // mit Fortschrittsbalken (Klick = ins Projekt) und je Projekt einen Schalter "ToDos (n offen)".
 // Kachel ToDos zeigt die offenen, allgemeinen ToDos (ohne Projekt und Post).
+// In den Projekt-Blöcken stehen bei "ToDos" auch die Sammel-ToDos aus Mobi (js/views/mobi-todo.js, ohne Kästchen).
 // Erledigte (nur die der letzten 2 Wochen) per Schalter oben rechts. ToDos haben ein Kästchen zum Abhaken.
 // Die anderen Kacheln sind noch Platzhalter (Posts/Kalender Etappe 5).
 
@@ -30,6 +31,7 @@ import {
 import {
   istAbgeschlossen, fortschritt, fortschrittText, sortiereProjekte, terminText
 } from './projekt-rechnen.js';
+import { sammelTodos, istSammel, sammelInfo, oeffneSammel } from './mobi-todo.js';
 
 const MAX_OFFEN = 10;
 const MAX_ERLEDIGT = 10;
@@ -62,6 +64,7 @@ export async function render(container, ctx) {
   let letzte = null;        // { daten, meta } der ToDos
   let projektDaten = null;  // { projekte }
   let projektFehler = '';
+  let mobiDaten = null;     // { mobi } für die Sammel-ToDos
   let extraDaten = null;    // { umfragen, antworten, mitteilungen }
   let extraJson = '';
   let offline = false;
@@ -237,6 +240,7 @@ export async function render(container, ctx) {
     }
     const gezeigt = laufend.slice(0, MAX_PROJEKTE);
     const todos = letzte ? letzte.daten.todos : [];
+    const sammel = mobiDaten ? sammelTodos(mobiDaten.mobi, projektDaten.projekte) : [];
 
     if (letzte) {
       const alleAuf = gezeigt.every(function (p) { return projektOffen[String(p.id)]; });
@@ -274,7 +278,8 @@ export async function render(container, ctx) {
         const offeneAlle = todos.filter(function (t) {
           return String(t.projekt_id || '').trim() === id && !istWahr(t.erledigt);
         });
-        const mitWer = sortieren(offeneAlle.filter(function (t) { return !istOffenerHut(t); }));
+        const offeneSammel = sammel.filter(function (t) { return t.projekt_id === id && !t.erledigt; });
+        const mitWer = sortieren(offeneAlle.filter(function (t) { return !istOffenerHut(t); }).concat(offeneSammel));
         const hueteListe = sortieren(offeneAlle.filter(istOffenerHut));
         const keyHut = id + ':hut';
 
@@ -314,6 +319,26 @@ export async function render(container, ctx) {
       projektListe.append(el('p', {
         class: 'leise', text: '… und ' + (laufend.length - MAX_PROJEKTE) + ' weitere'
       }));
+    }
+  }
+
+  async function ladeMobi(zuerstCache) {
+    try {
+      await ladeMitCache(
+        s.gruppe_id + ':startmobi',
+        async function () {
+          const r = await api('list', { tabelle: 'Mobi_Plan' }, s.token);
+          return { mobi: r.zeilen };
+        },
+        function (daten) {
+          mobiDaten = daten;
+          zeichneProjekte();
+        },
+        zuerstCache
+      );
+    } catch (e) {
+      // Ohne Mobi-Daten fehlen nur die Sammel-ToDos
+      ctx.behandleFehler(e);
     }
   }
 
@@ -457,7 +482,30 @@ export async function render(container, ctx) {
     };
   }
 
+  // Sammel-ToDo aus Mobi: kein Kästchen, Klick öffnet den Reiter Mobi (Kanban, gefiltert)
+  function sammelZeile(t) {
+    const klassen = ['dash-todo', 'pt-todo'];
+    // Überfällig/heute: Balken bleibt in Kanalfarbe, nur der Titel wird rot oder orange
+    const st = faelligStatus(t);
+    const punkt = el('span', { class: 'mobi-punkt', 'aria-hidden': 'true' });
+    punkt.style.background = t._farbe;
+    const li = el('li', { class: 'dash-zeile mobi-sammel' },
+      el('span', { class: 'mobi-sammel-platz', 'aria-hidden': 'true' }, punkt),
+      el('button', {
+        class: klassen.join(' '), type: 'button',
+        onclick: function () { oeffneSammel(ctx, t); }
+      },
+        el('strong', { class: st ? 'mobi-titel-' + st : '', text: t.text }),
+        el('span', { class: 'leise', text: [sammelInfo(t), t.faellig_am ? 'Nächster Termin ' + faelligText(t) : '']
+          .filter(Boolean).join(' · ') })
+      )
+    );
+    li.style.borderLeft = '6px solid ' + t._farbe;
+    return li;
+  }
+
   function zeile(t, href, mitHut) {
+    if (istSammel(t)) return sammelZeile(t);
     const fertig = istWahr(t.erledigt);
     const klassen = ['dash-todo'];
     if (fertig) klassen.push('erledigt');
@@ -596,7 +644,7 @@ export async function render(container, ctx) {
   // Während ein Häkchen noch gespeichert wird, wird nicht aktualisiert
   ctx.setzeRefresh(function () {
     if (Object.keys(arbeitet).length) return Promise.resolve();
-    return Promise.all([laden(false), ladeProjekte(false), ladeExtra(false), pinnwand.laden(), ladeNeuSeit(false)]);
+    return Promise.all([laden(false), ladeProjekte(false), ladeMobi(false), ladeExtra(false), pinnwand.laden(), ladeNeuSeit(false)]);
   });
-  await Promise.all([laden(true), ladeProjekte(true), ladeExtra(true), ladeNeuSeit(true)]);
+  await Promise.all([laden(true), ladeProjekte(true), ladeMobi(true), ladeExtra(true), ladeNeuSeit(true)]);
 }

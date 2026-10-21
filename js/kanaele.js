@@ -37,7 +37,7 @@ export const KANAELE = [
   { id: 'sonstiges', name: 'Sonstiges', farbe: '#596360', gruppe: 'sonstiges', limit: 0, schritte: S }
 ];
 
-// Standard-Beiträge je Kanal (Kennung aus KANAELE) für „+ Beiträge“.
+// Standard-Beiträge je Kanal (Kennung aus KANAELE) für „+ Beiträge planen“.
 // tage_vorher = so viele Tage VOR dem Bezugsdatum (Aktionsdatum oder Veranstaltungsdatum), negativ = danach.
 // Alle Tage sind Platzhalter und leicht änderbar. Nachlesen: docs/MOBI-STANDARD-BEITRAEGE.md (bei Änderung mitpflegen).
 // Sonstiges hat keinen Satz: dort gibt die Person einen eigenen Titel ein.

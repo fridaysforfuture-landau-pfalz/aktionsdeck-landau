@@ -1,5 +1,5 @@
 // js/views/mobi-sammlung.js
-// Fenster „+ Beiträge“: Kanäle wählen, dann Standard-Beiträge in einer Vorschau prüfen und gemeinsam anlegen.
+// Fenster „+ Beiträge planen“: Kanäle wählen, dann Standard-Beiträge in einer Vorschau prüfen und gemeinsam anlegen.
 // Schritt 1: Kanäle als Häkchen (nach Kanalgruppen), darunter „Sonstiges“ mit freiem Titel.
 // Schritt 2: Vorschau mit Haken, Titel, Format und Datum (änderbar). Was es schon gibt, ist grau.
 // Datum = Bezugsdatum minus tage_vorher (js/kanaele.js, STANDARD_BEITRAEGE).
