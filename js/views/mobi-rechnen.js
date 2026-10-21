@@ -3,12 +3,15 @@
 
 import { normDatum, datumText, heuteIso, archivGrenze } from './todos-rechnen.js';
 import { zeitNorm } from './kalender-rechnen.js';
-import { FORMAT_TEXT } from '../kanaele.js';
+import { FORMAT_TEXT, SCHRITTE_VIDEO, kanalInfo } from '../kanaele.js';
 
 const STATUS_TEXT = {
   idee: 'Idee',
   entwurf: 'Entwurf',
+  gedreht: 'Gedreht',
+  geschnitten: 'Geschnitten',
   review: 'Review',
+  anpassung: 'Anpassung',
   bereit: 'Bereit',
   veroeffentlicht: 'Veröffentlicht'
 };
@@ -78,7 +81,29 @@ export function beitragInfo(b) {
   ].filter(Boolean).join(' · ');
 }
 
-export const STATI = ['idee', 'entwurf', 'review', 'bereit', 'veroeffentlicht'];
+// Alle Status in der längsten Reihenfolge (Video). Kanäle ohne Video-Schritte nutzen einen Teil davon.
+export const STATI = SCHRITTE_VIDEO.slice();
+
+// Status-Reihenfolge des Kanals (Standard oder Video). Unbekannte Kanäle: Standard.
+export function statiFuer(kanalName) {
+  return kanalInfo(kanalName).schritte.slice();
+}
+
+// Vorheriger (schritt -1) oder nächster (schritt +1) Status in der Reihenfolge des Kanals dieses Beitrags.
+// Steht der Status nicht in dieser Reihenfolge (z. B. "gedreht" bei Facebook), zählt seine Stelle in STATI.
+// Gibt '' zurück, wenn es keinen gibt.
+export function nachbarStatus(b, schritt) {
+  const reihe = statiFuer(b.kanal);
+  const jetzt = statusKey(b);
+  const i = reihe.indexOf(jetzt);
+  if (i >= 0) return reihe[i + schritt] || '';
+  const pos = STATI.indexOf(jetzt);
+  if (schritt > 0) {
+    return reihe.find(function (x) { return STATI.indexOf(x) > pos; }) || '';
+  }
+  const davor = reihe.filter(function (x) { return STATI.indexOf(x) < pos; });
+  return davor.length ? davor[davor.length - 1] : '';
+}
 
 // Status als Schlüssel. Unbekannt oder leer zählt als "idee".
 export function statusKey(b) {
