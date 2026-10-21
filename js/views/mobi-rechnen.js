@@ -1,7 +1,7 @@
 // js/views/mobi-rechnen.js
 // Rechenhelfer für Mobi: Status, Fälligkeit, Sortierung, Infozeile.
 
-import { normDatum, datumText, heuteIso } from './todos-rechnen.js';
+import { normDatum, datumText, heuteIso, archivGrenze } from './todos-rechnen.js';
 import { zeitNorm } from './kalender-rechnen.js';
 import { FORMAT_TEXT } from '../kanaele.js';
 
@@ -67,4 +67,28 @@ export function beitragInfo(b) {
     statusText(b.status),
     String(b.verantwortlich || '').trim()
   ].filter(Boolean).join(' · ');
+}
+
+export const STATI = ['idee', 'entwurf', 'review', 'bereit', 'veroeffentlicht'];
+
+// Status als Schlüssel. Unbekannt oder leer zählt als "idee".
+export function statusKey(b) {
+  const s = String(b.status || '').trim();
+  return STATI.indexOf(s) >= 0 ? s : 'idee';
+}
+
+// "12.09.2026 18:30 (überfällig)" oder "Ohne Datum"
+export function datumZeile(b) {
+  if (!normDatum(b.datum)) return 'Ohne Datum';
+  const st = faelligStatus(b);
+  const z = zeitNorm(b.uhrzeit);
+  return datumText(b.datum) + (z ? ' ' + z : '') +
+    (st === 'ueberfaellig' ? ' (überfällig)' : st === 'heute' ? ' (heute)' : '');
+}
+
+// Veröffentlicht und die letzte Änderung ist mehr als 2 Wochen her
+export function istArchiv(b) {
+  if (!istVeroeffentlicht(b)) return false;
+  const d = normDatum(b.geaendert_am) || normDatum(b.datum);
+  return !!d && d < archivGrenze();
 }
