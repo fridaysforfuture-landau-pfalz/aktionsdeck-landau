@@ -32,7 +32,8 @@ var TABELLEN = {
                     'beschreibung', 'veranstalter', 'link', 'oeffentlich', 'farbe'], 
   Termin_Vorlagen: ['name', 'art', 'wochentag', 'zeit_von', 'zeit_bis', 'ort', 'beschreibung'],
   // Mobi_Plan: ein Beitrag je Kanal. Gehört zu einem Projekt oder einer Veranstaltung.
-  // status = idee | entwurf | review | bereit | veroeffentlicht. datum JJJJ-MM-TT, uhrzeit HH:MM (Text).
+  // status = idee | entwurf | gedreht | geschnitten | review | anpassung | bereit | veroeffentlicht
+  // (gedreht und geschnitten nur bei Instagram und TikTok, siehe js/kanaele.js). datum JJJJ-MM-TT, uhrzeit HH:MM (Text).
   Mobi_Plan: ['projekt_id', 'veranstaltung_id', 'kanal', 'format', 'titel', 'text', 'kanal_text', 'hashtags',
               'datum', 'uhrzeit', 'status', 'verantwortlich', 'canva_link', 'ergebnis', 'notiz']
 };

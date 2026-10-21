@@ -2364,3 +2364,28 @@ p.notiz.erledigt {
   .mobi-spalte.leer { display: block; }
   .mobi-kacheln-flaeche { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
+
+/* ---- 0.29.7: Mobi „+ Beiträge“, Kanban am PC ganz sichtbar ---- */
+.mobi-sammlung .vorlage-liste { margin-bottom: 8px; }
+.mobi-hinweis {
+  padding: 8px 10px;
+  border-left: 4px solid #c77c00;
+  border-radius: var(--radius);
+  background: #fff7e8;
+}
+.mobi-vorschau .vorlage-text { flex: 1; min-width: 0; }
+.mobi-vorschau-felder { display: flex; flex-wrap: wrap; gap: 6px; }
+.mobi-vorschau-felder .feld { width: auto; min-width: 0; flex: 1 1 130px; }
+.mobi-vorschau-felder .mobi-vorschau-titel { flex: 3 1 220px; }
+.mobi-vorschau.gibt-es .vorlage-text { opacity: 0.6; }
+.kanban-knoepfe { flex-wrap: wrap; }
+
+@media (min-width: 960px) {
+  /* Alle Spalten sind sichtbar: Sie brechen bei Bedarf in eine zweite Reihe um, statt seitwärts zu scrollen */
+  .kanban {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    overflow-x: visible;
+  }
+  .kanban-spalte { min-width: 0; }
+}
