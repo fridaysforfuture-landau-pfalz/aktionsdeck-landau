@@ -11,7 +11,8 @@ import { toast } from '../ui/toast.js';
 import { baueKommentare } from '../ui/kommentare.js';
 import { SCHEMA } from '../schema.js';
 import { kanaeleFuer, kanalInfo, FORMAT_HINWEIS } from '../kanaele.js';
-import { normDatum } from './todos-rechnen.js';
+import { normDatum, datumText, kurz } from './todos-rechnen.js';
+import { istWahr } from '../schema.js';
 import { zeitNorm, sichereUrl } from './kalender-rechnen.js';
 
 function txt(v) {
@@ -173,6 +174,19 @@ export function zeigeBeitragFormular(opt, b, vorgabe) {
         onclick: function () { loeschen(opt, b, fenster); }
       })
     ));
+    const zt = opt.todosVon ? opt.todosVon(b) : [];
+    if (zt.length) {
+      inhalt.append(
+        el('h3', { text: 'Zugehörige ToDos' }),
+        el('ul', { class: 'verlauf' }, ...zt.map(function (t) {
+          return el('li', {
+            text: (istWahr(t.erledigt) ? '✔ ' : '☐ ') + kurz(t.text, 70) +
+              (t.faellig_am ? ' · ' + datumText(t.faellig_am) : '') +
+              (txt(t.verantwortlich) ? ' · ' + txt(t.verantwortlich) : ' · Hut frei')
+          });
+        }))
+      );
+    }
     inhalt.append(baueKommentare({
       ctx: opt.ctx, token: opt.token, art: 'mobi', bezugId: b.id, projektId: txt(b.projekt_id)
     }).el);
