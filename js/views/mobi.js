@@ -26,6 +26,7 @@ import {
 import { zeigeBeitragFormular } from './mobi-eintrag.js';
 import { baueSpalten, baueKachelFlaeche } from './mobi-kachel.js';
 import { zeigeSammlung } from './mobi-sammlung.js';
+import { nimmMobiVorgabe } from './mobi-todo.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = { token: '', ansicht: 'liste' };
@@ -39,6 +40,14 @@ export async function render(container, ctx) {
   leeren(container);
 
   if (merk.token !== s.token) merk = { token: s.token, ansicht: 'liste' };
+  // Vorgabe aus einem Sammel-ToDo (Projekt, Kanal, Ansicht). Wird nur einmal benutzt.
+  const vorgabe = nimmMobiVorgabe();
+  let vorgabeBezug = '';
+  if (vorgabe) {
+    merk.ansicht = vorgabe.ansicht || merk.ansicht;
+    vorgabeBezug = vorgabe.projekt ? 'p:' + vorgabe.projekt : '';
+  }
+  let kanbanScroll = 0;     // Seitwärts-Stand im Kanban (bleibt beim Aktualisieren erhalten)
 
   const cacheKey = s.gruppe_id + ':mobi';
   let daten = { mobi: [], projekte: [], veranstaltungen: [], todos: [] };
@@ -71,6 +80,7 @@ export async function render(container, ctx) {
   kanaeleFuer(s.kurzname).forEach(function (k) {
     kanalWahl.append(el('option', { value: k.id, text: k.name }));
   });
+  if (vorgabe && vorgabe.kanal) kanalWahl.value = vorgabe.kanal;
   const bezugWahl = el('select', { class: 'feld', 'aria-label': 'Projekt oder Veranstaltung' });
   const werWahl = el('select', { class: 'feld', 'aria-label': 'Verantwortlich' });
   const statusWahl = el('select', { class: 'feld', 'aria-label': 'Status' },
@@ -110,11 +120,11 @@ export async function render(container, ctx) {
     }
   });
   const neuKnopf = el('button', {
-    class: 'knopf', type: 'button', text: '+ Beitrag',
+    class: 'knopf knopf-hell', type: 'button', text: '+ Einzelner Beitrag',
     onclick: function () { neuerBeitrag(); }
   });
   const sammelKnopf = el('button', {
-    class: 'knopf knopf-hell', type: 'button', text: '+ Beiträge',
+    class: 'knopf', type: 'button', text: '+ Beiträge planen',
     onclick: function () { neueBeitraege(); }
   });
 
@@ -242,7 +252,7 @@ export async function render(container, ctx) {
     zeigeBeitragFormular(formOpt(), null);
   }
 
-  // „+ Beiträge“ nur mit gewähltem Projekt oder gewählter Veranstaltung (Filter oben)
+  // „+ Beiträge planen“ nur mit gewähltem Projekt oder gewählter Veranstaltung (Filter oben)
   function neueBeitraege() {
     const wert = bezugWahl.value;
     if (!wert) {
@@ -316,7 +326,9 @@ export async function render(container, ctx) {
     leeren(bezugWahl);
     bezugWahl.append(el('option', { value: '', text: 'Alle Projekte und Veranstaltungen' }));
     optionen.forEach(function (o) { bezugWahl.append(el('option', { value: o.wert, text: o.label })); });
-    bezugWahl.value = optionen.some(function (o) { return o.wert === alt; }) ? alt : '';
+    const wunsch = vorgabeBezug || alt;
+    bezugWahl.value = optionen.some(function (o) { return o.wert === wunsch; }) ? wunsch : '';
+    vorgabeBezug = '';
   }
 
   function trifft(b, mitStatus) {
@@ -613,13 +625,17 @@ export async function render(container, ctx) {
     return karte;
   }
 
+  // Kanban in einer Reihe. Darüber: Seiten-Knöpfe (‹ Seite 1 · Seite 2 ›, in Klammern die Zahl der Beiträge
+  // auf der Seite, die gerade nicht zu sehen ist) und eine Leiste zum Verschieben direkt über den Spalten.
   function kanbanZeichnen(passend) {
     leeren(boxKanban);
     const wrap = el('div', { class: 'kanban' });
+    const anzahl = [];
     kanbanSpalten(passend).forEach(function (st) {
       let l = passend.filter(function (b) { return statusKey(b) === st; });
       if (st === 'veroeffentlicht') l = l.filter(function (b) { return !istArchiv(b); });
       l = sortiereBeitraege(l);
+      anzahl.push(l.length);
       const karten = el('div', { class: 'kanban-karten' });
       if (!l.length) karten.append(el('p', { class: 'leise', text: 'Nichts in dieser Spalte.' }));
       l.forEach(function (b) { karten.append(kanbanKarte(b)); });
@@ -628,7 +644,70 @@ export async function render(container, ctx) {
         karten
       ));
     });
-    boxKanban.append(wrap);
+
+    const zurueck = el('button', { class: 'knopf knopf-hell knopf-klein', type: 'button' });
+    const weiter = el('button', { class: 'knopf knopf-hell knopf-klein', type: 'button' });
+    const seiteText = el('span', { class: 'leise' });
+    const nav = el('div', { class: 'kanban-nav' }, zurueck, seiteText, weiter);
+    const innen = el('div', { class: 'kanban-leiste-innen' });
+    const leiste = el('div', { class: 'kanban-leiste', 'aria-hidden': 'true' }, innen);
+    boxKanban.append(nav, leiste, wrap);
+
+    let seite = 0;
+    function mass() {
+      const spalte = wrap.querySelector('.kanban-spalte');
+      const breite = spalte ? spalte.offsetWidth : 1;
+      const abstand = parseFloat(getComputedStyle(wrap).columnGap) || 0;
+      const proSeite = Math.max(1, Math.floor((wrap.clientWidth + abstand) / (breite + abstand)));
+      return { schritt: proSeite * (breite + abstand), proSeite: proSeite, seiten: Math.ceil(anzahl.length / proSeite) };
+    }
+    function beitraegeAuf(m, i) {
+      return anzahl.slice(i * m.proSeite, (i + 1) * m.proSeite).reduce(function (a, b) { return a + b; }, 0);
+    }
+    function aktualisieren() {
+      const m = mass();
+      const mehr = m.seiten > 1;
+      nav.hidden = !mehr;
+      leiste.hidden = !mehr;
+      if (!mehr) return;
+      innen.style.width = wrap.scrollWidth + 'px';
+      const ende = wrap.scrollLeft >= wrap.scrollWidth - wrap.clientWidth - 2;
+      seite = ende ? m.seiten - 1 : Math.min(m.seiten - 1, Math.round(wrap.scrollLeft / m.schritt));
+      seiteText.textContent = 'Seite ' + (seite + 1) + ' von ' + m.seiten;
+      zurueck.disabled = seite === 0;
+      weiter.disabled = seite >= m.seiten - 1;
+      zurueck.textContent = seite > 0 ? '‹ Seite ' + seite + ' (' + beitraegeAuf(m, seite - 1) + ')' : '‹';
+      weiter.textContent = seite < m.seiten - 1 ? 'Seite ' + (seite + 2) + ' (' + beitraegeAuf(m, seite + 1) + ') ›' : '›';
+      zurueck.title = seite > 0 ? beitraegeAuf(m, seite - 1) + ' Beiträge auf Seite ' + seite : '';
+      weiter.title = seite < m.seiten - 1 ? beitraegeAuf(m, seite + 1) + ' Beiträge auf Seite ' + (seite + 2) : '';
+    }
+    function gehe(i) {
+      wrap.scrollTo({ left: i * mass().schritt, behavior: 'smooth' });
+    }
+    zurueck.addEventListener('click', function () { gehe(seite - 1); });
+    weiter.addEventListener('click', function () { gehe(seite + 1); });
+
+    // Leiste oben und Kanban gegenseitig mitbewegen
+    leiste.addEventListener('scroll', function () {
+      if (Math.abs(wrap.scrollLeft - leiste.scrollLeft) > 1) wrap.scrollLeft = leiste.scrollLeft;
+    });
+    wrap.addEventListener('scroll', function () {
+      kanbanScroll = wrap.scrollLeft;
+      if (Math.abs(leiste.scrollLeft - wrap.scrollLeft) > 1) leiste.scrollLeft = wrap.scrollLeft;
+      aktualisieren();
+    });
+    function beiGroesse() {
+      if (!document.body.contains(wrap)) { window.removeEventListener('resize', beiGroesse); return; }
+      aktualisieren();
+    }
+    window.addEventListener('resize', beiGroesse);
+
+    // Erst nach dem Einhängen messen; Stand vom letzten Zeichnen wiederherstellen
+    requestAnimationFrame(function () {
+      wrap.scrollLeft = kanbanScroll;
+      leiste.scrollLeft = kanbanScroll;
+      aktualisieren();
+    });
   }
 
   // ---- Zeichnen ----
@@ -733,7 +812,7 @@ export async function render(container, ctx) {
         class: 'leise',
         text: daten.mobi.length
           ? 'Keine offenen Beiträge gefunden.'
-          : 'Noch keine Beiträge. Lege sie im Projekt an oder mit „+ Beitrag“.'
+          : 'Noch keine Beiträge. Lege sie mit „+ Beiträge planen“ oder „+ Einzelner Beitrag“ an.'
       }));
     } else {
       boxListe.append(baueSpalten(offen, kachelOpt(auswahlModus)));

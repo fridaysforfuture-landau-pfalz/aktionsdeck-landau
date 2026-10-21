@@ -1,11 +1,11 @@
-# Mobi: Standard-Beiträge und ihre Tage (Stand 0.29.7)
+# Mobi: Standard-Beiträge und ihre Tage (Stand 0.29.8)
 
 Diese Datei ist zum Nachlesen. Die App liest die Werte **nicht** von hier,
 sondern aus `js/kanaele.js` (Liste `STANDARD_BEITRAEGE`). Wer dort etwas ändert, ändert es auch hier.
 
 ## So funktioniert es
 
-- Im Projekt (Teil „Mobi“) oder im Reiter Mobi (mit gewähltem Projekt oder gewählter Veranstaltung) gibt es den Knopf **„+ Beiträge“**.
+- Im Projekt (Teil „Mobi“) oder im Reiter Mobi (mit gewähltem Projekt oder gewählter Veranstaltung) gibt es den Knopf **„+ Beiträge planen“** (früher „+ Beiträge“). Einzelne Beiträge legst du mit „+ Einzelner Beitrag“ an.
 - Du wählst Kanäle. Pro Kanal schlägt die App die Beiträge aus der Tabelle unten vor.
 - **Bezugsdatum** ist das Aktionsdatum des Projekts (bei einer Veranstaltung ihr Datum).
 - **Tage vorher** heißt: so viele Tage **vor** dem Bezugsdatum wird der Beitrag veröffentlicht.

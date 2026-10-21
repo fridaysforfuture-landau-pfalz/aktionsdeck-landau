@@ -2389,3 +2389,40 @@ p.notiz.erledigt {
   }
   .kanban-spalte { min-width: 0; }
 }
+
+/* ---- 0.29.8: Kanban in einer Reihe mit Seiten-Knöpfen, Sammel-ToDos ---- */
+.kanban-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.kanban-nav[hidden], .kanban-leiste[hidden] { display: none; }
+.kanban-nav .knopf { min-width: 44px; }
+
+/* Leiste zum Verschieben direkt über den Spalten (läuft mit dem Kanban mit) */
+.kanban-leiste { display: none; overflow-x: auto; overflow-y: hidden; margin-bottom: 4px; }
+.kanban-leiste-innen { height: 1px; }
+.kanban-leiste { scrollbar-width: auto; scrollbar-color: #8a9490 var(--gruen-hell); }
+.kanban-leiste::-webkit-scrollbar { height: 12px; }
+.kanban-leiste::-webkit-scrollbar-track { border-radius: 6px; background: var(--gruen-hell); }
+.kanban-leiste::-webkit-scrollbar-thumb { border-radius: 6px; background: #8a9490; }
+
+@media (min-width: 960px) {
+  /* Wieder eine Reihe (statt Raster aus 0.29.7); die untere Leiste ist ausgeblendet, die obere bleibt */
+  .kanban { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .kanban::-webkit-scrollbar { display: none; }
+  .kanban-spalte { flex: 0 0 220px; }
+  .kanban-leiste:not([hidden]) { display: block; }
+}
+
+/* Sammel-ToDo: Platz statt Kästchen, mit Kanal-Punkt */
+.mobi-sammel-platz {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 26px;
+}
+.mobi-sammel-platz .mobi-punkt { margin: 0; }

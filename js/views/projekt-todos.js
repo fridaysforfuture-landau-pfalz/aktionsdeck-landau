@@ -26,6 +26,7 @@ import {
   fortschritt, meilensteinStand, sortiereMeilensteine, meilensteinFaellig
 } from './projekt-rechnen.js';
 import { huetKnoepfe, istOffenerHut } from './todos-hut.js';
+import { sammelTodos, istSammel, sammelInfo, oeffneSammel } from './mobi-todo.js';
 
 // Aufgeklappte Hut-Listen je Projekt (bleibt beim Neuzeichnen erhalten)
 const hutOffen = {};
@@ -53,6 +54,8 @@ export function baueTodoTeil(opt) {
   }));
   const f = fortschritt(pid, daten().todos);
   const kz = kommentarZahlen(daten().kommentare);
+  // Sammel-ToDos aus Mobi (berechnet, ohne Kästchen) stehen bei „Ohne Meilenstein“
+  const sammel = sammelTodos(daten().mobi || [], daten().projekte || [], pid);
 
   // ---- Hilfen ----
 
@@ -466,8 +469,34 @@ export function baueTodoTeil(opt) {
     return li; 
   }
 
+  // Sammel-ToDo: Kanalfarbe, kein Kästchen, Klick öffnet den Reiter Mobi
+  function sammelZeile(t) {
+    const fertig = istWahr(t.erledigt);
+    const klassen = ['dash-todo', 'pt-todo'];
+    if (fertig) klassen.push('erledigt');
+    // Überfällig/heute: Balken bleibt in Kanalfarbe, nur der Titel wird rot oder orange
+    const st = faelligStatus(t);
+    const punkt = el('span', { class: 'mobi-punkt', 'aria-hidden': 'true' });
+    punkt.style.background = t._farbe;
+    const li = el('li', { class: 'dash-zeile mobi-sammel' + (fertig ? ' erledigt' : '') },
+      el('span', { class: 'mobi-sammel-platz', 'aria-hidden': 'true' }, punkt),
+      el('button', {
+        class: klassen.join(' '), type: 'button',
+        onclick: function () { oeffneSammel(ctx, t); }
+      },
+        el('strong', { class: st ? 'mobi-titel-' + st : '', text: t.text }),
+        el('span', { class: 'leise', text: [sammelInfo(t), t.faellig_am ? 'Nächster Termin ' + faelligText(t) : '']
+          .filter(Boolean).join(' · ') })
+      )
+    );
+    li.style.borderLeft = '6px solid ' + t._farbe;
+    return li;
+  }
+
   function todoListe(liste) {
-    return el('ul', { class: 'dash-todo-liste' }, ...sortieren(liste).map(todoZeile));
+    return el('ul', { class: 'dash-todo-liste' }, ...sortieren(liste).map(function (t) {
+      return istSammel(t) ? sammelZeile(t) : todoZeile(t);
+    }));
   }
 
   function meilensteinBlock(m) {
@@ -568,14 +597,15 @@ export function baueTodoTeil(opt) {
     );
     body.append(hd);
   }
-  if (alle.length) body.append(el('p', { class: 'dash-zahlen', text: zahlenText(alle, getName()) }));
-  if (!alle.length && !ms.length) {
+  const mitSammel = alle.concat(sammel);
+  if (mitSammel.length) body.append(el('p', { class: 'dash-zahlen', text: zahlenText(mitSammel, getName()) }));
+  if (!mitSammel.length && !ms.length) {
     body.append(el('p', { class: 'leise', text: 'Noch keine ToDos in diesem Projekt.' }));
   }
   ms.forEach(function (m) { body.append(meilensteinBlock(m)); });
-  if (ohne.length) {
+  if (ohne.length || sammel.length) {
     if (ms.length) body.append(el('h3', { class: 'teil-titel-klein', text: 'Ohne Meilenstein' }));
-    body.append(todoListe(ohne));
+    body.append(todoListe(ohne.concat(sammel)));
   }
 
   const teil = el('details', { class: 'projekt-teil' });

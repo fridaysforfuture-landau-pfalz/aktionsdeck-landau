@@ -3,6 +3,8 @@
 // Der Knopf "Archiv" zeigt die ToDos, die vor mehr als 2 Wochen erledigt wurden.
 // Abhaken wird ohne Konfliktprüfung gespeichert. Bearbeiten im Formular prüft auf Konflikte.
 // Eine Spalte "Projekt" zeigt, zu welchem Projekt ein ToDo gehört.
+// Dazu kommen die berechneten Sammel-ToDos aus Mobi (js/views/mobi-todo.js): ohne Kästchen,
+// Klick öffnet den Reiter Mobi.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -21,6 +23,7 @@ import {
   datumText, prioText, kurz, faelligStatus, faelligText, sortieren, treffer,
   zahlenText, istArchiv, sortiereErledigte, kommentarZahlen, kommentarMarke
 } from './todos-rechnen.js';
+import { sammelTodos, istSammel, sammelInfo, sammelPasstWer, oeffneSammel } from './mobi-todo.js';
 
 // Projekt-Titel nach ID (wird beim Laden gefüllt)
 let projektTitel = {};
@@ -48,6 +51,15 @@ const SPALTEN = [
 function karteVon(z) {
   const fertig = istWahr(z.erledigt);
   const pn = projektName(z);
+  if (istSammel(z)) {
+    return {
+      titel: z.text,
+      zeilen: [
+        pn ? 'Projekt: ' + pn : '',
+        [sammelInfo(z), z.faellig_am ? 'Nächster Termin ' + faelligText(z) : ''].filter(Boolean).join(' · ')
+      ]
+    };
+  }
   return {
     titel: kurz(z.text, 120) + kommentarMarke(kommZahl[String(z.id)]),
     zeilen: [
@@ -73,7 +85,8 @@ export async function render(container, ctx) {
   const s = ctx.session;
   leeren(container);
 
-  let daten = { todos: [], projekte: [], kommentare: [] };
+  let daten = { todos: [], projekte: [], kommentare: [], mobi: [] };
+  let sammel = [];          // berechnete Sammel-ToDos aus Mobi
   let offenId = null;
   let formOffen = false;
   let formTodo = null;      // das ToDo, wie es beim Öffnen des Formulars war (null = neu)
@@ -393,11 +406,31 @@ export async function render(container, ctx) {
       const klassen = [];
       if (istWahr(z.erledigt)) klassen.push('erledigt');
       const st = faelligStatus(z);
-      if (st) klassen.push(st);
+      // Sammel-ToDo: Balken bleibt in Kanalfarbe, nur der Titel wird rot oder orange (unten)
+      if (st && !istSammel(z)) klassen.push(st);
       klassen.forEach(function (k) {
         if (reihen[i]) reihen[i].classList.add(k);
         if (karten[i]) karten[i].classList.add(k);
       });
+      // Sammel-ToDo: kein Kästchen (es ist erledigt, wenn alle Beiträge veröffentlicht sind), Kanalfarbe
+      if (istSammel(z)) {
+        [reihen[i], karten[i]].forEach(function (e) {
+          if (!e) return;
+          e.classList.add('mobi-sammel');
+          const box = e.querySelector('input.auswahl-box');
+          if (box) box.remove();
+        });
+        if (karten[i]) karten[i].style.borderLeft = '6px solid ' + z._farbe;
+        const zelle = reihen[i] ? reihen[i].querySelector('td:not(.auswahl-spalte)') : null;
+        if (zelle) {
+          const p = el('span', { class: 'mobi-punkt', 'aria-hidden': 'true' });
+          p.style.background = z._farbe;
+          zelle.prepend(p);
+          if (st) zelle.classList.add('mobi-titel-' + st);
+        }
+        const titel = karten[i] ? karten[i].querySelector('.karten-text strong') : null;
+        if (titel && st) titel.classList.add('mobi-titel-' + st);
+      }
     });
   }
 
@@ -409,6 +442,7 @@ export async function render(container, ctx) {
   function liste(box, zeilen, leerText) {
     zeigeListe(box, zeilen, SPALTEN, karteVon,
       function (z) {
+        if (istSammel(z)) { oeffneSammel(ctx, z); return; }
         formEnde();
         offenId = z.id;
         detailZeigen(z.id, true);
@@ -478,7 +512,11 @@ export async function render(container, ctx) {
       meine: meine.checked,
       name: getName()
     };
-    const passend = daten.todos.filter(function (t) { return treffer(t, f); });
+    // Sammel-ToDos: Filter "Verantwortlich" prüft jede Person einzeln
+    const passendSammel = sammel.filter(function (t) {
+      return sammelPasstWer(t, f.wer) && treffer(t, Object.assign({}, f, { wer: '' }));
+    });
+    const passend = daten.todos.filter(function (t) { return treffer(t, f); }).concat(passendSammel);
     const offen = sortieren(passend.filter(function (t) { return !istWahr(t.erledigt); }));
     const erledigt = sortiereErledigte(passend.filter(function (t) { return istWahr(t.erledigt); }));
     const neuere = erledigt.filter(function (t) { return !istArchiv(t); });
@@ -486,10 +524,11 @@ export async function render(container, ctx) {
     hutZeichnen();
 
     // Im Archiv gibt es keine Zählzeile
-    zahlen.hidden = archivModus || !daten.todos.length;
-    zahlen.textContent = daten.todos.length ? zahlenText(daten.todos, getName()) : '';
+    const alleMitSammel = daten.todos.concat(sammel);
+    zahlen.hidden = archivModus || !alleMitSammel.length;
+    zahlen.textContent = alleMitSammel.length ? zahlenText(alleMitSammel, getName()) : '';
 
-    const archivAnzahl = daten.todos.filter(istArchiv).length;
+    const archivAnzahl = alleMitSammel.filter(istArchiv).length;
     archivKnopf.textContent = archivModus
       ? '← Zurück zu den ToDos'
       : 'Archiv' + (archivAnzahl ? ' (' + archivAnzahl + ')' : '');
@@ -505,7 +544,7 @@ export async function render(container, ctx) {
       zaehlText = aeltere.length + ' im Archiv';
     } else {
       boxOffen.hidden = false;
-      liste(boxOffen, offen, daten.todos.length
+      liste(boxOffen, offen, alleMitSammel.length
         ? 'Keine offenen ToDos gefunden.'
         : 'Noch keine ToDos eingetragen.');
       kopfErledigt.hidden = !neuere.length;
@@ -534,12 +573,14 @@ export async function render(container, ctx) {
     // Ältere Zwischenspeicher (z. B. von der Start-Kachel) kennen die Projekte nicht
     if (!neu.projekte) neu.projekte = daten.projekte || [];
     if (!neu.kommentare) neu.kommentare = daten.kommentare || [];
+    if (!neu.mobi) neu.mobi = daten.mobi || [];
     daten = neu;
     meta = m;
     offline = false;
     projektTitel = {};
     daten.projekte.forEach(function (p) { projektTitel[String(p.id)] = String(p.titel); });
     kommZahl = kommentarZahlen(daten.kommentare);
+    sammel = sammelTodos(daten.mobi, daten.projekte);
     werAufbauen();
     zeichne();
     // Ein offenes Formular wird bei der Aktualisierung nie überschrieben.
@@ -552,9 +593,11 @@ export async function render(container, ctx) {
       const ok = await ladeMitCache(
         s.gruppe_id + ':todos',
         async function () {
-          const r = await api('listMehrere', { tabellen: ['ToDos', 'Projekte', 'Kommentare'] }, s.token);
+          const r = await api('listMehrere', { tabellen: ['ToDos', 'Projekte', 'Kommentare', 'Mobi_Plan'] }, s.token);
           const t = (r && r.tabellen) || {};
-          return { todos: t.ToDos || [], projekte: t.Projekte || [], kommentare: t.Kommentare || [] };
+          return {
+            todos: t.ToDos || [], projekte: t.Projekte || [], kommentare: t.Kommentare || [], mobi: t.Mobi_Plan || []
+          };
         },
         zeigen,
         zuerstCache

@@ -209,8 +209,7 @@ export function baueMobiTeil(opt) {
 
   const body = el('div', { class: 'projekt-teil-body' },
     el('div', { class: 'teil-aktionen' },
-      knopf('+ Beitrag', false, function () { zeigeBeitragFormular(formOpt, null); }),
-      knopf('+ Beiträge', true, function () {
+      knopf('+ Beiträge planen', false, function () {
         zeigeSammlung({
           ctx: ctx,
           token: token,
@@ -222,6 +221,7 @@ export function baueMobiTeil(opt) {
           beiFertig: formOpt.beiFertig
         });
       }),
+      knopf('+ Einzelner Beitrag', true, function () { zeigeBeitragFormular(formOpt, null); }),
       knopf('Analyse bearbeiten', true, analyseBearbeiten)
     ),
     analyseAnzeige(),
@@ -230,7 +230,7 @@ export function baueMobiTeil(opt) {
   if (!alle.length) {
     body.append(el('p', {
       class: 'leise',
-      text: 'Noch keine Beiträge. Mit „+ Beitrag“ planst du, was wann auf welchem Kanal erscheint.'
+      text: 'Noch keine Beiträge. Mit „+ Beiträge planen“ wählst du Kanäle und bekommst Vorschläge, mit „+ Einzelner Beitrag“ legst du einen Beitrag selbst an.'
     }));
   } else {
     body.append(kanalZeile(), el('ul', { class: 'dash-todo-liste' }, ...alle.map(beitragZeile)));
