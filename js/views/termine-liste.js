@@ -114,11 +114,10 @@ export function terminKarte(t) {
   return k;
 }
 
-// Feste Kachel: Datum, Titel, Uhrzeit, Ort, Gruppe. Fehlende Angaben bleiben als leere Zeile,
-// damit alle Kacheln gleich groß sind. Ein Klick öffnet das Detailfenster.
-export function terminKachel(t, beiKlick) {
+// anheften (nur für Angemeldete): { text, fn(t) -> Promise }. Der Knopf sitzt unter dem Text der Kachel.
+export function terminKachel(t, beiKlick, anheften) {
   const leer = '\u00a0';
-  const k = el('button', {
+  const haupt = el('button', {
     class: 'oeff-kachel', type: 'button',
     onclick: function () { beiKlick(t); }
   },
@@ -128,6 +127,18 @@ export function terminKachel(t, beiKlick) {
     el('span', { text: t.ort || leer }),
     el('span', { text: t.gruppe || leer })
   );
+  const k = el('div', { class: 'oeff-kachel-box' }, haupt);
+  if (anheften) {
+    const b = el('button', {
+      class: 'knopf knopf-hell knopf-klein oeff-heften', type: 'button', text: anheften.text,
+      onclick: async function () {
+        b.disabled = true;
+        await anheften.fn(t);
+        b.disabled = false;
+      }
+    });
+    k.append(b);
+  }
   k.style.background = t.farbe;
   k.style.color = schriftfarbe(t.farbe);
   return k;
@@ -356,9 +367,14 @@ export function baueAktionskalender(session, ctx) {
         ul = el('ul', { class: 'oeff-liste oeff-gross' });
         liste.append(ul);
       }
-      ul.append(el('li', null, terminKachel(t, function (x) {
-        zeigeTerminDetail(x, session, ctx);
-      })));
+      ul.append(el('li', null, terminKachel(
+        t,
+        function (x) { zeigeTerminDetail(x, session, ctx); },
+        session ? {
+          text: istEigen(t, session) ? 'Als Mitteilung anheften' : 'An Pinnwand heften',
+          fn: function (x) { return anheften(x, session, ctx); }
+        } : null
+      )));
     });
     aboZeigen();
   }
