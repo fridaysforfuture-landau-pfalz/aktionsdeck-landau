@@ -117,17 +117,24 @@ function termineListe(kurz) {
 }
 
 // Für POST (verteile in Code.gs) und GET
-function aktionTermine(p) {
-  var kurz = termineFilter(p);
-  var key = 'termine_' + (kurz || 'alle');
+// Es gibt nur EINEN Zwischenspeicher-Eintrag (alle Gruppen). Der Gruppenfilter wird danach
+// im Speicher angewendet. So kann niemand mit erfundenen Gruppennamen das Sheet überlasten.
+function termineAlle() {
   var cache = CacheService.getScriptCache();
-  var gespeichert = cache.get(key);
+  var gespeichert = cache.get('termine_alle');
   if (gespeichert) {
     try { return JSON.parse(gespeichert); } catch (e) { /* neu berechnen */ }
   }
-  var liste = termineListe(kurz);
-  try { cache.put(key, JSON.stringify(liste), TERMINE_CACHE_SEK); } catch (e2) { /* zu groß: egal */ }
+  var liste = termineListe('');
+  try { cache.put('termine_alle', JSON.stringify(liste), TERMINE_CACHE_SEK); } catch (e2) { /* zu groß: egal */ }
   return liste;
+}
+
+function aktionTermine(p) {
+  var kurz = termineFilter(p);
+  var alle = termineAlle();
+  if (!kurz) return alle;
+  return alle.filter(function (t) { return String(t.kurzname).toLowerCase() === kurz; });
 }
 
 // ---- GET: JSON oder Kalender-Abo (.ics) ----
@@ -231,4 +238,49 @@ function testenTermine() {
   Logger.log(l.length + ' öffentliche kommende Termine');
   Logger.log(JSON.stringify(l));
   Logger.log(termineIcs(l, 'Test'));
+}
+// Im Editor ausführen: prüft, dass die öffentliche Schnittstelle nichts Unerlaubtes herausgibt.
+function testenTermineSicher() {
+  var erlaubt = ['titel', 'datum', 'datum_ende', 'zeit_von', 'zeit_bis', 'ort', 'beschreibung',
+    'veranstalter', 'link', 'gruppe_name', 'kurzname', 'farbe', 'gruppe_web', 'gruppe_instagram', 'gruppe_links'];
+  var liste = termineListe('');
+  var probleme = 0;
+
+  // 1) Nur erlaubte Felder (keine IDs, Bearbeiter, Zeitstempel)
+  liste.forEach(function (t) {
+    Object.keys(t).forEach(function (k) {
+      if (erlaubt.indexOf(k) < 0) { probleme++; Logger.log('FEHLER: unerlaubtes Feld ' + k); }
+    });
+  });
+
+  // 2) Zahl der Termine passt zu den Zeilen im Sheet (extern, veröffentlicht, nicht gelöscht, kommend)
+  var heute = tHeute();
+  var soll = lies('Veranstaltungen').zeilen.filter(function (v) {
+    var von = tDatum(v.datum);
+    var bis = tDatum(v.datum_ende);
+    if (!bis || bis < von) bis = von;
+    return !truthy(v.geloescht) && String(v.art).trim() === 'extern' && truthy(v.oeffentlich) &&
+      von && bis >= heute;
+  }).length;
+  Logger.log('Im Sheet passend: ' + soll + ', ausgegeben: ' + liste.length +
+    ' (kleiner ist erlaubt, wenn eine Gruppe nicht aktiv ist)');
+  if (liste.length > soll) { probleme++; Logger.log('FEHLER: mehr Termine als erlaubt'); }
+
+  // 3) Ungültige Gruppenfilter müssen abgelehnt werden
+  ['a b', '../x', 'x;y', 'abc<script>', 'a'.repeat(40)].forEach(function (g) {
+    try {
+      termineFilter({ gruppe: g });
+      probleme++;
+      Logger.log('FEHLER: Filter "' + g + '" wurde nicht abgelehnt');
+    } catch (e) { /* gewollt */ }
+  });
+
+  // 4) Links nur mit http(s)
+  ['javascript:alert(1)', 'data:text/html,x', 'ftp://x.de', ' https://ok.de '].forEach(function (u) {
+    var r = tLink(u);
+    var gut = u.trim().indexOf('https://') === 0;
+    if ((r !== '') !== gut) { probleme++; Logger.log('FEHLER: Link falsch bewertet: ' + u); }
+  });
+
+  Logger.log(probleme ? ('FERTIG mit ' + probleme + ' Problem(en)') : 'ALLES GUT: keine Probleme gefunden.');
 }
