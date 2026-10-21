@@ -1,4 +1,4 @@
-# Mobi: Standard-Beiträge und ihre Tage (Stand 0.29.8)
+# Mobi: Standard-Beiträge und ihre Tage (Stand 0.29.9)
 
 Diese Datei ist zum Nachlesen. Die App liest die Werte **nicht** von hier,
 sondern aus `js/kanaele.js` (Liste `STANDARD_BEITRAEGE`). Wer dort etwas ändert, ändert es auch hier.
@@ -9,7 +9,7 @@ sondern aus `js/kanaele.js` (Liste `STANDARD_BEITRAEGE`). Wer dort etwas ändert
 - Du wählst Kanäle. Pro Kanal schlägt die App die Beiträge aus der Tabelle unten vor.
 - **Bezugsdatum** ist das Aktionsdatum des Projekts (bei einer Veranstaltung ihr Datum).
 - **Tage vorher** heißt: so viele Tage **vor** dem Bezugsdatum wird der Beitrag veröffentlicht.
-  0 = am Tag selbst. Eine negative Zahl hieße „danach“.
+  0 = am Tag selbst. Eine negative Zahl heißt „danach“ (zum Beispiel -1 = einen Tag nach der Aktion).
 - Hat das Projekt kein Aktionsdatum, bekommen die Beiträge kein Datum. In der Vorschau kannst du es eintragen.
 - In der Vorschau kannst du jeden Beitrag abwählen und Titel, Format und Datum ändern.
 - Gibt es im Projekt schon einen Beitrag mit demselben Titel auf demselben Kanal, wird er nicht noch einmal angelegt („Gibt es schon“).
@@ -39,6 +39,7 @@ Thema-Posts einmal pro Tag, Storys). Die Tage dazu und alle anderen Kanäle sind
 | Story 1 | Story | 3 |
 | Story 2 | Story | 1 |
 | Story 3 (am Tag) | Story | 0 |
+| Danke-Post | Beitrag | -1 (danach) |
 
 ## Weitere Kanäle
 
@@ -49,7 +50,9 @@ Thema-Posts einmal pro Tag, Storys). Die Tage dazu und alle anderen Kanäle sind
 | TikTok (Social Media) | Video 1 | Video | 7 |
 | TikTok (Social Media) | Video 2 | Video | 2 |
 | Pressemitteilung (Digital) | Pressemitteilung | Text | 7 |
+| Pressemitteilung (Digital) | Pressemitteilung Rückblick | Text | -1 (danach) |
 | Webseite (Digital) | Ankündigung auf der Webseite | Text | 10 |
+| Webseite (Digital) | Rückblick auf der Webseite | Text | -3 (danach) |
 | Newsletter (Digital) | Newsletter | Text | 5 |
 | WhatsApp und Telegram (Digital) | Ankündigung | Text | 7 |
 | WhatsApp und Telegram (Digital) | Erinnerung | Text | 1 |
@@ -60,6 +63,9 @@ Thema-Posts einmal pro Tag, Storys). Die Tage dazu und alle anderen Kanäle sind
 | Werbung über andere Gruppen (Extern) | Anfrage an andere Gruppen | Text | 10 |
 | Schuldelis (Extern) | Schuldelis informieren | Text | 7 |
 | Sonstiges | kein fester Satz: eigener Titel, Datum selbst eintragen | Sonstiges | – |
+
+Danke- und Rückblick-Beiträge (Titel enthält „Danke“ oder „Rückblick“) liegen absichtlich nach der Aktion.
+Im Kalender sind sie darum nicht pink markiert. Andere Beiträge nach der Aktion sind pink.
 
 ## Ändern
 

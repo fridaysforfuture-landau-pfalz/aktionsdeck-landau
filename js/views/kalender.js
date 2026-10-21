@@ -1,5 +1,6 @@
 // js/views/kalender.js
-// Reiter Kalender: Liste "Kommende" und "Vergangene", Filterleiste, Suche.
+// Reiter Kalender: Liste "Kommende" und "Vergangene", Monat, Woche, Filterleiste, Suche.
+// Mobi-Beiträge stehen als Termine darin (📣, Kanalfarbe; Klick öffnet den Beitrag).
 // Veranstaltungen anlegen, ändern und löschen (mit Uhrzeit und mehreren Tagen).
 // Die Termine werden in kalender-rechnen.js berechnet, hier wird nur angezeigt und gespeichert.
 // Die Filter bleiben beim Reiterwechsel erhalten (Merker außerhalb von render).
@@ -18,8 +19,10 @@ import {
   baueTermine, filtereTermine, kommende, vergangene, standardFilter,
   zeitNorm, zeitText, datumsText, sichereUrl, istUeberfaellig, MONATE,
   monatsRaster, monatTitel, imZeitraum, WOCHENTAGE, wochentagNr,
-  istVorbei, schriftfarbe, pastell
+  istVorbei, schriftfarbe, pastell, bezugText, wocheVon, addTage
 } from './kalender-rechnen.js';
+import { zeigeBeitragFormular } from './mobi-eintrag.js';
+import { zeigeSammlung } from './mobi-sammlung.js';
 import { zeigeVorlagen } from './kalender-vorlagen.js';
 import { baueAktionskalender } from './termine-liste.js';
 
@@ -39,6 +42,7 @@ const SCHALTER = [
   ['deadlines', 'Deadlines'],
   ['meilensteine', 'Meilensteine'],
   ['todos', 'ToDos'],
+  ['mobi', 'Mobi'],
   ['nurMeine', 'Nur meine ToDos'],
   ['archivProjekte', 'Archiv-Projekte'],
   ['oeffentlich', 'Öffentliche Termine anderer Gruppen']
@@ -88,6 +92,7 @@ function markeText(t) {
   if (t.quelle === 'meilenstein') return 'Meilenstein';
   if (t.quelle === 'todo') return 'ToDo';
   if (t.quelle === 'balken') return 'Projektzeitraum';
+  if (t.quelle === 'mobi') return 'Mobi' + (t.erledigt ? ' · veröffentlicht' : '');
   return '';
 }
 
@@ -110,9 +115,10 @@ export async function render(container, ctx) {
   }
   const f = merk.filter;
   f.name = getName();
+  if (f.mobi === undefined) f.mobi = true;   // Merker von vor 0.29.9
   const basis = '#/g/' + encodeURIComponent(s.kurzname) + '/';
 
-  let daten = { veranstaltungen: [], projekte: [], meilensteine: [], todos: [], oeffentlich: [] };
+  let daten = { veranstaltungen: [], projekte: [], meilensteine: [], todos: [], mobi: [], oeffentlich: [] };
   let meta = null;
   let offline = false;
 
@@ -138,11 +144,15 @@ export async function render(container, ctx) {
     class: 'knopf knopf-hell', type: 'button', text: 'Monat',
     onclick: function () { ansichtSetzen('monat'); }
   });
+  const wocheKnopf = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Woche',
+    onclick: function () { ansichtSetzen('woche'); }
+  });
   const aktionKnopf = el('button', {
     class: 'knopf knopf-hell', type: 'button', text: 'Aktionskalender',
     onclick: function () { aktionSchalten(true); }
   });
-  const ansichtLinks = el('div', { class: 'kal-ansicht-gruppe' }, listenKnopf, monatKnopf, aktionKnopf);
+  const ansichtLinks = el('div', { class: 'kal-ansicht-gruppe' }, listenKnopf, monatKnopf, wocheKnopf, aktionKnopf);
   const ansichtRechts = el('div', { class: 'kal-ansicht-gruppe kal-ansicht-rechts' });
   const ansichtZeile = el('div', { class: 'kal-ansicht' }, ansichtLinks, ansichtRechts);
 
@@ -251,29 +261,64 @@ export async function render(container, ctx) {
       : 'Zwischengespeichert von ' + stempelText(meta.stand) + '. Aktualisiere …';
   }
 
+  // Klick auf einen Termin: Veranstaltung bearbeiten, öffentlichen Termin ansehen,
+  // Mobi-Beitrag öffnen, sonst in den Reiter springen
+  function oeffnen(t) {
+    if (t.quelle === 'veranstaltung') formZeigen(t.roh);
+    else if (t.quelle === 'oeffentlich') oeffInfo(t);
+    else if (t.quelle === 'mobi') beitragOeffnen(t.roh);
+    else if (t.link) location.hash = t.link;
+  }
+
+  function beitragOeffnen(b) {
+    const personen = function () {
+      const l = [];
+      [getName()].concat(daten.mobi.map(function (x) { return x.verantwortlich; })).forEach(function (n) {
+        const k = txt(n);
+        if (k && l.indexOf(k) < 0) l.push(k);
+      });
+      return l.sort(function (a, c) { return a.localeCompare(c, 'de'); });
+    };
+    zeigeBeitragFormular({
+      ctx: ctx, token: s.token, kurzname: s.kurzname, personen: personen,
+      neuLaden: function () { return laden(false); },
+      beiFertig: function () { return laden(false); }
+    }, b);
+  }
+
+  // Grau: abgeschlossenes Projekt, vorbei (offene überfällige nicht) oder veröffentlichter Mobi-Beitrag
+  function istGrau(t) {
+    return !!t.zu || (!istUeberfaellig(t) && istVorbei(t)) || (t.quelle === 'mobi' && t.erledigt);
+  }
+
+  // Mobi-Beitrag nach der Aktion (außer Danke/Rückblick): pink markiert
+  function istPink(t) {
+    return t.quelle === 'mobi' && t.nachAktion && !istGrau(t);
+  }
+
   function zeile(t, vorher) {
     const istV = t.quelle === 'veranstaltung';
     const ueber = istUeberfaellig(t);
-    const grau = !!t.zu || (!ueber && istVorbei(t));
+    const grau = istGrau(t);
+    const pink = istPink(t);
     const voll = !grau && (istV || t.quelle === 'aktion');
     const frist = !grau && t.quelle === 'deadline';
     const symbol = (istV || t.quelle === 'aktion') ? '📅 ' : (t.quelle === 'deadline' ? '⏰ ' : '');
-    const mitProjekt = (t.quelle === 'meilenstein' || t.quelle === 'todo') && t.projektTitel;
+    const mitProjekt = (t.quelle === 'meilenstein' || t.quelle === 'todo' || t.quelle === 'mobi') && t.projektTitel;
     const info = [
       datumsText(t) + (ueber ? ' (überfällig)' : ''),
       zeitText(t),
       t.ort,
-      mitProjekt ? 'Projekt: ' + t.projektTitel : '',
-      t.verantwortlich
+      mitProjekt ? (t.projektTitel.indexOf('📅') === 0 ? t.projektTitel : 'Projekt: ' + t.projektTitel) : '',
+      t.verantwortlich,
+      t.erledigt ? '' : bezugText(t)
     ].filter(Boolean).join(' · ');
 
     const knopf = el('button', {
       class: 'dash-todo pt-todo' + (ueber ? ' ueberfaellig' : ''), type: 'button',
       onclick: function () {
         if (typeof vorher === 'function') vorher();
-        if (istV) formZeigen(t.roh);
-        else if (t.quelle === 'oeffentlich') oeffInfo(t);
-        else if (t.link) location.hash = t.link;
+        oeffnen(t);
       }
     },
       el('span', { class: 'kal-marke leise', text: markeText(t) }),
@@ -283,9 +328,9 @@ export async function render(container, ctx) {
 
     const li = el('li', {
       class: 'dash-zeile kal-zeile' + (grau ? ' kal-grau' : '') +
-        (voll ? ' kal-voll' : '') + (frist ? ' kal-frist' : '')
+        (voll ? ' kal-voll' : '') + (frist ? ' kal-frist' : '') + (pink ? ' kal-mobi-nach' : '')
     }, knopf);
-    li.style.borderLeftColor = grau ? '#8a9490' : (ueber ? '#b3261e' : t.farbe);
+    li.style.borderLeftColor = grau ? '#8a9490' : (ueber ? '#b3261e' : (pink ? '#d81b60' : t.farbe));
     if (voll) {
       li.style.background = t.farbe;
       li.style.color = schriftfarbe(t.farbe);
@@ -349,6 +394,11 @@ export async function render(container, ctx) {
       statusZeigen();
       return;
     }
+    if (merk.ansicht === 'woche' && !merk.archiv) {
+      zeichneWoche(liste);
+      statusZeigen();
+      return;
+    }
     if (merk.archiv) {
       zeichneArchiv(verg);
       leeren(vergBox);
@@ -400,7 +450,7 @@ export async function render(container, ctx) {
 
   function kachelnZeichnen(termine) {
     leeren(kachelBox);
-    if (merk.ansicht === 'monat' || merk.archiv) {
+    if (merk.ansicht === 'monat' || merk.ansicht === 'woche' || merk.archiv) {
       kachelBox.hidden = true;
       return;
     }
@@ -454,15 +504,20 @@ export async function render(container, ctx) {
 
   function ansichtAnzeige() {
     const monat = merk.ansicht === 'monat';
-    const m = monat && !merk.archiv;   // Raster nur, wenn das Archiv nicht offen ist
+    const woche = merk.ansicht === 'woche';
+    const liste = !monat && !woche;
+    // Raster (Monat oder Woche) nur, wenn das Archiv nicht offen ist. Beide nutzen monatBox.
+    const m = (monat || woche) && !merk.archiv;
     monatBox.hidden = !m;
     listeTitel.hidden = m;
     kommBox.hidden = m;
     vergBox.hidden = m;
-    listenKnopf.className = 'knopf' + (monat ? ' knopf-hell' : '');
+    listenKnopf.className = 'knopf' + (liste ? '' : ' knopf-hell');
     monatKnopf.className = 'knopf' + (monat ? '' : ' knopf-hell');
-    listenKnopf.setAttribute('aria-pressed', String(!monat));
+    wocheKnopf.className = 'knopf' + (woche ? '' : ' knopf-hell');
+    listenKnopf.setAttribute('aria-pressed', String(liste));
     monatKnopf.setAttribute('aria-pressed', String(monat));
+    wocheKnopf.setAttribute('aria-pressed', String(woche));
   }
   
   function ansichtSetzen(a) {
@@ -488,11 +543,6 @@ export async function render(container, ctx) {
     merk.monat = Number(h.slice(5, 7)) - 1;
     merk.tag = h;
     zeichneMonat(liste);
-  }
-
-  // Grau: gehört zu einem abgeschlossenen Projekt oder ist vorbei (offene überfällige nicht)
-  function istGrau(t) {
-    return !!t.zu || (!istUeberfaellig(t) && istVorbei(t));
   }
 
   // Veranstaltungen zuerst, dann Projekt-Aktionen, dann der Rest
@@ -562,7 +612,8 @@ export async function render(container, ctx) {
         c.style.background = t.farbe;
         c.style.color = schriftfarbe(t.farbe);
       } else {
-        c.style.borderLeftColor = ueber ? '#b3261e' : (grau ? '#8a9490' : t.farbe);
+        c.style.borderLeftColor = ueber ? '#b3261e' : (grau ? '#8a9490' : (istPink(t) ? '#d81b60' : t.farbe));
+        if (istPink(t)) c.classList.add('kal-chip-pink');
       }
       chips.append(c);
     });
@@ -727,6 +778,91 @@ export async function render(container, ctx) {
     monatBox.append(tagesBox);
   }
 
+  // ---- Wochenansicht ----
+  // Montag bis Sonntag der Woche, in der der gewählte Tag liegt. PC: 7 Spalten, Handy: Tage untereinander.
+  // Jeder Termin ist ein Knopf (Klick wie in der Liste). Projektbalken stehen hier nicht.
+
+  function wocheWechseln(delta, liste) {
+    const tag = addTage(merk.tag || heuteIso(), delta * 7);
+    merk.tag = tag;
+    merk.jahr = Number(tag.slice(0, 4));
+    merk.monat = Number(tag.slice(5, 7)) - 1;
+    zeichneWoche(liste);
+  }
+
+  function wochenChip(t) {
+    const ueber = istUeberfaellig(t);
+    const grau = istGrau(t);
+    const pink = istPink(t);
+    const hervor = !grau && (t.quelle === 'veranstaltung' || t.quelle === 'aktion');
+    const symbol = (t.quelle === 'veranstaltung' || t.quelle === 'aktion') ? '📅 ' : (t.quelle === 'deadline' ? '⏰ ' : '');
+    const zusatz = [zeitNorm(t.zeitVon), t.erledigt ? '' : bezugText(t)].filter(Boolean).join(' · ');
+    const c = el('button', {
+      class: 'kal-wchip' + (ueber ? ' ueber' : '') + (grau ? ' kal-chip-grau' : '') + (pink ? ' kal-chip-pink' : ''),
+      type: 'button',
+      onclick: function () { oeffnen(t); }
+    },
+      el('strong', { text: symbol + t.titel }),
+      zusatz ? el('span', { class: 'leise', text: zusatz }) : null
+    );
+    if (hervor) {
+      c.style.background = t.farbe;
+      c.style.color = schriftfarbe(t.farbe);
+    } else {
+      c.style.borderLeftColor = ueber ? '#b3261e' : (grau ? '#8a9490' : (pink ? '#d81b60' : t.farbe));
+    }
+    return c;
+  }
+
+  function zeichneWoche(liste) {
+    leeren(monatBox);
+    const tage = wocheVon(merk.tag || heuteIso());
+    const heute = heuteIso();
+    const imRaum = imZeitraum(liste, tage[0], tage[6]).filter(function (t) { return t.quelle !== 'balken'; });
+
+    monatBox.append(el('div', { class: 'kal-kopf' },
+      el('div', { class: 'kal-monatsnav' },
+        el('button', {
+          class: 'kal-taste', type: 'button', text: '‹', 'aria-label': 'Vorherige Woche',
+          onclick: function () { wocheWechseln(-1, liste); }
+        }),
+        el('h2', { text: datumText(tage[0]).slice(0, 6) + ' – ' + datumText(tage[6]) }),
+        el('button', {
+          class: 'kal-taste', type: 'button', text: '›', 'aria-label': 'Nächste Woche',
+          onclick: function () { wocheWechseln(1, liste); }
+        })
+      ),
+      el('div', { class: 'kal-kopf-rechts' },
+        el('button', {
+          class: 'knopf knopf-hell', type: 'button', text: 'Heute',
+          onclick: function () { merk.tag = heute; zeichneWoche(liste); }
+        })
+      )
+    ));
+
+    const raster = el('div', { class: 'kal-woche' });
+    tage.forEach(function (tag) {
+      const termine = imRaum.filter(function (t) { return t.von <= tag && t.bis >= tag; })
+        .sort(function (a, b) {
+          if (rang(a) !== rang(b)) return rang(a) - rang(b);
+          return (a.zeitVon || '').localeCompare(b.zeitVon || '');
+        });
+      const spalte = el('section', { class: 'kal-wtag' + (tag === heute ? ' kal-heute' : '') },
+        el('h3', { class: 'kal-wtag-kopf', text: WOCHENTAGE[wochentagNr(tag)].slice(0, 2) + ', ' + datumText(tag).slice(0, 6) })
+      );
+      if (termine.length) termine.forEach(function (t) { spalte.append(wochenChip(t)); });
+      else spalte.append(el('p', { class: 'leise kal-wleer', text: '–' }));
+      spalte.append(el('button', {
+        class: 'knopf knopf-hell knopf-klein kal-wneu', type: 'button', text: '+',
+        'aria-label': 'Veranstaltung am ' + datumText(tag),
+        title: 'Veranstaltung an diesem Tag',
+        onclick: function () { formZeigen(null, { datum: tag }); }
+      }));
+      raster.append(spalte);
+    });
+    monatBox.append(raster);
+  }
+
   // ---- Öffentlicher Termin einer anderen Gruppe: nur ansehen ----
 
   function oeffInfo(t) {
@@ -873,6 +1009,10 @@ export async function render(container, ctx) {
     if (v) {
       inhalt.append(el('div', { class: 'fenster-loeschen form-knoepfe' },
         el('button', {
+          class: 'knopf knopf-hell', type: 'button', text: 'In Mobi einplanen',
+          onclick: function () { fenster.schliessen(); inMobiEinplanen(v); }
+        }),
+        el('button', {
           class: 'knopf knopf-hell', type: 'button',
           text: aufsBrett(v) ? 'Als Mitteilung anheften' : 'An Pinnwand heften',
           onclick: function () { anheften(v, fenster); }
@@ -884,6 +1024,21 @@ export async function render(container, ctx) {
       ));
     }
     fenster = zeigeFenster(v ? 'Veranstaltung bearbeiten' : 'Neue Veranstaltung', inhalt);
+  }
+
+  // Veranstaltung in Mobi einplanen: dasselbe Fenster wie „+ Beiträge planen“, Bezug = Veranstaltung
+  function inMobiEinplanen(v) {
+    zeigeSammlung({
+      ctx: ctx,
+      token: s.token,
+      kurzname: s.kurzname,
+      bezug: {
+        feld: 'veranstaltung_id', id: String(v.id), titel: txt(v.titel), datum: v.datum,
+        datumName: 'Veranstaltungsdatum'
+      },
+      vorhandene: daten.mobi.filter(function (b) { return txt(b.veranstaltung_id) === String(v.id); }),
+      beiFertig: function () { return laden(false); }
+    });
   }
 
   async function speichern(v, d, fenster) {
@@ -928,7 +1083,11 @@ export async function render(container, ctx) {
   }
 
   async function loeschen(v, fenster) {
-    if (!window.confirm('Diese Veranstaltung wirklich löschen?\n\n„' + txt(v.titel) + '“')) return;
+    // Das Skript löscht die Mobi-Beiträge der Veranstaltung mit (mobiKaskade)
+    const n = daten.mobi.filter(function (b) { return txt(b.veranstaltung_id) === String(v.id); }).length;
+    const frage = 'Diese Veranstaltung wirklich löschen?\n\n„' + txt(v.titel) + '“' +
+      (n ? '\n\nDabei werden auch ' + n + (n === 1 ? ' Mobi-Beitrag' : ' Mobi-Beiträge') + ' gelöscht.' : '');
+    if (!window.confirm(frage)) return;
     try {
       await api('delete', { tabelle: 'Veranstaltungen', id: v.id, bekannt: v.geaendert_am }, s.token);
       fenster.schliessen();
@@ -952,6 +1111,7 @@ export async function render(container, ctx) {
     if (!neu.projekte) neu.projekte = [];
     if (!neu.meilensteine) neu.meilensteine = [];
     if (!neu.todos) neu.todos = [];
+    if (!neu.mobi) neu.mobi = [];
     if (!neu.oeffentlich) neu.oeffentlich = [];
     daten = neu;
     meta = m;
@@ -965,7 +1125,7 @@ export async function render(container, ctx) {
         s.gruppe_id + ':kalender',
         async function () {
           const r = await api('listMehrere', {
-            tabellen: ['Veranstaltungen', 'Projekte', 'Meilensteine', 'ToDos']
+            tabellen: ['Veranstaltungen', 'Projekte', 'Meilensteine', 'ToDos', 'Mobi_Plan']
           }, s.token);
           // Öffentliche Termine anderer Gruppen (ohne Login). Klappt es nicht, bleibt die Liste leer.
           let oeff = [];
@@ -979,6 +1139,7 @@ export async function render(container, ctx) {
             projekte: t.Projekte || [],
             meilensteine: t.Meilensteine || [],
             todos: t.ToDos || [],
+            mobi: t.Mobi_Plan || [],
             oeffentlich: oeff
           };
         },

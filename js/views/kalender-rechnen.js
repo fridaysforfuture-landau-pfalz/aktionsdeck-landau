@@ -1,17 +1,19 @@
 // js/views/kalender-rechnen.js
 // Rechenhelfer für den Kalender (und später den Mobi-Kalender).
-// Baut aus Veranstaltungen, Projekten, Meilensteinen und ToDos eine gemeinsame Terminliste.
+// Baut aus Veranstaltungen, Projekten, Meilensteinen, ToDos und Mobi-Beiträgen eine gemeinsame Terminliste.
 // Nichts davon wird gespeichert, alles wird berechnet.
 //
 // Ein Termin hat: key, quelle, art, titel, von, bis (JJJJ-MM-TT), zeitVon, zeitBis, ort, farbe,
 //   gruppe, link (Adresse in der App), url (externer Link), projektId, projektTitel,
 //   erledigt, verantwortlich, marken (nur Projektbalken), roh (Ursprungszeile).
+//   Nur bei Mobi: bezugTage (Tage bis zur Aktion/Veranstaltung, negativ = danach), bezugName, nachAktion.
 // quelle: 'veranstaltung' (art intern|extern) | 'oeffentlich' | 'aktion' | 'deadline'
-//         | 'balken' | 'meilenstein' | 'todo'
+//         | 'balken' | 'meilenstein' | 'todo' | 'mobi'
 
 import { istWahr } from '../schema.js';
 import { normDatum, iso, heuteIso, kurz, datumText, istMeins } from './todos-rechnen.js';
 import { istAbgeschlossen, meilensteinStand } from './projekt-rechnen.js';
+import { kanalInfo } from '../kanaele.js';
 
 export const WOCHENTAGE = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 export const WOCHENTAGE_KURZ = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
@@ -125,7 +127,7 @@ export function istVorbei(t, heute) {
 
 // ---- Terminliste bauen ----
 
-// daten: { veranstaltungen, projekte, meilensteine, todos, oeffentlich }
+// daten: { veranstaltungen, projekte, meilensteine, todos, mobi, oeffentlich }
 //   oeffentlich = Termine aus der öffentlichen Schnittstelle (andere Gruppen):
 //   { titel, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, link, gruppe_name, kurzname, farbe }
 // opt: { basis ('#/g/<kurzname>/'), farbe (Farbe der eigenen Gruppe), eigeneKurz, abgeschlossene (true = auch Archiv) }
@@ -289,7 +291,60 @@ export function baueTermine(daten, opt) {
     }));
   });
 
+  // 6) Mobi-Beiträge mit Datum (Kanalfarbe, veröffentlichte grau)
+  const veranstDatum = {};
+  const veranstTitel = {};
+  (daten.veranstaltungen || []).forEach(function (v) {
+    veranstDatum[String(v.id)] = normDatum(v.datum);
+    veranstTitel[String(v.id)] = txt(v.titel);
+  });
+  const aktionVon = {};
+  projekte.forEach(function (p) { aktionVon[String(p.id)] = normDatum(p.aktionsdatum); });
+  (daten.mobi || []).forEach(function (b) {
+    if (istWahr(b.geloescht)) return;
+    const d = normDatum(b.datum);
+    const pid = txt(b.projekt_id);
+    const vid = txt(b.veranstaltung_id);
+    if (!d || ausgeblendet(pid)) return;
+    const k = kanalInfo(b.kanal);
+    // Bezug: Aktionsdatum des Projekts, sonst Datum der Veranstaltung
+    const bezug = (pid && aktionVon[pid]) || (vid && veranstDatum[vid]) || '';
+    const bezugName = pid && aktionVon[pid] ? 'Aktion' : 'Veranstaltung';
+    const bezugTage = bezug ? tageZwischen(d, bezug) : null;
+    // Nach der Aktion ist ungewöhnlich (pink), außer Danke- und Rückblick-Beiträgen
+    const danke = /danke|rückblick|rueckblick/i.test(txt(b.titel));
+    liste.push(neu({
+      key: 'mb' + b.id,
+      quelle: 'mobi',
+      titel: '📣 ' + (k.name || 'Mobi') + ': ' + kurz(b.titel, 80),
+      von: d,
+      bis: d,
+      zeitVon: zeitNorm(b.uhrzeit),
+      farbe: k.farbe,
+      link: basis + 'mobi',
+      projektId: pid,
+      projektTitel: pid ? (projektTitel[pid] || '') : (vid ? '📅 ' + (veranstTitel[vid] || 'Veranstaltung') : ''),
+      verantwortlich: txt(b.verantwortlich),
+      erledigt: txt(b.status) === 'veroeffentlicht',
+      bezugTage: bezugTage,
+      bezugName: bezugName,
+      nachAktion: bezugTage !== null && bezugTage < 0 && !danke,
+      roh: b
+    }));
+  });
+
   return sortiereTermine(liste);
+}
+
+// "3 Tage bis zur Aktion", "am Tag der Aktion", "2 Tage nach der Veranstaltung" oder ''
+export function bezugText(t) {
+  if (t.quelle !== 'mobi' || t.bezugTage === null || t.bezugTage === undefined) return '';
+  const n = t.bezugTage;
+  const zur = t.bezugName === 'Aktion' ? 'zur Aktion' : 'zur Veranstaltung';
+  const der = t.bezugName === 'Aktion' ? 'der Aktion' : 'der Veranstaltung';
+  if (n === 0) return 'am Tag ' + der;
+  if (n > 0) return n + (n === 1 ? ' Tag bis ' : ' Tage bis ') + zur;
+  return (-n) + (n === -1 ? ' Tag nach ' : ' Tage nach ') + der;
 }
 
 // ---- Sortieren, Filtern ----
@@ -313,6 +368,7 @@ export function standardFilter(name) {
     deadlines: true,
     meilensteine: true,
     todos: true,
+    mobi: true,
     nurMeine: false,
     archivProjekte: false,
     name: name || ''
@@ -328,6 +384,8 @@ export function passt(t, f) {
     case 'deadline': return !!f.deadlines;
     case 'meilenstein': return !!f.meilensteine;
     case 'todo': return !!f.todos && (!f.nurMeine || istMeins(t.roh, f.name));
+    // Ältere Merker kennen "mobi" noch nicht: dann an
+    case 'mobi': return f.mobi !== false;
     default: return true;
   }
 }
@@ -338,9 +396,10 @@ export function filtereTermine(liste, f) {
 
 // ---- Zeiträume ----
 
-// Offene ToDos und noch nicht erreichte Meilensteine bleiben bei "Kommende", auch wenn sie überfällig sind
+// Offene ToDos, noch nicht erreichte Meilensteine und nicht veröffentlichte Mobi-Beiträge
+// bleiben bei "Kommende", auch wenn sie überfällig sind
 export function istUeberfaellig(t, ab) {
-  return (t.quelle === 'todo' || t.quelle === 'meilenstein') && !t.erledigt && !t.zu &&
+  return (t.quelle === 'todo' || t.quelle === 'meilenstein' || t.quelle === 'mobi') && !t.erledigt && !t.zu &&
     t.bis < (ab || heuteIso());
 }
 
@@ -391,6 +450,14 @@ export function monatsRaster(jahr, monat0) {
     if (lauf > letzter) break;
   }
   return wochen;
+}
+
+// Die 7 Tage (Montag bis Sonntag) der Woche, in der "tag" liegt
+export function wocheVon(tag) {
+  const montag = addTage(tag, -wochentagNr(tag));
+  const tage = [];
+  for (let i = 0; i < 7; i++) tage.push(addTage(montag, i));
+  return tage;
 }
 
 // "September 2026"

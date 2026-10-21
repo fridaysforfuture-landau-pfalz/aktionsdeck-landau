@@ -2426,3 +2426,63 @@ p.notiz.erledigt {
   width: 26px;
 }
 .mobi-sammel-platz .mobi-punkt { margin: 0; }
+
+/* ---- 0.29.9: Kanban-Knöpfe, Start-Schalter Mobi, Kalender mit Mobi und Woche ---- */
+/* Seiten-Knöpfe direkt neben der Seitenangabe */
+.kanban-nav { justify-content: flex-start; }
+
+/* Start: drei Schalter (ToDos, Hüte, Mobi) */
+.dash-projekt-spalten.mit-mobi { grid-template-columns: repeat(3, 1fr); }
+
+/* Mobi-Beitrag nach der Aktion (außer Danke/Rückblick): pink */
+.kal-zeile.kal-mobi-nach { background: #fde7ef; }
+.kal-chip-pink { background: #fde7ef; }
+
+/* Wochenansicht: Handy untereinander, PC 7 Spalten */
+.kal-woche { display: grid; gap: 8px; }
+.kal-wtag {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  background: var(--flaeche);
+}
+.kal-wtag.kal-heute { border-color: var(--gruppe); box-shadow: inset 0 3px 0 var(--gruppe); }
+.kal-wtag-kopf { margin: 0 0 2px; font-size: 14px; }
+.kal-wleer { margin: 0; }
+.kal-wchip {
+  display: grid;
+  gap: 1px;
+  min-height: 44px;
+  padding: 4px 6px;
+  border: 0;
+  border-left: 4px solid var(--gruppe);
+  border-radius: 3px;
+  background: var(--gruen-hell);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.kal-wchip .leise { font-size: 12px; }
+.kal-wchip.ueber strong { color: #b3261e; }
+.kal-wchip.kal-chip-pink { background: #fde7ef; }
+.kal-wchip.kal-chip-grau { background: #eceeed; color: var(--text-leise); }
+.kal-wchip:focus-visible { outline: 2px solid var(--gruppe); }
+.kal-wneu { justify-self: start; }
+
+@media (min-width: 960px) {
+  .kal-woche { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .kal-wtag { min-height: 160px; }
+}
+
+/* Kalender-Kopf am Handy: sechs Knöpfe passen nicht in eine Zeile.
+   Liste, Monat, Woche, Aktionskalender oben, Vorlagen und + Veranstaltung darunter (rechtsbündig). */
+@media (max-width: 599px) {
+  .kal-ansicht { flex-wrap: wrap; row-gap: 6px; }
+  .kal-ansicht .knopf { flex: none; overflow: visible; }
+}

@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.29.8 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.29.9 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/KlimastreikLandau/aktionsdeck-landau
 Seite: https://klimastreiklandau.github.io/aktionsdeck-landau/
 
@@ -9,10 +9,10 @@ Seite: https://klimastreiklandau.github.io/aktionsdeck-landau/
 - Etappe 4 komplett (0.18.0 bis 0.25.x): Projekte, ToDos und Meilensteine im Projekt, Meilenstein-Vorlagen, Hüte, Material im Projekt, Finanzen, Planung und Abschluss, Learnings, Aufräumen.
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
-- Etappe 7 Mobi läuft (0.29.0 bis 0.29.8), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6.
+- Etappe 7 Mobi läuft (0.29.0 bis 0.29.9), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7. Offen: 7.8 Feinschliff.
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): vor dem Echtbetrieb im Sheet löschen. Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
-## Etappe 7 (Mobi), Stand 0.29.8
+## Etappe 7 (Mobi), Stand 0.29.9
 Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code übernommen. Bis 7.4 stand hier noch 0.28.13.
 - 7.1 / 7.1a (0.29.0, 0.29.1): Tab Mobi_Plan (projekt_id, veranstaltung_id, kanal, format, titel, text, kanal_text, hashtags, datum, uhrzeit, status, verantwortlich, canva_link, ergebnis, notiz). Projekte zusätzlich zielgruppe, werbeart, kampagnenziel, handlungsaufruf, kanaele. ToDos zusätzlich mobi_id. apps-script/Mobi.gs prüft den Bezug (Projekt oder Veranstaltung) und löscht mit Verknüpfung (mobiKaskade). Der alte Tab Posts ist ungenutzt.
 - 7.2 (0.29.2): js/kanaele.js (feste Kanalliste mit Farben und Zeichengrenzen), js/views/mobi-eintrag.js (Beitrag-Fenster), js/views/mobi-plan.js (Teil "Mobi" im Projekt), js/views/mobi-rechnen.js. Reiter "Posts" heißt "Mobi".
@@ -36,7 +36,12 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - Wo sie stehen: Reiter ToDos (Liste, Erledigt, Archiv, Zählzeile; Filter "Verantwortlich" prüft jede Person einzeln; nicht bei "Noch offen"), Teil ToDos im Projekt (bei "Ohne Meilenstein", Zählzeile), Start (Projekt-Block, Liste "ToDos (n offen)", nur offene; nicht in der Kachel ToDos, die nur allgemeine ToDos zeigt). Der Start lädt dafür Mobi_Plan (Zwischenspeicher gruppe_id:startmobi). Der Reiter ToDos lädt Mobi_Plan mit.
 - Klick auf ein Sammel-ToDo: Reiter Mobi, Kanban, gefiltert auf Projekt und Kanal. Die Vorgabe liegt in js/views/mobi-todo.js (oeffneSammel, nimmMobiVorgabe) und wird von mobi.js beim Öffnen einmal gelesen.
 - Nicht im Kalender (kommt mit den Beiträgen in 7.7).
-- Nächster Schritt: 7.7 (Kalender).
+- 7.6 geprüft (21.10.2026): alles bestätigt. Änderungen daraus in 0.29.9: Kanban-Seitenknöpfe sprangen am PC nicht (die mitlaufende Leiste hat das weiche Scrollen zurückgesetzt). Jetzt springen sie sofort, und die Rückkopplung ist für 300 ms gesperrt. Die Knöpfe stehen direkt neben "Seite x von y". Sammel-ToDos gibt es pro Projekt und Kanalgruppe ("📣 Social Media", "📣 Digital", "📣 Print", "📣 Extern", "📣 Sonstiges"; Farbe aus KANALGRUPPEN in js/kanaele.js); ein Klick filtert den Kanban auf die Gruppe (Sonstiges: auf den Kanal Sonstiges). Start: eigener Schalter "Mobi (n offen)" im Projekt-Block (nur bei Projekten mit Beiträgen); "ToDos (n offen)" zählt nur echte ToDos.
+- Idee F (0.29.9): Standard-ToDos beim Anlegen eines Projekts über "+ Neu" (js/vorlagen.js STANDARD_TODOS, Liste mit Haken und Datum im Formular, Fälligkeit vom Aktionsdatum, angelegt mit batchCreate nach dem Projekt). Nachlesen: docs/STANDARD-TODOS.md. Vorlagen "Mobi" und "Pressearbeit" entfernt. "Versammlungsleitung festlegen" (vorher "Ansprechperson für die Aktion festlegen") steht in "Genehmigung und Anmeldung" an zweiter Stelle. Neue Standard-Beiträge: Danke-Post (Instagram, -1), Pressemitteilung Rückblick (-1), Rückblick auf der Webseite (-3). "+ Eigener Schritt" bleibt.
+- 7.7 (0.29.9): Mobi-Beiträge mit Datum sind Termine im Kalender (kalender-rechnen.js, quelle "mobi"): Titel "📣 Kanal: Titel", Kanalfarbe, Uhrzeit, Projekt oder Veranstaltung, Verantwortliche. Veröffentlichte grau. Hinweis "n Tage bis zur Aktion" (bzw. "zur Veranstaltung", "am Tag der Aktion", "n Tage nach …"). Beiträge nach der Aktion/Veranstaltung pink, außer Titel mit "Danke" oder "Rückblick". Offene überfällige Beiträge bleiben bei "Kommende" (rot). Klick öffnet das Beitrag-Fenster. Beiträge abgeschlossener Projekte nur mit Filter Archiv-Projekte. Neuer Filter "Mobi" (Standard an). Der Kalender lädt Mobi_Plan mit.
+- Wochenansicht (Knopf "Woche"): Montag bis Sonntag der Woche des gewählten Tags, ‹ › blättern, "Heute". PC: 7 Spalten, Handy: Tage untereinander. Jeder Termin ist ein Knopf (Klick wie in der Liste), "+" legt eine Veranstaltung an diesem Tag an. Projektbalken stehen dort nicht. Am Handy stehen Vorlagen und "+ Veranstaltung" jetzt in einer zweiten Zeile.
+- Veranstaltung bearbeiten: Knopf "In Mobi einplanen" (Fenster aus mobi-sammlung.js, Bezug veranstaltung_id, Bezugsdatum = Veranstaltungsdatum). Löschen nennt die Zahl der Mobi-Beiträge, die mitgelöscht werden (das Skript macht das schon, mobiKaskade).
+- Nächster Schritt: 7.8 (Feinschliff).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -56,7 +61,7 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - nav.js: Klick auf "Mehr" im Kalender, Posts oder Hilfe öffnet die Übersicht (beiAktiv nur, wenn der Reiter wirklich "mehr" ist).
 - 6.9 erledigt: Sicherheitsprüfung Termine, Test, Aufräumen (Testdaten-Liste), siehe oben.
 - Wunsch für Etappe 7: Wichtige Veranstaltungen (werden schon über Pinnwand oder Mitteilung angeheftet) sollen in Mobi als Story einplanbar sein.
-- Mobi-Kalender (Etappe 7) nutzt dieselbe Logik (kalender-rechnen.js) mit voreingestelltem Filter.
+- Mobi im Kalender: erledigt in 7.7 (0.29.9), im normalen Kalender mit Filter "Mobi" (kein eigener Mobi-Kalender).
 
 ## Plan Etappen 7 bis 11
 Neue Reiter: Start, Projekte, ToDos, Material, Mobi, Veranstaltungen, Team, Wiki. "Posts" wird Mobi, "Hilfe" wird Wiki, der Reiter Kalender entfällt (Kalender steckt in Mobi und Veranstaltungen). Untere Leiste am Handy bleibt: Start, Projekte, ToDos, Material, Mehr.
@@ -125,10 +130,9 @@ Neue Reiter: Start, Projekte, ToDos, Material, Mobi, Veranstaltungen, Team, Wiki
 - Testdaten aus Etappe 5 und 6 im Sheet vor dem Echtbetrieb löschen (testdatenListe im Editor).
 - Das Kalender-Abo (Skript-Adresse mit Weiterleitung) in Google und Apple Kalender noch testen. Notfalls feste ICS-Datei auf GitHub Pages.
 - Alte, nicht mehr genutzte CSS-Regeln (.kal-pfeil, .kal-nav, .kal-datum, .kal-monat-kopf) stören nicht, können später entfernt werden.
-- Am Handy könnten die fünf Kalender-Knöpfe auf sehr schmalen Geräten eng werden. Bei Bedarf "Aktionskalender" kürzen.
 
 ## Dateiübersicht
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.29.8 am Ende)
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.29.9 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit

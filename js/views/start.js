@@ -2,7 +2,8 @@
 // Start-Reiter: Dashboard. Kachel Projekte zeigt die laufenden Projekte (Aktiv zuerst, dann Planung)
 // mit Fortschrittsbalken (Klick = ins Projekt) und je Projekt einen Schalter "ToDos (n offen)".
 // Kachel ToDos zeigt die offenen, allgemeinen ToDos (ohne Projekt und Post).
-// In den Projekt-Blöcken stehen bei "ToDos" auch die Sammel-ToDos aus Mobi (js/views/mobi-todo.js, ohne Kästchen).
+// In den Projekt-Blöcken gibt es neben "ToDos" und "Hüte" den Schalter "Mobi" mit den Sammel-ToDos
+// aus Mobi (js/views/mobi-todo.js, ohne Kästchen). Sie zählen nicht bei "ToDos".
 // Erledigte (nur die der letzten 2 Wochen) per Schalter oben rechts. ToDos haben ein Kästchen zum Abhaken.
 // Die anderen Kacheln sind noch Platzhalter (Posts/Kalender Etappe 5).
 
@@ -252,6 +253,7 @@ export async function render(container, ctx) {
             gezeigt.forEach(function (p) {
               projektOffen[String(p.id)] = !alleAuf;
               projektOffen[String(p.id) + ':hut'] = !alleAuf;
+              projektOffen[String(p.id) + ':mobi'] = !alleAuf;
             });
             zeichneProjekte();
           }
@@ -279,7 +281,8 @@ export async function render(container, ctx) {
           return String(t.projekt_id || '').trim() === id && !istWahr(t.erledigt);
         });
         const offeneSammel = sammel.filter(function (t) { return t.projekt_id === id && !t.erledigt; });
-        const mitWer = sortieren(offeneAlle.filter(function (t) { return !istOffenerHut(t); }).concat(offeneSammel));
+        const mitWer = sortieren(offeneAlle.filter(function (t) { return !istOffenerHut(t); }));
+        const keyMobi = id + ':mobi';
         const hueteListe = sortieren(offeneAlle.filter(istOffenerHut));
         const keyHut = id + ':hut';
 
@@ -305,12 +308,18 @@ export async function render(container, ctx) {
           return ul;
         };
 
-        blockEl.append(el('div', { class: 'dash-projekt-spalten' },
+        // Mobi nur, wenn das Projekt Beiträge hat
+        const mitMobi = sammel.some(function (t) { return t.projekt_id === id; });
+        blockEl.append(el('div', { class: 'dash-projekt-spalten' + (mitMobi ? ' mit-mobi' : '') },
           schalter(id, 'ToDos', mitWer),
-          schalter(keyHut, 'Hüte', hueteListe)
+          schalter(keyHut, 'Hüte', hueteListe),
+          mitMobi ? schalter(keyMobi, 'Mobi', offeneSammel) : null
         ));
         if (projektOffen[id]) blockEl.append(listeFuer(id, mitWer, 'Keine offenen ToDos.'));
         if (projektOffen[keyHut]) blockEl.append(listeFuer(keyHut, hueteListe, 'Keine offenen Hüte.'));
+        if (projektOffen[keyMobi]) {
+          blockEl.append(listeFuer(keyMobi, sortieren(offeneSammel), 'Alle Mobi-Beiträge sind veröffentlicht.'));
+        }
       }
       projektListe.append(blockEl);
     });

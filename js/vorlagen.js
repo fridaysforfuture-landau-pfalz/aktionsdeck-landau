@@ -6,37 +6,30 @@
 
 import { normDatum, iso } from './views/todos-rechnen.js';
 
+// Standard-ToDos: werden beim Anlegen eines Projekts vorgeschlagen (mit Haken, abwählbar).
+// tage_vorher = so viele Tage VOR dem Aktionsdatum (ohne Aktionsdatum: kein Fälligkeitsdatum).
+// Alle Tage sind Platzhalter. Nachlesen: docs/STANDARD-TODOS.md (bei Änderung mitpflegen).
+export const STANDARD_TODOS = [
+  { text: 'Bühne?', tage_vorher: 21 },
+  { text: 'Band?', tage_vorher: 21 },
+  { text: 'Uploadplan erstellen', tage_vorher: 14 },
+  { text: 'Band anfragen', tage_vorher: 14 },
+  { text: 'Anfrage Bollerwagen Foodsharing', tage_vorher: 14 },
+  { text: 'Presseverteiler prüfen', tage_vorher: 8 },
+  { text: 'Awareness-Team festlegen', tage_vorher: 5 },
+  { text: 'Person für Fotos festlegen', tage_vorher: 3 },
+  { text: 'Bei der Presse nachfassen', tage_vorher: 2 }
+];
+
 export const VORLAGEN = [
-  {
-    id: 'mobi',
-    name: 'Mobi',
-    schritte: [
-      { text: 'Plakate designen', tage_vorher: 21 },
-      { text: 'Plakate drucken', tage_vorher: 14 },
-      { text: 'Uploadplan erstellen', tage_vorher: 14 },
-      { text: 'Instagram-Posts erstellen', tage_vorher: 10 },
-      { text: 'Instagram-Posts hochladen', tage_vorher: 7 },
-      { text: 'Pressemitteilung schreiben', tage_vorher: 7 }
-    ]
-  },
-  {
-    id: 'presse',
-    name: 'Pressearbeit',
-    schritte: [
-      { text: 'Pressemitteilung schreiben', tage_vorher: 10 },
-      { text: 'Presseverteiler prüfen', tage_vorher: 8 },
-      { text: 'Pressemitteilung verschicken', tage_vorher: 5 },
-      { text: 'Bei der Presse nachfassen', tage_vorher: 2 }
-    ]
-  },
   {
     id: 'genehmigung',
     name: 'Genehmigung und Anmeldung',
     schritte: [
       { text: 'Ort und Route klären', tage_vorher: 28 },
+      { text: 'Versammlungsleitung festlegen', tage_vorher: 7 },
       { text: 'Versammlung bei der Stadt anmelden', tage_vorher: 21 },
-      { text: 'Auflagen prüfen', tage_vorher: 10 },
-      { text: 'Ansprechperson für die Aktion festlegen', tage_vorher: 7 }
+      { text: 'Auflagen prüfen', tage_vorher: 10 }
     ]
   },
   {

@@ -1,11 +1,12 @@
 // js/views/mobi-todo.js
-// Sammel-ToDos aus den Mobi-Beiträgen: pro Projekt und Kanal ein Eintrag, zum Beispiel „📣 Instagram“.
+// Sammel-ToDos aus den Mobi-Beiträgen: pro Projekt und Kanalgruppe ein Eintrag, zum Beispiel „📣 Social Media“
+// (Instagram, Facebook, TikTok zusammen). Unbekannte Kanäle zählen zu „Sonstiges“.
 // Sie werden NICHT gespeichert, sondern bei jedem Zeichnen berechnet (wie Kalender-Termine).
 // Ein Sammel-ToDo sieht aus wie ein ToDo (text, faellig_am, erledigt, verantwortlich ...),
 // damit Sortierung, Filter und Zählzeile aus todos-rechnen.js damit arbeiten können.
-// Es hat kein Kästchen. Ein Klick öffnet den Reiter Mobi (Kanban, gefiltert auf Projekt und Kanal).
+// Es hat kein Kästchen. Ein Klick öffnet den Reiter Mobi (Kanban, gefiltert auf Projekt und Kanalgruppe).
 
-import { kanalInfo } from '../kanaele.js';
+import { kanalInfo, KANALGRUPPEN } from '../kanaele.js';
 import { istVeroeffentlicht } from './mobi-rechnen.js';
 import { normDatum, heuteIso } from './todos-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
@@ -30,14 +31,18 @@ export function sammelTodos(mobi, projekte, projektId) {
     // Nur Beiträge von Projekten (nicht von Veranstaltungen), nur offene Projekte
     if (!pid || zu[pid] !== false) return;
     if (projektId && pid !== String(projektId)) return;
-    const k = kanalInfo(b.kanal);
-    const name = k.name || 'Ohne Kanal';
-    const key = pid + '|' + name;
+    const gid = kanalInfo(b.kanal).gruppe || 'sonstiges';
+    const kg = KANALGRUPPEN.find(function (x) { return x.id === gid; }) || KANALGRUPPEN[KANALGRUPPEN.length - 1];
+    const key = pid + '|' + kg.id;
     if (!gruppen[key]) {
-      gruppen[key] = { pid: pid, kanal: k, name: name, liste: [] };
+      gruppen[key] = { pid: pid, gruppe: kg, liste: [] };
       reihenfolge.push(key);
     }
     gruppen[key].liste.push(b);
+  });
+  // Reihenfolge wie KANALGRUPPEN (Social Media, Digital, Print, Extern, Sonstiges)
+  reihenfolge.sort(function (a, b) {
+    return KANALGRUPPEN.indexOf(gruppen[a].gruppe) - KANALGRUPPEN.indexOf(gruppen[b].gruppe);
   });
   return reihenfolge.map(function (key) { return baue(gruppen[key]); });
 }
@@ -76,16 +81,17 @@ function baue(g) {
 
   const stand = fertig + ' von ' + g.liste.length + ' veröffentlicht';
   return {
-    id: 'mobi-' + g.pid + '-' + (g.kanal.id || g.name),
+    id: 'mobi-' + g.pid + '-' + g.gruppe.id,
     _sammel: true,
-    _farbe: g.kanal.farbe,
-    _kanalId: g.kanal.id,
+    _farbe: g.gruppe.farbe,
+    // Wert für den Kanalfilter im Reiter Mobi: Gruppe ("g:social"), Sonstiges hat dort keine Gruppe
+    _kanalId: g.gruppe.id === 'sonstiges' ? 'sonstiges' : 'g:' + g.gruppe.id,
     _personen: personen,
     _hutFrei: hutFrei,
     _ueberfaellig: ueberfaellig,
     _stand: stand,
     projekt_id: g.pid,
-    text: '📣 ' + g.name,
+    text: '📣 ' + g.gruppe.name,
     details: stand,
     faellig_am: datum,
     erledigt: erledigt,

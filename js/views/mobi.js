@@ -681,19 +681,32 @@ export async function render(container, ctx) {
       zurueck.title = seite > 0 ? beitraegeAuf(m, seite - 1) + ' Beiträge auf Seite ' + seite : '';
       weiter.title = seite < m.seiten - 1 ? beitraegeAuf(m, seite + 1) + ' Beiträge auf Seite ' + (seite + 2) : '';
     }
+    // Sofort springen (nicht weich): Weiches Scrollen wurde in manchen Browsern
+    // von der mitlaufenden Leiste wieder zurückgesetzt.
+    let vonWrap = 0;
     function gehe(i) {
-      wrap.scrollTo({ left: i * mass().schritt, behavior: 'smooth' });
+      const ziel = Math.max(0, i * mass().schritt);
+      vonWrap = Date.now();
+      wrap.scrollLeft = ziel;
+      leiste.scrollLeft = ziel;
+      aktualisieren();
     }
     zurueck.addEventListener('click', function () { gehe(seite - 1); });
     weiter.addEventListener('click', function () { gehe(seite + 1); });
 
     // Leiste oben und Kanban gegenseitig mitbewegen
+    // Bewegt sich der Kanban selbst (Knopf, Wischen), folgt die Leiste; dann darf die Leiste
+    // den Kanban kurz nicht zurückschieben (Rückkopplung vermeiden).
     leiste.addEventListener('scroll', function () {
+      if (Date.now() - vonWrap < 300) return;
       if (Math.abs(wrap.scrollLeft - leiste.scrollLeft) > 1) wrap.scrollLeft = leiste.scrollLeft;
     });
     wrap.addEventListener('scroll', function () {
       kanbanScroll = wrap.scrollLeft;
-      if (Math.abs(leiste.scrollLeft - wrap.scrollLeft) > 1) leiste.scrollLeft = wrap.scrollLeft;
+      if (Math.abs(leiste.scrollLeft - wrap.scrollLeft) > 1) {
+        vonWrap = Date.now();
+        leiste.scrollLeft = wrap.scrollLeft;
+      }
       aktualisieren();
     });
     function beiGroesse() {
