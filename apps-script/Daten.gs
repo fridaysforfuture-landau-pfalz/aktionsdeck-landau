@@ -288,6 +288,9 @@ function aktionDelete(ctx, p) {
     konfliktPruefen(z, p.bekannt);
     var zeit = jetzt();
 
+    // Mobi: Beitrag oder Veranstaltung gelöscht, dann gehen die verknüpften Teile mit
+    mobiKaskade(ctx, tab, z, zeit, anzeige);
+
     // Meilenstein gelöscht: seine ToDos bleiben, verlieren nur den Verweis
     if (tab === 'Meilensteine') {
       var td = lies('ToDos');
