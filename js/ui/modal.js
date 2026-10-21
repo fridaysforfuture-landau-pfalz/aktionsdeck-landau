@@ -2,6 +2,7 @@
 // Kleines Fenster "Wer bist du?". Gibt den Namen zurück (oder null bei Abbrechen).
 
 import { el } from './dom.js';
+import { xKnopf } from './fenster.js';
 
 export function frageName(aktuell, darfAbbrechen) {
   return new Promise(function (resolve) {
@@ -47,6 +48,7 @@ export function frageName(aktuell, darfAbbrechen) {
         text: 'Abbrechen',
         onclick: function () { zu(null); }
       }));
+      box.append(xKnopf(function () { zu(null); }));
     }
 
     formular.addEventListener('submit', function (ev) {
