@@ -2233,3 +2233,13 @@ p.notiz.erledigt {
 .oeff-kachel-box .oeff-kachel { background: none; color: inherit; }
 .oeff-kachel-box:hover { filter: brightness(0.96); }
 .oeff-heften { justify-self: start; margin: 0 12px 10px; }
+
+/* ---- 0.29.2: Mobi ---- */
+.mobi-kanal { flex-wrap: wrap; gap: 8px 10px; padding: 6px 0; }
+.mobi-punkt { width: 14px; height: 14px; flex: none; margin-left: 4px; border-radius: 50%; }
+.mobi-kanal-text { display: grid; flex: 1; min-width: 140px; }
+.mobi-rolle { width: auto; min-width: 150px; }
+.mobi-luecke { color: #b3261e; font-size: 13px; font-weight: 600; }
+.mobi-zaehler { font-size: 13px; }
+.mobi-zaehler.ueber { color: #b3261e; font-weight: 600; }
+.mobi-analyse dd { white-space: pre-wrap; }
