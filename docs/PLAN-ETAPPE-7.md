@@ -57,9 +57,14 @@ Nochmals bestätigt vor 7.5 (21.10.2026): A = Gruppe „Digital“, B = ja (der 
 Die Person hat 7.4 (0.29.4) umgesetzt, es ist im Repo.
 **B ja (bestätigt am 21.10.2026):** Die ToDo-Bausteine aus 7.4 werden in Schritt 7.5 zurückgebaut (siehe 7.5, Punkt 4). Vorher (zum Beispiel in 7.4a und 7.4b) wird nichts davon entfernt.
 
-**Neu offen (F, aus der Prüfung von 7.5 am 21.10.2026):** Die Meilenstein-Vorlagen „Mobi“ und „Pressearbeit“ sind durch die Beiträge kaum noch nötig.
-Schritte wie „Presseverteiler prüfen“ und „Uploadplan erstellen“ sollen Standard-ToDos sein, die beim Anlegen eines Projekts schon da sind.
-Noch nicht gebaut (steht nicht im Plan). Vorschlag und Fragen stehen im Pull Request zu 7.6. Erst nach der Antwort bauen.
+**F ja (bestätigt am 21.10.2026, gebaut in 0.29.9):** Beim Anlegen eines Projekts werden Standard-ToDos vorgeschlagen (mit Haken, abwählbar,
+Fälligkeit vom Aktionsdatum). Liste in `js/vorlagen.js` (`STANDARD_TODOS`), nachlesen in `docs/STANDARD-TODOS.md`.
+Die Vorlagen „Mobi“ und „Pressearbeit“ sind entfernt. „Ansprechperson für die Aktion festlegen“ heißt „Versammlungsleitung festlegen“ und steht unter „Ort und Route klären“.
+Neue Standard-Beiträge: Danke-Post (Instagram), Pressemitteilung Rückblick, Rückblick auf der Webseite.
+„+ Eigener Schritt“ bleibt.
+
+**C geändert (21.10.2026):** Sammel-ToDos gibt es pro Projekt und **Kanalgruppe** (Social Media, Digital, Print, Extern, Sonstiges), nicht mehr pro Kanal.
+Auf dem Start stehen sie im Projekt-Block unter einem eigenen Schalter „Mobi“ und zählen nicht bei „ToDos“.
 
 Die Tabelle unten zeigt die ursprünglichen Fragen.
 

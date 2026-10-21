@@ -9,12 +9,13 @@ export const SCHRITTE_STANDARD = ['idee', 'entwurf', 'review', 'anpassung', 'ber
 export const SCHRITTE_VIDEO = ['idee', 'entwurf', 'gedreht', 'geschnitten', 'review', 'anpassung', 'bereit', 'veroeffentlicht'];
 
 // Kanalgruppen (Feld "gruppe" je Kanal). Sonstiges steht nicht im Filter.
+// farbe = Farbe der Sammel-ToDos dieser Gruppe (js/views/mobi-todo.js)
 export const KANALGRUPPEN = [
-  { id: 'social', name: 'Social Media' },
-  { id: 'digital', name: 'Digital' },
-  { id: 'print', name: 'Print' },
-  { id: 'extern', name: 'Extern' },
-  { id: 'sonstiges', name: 'Sonstiges' }
+  { id: 'social', name: 'Social Media', farbe: '#d6249f' },
+  { id: 'digital', name: 'Digital', farbe: '#0894ad' },
+  { id: 'print', name: 'Print', farbe: '#7a4fb5' },
+  { id: 'extern', name: 'Extern', farbe: '#00796b' },
+  { id: 'sonstiges', name: 'Sonstiges', farbe: '#596360' }
 ];
 
 const S = SCHRITTE_STANDARD;
@@ -58,9 +59,13 @@ export const STANDARD_BEITRAEGE = {
     { name: 'Thema-Post 6', format: 'beitrag', tage_vorher: 2 },
     { name: 'Story 1', format: 'story', tage_vorher: 3 },
     { name: 'Story 2', format: 'story', tage_vorher: 1 },
-    { name: 'Story 3 (am Tag)', format: 'story', tage_vorher: 0 }
+    { name: 'Story 3 (am Tag)', format: 'story', tage_vorher: 0 },
+    { name: 'Danke-Post', format: 'beitrag', tage_vorher: -1 }
   ],
-  presse: [{ name: 'Pressemitteilung', format: 'text', tage_vorher: 7 }],
+  presse: [
+    { name: 'Pressemitteilung', format: 'text', tage_vorher: 7 },
+    { name: 'Pressemitteilung Rückblick', format: 'text', tage_vorher: -1 }
+  ],
   plakate: [{ name: 'Plakate und Flyer', format: 'sonstiges', tage_vorher: 14 }],
   kreide: [{ name: 'Kreideaktion', format: 'sonstiges', tage_vorher: 1 }],
   messenger: [
@@ -77,7 +82,10 @@ export const STANDARD_BEITRAEGE = {
     { name: 'Video 1', format: 'video', tage_vorher: 7 },
     { name: 'Video 2', format: 'video', tage_vorher: 2 }
   ],
-  web: [{ name: 'Ankündigung auf der Webseite', format: 'text', tage_vorher: 10 }],
+  web: [
+    { name: 'Ankündigung auf der Webseite', format: 'text', tage_vorher: 10 },
+    { name: 'Rückblick auf der Webseite', format: 'text', tage_vorher: -3 }
+  ],
   gruppen: [{ name: 'Anfrage an andere Gruppen', format: 'text', tage_vorher: 10 }],
   schuldelis: [{ name: 'Schuldelis informieren', format: 'text', tage_vorher: 7 }],
   foerder: [{ name: 'Mail an Fördermitglieder', format: 'text', tage_vorher: 5 }]

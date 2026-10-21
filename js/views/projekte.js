@@ -25,6 +25,7 @@ import { baueFinanzTeil } from './projekt-finanzen.js';
 import { baueLearningTeil, baueLearningUebersicht } from './projekt-learnings.js';
 import { baueIdeenTeil } from './ideen.js';
 import { baueMobiTeil } from './mobi-plan.js';
+import { STANDARD_TODOS, faelligAus } from '../vorlagen.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = leer.
 // offen: aufgeklappte Projekte. teile: aufgeklappte Teile ("<id>:todos", "<id>:team").
@@ -494,25 +495,86 @@ export async function render(container, ctx) {
   function formZeigen(p) {
     const neuAnlegen = !p;
     let fenster = null;
+    let zeilen = [];   // Standard-ToDos (nur beim Anlegen)
     const form = baueFormular(SCHEMA.Projekte.felder, p || { status: 'planung' }, {
       speichernText: neuAnlegen ? 'Anlegen' : 'Speichern',
       vorschlaege: { aktionsart: aktionsarten() },
-      onSpeichern: function (d) { return speichern(p, d, fenster); },
+      onSpeichern: function (d) {
+        const todos = zeilen.filter(function (z) { return z.cb.checked; })
+          .map(function (z) { return { text: z.st.text, faellig_am: z.datum.value }; });
+        return speichern(p, d, fenster, todos);
+      },
       onAbbrechen: function () { fenster.schliessen(); }
     });
+    if (neuAnlegen) zeilen = standardTodosEinbauen(form);
     fenster = zeigeFenster(
       neuAnlegen ? 'Neues Projekt' : 'Projekt bearbeiten: ' + String(p.titel),
       form
     );
   }
 
-  async function speichern(p, d, fenster) {
+  // Standard-ToDos (js/vorlagen.js) als Liste mit Haken und Datum ins Formular „Neues Projekt“.
+  // Das Datum wird vom Aktionsdatum zurückgerechnet, solange du es nicht selbst änderst.
+  function standardTodosEinbauen(form) {
+    const aktion = form.querySelector('input[name="aktionsdatum"]');
+    const liste = el('div', { class: 'vorlage-liste' },
+      el('p', { class: 'leise', text: 'Standard-ToDos: Haken weg = wird nicht angelegt. ' +
+        'Die Fälligkeit wird vom Aktionsdatum zurückgerechnet und kann hier geändert werden.' }));
+    const zeilen = STANDARD_TODOS.map(function (st) {
+      const cb = el('input', { type: 'checkbox', class: 'auswahl-box', 'aria-label': st.text });
+      cb.checked = true;
+      const dat = el('input', { class: 'feld vorlage-datum', type: 'date', 'aria-label': 'Fällig: ' + st.text });
+      dat.value = aktion ? faelligAus(aktion.value, st.tage_vorher) : '';
+      const z = { st: st, cb: cb, datum: dat, manuell: false };
+      dat.addEventListener('input', function () { z.manuell = true; });
+      dat.addEventListener('click', function () {
+        try { if (typeof dat.showPicker === 'function') dat.showPicker(); } catch (e) { /* ignorieren */ }
+      });
+      liste.append(el('div', { class: 'vorlage-zeile' },
+        cb,
+        el('div', { class: 'vorlage-text' }, el('strong', { text: st.text }), dat)
+      ));
+      return z;
+    });
+    function fristen() {
+      zeilen.forEach(function (z) {
+        if (!z.manuell) z.datum.value = faelligAus(aktion.value, z.st.tage_vorher);
+      });
+    }
+    if (aktion) {
+      aktion.addEventListener('input', fristen);
+      aktion.addEventListener('change', fristen);
+    }
+    form.insertBefore(liste, form.querySelector('p.fehler'));
+    return zeilen;
+  }
+
+  async function speichern(p, d, fenster, todos) {
     if (!d.status) d.status = 'planung';
     try {
       if (!p) {
         const o = await api('create', { tabelle: 'Projekte', daten: d }, s.token);
+        if (todos && todos.length) {
+          try {
+            await api('batchCreate', {
+              tabelle: 'ToDos',
+              liste: todos.map(function (t) {
+                return { projekt_id: String(o.id), text: t.text, faellig_am: t.faellig_am || '', prioritaet: 'normal' };
+              })
+            }, s.token);
+          } catch (e2) {
+            // Das Projekt steht schon. Nicht noch einmal anlegen lassen.
+            fenster.schliessen();
+            if (ctx.behandleFehler(e2)) return;
+            toast('Projekt angelegt, aber die Standard-ToDos nicht: ' + e2.message);
+            offen[o.id] = true;
+            await laden(false);
+            springe(o.id);
+            return;
+          }
+        }
         fenster.schliessen();
-        toast('Projekt angelegt.');
+        toast(todos && todos.length ? 'Projekt mit ' + todos.length + ' ToDos angelegt.' : 'Projekt angelegt.');
         offen[o.id] = true;
         await laden(false);
         springe(o.id);
