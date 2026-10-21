@@ -51,6 +51,51 @@ function mobiBezugPruefen(ctx, tab, projektId, veranstaltungId, mobiId, cache) {
   }
 }
 
+// Löschen mit Verknüpfung (wird von aktionDelete aufgerufen, innerhalb der Sperre):
+// - Beitrag gelöscht: seine ToDos (mobi_id) werden mitgelöscht.
+// - Veranstaltung gelöscht: ihre Beiträge und deren ToDos werden mitgelöscht.
+// z = die Zeile, die gerade gelöscht wird. Gibt die Zahlen zurück (für Tests).
+function mobiKaskade(ctx, tab, z, zeit, anzeige) {
+  var leer = { beitraege: 0, todos: 0 };
+  if (tab !== 'Mobi_Plan' && tab !== 'Veranstaltungen') return leer;
+
+  var gid = String(ctx.gruppe_id);
+  var plan = lies('Mobi_Plan');
+  pruefeKopf('Mobi_Plan', plan.kopf);
+  var td = lies('ToDos');
+  pruefeKopf('ToDos', td.kopf);
+
+  var beitraege = [];
+  if (tab === 'Mobi_Plan') {
+    beitraege = [z];
+  } else {
+    beitraege = plan.zeilen.filter(function (r) {
+      return String(r.gruppe_id) === gid && !truthy(r.geloescht) &&
+        String(r.veranstaltung_id) === String(z.id);
+    });
+  }
+
+  var ids = {};
+  beitraege.forEach(function (b) { ids[String(b.id)] = true; });
+  var todos = td.zeilen.filter(function (r) {
+    return String(r.gruppe_id) === gid && !truthy(r.geloescht) &&
+      mobiTxt(r.mobi_id) !== '' && ids[String(r.mobi_id)] === true;
+  });
+
+  var felder = { geloescht: true, geaendert_am: zeit, geaendert_von: schuetzen(anzeige) };
+
+  // Bei einem gelöschten Beitrag löscht aktionDelete die Zeile selbst
+  if (tab === 'Veranstaltungen' && beitraege.length) {
+    schreibeSpalten(plan, beitraege, felder);
+    protokoll(ctx, 'delete', 'Mobi_Plan', beitraege.map(function (r) { return r.id; }), anzeige);
+  }
+  if (todos.length) {
+    schreibeSpalten(td, todos, felder);
+    protokoll(ctx, 'delete', 'ToDos', todos.map(function (r) { return r.id; }), anzeige);
+  }
+  return { beitraege: tab === 'Veranstaltungen' ? beitraege.length : 0, todos: todos.length };
+}
+
 // ---- Test für den Editor (Funktion auswählen, dann "Ausführen") ----
 
 function testenMobi() {
