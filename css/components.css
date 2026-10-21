@@ -2299,3 +2299,7 @@ p.notiz.erledigt {
 @media (min-width: 960px) {
   .kanban-spalte { flex: 1 1 0; min-width: 190px; }
 }
+
+/* ---- 0.29.4: Mobi-Vorlagen ---- */
+.vorlage-text .leise { font-size: 13px; }
+.vorlage-liste > .knopf-klein { justify-self: start; margin-top: 6px; }
