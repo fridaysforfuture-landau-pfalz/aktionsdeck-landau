@@ -208,6 +208,9 @@ export async function render(container, ctx) {
       kurzname: s.kurzname,
       personen: personen,
       bezuege: bezuege(),
+      todosVon: function (b) {
+        return daten.todos.filter(function (t) { return txt(t.mobi_id) === String(b.id); });
+      },
       todoAnzahl: function (b) {
         return daten.todos.filter(function (t) { return txt(t.mobi_id) === String(b.id); }).length;
       },
