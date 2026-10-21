@@ -93,13 +93,38 @@ export const SCHEMA = {
       { name: 'beleg_id', label: 'Beleg / Hinweis (z. B. Link, keine Kontonummern)', typ: 'text' }
     ]
   },
+  // Protokolle: Rollen, Projekt oder Veranstaltung und „Nächstes Plenum“ baut das Protokoll-Formular selbst (8.3).
+  // im_dokument und vorschlaege_erledigt setzt nur die App bzw. das Skript (kein Formularfeld).
   Protokolle: {
     titel: 'Protokoll',
     felder: [
       { name: 'datum', label: 'Datum', typ: 'datum' },
       { name: 'titel', label: 'Titel', typ: 'text', pflicht: true },
-      { name: 'teilnehmende', label: 'Teilnehmende', typ: 'text' },
-      { name: 'text', label: 'Absprachen', typ: 'langtext' }
+      // Angezeigt groß, gespeichert klein
+      { name: 'art', label: 'Art', typ: 'auswahl', optionen: [
+        { wert: 'plenum', label: 'Plenum' }, { wert: 'ag', label: 'AG' },
+        { wert: 'aktion', label: 'Aktion' }, { wert: 'sonstiges', label: 'Sonstiges' }
+      ] },
+      { name: 'teilnehmende', label: 'Anwesend', typ: 'text' },
+      // Grenze wie in apps-script/Schema.gs (MAX_TEXT_AUSNAHMEN)
+      { name: 'text', label: 'Protokolltext (höchstens 20 000 Zeichen)', typ: 'langtext', max: 20000 }
+    ]
+  },
+  // Reden: Projekt oder Veranstaltung baut das Reden-Formular selbst (8.6). Werden nie gelöscht.
+  Reden: {
+    titel: 'Reden',
+    felder: [
+      { name: 'titel', label: 'Titel', typ: 'text', pflicht: true },
+      { name: 'redner', label: 'Redner', typ: 'text' },
+      { name: 'datum', label: 'Datum', typ: 'datum' },
+      { name: 'aktionsart', label: 'Aktionsart (z. B. Demo, Infostand)', typ: 'text' },
+      { name: 'link', label: 'Link zum Drive-Dokument (https://…)', typ: 'text' },
+      // Angezeigt groß, gespeichert klein
+      { name: 'status', label: 'Status', typ: 'auswahl', optionen: [
+        { wert: 'entwurf', label: 'Entwurf' }, { wert: 'probelesen', label: 'Probelesen' },
+        { wert: 'fertig', label: 'Fertig' }, { wert: 'gehalten', label: 'Gehalten' }
+      ] },
+      { name: 'notiz', label: 'Notiz', typ: 'langtext' }
     ]
   },
   Learnings: {

@@ -38,7 +38,6 @@ const TEILE = [
   ['Projekt_Team', 'Teammitglieder'],
   ['Projekt_Material', 'Material-Positionen'],
   ['Finanzen', 'Finanz-Posten'],
-  ['Protokolle', 'Protokolle'],
   ['Kommentare', 'Kommentare'],
   ['Posts', 'Posts'],
   ['Mobi_Plan', 'Mobi-Beiträge']

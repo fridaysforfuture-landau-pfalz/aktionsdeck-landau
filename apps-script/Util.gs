@@ -70,8 +70,8 @@ function aus(v) {
   return v;
 }
 
-// Wert auf den Spaltentyp bringen (noch ohne Schutz)
-function typisieren(v, sp) {
+// Wert auf den Spaltentyp bringen (noch ohne Schutz). tab ist freiwillig (für die Höchstlänge).
+function typisieren(v, sp, tab) {
   var typ = spaltenTyp(sp);
   if (v === null || v === undefined) v = '';
   if (typ === 'bool') return v === true || /^(true|1|ja)$/i.test(String(v));
@@ -83,7 +83,8 @@ function typisieren(v, sp) {
   }
   if (typeof v === 'object') fehler('ungueltig', 'Feld "' + sp + '" hat einen ungültigen Wert.');
   var s = String(v);
-  if (s.length > 5000) fehler('ungueltig', 'Feld "' + sp + '" ist zu lang (max. 5000 Zeichen).');
+  var max = tab ? maxLaenge(tab, sp) : MAX_TEXT;
+  if (s.length > max) fehler('ungueltig', 'Feld "' + sp + '" ist zu lang (max. ' + max + ' Zeichen).');
   return s;
 }
 

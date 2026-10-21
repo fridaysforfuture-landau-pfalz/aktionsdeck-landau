@@ -2,11 +2,13 @@
 // Jeder Schreibzugriff läuft in einer Sperre. Es sieht nur Daten der eigenen Gruppe.
 
 // Diese Tabs brauchen immer ein Projekt (projekt_id darf nicht leer sein)
-var PROJEKT_PFLICHT = ['Meilensteine', 'Projekt_Team', 'Projekt_Material', 'Finanzen', 'Protokolle'];
+// (Protokolle seit 0.30.0 nicht mehr: Projekt freiwillig, siehe protokollBezugPruefen in Protokoll.gs)
+var PROJEKT_PFLICHT = ['Meilensteine', 'Projekt_Team', 'Projekt_Material', 'Finanzen'];
 
-// Diese Tabs werden beim Löschen eines Projekts mitgelöscht (Posts zuerst, wegen der ToDos zu Posts)
+// Diese Tabs werden beim Löschen eines Projekts mitgelöscht (Posts zuerst, wegen der ToDos zu Posts).
+// Protokolle und Reden bleiben erhalten (sie werden nie gelöscht).
 var PROJEKT_ABHAENGIG = ['Posts', 'ToDos', 'Meilensteine', 'Projekt_Team', 'Projekt_Material',
-                         'Finanzen', 'Protokolle', 'Kommentare', 'Mobi_Plan'];
+                         'Finanzen', 'Kommentare', 'Mobi_Plan'];
 
 function tabelleCheck(name) {
   if (typeof name !== 'string' || !TABELLEN.hasOwnProperty(name)) fehler('ungueltig', 'Unbekannte Tabelle.');
@@ -42,7 +44,7 @@ function neuerEintrag(tab, ctx, daten, anzeige, zeit) {
     geaendert_am: zeit, geaendert_von: anzeige,
     geloescht: false
   };
-  TABELLEN[tab].forEach(function (sp) { o[sp] = typisieren(daten[sp], sp); });
+  TABELLEN[tab].forEach(function (sp) { o[sp] = typisieren(daten[sp], sp, tab); });
   return o;
 }
 
@@ -194,6 +196,7 @@ function aktionCreate(ctx, p) {
     var bezugCache = {};
     bezugPruefen(ctx, tab, p.daten.projekt_id, p.daten.meilenstein_id, bezugCache);
     mobiBezugPruefen(ctx, tab, p.daten.projekt_id, p.daten.veranstaltung_id, p.daten.mobi_id, bezugCache);
+    protokollBezugPruefen(ctx, tab, p.daten.veranstaltung_id, bezugCache);
     var o = neuerEintrag(tab, ctx, p.daten, anzeige, jetzt());
     anhaengen(sh, [zeilenArray(kopf, o)]);
     protokoll(ctx, 'create', tab, [o.id], anzeige);
@@ -218,6 +221,7 @@ function aktionBatchCreate(ctx, p) {
       pruefeFelder(tab, d);
       bezugPruefen(ctx, tab, d.projekt_id, d.meilenstein_id, cache);
       mobiBezugPruefen(ctx, tab, d.projekt_id, d.veranstaltung_id, d.mobi_id, cache);
+      protokollBezugPruefen(ctx, tab, d.veranstaltung_id, cache);
       return neuerEintrag(tab, ctx, d, anzeige, zeit);
     });
     anhaengen(sh, eintraege.map(function (o) { return zeilenArray(kopf, o); }));
@@ -240,7 +244,7 @@ function aktionUpdate(ctx, p) {
     // nur geänderte Felder
     var neu = {};
     Object.keys(p.daten).forEach(function (sp) {
-      var wert = typisieren(p.daten[sp], sp);
+      var wert = typisieren(p.daten[sp], sp, tab);
       if (String(wert) !== String(z[sp])) neu[sp] = wert;
     });
     if (!Object.keys(neu).length) return { eintrag: sauber(z), geaendert: false };
@@ -261,6 +265,10 @@ function aktionUpdate(ctx, p) {
         neu.hasOwnProperty('mobi_id')) {
       mobiBezugPruefen(ctx, tab, vor('projekt_id'), vor('veranstaltung_id'), vor('mobi_id'), {});
     }
+    // Protokolle und Reden: geänderte Veranstaltung prüfen (Projekt prüft schon bezugPruefen oben)
+    if (neu.hasOwnProperty('veranstaltung_id')) {
+      protokollBezugPruefen(ctx, tab, neu.veranstaltung_id, {});
+    }
     var zeit = jetzt();
     neu.geaendert_am = zeit;
     neu.geaendert_von = anzeige;
@@ -279,6 +287,9 @@ function aktionDelete(ctx, p) {
   nurWennAenderbar(tab);
   if (tab === 'Projekte') {
     fehler('ungueltig', 'Projekte werden mit "projektLoeschen" gelöscht, damit alles dazu mitgelöscht wird.');
+  }
+  if (NIE_LOESCHEN.indexOf(tab) >= 0) {
+    fehler('ungueltig', 'Protokolle und Reden werden nicht gelöscht.');
   }
   var anzeige = anzeigename(p);
   return mitSperre(function () {

@@ -71,7 +71,10 @@ function beschriftungen(r, liste, abstand) {
 // beitraege: Beiträge eines Projekts oder einer Veranstaltung. bezugsdatum: Aktion oder Veranstaltungsdatum.
 // bezugName: 'Aktion' oder 'Veranstaltung'. oeffnen(b): Beitrag öffnen. Gibt null ohne Beiträge mit Datum.
 export function baueZeitstrahl(beitraege, bezugsdatum, oeffnen, bezugName) {
-  const mitDatum = beitraege.filter(function (b) { return !!normDatum(b.datum); });
+  // Beiträge mit Status „Idee“ stehen nicht im Zeitstrahl (Wunsch aus der Prüfung von 0.29.12)
+  const mitDatum = beitraege.filter(function (b) {
+    return !!normDatum(b.datum) && txt(b.status).toLowerCase() !== 'idee';
+  });
   const bezug = normDatum(bezugsdatum);
   const name = bezugName || 'Aktion';
   const r = zeitraum(mitDatum, bezug);
@@ -177,7 +180,8 @@ export function baueZeitstrahl(beitraege, bezugsdatum, oeffnen, bezugName) {
   });
 
   box.append(el('p', { class: 'leise mz-legende', text: 'Punkt = Beitrag (grau = veröffentlicht, roter Rand = überfällig). ' +
-    'Grüne Linie = ' + name + ', gestrichelt = heute, dünne Linien = Wochenanfang (Montag).' }));
+    'Grüne Linie = ' + name + ', gestrichelt = heute, dünne Linien = Wochenanfang (Montag). ' +
+    'Beiträge mit Status „Idee“ stehen nicht im Zeitstrahl.' }));
   return box;
 }
 

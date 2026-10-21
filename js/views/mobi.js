@@ -827,7 +827,7 @@ export async function render(container, ctx) {
     if (!gezeigt) {
       boxZeit.append(el('p', {
         class: 'leise',
-        text: 'Keine Beiträge mit Datum gefunden. Der Zeitstrahl zeigt Beiträge, die ein Datum haben.'
+        text: 'Keine Beiträge mit Datum gefunden. Der Zeitstrahl zeigt Beiträge, die ein Datum haben (ohne Status „Idee“).'
       }));
     }
   }

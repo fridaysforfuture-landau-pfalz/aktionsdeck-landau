@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.29.12 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.30.0 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.md, abgeschlossen, bleibt als Nachweis)
@@ -11,7 +11,7 @@ Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.m
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
 - Etappe 7 Mobi komplett (0.29.0 bis 0.29.12), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7, 7.8. 0.29.11 geprüft (22.10.2026), Anpassungen in 0.29.12.
-- Etappe 8 Protokoll, Reden, Learnings läuft, siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12).
+- Etappe 8 Protokoll, Reden, Learnings läuft, siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript; die Person stellt von Hand bereit, siehe Pull Request).
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
 ## Etappe 7 (Mobi), abgeschlossen mit 0.29.12
@@ -58,7 +58,17 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Zeitstrahl pro Projekt (js/views/mobi-zeitstrahl.js) im Teil "Mobi": eine Bahn je Kanal, Punkte am Datum (Kanalfarbe, grau = veröffentlicht, roter Rand = überfällig, Zahl = mehrere am selben Tag mit Auswahl), Linien für Aktion (grün) und heute (gestrichelt). Klick öffnet den Beitrag. Seit 0.29.12 im Reiter Mobi (Ansicht "Zeitstrahl"), im Projekt nur ein Balken (siehe unten).
   - Drag-and-Drop am PC: nur als Vorschlag im Pull Request, nicht gebaut.
 - 7.8 geprüft (22.10.2026): alles bestätigt. Anpassung in 0.29.12 (Schritt 8.0): Der ganze Zeitstrahl steht im Reiter Mobi (Knopf "Zeitstrahl" neben Liste, Kanban, Kalender), je Projekt oder Veranstaltung ein Strahl (gefiltert wie der Kanban), mit Tagesstrichen und Datum je Montag (am Handy nur Anfang, Ende, Heute, Aktion). Im Projekt (Teil "Mobi") steht nur noch ein Balken (baueZeitbalken): Abschnitte mit Beiträgen in Kanalfarbe, grau wenn veröffentlicht, Linien für Aktion und Heute; Knopf "Ganzer Zeitstrahl im Reiter Mobi →" (oeffneMobiAnsicht in mobi-todo.js, setzt Projekt-Filter und Ansicht). Drag-and-Drop: nein (Entscheidung 22.10.2026).
-- Nächster Schritt: Etappe 8, Schritt 8.1 (Sheet und Skript, siehe docs/PLAN-ETAPPE-8.md).
+- 8.0 geprüft (22.10.2026): alles bestätigt. Anpassung in 0.30.0: Im Zeitstrahl (Reiter Mobi) stehen Beiträge mit Status "Idee" nicht mehr (Hinweis in der Legende). Der Balken im Projekt zeigt sie weiter (Rückfrage im Pull Request).
+
+## Etappe 8 (Protokoll, Reden, Learnings), läuft
+- 8.1 (0.30.0): Sheet und Skript.
+  - Tab Protokolle hat zusätzlich art, veranstaltung_id, rollen, im_dokument, vorschlaege_erledigt. Neuer Tab Reden (projekt_id, veranstaltung_id, titel, redner, datum, aktionsart, link, status, notiz). Schema.gs und js/schema.js sind angepasst (Formularfelder Protokolle: Datum, Titel, Art, Anwesend, Protokolltext; Reden: Titel, Redner, Datum, Aktionsart, Link, Status groß beschriftet, Notiz).
+  - Höchstlänge für Textfelder: 5000 Zeichen, nur Protokolle.text 20 000 (MAX_TEXT und MAX_TEXT_AUSNAHMEN in Schema.gs, typisieren in Util.gs bekommt den Tab). form.js: Feld-Angabe max für langtext (Standard 5000).
+  - Daten.gs: Protokolle stehen nicht mehr in PROJEKT_PFLICHT und PROJEKT_ABHAENGIG (Projekt freiwillig, bleiben beim Löschen eines Projekts erhalten). delete für Protokolle und Reden gesperrt (NIE_LOESCHEN in Schema.gs): "Protokolle und Reden werden nicht gelöscht." veranstaltung_id von Protokollen und Reden muss zur Gruppe gehören (protokollBezugPruefen in Protokoll.gs). im_dokument und vorschlaege_erledigt stehen in BOOL_SPALTEN.
+  - Neu apps-script/Protokoll.gs: Aktionen protokollSpeichern, protokollInsDokument, protokollInfo (in Code.gs eingetragen). Einfügen direkt unter dem ersten Absatz mit [[NEUE PROTOKOLLE HIER]] (Titel fett, Datum, Rollen, Anwesend, Protokolltext, "- " wird Aufzählung, Trennlinie). Fehlt die Markierung, wird nichts geschrieben. Editor-Tests testenProtokollDok und testenProtokollAnhaengen.
+  - js/views/projekte.js: Das Löschfenster eines Projekts zählt keine Protokolle mehr.
+  - Keine appsscript.json im Repo: Google fragt beim ersten Lauf nach der Berechtigung für Dokumente.
+- Nächster Schritt: 8.2 (Reiter Protokoll: Liste und Lesen), erst wenn 8.1 von Hand bereitgestellt ist.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -88,7 +98,7 @@ Geplant: Etappe 8 bringt den Reiter "Protokoll" (📝, am PC nach "Kalender", am
 - Etappe 9 Team: Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
 - Etappe 10 Wiki und öffentliche Seiten: Wiki mit Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlichem Bereich. Impressum, Info, Datenschutz (Texte aus 6.1). Die Seite #/termine gibt es schon.
 - Etappe 11 Komfort: OpenCollective-Kontostand (nur Klimastreik Landau, https://opencollective.com/klimastreik-landau, einmal pro Woche per Skript; erst testen, noch keine Zusage). Erinnerungen und Push so planen, dass sie später auf Push oder E-Mail aufsetzen können (Umfragen, überfällige ToDos, Pinnwand-Kommentare). Sicherung, Übersicht und Export, Dunkelmodus, Feinschliff, GitHub-Actions-Versionen anheben.
-- Neue Sheet-Tabs für spätere Etappen: Mobi_Plan, Reden, Kapazitaet, Wiki. Jede Etappe nennt vorher, was im Sheet und Skript zu ergänzen ist und wann neu bereitgestellt wird.
+- Neue Sheet-Tabs für spätere Etappen: Kapazitaet, Wiki (Mobi_Plan seit 0.29.0, Reden seit 0.30.0). Jede Etappe nennt vorher, was im Sheet und Skript zu ergänzen ist und wann neu bereitgestellt wird.
 
 ## Festlegungen Start als Zentrale (Etappe 5)
 - Tabs und Spalten (Schema.gs und js/schema.js): Umfragen (frage, optionen, ablauf_am, mehrfach, beendet, namentlich), Umfrage_Antworten (umfrage_id, person, auswahl), Mitteilungen (titel, text, angeheftet, farbe), Ideen (titel, beschreibung, aktionsart, projekt_id), Kommentare (projekt_id, bezug_art, bezug_id, text, angeheftet, farbe), Projekte zusätzlich aktionsart. Kommentare gehören nicht zu PROJEKT_PFLICHT (Pinnwand ohne Projekt). BOOL_SPALTEN enthält mehrfach, angeheftet, beendet, namentlich, oeffentlich.
@@ -149,17 +159,17 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 ## Dateiübersicht
 - docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (laufend), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
 - index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.29.12 am Ende)
-- apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs (Setup.gs nur im Editor)
+- apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
 - js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl
-- Noch nicht vorhanden: Team, Wiki, Protokoll.
+- Noch nicht vorhanden: Team, Wiki, Reiter Protokoll (Skript und Tabs dafür gibt es seit 0.30.0).
 
 ## Hinweise
 - config.js enthält die echte API_URL: nie ersetzen, nur VERSION ändern.
 - Neue Dateien immer in sw.js (HUELLE) eintragen, gelöschte austragen. Dateien in HUELLE müssen im Repo existieren.
 - Skript geändert = neue Bereitstellung (Bereitstellen, Bereitstellungen verwalten, Stift, Neue Version). Neue Sheet-Spalte oder neuer Tab: erst im Sheet ergänzen (Kopfzeile von Hand tippen, ohne unsichtbare Zeichen), dann Schema.gs (Editor und GitHub), dann formatieren() ausführen (nur bei neuen Text-Spalten nötig), dann neu bereitstellen.
-- Skripteigenschaften (nur im Editor): TOKEN_GEHEIMNIS, FOTO_ORDNER_g1, g2, g3.
+- Skripteigenschaften (nur im Editor): TOKEN_GEHEIMNIS, FOTO_ORDNER_g1, g2, g3. Seit 0.30.0: PROTOKOLL_DOK_g1 (ID des FFF-Dokuments), freiwillig PROTOKOLL_LINK_<gruppe_id> (z. B. Etherpad von GP, nur https://).
 - Nach jedem Commit: Actions grün abwarten, Seite zweimal neu laden.
 - Ein Syntaxfehler in einer Datei lässt den Reiter auf "Dieser Reiter ist noch in Arbeit" zurückfallen (app.js lädt jeden Reiter als Modul). Bei diesem Symptom zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern und übrig gebliebene Reste wie "..." prüfen, vor allem `});` und `}, s.token);`.
 - In Util.gs gibt es schon eine Funktion aus(): in neuen Skriptdateien keine Variable so nennen. Hilfsfunktionen in Termine.gs beginnen mit t oder ics.
