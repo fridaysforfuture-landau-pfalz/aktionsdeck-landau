@@ -2243,3 +2243,59 @@ p.notiz.erledigt {
 .mobi-zaehler { font-size: 13px; }
 .mobi-zaehler.ueber { color: #b3261e; font-weight: 600; }
 .mobi-analyse dd { white-space: pre-wrap; }
+
+/* ---- 0.29.3: Reiter Mobi ---- */
+.mobi-ansicht { display: flex; gap: 8px; margin-bottom: 12px; }
+.tabelle .mobi-punkt { display: inline-block; margin: 0 8px 0 0; vertical-align: middle; }
+
+.kanban {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+}
+
+.kanban-spalte {
+  flex: 0 0 270px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  background: var(--gruen-hell);
+  scroll-snap-align: start;
+}
+
+.kanban-kopf { margin: 0 0 8px; font-size: 15px; }
+.kanban-karten { display: grid; gap: 8px; }
+
+.kanban-karte {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 6px solid var(--gruppe);
+}
+
+.kanban-titel {
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.kanban-titel:focus-visible { outline: 2px solid var(--gruppe); }
+.kanban-karte .ueberfaellig { color: #b3261e; font-weight: 600; }
+.kanban-karte .heute { color: #c77c00; font-weight: 600; }
+.kanban-knoepfe { display: flex; justify-content: space-between; gap: 6px; }
+
+@media (min-width: 960px) {
+  .kanban-spalte { flex: 1 1 0; min-width: 190px; }
+}
