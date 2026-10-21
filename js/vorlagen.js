@@ -17,7 +17,6 @@ export const STANDARD_TODOS = [
   { text: 'Anfrage Bollerwagen Foodsharing', tage_vorher: 14 },
   { text: 'Presseverteiler prüfen', tage_vorher: 8 },
   { text: 'Reden festlegen', tage_vorher: 7 },
-  { text: 'O-Ton Radio', tage_vorher: 5 },
   { text: 'Awareness-Team festlegen', tage_vorher: 5 },
   { text: 'Person für Fotos festlegen', tage_vorher: 3 }
 ];

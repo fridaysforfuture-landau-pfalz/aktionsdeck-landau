@@ -2,13 +2,14 @@
 // Kacheln für den Reiter Mobi (Ansicht "Liste"): eine Kachel je Beitrag, in Spalten nach Kanalgruppe.
 // PC (ab 960 px): vier Spalten Social Media, Digital, Print, Sonstiges. Handy: untereinander.
 //
-// opt: { bezugText(b) -> Text, oeffnen(b),
+// opt: { bezugText(b) -> Text, oeffnen(b), kommentare ({ beitragId: Anzahl }, freiwillig),
 //        auswahl: { gewaehlt(b), umschalten(b, wert) } oder null  (Kästchen "auswählen"),
 //        haken: { umschalten(b, wert) } oder null                 (Kästchen "veröffentlicht") }
 
 import { el } from '../ui/dom.js';
 import { kanalInfo, FORMAT_TEXT } from '../kanaele.js';
 import { istVeroeffentlicht, faelligStatus, sortiereBeitraege, datumZeile, statusText } from './mobi-rechnen.js';
+import { kommentarMarke } from './todos-rechnen.js';
 
 // Spalten am PC. Extern und Sonstiges (und unbekannte Kanäle) stehen zusammen in "Sonstiges".
 export const KACHEL_SPALTEN = [
@@ -63,7 +64,10 @@ export function baueKachel(b, opt) {
       punkt,
       el('span', { text: [txt(b.kanal) || 'Ohne Kanal', FORMAT_TEXT[txt(b.format)] || ''].filter(Boolean).join(' · ') })
     ),
-    el('strong', { class: st ? 'mobi-titel-' + st : '', text: titel }),
+    el('strong', {
+      class: st ? 'mobi-titel-' + st : '',
+      text: titel + kommentarMarke((opt.kommentare || {})[String(b.id)])
+    }),
     el('span', { class: 'leise' + (st ? ' mobi-datum-' + st : ''), text: datumZeile(b) + ' · ' + statusText(b.status) }),
     el('span', { class: 'leise', text: [opt.bezugText(b), txt(b.verantwortlich)].filter(Boolean).join(' · ') })
   );

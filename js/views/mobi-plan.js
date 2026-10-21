@@ -13,8 +13,12 @@ import { toast } from '../ui/toast.js';
 import { getName } from '../store.js';
 import { kanaeleFuer, kanalInfo } from '../kanaele.js';
 import {
-  istVeroeffentlicht, faelligStatus, sortiereBeitraege, beitragInfo
+  istVeroeffentlicht, faelligStatus, sortiereBeitraege, beitragInfo, mobiKommentarZahlen
 } from './mobi-rechnen.js';
+import { kommentarMarke, normDatum, heuteIso, datumText } from './todos-rechnen.js';
+import { addTage } from './kalender-rechnen.js';
+import { baueZeitstrahl } from './mobi-zeitstrahl.js';
+import { istAbgeschlossen } from './projekt-rechnen.js';
 import { zeigeBeitragFormular } from './mobi-eintrag.js';
 import { zeigeSammlung } from './mobi-sammlung.js';
 
@@ -42,6 +46,7 @@ export function baueMobiTeil(opt) {
     return txt(b.projekt_id) === pid;
   }));
   const fertigAnzahl = alle.filter(istVeroeffentlicht).length;
+  const kz = mobiKommentarZahlen(daten().kommentare);
 
   function knopf(text, hell, fn) {
     return el('button', {
@@ -197,12 +202,36 @@ export function baueMobiTeil(opt) {
         class: klassen.join(' '), type: 'button',
         onclick: function () { zeigeBeitragFormular(formOpt, b); }
       },
-        el('strong', { class: st ? 'mobi-titel-' + st : '', text: txt(b.titel) }),
+        el('strong', { class: st ? 'mobi-titel-' + st : '', text: txt(b.titel) + kommentarMarke(kz[String(b.id)]) }),
         el('span', { class: 'leise', text: beitragInfo(b) })
       )
     );
     li.style.borderLeft = '6px solid ' + k.farbe;
     return li;
+  }
+
+  // ---- Warnungen: Aktion bald, aber kein Beitrag; Beiträge ohne Datum ----
+
+  function warnungen() {
+    if (istAbgeschlossen(p)) return [];
+    const liste = [];
+    const h = heuteIso();
+    const aktion = normDatum(p.aktionsdatum);
+    if (!alle.length && aktion && aktion >= h && aktion <= addTage(h, 21)) {
+      liste.push(el('p', {
+        class: 'mobi-warnung',
+        text: '⚠ Die Aktion ist am ' + datumText(aktion) + ' und es ist noch kein Beitrag geplant. ' +
+          'Mit „+ Beiträge planen“ bekommst du Vorschläge.'
+      }));
+    }
+    const ohne = alle.filter(function (b) { return !istVeroeffentlicht(b) && !normDatum(b.datum); }).length;
+    if (ohne) {
+      liste.push(el('p', {
+        class: 'mobi-warnung',
+        text: '⚠ ' + ohne + (ohne === 1 ? ' Beitrag hat' : ' Beiträge haben') + ' noch kein Datum.'
+      }));
+    }
+    return liste;
   }
 
   // ---- Zusammenbauen ----
@@ -225,6 +254,7 @@ export function baueMobiTeil(opt) {
       knopf('Analyse bearbeiten', true, analyseBearbeiten)
     ),
     analyseAnzeige(),
+    ...warnungen(),
     el('h3', { class: 'teil-titel-klein', text: 'Beiträge' })
   );
   if (!alle.length) {
@@ -233,7 +263,15 @@ export function baueMobiTeil(opt) {
       text: 'Noch keine Beiträge. Mit „+ Beiträge planen“ wählst du Kanäle und bekommst Vorschläge, mit „+ Einzelner Beitrag“ legst du einen Beitrag selbst an.'
     }));
   } else {
-    body.append(kanalZeile(), el('ul', { class: 'dash-todo-liste' }, ...alle.map(beitragZeile)));
+    body.append(kanalZeile());
+    const strahl = baueZeitstrahl(alle, p.aktionsdatum, function (b) { zeigeBeitragFormular(formOpt, b); });
+    if (strahl) {
+      const zs = el('details', { class: 'mobi-zs-box' });
+      zs.open = true;
+      zs.append(el('summary', { text: 'Zeitstrahl' }), strahl);
+      body.append(zs);
+    }
+    body.append(el('ul', { class: 'dash-todo-liste' }, ...alle.map(beitragZeile)));
   }
 
   const teil = el('details', { class: 'projekt-teil' });

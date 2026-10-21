@@ -1,4 +1,4 @@
-# Plan Etappe 7: Mobi (Stand 21.10.2026)
+# Plan Etappe 7: Mobi (Stand 21.10.2026, abgeschlossen mit 0.29.11)
 
 Diese Datei ergänzt `docs/STAND.md`. Bei Widerspruch gilt `docs/STAND.md`, und du meldest den Widerspruch im Pull Request.
 Regeln für die Arbeit stehen in `CLAUDE.md`.

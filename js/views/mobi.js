@@ -13,7 +13,7 @@ import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { getName } from '../store.js';
 import { zeitText } from './material-rechnen.js';
-import { normDatum, datumText, heuteIso, wochenEnde, istMeins, kurz } from './todos-rechnen.js';
+import { normDatum, datumText, heuteIso, wochenEnde, istMeins, kurz, kommentarMarke } from './todos-rechnen.js';
 import { addTage, setzeMobiKalender } from './kalender-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
 import {
@@ -21,7 +21,7 @@ import {
 } from '../kanaele.js';
 import {
   STATI, statusKey, statusText, istVeroeffentlicht, faelligStatus,
-  sortiereBeitraege, datumZeile, istArchiv, nachbarStatus
+  sortiereBeitraege, datumZeile, istArchiv, nachbarStatus, mobiKommentarZahlen, mobiWarnungen
 } from './mobi-rechnen.js';
 import { zeigeBeitragFormular } from './mobi-eintrag.js';
 import { baueSpalten, baueKachelFlaeche } from './mobi-kachel.js';
@@ -50,7 +50,8 @@ export async function render(container, ctx) {
   let kanbanScroll = 0;     // Seitwärts-Stand im Kanban (bleibt beim Aktualisieren erhalten)
 
   const cacheKey = s.gruppe_id + ':mobi';
-  let daten = { mobi: [], projekte: [], veranstaltungen: [], todos: [] };
+  let daten = { mobi: [], projekte: [], veranstaltungen: [], todos: [], kommentare: [] };
+  let kommZahl = {};        // Kommentare je Beitrag (💬-Marke)
   let projektTitel = {};
   let projektOffen = {};
   let veranstTitel = {};
@@ -65,6 +66,7 @@ export async function render(container, ctx) {
   // ---- Bedienelemente ----
 
   const zahlen = el('p', { class: 'dash-zahlen' });
+  const warnBox = el('div', { class: 'mobi-warnungen' });
   const status = el('p', { class: 'leise', text: 'Lade Daten …' });
   const suche = el('input', {
     class: 'feld suche-feld', type: 'search', placeholder: 'Suchen …', 'aria-label': 'Suchen'
@@ -174,6 +176,7 @@ export async function render(container, ctx) {
     ),
     el('div', { class: 'mobi-ansicht' }, listenKnopf, kanbanKnopf, kalenderKnopf),
     zahlen,
+    warnBox,
     el('div', { class: 'filterzeile filter-todos' },
       suche, kanalWahl, bezugWahl, werWahl, statusWahl, meineFeld),
     status,
@@ -459,7 +462,7 @@ export async function render(container, ctx) {
 
   const SPALTEN = [
     { name: 'kanal', label: 'Kanal', wert: function (z) { return txt(z.kanal); } },
-    { name: 'titel', label: 'Titel', wert: function (z) { return kurz(z.titel, 80); } },
+    { name: 'titel', label: 'Titel', wert: function (z) { return kurz(z.titel, 80) + kommentarMarke(kommZahl[String(z.id)]); } },
     { name: '_bezug', label: 'Projekt / Veranstaltung', wert: function (z) { return bezugText(z); } },
     { name: 'datum', label: 'Datum', wert: function (z) { return datumZeile(z); } },
     { name: 'status', label: 'Status', wert: function (z) { return statusText(z.status); } },
@@ -468,7 +471,7 @@ export async function render(container, ctx) {
 
   function karteVon(z) {
     return {
-      titel: txt(z.titel),
+      titel: txt(z.titel) + kommentarMarke(kommZahl[String(z.id)]),
       zeilen: [
         [txt(z.kanal), FORMAT_TEXT[txt(z.format)] || ''].filter(Boolean).join(' · '),
         datumZeile(z) + ' · ' + statusText(z.status),
@@ -529,6 +532,7 @@ export async function render(container, ctx) {
   function kachelOpt(mitAuswahl) {
     return {
       bezugText: bezugText,
+      kommentare: kommZahl,
       oeffnen: function (b) { beitragOeffnen(b); },
       auswahl: mitAuswahl ? {
         gewaehlt: function (b) { return !!gewaehlt[b.id]; },
@@ -621,7 +625,7 @@ export async function render(container, ctx) {
         class: 'kanban-titel', type: 'button',
         onclick: function () { beitragOeffnen(b); }
       },
-        el('strong', { class: st ? 'mobi-titel-' + st : '', text: txt(b.titel) }),
+        el('strong', { class: st ? 'mobi-titel-' + st : '', text: txt(b.titel) + kommentarMarke(kommZahl[String(b.id)]) }),
         el('span', { class: 'leise', text: [txt(b.kanal), FORMAT_TEXT[txt(b.format)] || ''].filter(Boolean).join(' · ') }),
         el('span', { class: 'leise ' + st, text: datumZeile(b) }),
         el('span', { class: 'leise', text: [bezugText(b), txt(b.verantwortlich)].filter(Boolean).join(' · ') })
@@ -743,6 +747,43 @@ export async function render(container, ctx) {
     zeichne();
   }
 
+  // Warnungen: Projekt ohne Mobi (Aktion in den nächsten 21 Tagen, kein Beitrag), Beiträge ohne Datum
+  function warnungenZeichnen() {
+    leeren(warnBox);
+    const w = mobiWarnungen(daten.mobi, daten.projekte, function (p) { return !istAbgeschlossen(p); });
+    warnBox.hidden = archivModus || (!w.ohneMobi.length && !w.ohneDatum.length);
+    if (warnBox.hidden) return;
+    const h = heuteIso();
+    w.ohneMobi.forEach(function (p) {
+      const tage = Math.round((new Date(normDatum(p.aktionsdatum)) - new Date(h)) / 86400000);
+      warnBox.append(el('p', { class: 'mobi-warnung' },
+        el('span', { text: '⚠ Projekt ohne Mobi: ' }),
+        el('a', {
+          href: '#/g/' + encodeURIComponent(s.kurzname) + '/projekte/' + encodeURIComponent(p.id),
+          text: txt(p.titel)
+        }),
+        el('span', {
+          text: ' · Aktion ' + datumText(p.aktionsdatum) +
+            (tage === 0 ? ' (heute)' : ' (in ' + tage + (tage === 1 ? ' Tag)' : ' Tagen)')) +
+            '. Noch kein Beitrag geplant.'
+        })
+      ));
+    });
+    if (w.ohneDatum.length) {
+      const zeile = el('p', { class: 'mobi-warnung' },
+        el('span', { text: '⚠ ' + w.ohneDatum.length + (w.ohneDatum.length === 1 ? ' Beitrag' : ' Beiträge') + ' ohne Datum: ' }));
+      w.ohneDatum.slice(0, 5).forEach(function (b, i) {
+        if (i) zeile.append(el('span', { text: ', ' }));
+        zeile.append(el('button', {
+          class: 'mobi-warnung-link', type: 'button', text: txt(b.titel) || 'ohne Titel',
+          onclick: function () { beitragOeffnen(b); }
+        }));
+      });
+      if (w.ohneDatum.length > 5) zeile.append(el('span', { text: ' … und ' + (w.ohneDatum.length - 5) + ' weitere' }));
+      warnBox.append(zeile);
+    }
+  }
+
   function zaehlenZeile(sicht) {
     zahlen.hidden = !sicht.length;
     if (!sicht.length) return;
@@ -793,6 +834,7 @@ export async function render(container, ctx) {
     sammelKnopf.disabled = auswahlModus;
 
     zaehlenZeile(sicht);
+    warnungenZeichnen();
 
     boxListe.hidden = kanban;
     boxKanban.hidden = !kanban;
@@ -859,7 +901,9 @@ export async function render(container, ctx) {
     if (!neu.projekte) neu.projekte = [];
     if (!neu.veranstaltungen) neu.veranstaltungen = [];
     if (!neu.todos) neu.todos = [];
+    if (!neu.kommentare) neu.kommentare = [];
     daten = neu;
+    kommZahl = mobiKommentarZahlen(daten.kommentare);
     meta = m;
     offline = false;
     projektTitel = {};
@@ -883,14 +927,15 @@ export async function render(container, ctx) {
         cacheKey,
         async function () {
           const r = await api('listMehrere', {
-            tabellen: ['Mobi_Plan', 'Projekte', 'Veranstaltungen', 'ToDos']
+            tabellen: ['Mobi_Plan', 'Projekte', 'Veranstaltungen', 'ToDos', 'Kommentare']
           }, s.token);
           const t = (r && r.tabellen) || {};
           return {
             mobi: t.Mobi_Plan || [],
             projekte: t.Projekte || [],
             veranstaltungen: t.Veranstaltungen || [],
-            todos: t.ToDos || []
+            todos: t.ToDos || [],
+            kommentare: t.Kommentare || []
           };
         },
         zeigen,

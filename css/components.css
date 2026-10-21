@@ -2505,4 +2505,73 @@ p.notiz.erledigt {
 .kal-mobi-leiste[hidden] { display: none; }
 .kal-mobi-knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
 .kal-mobi-knoepfe a.knopf { display: inline-flex; align-items: center; text-decoration: none; }
-.kal-filter > .knopf-klein { align-self: center; }
+
+/* ---- 0.29.11: Mobi-Warnungen, Zeitstrahl ---- */
+.mobi-warnungen { margin: 0 0 12px; }
+.mobi-warnungen[hidden] { display: none; }
+.mobi-warnung {
+  margin: 0 0 6px;
+  padding: 6px 10px;
+  border-left: 4px solid #c77c00;
+  border-radius: var(--radius);
+  background: #fff7e8;
+  font-size: 14px;
+}
+.mobi-warnung-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.mobi-zs-box { margin: 8px 0; }
+.mobi-zs-box > summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+.mobi-zeitstrahl { display: grid; gap: 2px; margin-top: 6px; }
+.mz-zeile { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 8px; min-height: 30px; }
+.mz-name { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mz-name .mobi-punkt { width: 10px; height: 10px; margin: 0; }
+.mz-bahn { position: relative; height: 30px; margin: 0 12px; border-bottom: 1px solid var(--rand); }
+.mz-achse { height: 18px; border-bottom: 0; font-size: 12px; color: var(--text-leise); }
+.mz-datum { position: absolute; top: 0; white-space: nowrap; }
+.mz-start { left: 0; transform: translateX(-30%); }
+.mz-ende { right: 0; transform: translateX(30%); }
+.mz-aktion-text { transform: translateX(-50%); color: #368469; font-weight: 600; }
+.mz-linie { position: absolute; top: 0; bottom: 0; width: 0; }
+.mz-aktion { border-left: 2px solid #368469; }
+.mz-heute { border-left: 2px dashed #8a9490; }
+.mz-punkt {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  padding: 0;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: #b8c0bc;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+}
+/* Unsichtbar größere Tippfläche (44 px) um den kleinen Punkt */
+.mz-punkt::after { content: ''; position: absolute; inset: -13px; }
+.mz-punkt.mz-ueber { border-color: #b3261e; }
+.mz-punkt.mz-fertig { background: #b8c0bc; }
+.mz-punkt:focus-visible { outline: 2px solid var(--gruppe); outline-offset: 2px; }
+.mz-legende { margin: 4px 0 0; font-size: 12px; }
+
+@media (max-width: 599px) {
+  .mz-zeile { grid-template-columns: 76px 1fr; }
+}
+.mz-name > span:last-child { overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 599px) {
+  .mz-aktion-text { font-size: 11px; }
+}
