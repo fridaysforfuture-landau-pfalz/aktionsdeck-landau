@@ -2147,3 +2147,89 @@ p.notiz.erledigt {
   .kal-monatsnav { grid-column: 2; }
   .kal-kopf-rechts { grid-column: 3; }
 }
+/* ---- 0.28.13: Seitenleiste grau, Kalender-Zeilen, ✕ im Fenster, Anheften auf Kachel ---- */
+
+/* Strich der Terminleiste: AktionsDeck-Dunkelgrau wie der Balken oben */
+.start-termine { border-top: 5px solid #1a1e20; }
+
+/* ✕ oben rechts in jedem Fenster */
+.modal-box { position: relative; }
+.modal-box h2 { padding-right: 44px; }
+
+.fenster-x {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--text);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.fenster-x:hover { background: var(--gruen-hell); }
+.fenster-x:focus-visible { outline: 3px solid var(--gruppe); }
+
+/* Kalender: Liste, Monat, Aktionskalender links, Vorlagen und + Veranstaltung rechts, eine Zeile */
+.kal-ansicht { flex-wrap: nowrap; gap: 4px; }
+.kal-ansicht-gruppe { gap: 4px; min-width: 0; }
+
+.kal-ansicht .knopf {
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 0 6px;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 600px) {
+  .kal-ansicht { gap: 6px; }
+  .kal-ansicht .knopf { padding: 0 16px; font-size: 15px; }
+}
+
+/* Monatskopf am Handy: ‹ Monat › und Heute links, Datumswahl rechts, alles in einer Zeile */
+.kal-kopf {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.kal-kopf-rechts { display: contents; }
+.kal-datumknopf { margin-left: auto; }
+.kal-taste { width: 38px; height: 44px; }
+.kal-monatsnav { gap: 2px; }
+.kal-monatsnav h2 { min-width: 0; font-size: 16px; white-space: nowrap; }
+.kal-kopf .knopf { padding: 0 10px; }
+
+/* PC: Monat mittig, Heute und Datumswahl rechtsbündig */
+@media (min-width: 600px) {
+  .kal-kopf {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px;
+  }
+  .kal-monatsnav { grid-column: 2; gap: 4px; }
+  .kal-monatsnav h2 { min-width: 11ch; font-size: 18px; }
+  .kal-kopf-rechts { display: flex; grid-column: 3; justify-content: flex-end; gap: 8px; }
+  .kal-datumknopf { margin-left: 0; }
+  .kal-taste { width: 44px; }
+}
+
+/* Aktionskalender: Kachel mit Anheften-Knopf */
+.oeff-kachel-box {
+  display: grid;
+  border-radius: var(--radius);
+}
+
+.oeff-kachel-box .oeff-kachel { background: none; color: inherit; }
+.oeff-kachel-box:hover { filter: brightness(0.96); }
+.oeff-heften { justify-self: start; margin: 0 12px 10px; }
