@@ -38,7 +38,8 @@ const TEILE = [
   ['Finanzen', 'Finanz-Posten'],
   ['Protokolle', 'Protokolle'],
   ['Kommentare', 'Kommentare'],
-  ['Posts', 'Posts']
+  ['Posts', 'Posts'],
+  ['Mobi_Plan', 'Mobi-Beiträge']
 ];
 
 function paare(liste) {
