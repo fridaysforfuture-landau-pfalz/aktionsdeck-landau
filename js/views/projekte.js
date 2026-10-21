@@ -451,7 +451,9 @@ export async function render(container, ctx) {
       offen: !!merk.ideenAuf,
       beiToggle: function (o) { merk.ideenAuf = o; },
       neuLaden: function () { return laden(false); },
-      springe: springe
+      springe: springe,
+      // „Als Projekt starten“ öffnet das Formular „Neues Projekt“ (mit Standard-ToDos), vorausgefüllt
+      projektAnlegen: function (vorgabe) { formZeigen(null, vorgabe); }
     }));
 
     leeren(box);
@@ -492,11 +494,12 @@ export async function render(container, ctx) {
 
   // ---- Anlegen und Ändern ----
 
-  function formZeigen(p) {
+  // p = null heißt neu. vorgabe = vorausgefüllte Werte beim Anlegen (z. B. aus einer Aktionsidee)
+  function formZeigen(p, vorgabe) {
     const neuAnlegen = !p;
     let fenster = null;
     let zeilen = [];   // Standard-ToDos (nur beim Anlegen)
-    const form = baueFormular(SCHEMA.Projekte.felder, p || { status: 'planung' }, {
+    const form = baueFormular(SCHEMA.Projekte.felder, p || Object.assign({ status: 'planung' }, vorgabe || {}), {
       speichernText: neuAnlegen ? 'Anlegen' : 'Speichern',
       vorschlaege: { aktionsart: aktionsarten() },
       onSpeichern: function (d) {

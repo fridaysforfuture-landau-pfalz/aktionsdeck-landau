@@ -1,4 +1,4 @@
-# Standard-ToDos beim Anlegen eines Projekts (Stand 0.29.9)
+# Standard-ToDos beim Anlegen eines Projekts (Stand 0.29.10)
 
 Diese Datei ist zum Nachlesen. Die App liest die Werte **nicht** von hier,
 sondern aus `js/vorlagen.js` (Liste `STANDARD_TODOS`). Wer dort etwas ändert, ändert es auch hier.
@@ -11,7 +11,7 @@ sondern aus `js/vorlagen.js` (Liste `STANDARD_TODOS`). Wer dort etwas ändert, �
   rechnen sich die Daten neu, außer bei denen, die du selbst geändert hast.
 - Ohne Aktionsdatum bekommen die ToDos kein Fälligkeitsdatum.
 - Die ToDos gehören zum Projekt, aber zu keinem Meilenstein (sie stehen bei „Ohne Meilenstein“).
-- Nur beim Anlegen über „+ Neu“. „Als Projekt starten“ bei einer Aktionsidee legt keine Standard-ToDos an.
+- Beim Anlegen über „+ Neu“ und über „Als Projekt starten“ bei einer Aktionsidee (dann ist das Formular mit der Idee vorausgefüllt).
 
 **Alle Tage sind Annahmen (Platzhalter).**
 
@@ -25,16 +25,22 @@ sondern aus `js/vorlagen.js` (Liste `STANDARD_TODOS`). Wer dort etwas ändert, �
 | Band anfragen | 14 | von der Person genannt |
 | Anfrage Bollerwagen Foodsharing | 14 | von der Person genannt |
 | Presseverteiler prüfen | 8 | von der Person genannt (vorher Vorlage „Pressearbeit“) |
-| Awareness-Team festlegen | 5 | Vorschlag von Claude |
-| Person für Fotos festlegen | 3 | Vorschlag von Claude |
-| Bei der Presse nachfassen | 2 | Vorschlag von Claude (vorher Vorlage „Pressearbeit“) |
+| Reden festlegen | 7 | von der Person genannt (0.29.10) |
+| O-Ton Radio | 5 | von der Person genannt (0.29.10) |
+| Awareness-Team festlegen | 5 | Vorschlag von Claude, bestätigt |
+| Person für Fotos festlegen | 3 | Vorschlag von Claude, bestätigt |
 
-## Was sich an den Meilenstein-Vorlagen geändert hat (0.29.9)
+„Bei der Presse nachfassen“ ist seit 0.29.10 nicht mehr in der Liste.
+
+## Was sich an den Meilenstein-Vorlagen geändert hat (0.29.9 und 0.29.10)
 
 - Die Vorlagen „Mobi“ und „Pressearbeit“ sind weg. Ihre Aufgaben stecken jetzt in den Standard-Beiträgen
   („+ Beiträge planen“, siehe `docs/MOBI-STANDARD-BEITRAEGE.md`) und in den Standard-ToDos oben.
 - „Genehmigung und Anmeldung“: „Ansprechperson für die Aktion festlegen“ heißt jetzt **„Versammlungsleitung festlegen“**
-  und steht an zweiter Stelle, unter „Ort und Route klären“. Die Tage (7) sind gleich geblieben.
+  und steht an zweiter Stelle, unter „Ort und Route klären“. Seit 0.29.10 ist sie 21 Tage vorher fällig,
+  also spätestens am selben Tag wie „Versammlung bei der Stadt anmelden“.
+- „Nachbereitung“: „Danke-Post schreiben“ ist entfernt (0.29.10). Dafür gibt es den Standard-Beitrag „Danke-Post“
+  bei Instagram („+ Beiträge planen“). Ein ToDo legt keinen Beitrag von selbst an.
 
 ## Ändern
 

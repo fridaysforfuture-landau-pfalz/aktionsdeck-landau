@@ -16,9 +16,10 @@ export const STANDARD_TODOS = [
   { text: 'Band anfragen', tage_vorher: 14 },
   { text: 'Anfrage Bollerwagen Foodsharing', tage_vorher: 14 },
   { text: 'Presseverteiler prüfen', tage_vorher: 8 },
+  { text: 'Reden festlegen', tage_vorher: 7 },
+  { text: 'O-Ton Radio', tage_vorher: 5 },
   { text: 'Awareness-Team festlegen', tage_vorher: 5 },
-  { text: 'Person für Fotos festlegen', tage_vorher: 3 },
-  { text: 'Bei der Presse nachfassen', tage_vorher: 2 }
+  { text: 'Person für Fotos festlegen', tage_vorher: 3 }
 ];
 
 export const VORLAGEN = [
@@ -27,7 +28,7 @@ export const VORLAGEN = [
     name: 'Genehmigung und Anmeldung',
     schritte: [
       { text: 'Ort und Route klären', tage_vorher: 28 },
-      { text: 'Versammlungsleitung festlegen', tage_vorher: 7 },
+      { text: 'Versammlungsleitung festlegen', tage_vorher: 21 },
       { text: 'Versammlung bei der Stadt anmelden', tage_vorher: 21 },
       { text: 'Auflagen prüfen', tage_vorher: 10 }
     ]
@@ -48,7 +49,6 @@ export const VORLAGEN = [
     schritte: [
       { text: 'Material zurückgeben', tage_vorher: -1 },
       { text: 'Fotos sichten und auswählen', tage_vorher: -2 },
-      { text: 'Danke-Post schreiben', tage_vorher: -2 },
       { text: 'Belege und Kosten sammeln', tage_vorher: -7 },
       { text: 'Auswertung im Team', tage_vorher: -10 }
     ]

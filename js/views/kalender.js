@@ -19,7 +19,7 @@ import {
   baueTermine, filtereTermine, kommende, vergangene, standardFilter,
   zeitNorm, zeitText, datumsText, sichereUrl, istUeberfaellig, MONATE,
   monatsRaster, monatTitel, imZeitraum, WOCHENTAGE, wochentagNr,
-  istVorbei, schriftfarbe, pastell, bezugText, wocheVon, addTage
+  istVorbei, schriftfarbe, pastell, bezugText, wocheVon, addTage, MOBI_FILTER, nimmMobiKalender
 } from './kalender-rechnen.js';
 import { zeigeBeitragFormular } from './mobi-eintrag.js';
 import { zeigeSammlung } from './mobi-sammlung.js';
@@ -116,6 +116,19 @@ export async function render(container, ctx) {
   const f = merk.filter;
   f.name = getName();
   if (f.mobi === undefined) f.mobi = true;   // Merker von vor 0.29.9
+  // Mobi-Kalender: Filter merken und auf Mobi umstellen (aus dem Reiter Mobi oder Knopf „Nur Mobi“)
+  function mobiModusAn() {
+    if (!merk.mobiModus) merk.vorMobi = Object.assign({}, f);
+    Object.assign(f, MOBI_FILTER);
+    merk.mobiModus = true;
+    merk.archiv = false;
+  }
+  function mobiModusAus() {
+    if (merk.vorMobi) Object.assign(f, merk.vorMobi);
+    merk.mobiModus = false;
+    merk.vorMobi = null;
+  }
+  if (nimmMobiKalender()) mobiModusAn();
   const basis = '#/g/' + encodeURIComponent(s.kurzname) + '/';
 
   let daten = { veranstaltungen: [], projekte: [], meilensteine: [], todos: [], mobi: [], oeffentlich: [] };
@@ -188,6 +201,7 @@ export async function render(container, ctx) {
   }
   const suchZeile = el('div', { class: 'kal-suchzeile' }, suche, filterKnopf);
   
+  const schalterBoxen = [];
   SCHALTER.forEach(function (sch) {
     const cb = el('input', { type: 'checkbox' });
     cb.checked = !!f[sch[0]];
@@ -195,11 +209,34 @@ export async function render(container, ctx) {
       f[sch[0]] = cb.checked;
       zeichne();
     });
+    schalterBoxen.push({ key: sch[0], cb: cb });
     filterBox.append(el('label', { class: 'formfeld-bool' }, cb, el('span', { text: sch[1] })));
   });
+  function schalterAbgleichen() {
+    schalterBoxen.forEach(function (x) { x.cb.checked = !!f[x.key]; });
+  }
+  filterBox.append(el('button', {
+    class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Nur Mobi',
+    title: 'Mobi-Beiträge, Projekt-Aktionen und Deadlines',
+    onclick: function () { mobiModusAn(); schalterAbgleichen(); zeichne(); }
+  }));
+
+  // Hinweis-Leiste im Mobi-Kalender
+  const mobiLeiste = el('div', { class: 'kal-mobi-leiste' },
+    el('span', { text: '📣 Mobi-Kalender: Mobi-Beiträge, Projekt-Aktionen und Deadlines.' }),
+    el('span', { class: 'kal-mobi-knoepfe' },
+      el('button', {
+        class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Alle Termine zeigen',
+        onclick: function () { mobiModusAus(); schalterAbgleichen(); zeichne(); }
+      }),
+      el('a', { class: 'knopf knopf-hell knopf-klein', href: basis + 'mobi', text: '← Zurück zu Mobi' })
+    )
+  );
+  mobiLeiste.hidden = !merk.mobiModus;
 
   // Alles Bisherige liegt in kalenderBox. Der Aktionskalender ersetzt es zeitweise (Reiter bleiben links).
   const kalenderBox = el('div', null,
+    mobiLeiste,
     ansichtZeile,
     suchZeile,
     filterBox,
@@ -386,6 +423,7 @@ export async function render(container, ctx) {
       ? '← Termine'
       : 'Archiv' + (verg.length ? ' (' + verg.length + ')' : '');
     listeTitel.textContent = merk.archiv ? 'Archiv: vergangene Termine' : 'Kommende Termine';
+    mobiLeiste.hidden = !merk.mobiModus;
     kachelnZeichnen(termine);
 
     ansichtAnzeige();

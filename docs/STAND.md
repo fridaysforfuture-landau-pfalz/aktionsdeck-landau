@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.29.9 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.29.10 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/KlimastreikLandau/aktionsdeck-landau
 Seite: https://klimastreiklandau.github.io/aktionsdeck-landau/
 
@@ -9,10 +9,10 @@ Seite: https://klimastreiklandau.github.io/aktionsdeck-landau/
 - Etappe 4 komplett (0.18.0 bis 0.25.x): Projekte, ToDos und Meilensteine im Projekt, Meilenstein-Vorlagen, Hüte, Material im Projekt, Finanzen, Planung und Abschluss, Learnings, Aufräumen.
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
-- Etappe 7 Mobi läuft (0.29.0 bis 0.29.9), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7. Offen: 7.8 Feinschliff.
-- Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): vor dem Echtbetrieb im Sheet löschen. Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
+- Etappe 7 Mobi läuft (0.29.0 bis 0.29.10), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7. Offen: 7.8 Feinschliff.
+- Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
-## Etappe 7 (Mobi), Stand 0.29.9
+## Etappe 7 (Mobi), Stand 0.29.10
 Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code übernommen. Bis 7.4 stand hier noch 0.28.13.
 - 7.1 / 7.1a (0.29.0, 0.29.1): Tab Mobi_Plan (projekt_id, veranstaltung_id, kanal, format, titel, text, kanal_text, hashtags, datum, uhrzeit, status, verantwortlich, canva_link, ergebnis, notiz). Projekte zusätzlich zielgruppe, werbeart, kampagnenziel, handlungsaufruf, kanaele. ToDos zusätzlich mobi_id. apps-script/Mobi.gs prüft den Bezug (Projekt oder Veranstaltung) und löscht mit Verknüpfung (mobiKaskade). Der alte Tab Posts ist ungenutzt.
 - 7.2 (0.29.2): js/kanaele.js (feste Kanalliste mit Farben und Zeichengrenzen), js/views/mobi-eintrag.js (Beitrag-Fenster), js/views/mobi-plan.js (Teil "Mobi" im Projekt), js/views/mobi-rechnen.js. Reiter "Posts" heißt "Mobi".
@@ -41,6 +41,13 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - 7.7 (0.29.9): Mobi-Beiträge mit Datum sind Termine im Kalender (kalender-rechnen.js, quelle "mobi"): Titel "📣 Kanal: Titel", Kanalfarbe, Uhrzeit, Projekt oder Veranstaltung, Verantwortliche. Veröffentlichte grau. Hinweis "n Tage bis zur Aktion" (bzw. "zur Veranstaltung", "am Tag der Aktion", "n Tage nach …"). Beiträge nach der Aktion/Veranstaltung pink, außer Titel mit "Danke" oder "Rückblick". Offene überfällige Beiträge bleiben bei "Kommende" (rot). Klick öffnet das Beitrag-Fenster. Beiträge abgeschlossener Projekte nur mit Filter Archiv-Projekte. Neuer Filter "Mobi" (Standard an). Der Kalender lädt Mobi_Plan mit.
 - Wochenansicht (Knopf "Woche"): Montag bis Sonntag der Woche des gewählten Tags, ‹ › blättern, "Heute". PC: 7 Spalten, Handy: Tage untereinander. Jeder Termin ist ein Knopf (Klick wie in der Liste), "+" legt eine Veranstaltung an diesem Tag an. Projektbalken stehen dort nicht. Am Handy stehen Vorlagen und "+ Veranstaltung" jetzt in einer zweiten Zeile.
 - Veranstaltung bearbeiten: Knopf "In Mobi einplanen" (Fenster aus mobi-sammlung.js, Bezug veranstaltung_id, Bezugsdatum = Veranstaltungsdatum). Löschen nennt die Zahl der Mobi-Beiträge, die mitgelöscht werden (das Skript macht das schon, mobiKaskade).
+- 7.7 geprüft (21.10.2026): alles bestätigt. Anpassungen daraus in 0.29.10:
+  - Kanban: Seiten-Knöpfe und "Seite x von y" stehen mittig.
+  - Standard-ToDos: neu "Reden festlegen" (7) und "O-Ton Radio" (5), entfernt "Bei der Presse nachfassen". Awareness-Team und Person für Fotos bleiben (bestätigt).
+  - Neuer Kanal "Radio" (Gruppe Digital, Farbe #e65100) mit Standard-Beitrag "O-Ton Radio" (Sonstiges, 3 Tage vorher).
+  - "Versammlungsleitung festlegen" 21 Tage vorher (gleich wie "Versammlung bei der Stadt anmelden"). "Danke-Post schreiben" aus der Vorlage "Nachbereitung" entfernt (dafür Standard-Beitrag "Danke-Post"; ein ToDo legt keinen Beitrag an).
+  - "Als Projekt starten" (Aktionsidee) öffnet das Formular "Neues Projekt", vorausgefüllt, mit Standard-ToDos.
+  - Mobi-Kalender: Knopf "Kalender" im Reiter Mobi und Knopf "Nur Mobi" im Kalender-Filter. Beide stellen den Kalender auf Mobi-Beiträge, Projekt-Aktionen und Deadlines um (MOBI_FILTER in kalender-rechnen.js) und zeigen eine rosa Leiste mit "Alle Termine zeigen" (stellt die vorherigen Filter wieder her) und "← Zurück zu Mobi". Der Kalender bleibt ein Reiter (kein zweiter Kalender in Mobi).
 - Nächster Schritt: 7.8 (Feinschliff).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
@@ -121,15 +128,12 @@ Neue Reiter: Start, Projekte, ToDos, Material, Mobi, Veranstaltungen, Team, Wiki
 - Meldungen (toast) mittig. Projekte, Start, Kalender und Material-Dialoge nutzen Fenster (js/ui/fenster.js, zeigeFenster(titel, inhalt, beiZu, { aussenKlick }), mit ✕ oben rechts). Reiter ToDos und Material nutzen den Detailbereich rechts.
 - Öffentliche Seiten ohne Login: #/info/<seite> (Impressum, Info, Datenschutz, Texte kommen in 6.1/Etappe 10) und #/termine.
 
-## Offen
-- GitHub Actions: Warnungen (Node 20 veraltet). ubuntu-latest wechselt ab 19.10.2026 auf Ubuntu 26. Läuft, Action-Versionen in .github/workflows später anheben.
-- Sicherheitstest 1.8 nur teilweise (Abmelden-Test und Sperre; Ergebnis nicht gemeldet).
-- Mögliche Ursache für einmalige Fehler "Cannot read properties of undefined (reading 'forEach')": beschädigte Kopfzeile in einem Sheet-Tab.
-- GitHub Pages hält Dateien bis zu ca. 10 Minuten im Zwischenspeicher: warten und zweimal neu laden.
-- Der Reiter Projekte lädt neun bis zehn Tabellen auf einmal und kann langsam sein. Bei Bedarf Material und Finanzen erst beim Aufklappen laden.
-- Testdaten aus Etappe 5 und 6 im Sheet vor dem Echtbetrieb löschen (testdatenListe im Editor).
-- Das Kalender-Abo (Skript-Adresse mit Weiterleitung) in Google und Apple Kalender noch testen. Notfalls feste ICS-Datei auf GitHub Pages.
-- Alte, nicht mehr genutzte CSS-Regeln (.kal-pfeil, .kal-nav, .kal-datum, .kal-monat-kopf) stören nicht, können später entfernt werden.
+## Offen (mit Zeitpunkt)
+Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
+- **Etappe 11 (Komfort)**, früher nur, wenn die Actions rot werden: GitHub Actions zeigen Warnungen (Node 20 veraltet), ubuntu-latest ist seit 19.10.2026 Ubuntu 26. Läuft. Action-Versionen in .github/workflows anheben (steht schon im Plan für Etappe 11). Zeitpunkt ist ein Vorschlag.
+- **Etappe 10 (öffentliche Seiten)**: Das Kalender-Abo (Skript-Adresse mit Weiterleitung) in Google und Apple Kalender testen. Die Person kann das jederzeit vorher testen und das Ergebnis melden. Notfalls feste ICS-Datei auf GitHub Pages. Zeitpunkt ist ein Vorschlag.
+- **Aufräumen vor dem Update auf 1.0**: Alte, nicht mehr genutzte CSS-Regeln (.kal-pfeil, .kal-nav, .kal-datum, .kal-monat-kopf) entfernen. Stören bis dahin nicht.
+- **Vor 1.0**: Test-ToDos und Test-Einträge im Sheet löscht die Person.
 
 ## Dateiübersicht
 - index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.29.9 am Ende)
