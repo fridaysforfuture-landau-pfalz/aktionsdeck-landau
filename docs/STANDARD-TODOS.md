@@ -1,4 +1,4 @@
-# Standard-ToDos beim Anlegen eines Projekts (Stand 0.29.10)
+# Standard-ToDos beim Anlegen eines Projekts (Stand 0.29.11)
 
 Diese Datei ist zum Nachlesen. Die App liest die Werte **nicht** von hier,
 sondern aus `js/vorlagen.js` (Liste `STANDARD_TODOS`). Wer dort etwas ändert, ändert es auch hier.
@@ -26,11 +26,11 @@ sondern aus `js/vorlagen.js` (Liste `STANDARD_TODOS`). Wer dort etwas ändert, �
 | Anfrage Bollerwagen Foodsharing | 14 | von der Person genannt |
 | Presseverteiler prüfen | 8 | von der Person genannt (vorher Vorlage „Pressearbeit“) |
 | Reden festlegen | 7 | von der Person genannt (0.29.10) |
-| O-Ton Radio | 5 | von der Person genannt (0.29.10) |
 | Awareness-Team festlegen | 5 | Vorschlag von Claude, bestätigt |
 | Person für Fotos festlegen | 3 | Vorschlag von Claude, bestätigt |
 
-„Bei der Presse nachfassen“ ist seit 0.29.10 nicht mehr in der Liste.
+„Bei der Presse nachfassen“ ist seit 0.29.10 nicht mehr in der Liste. „O-Ton Radio“ ist seit 0.29.11 nur noch ein
+Standard-Beitrag (Kanal „Radio“, siehe `docs/MOBI-STANDARD-BEITRAEGE.md`), kein Standard-ToDo.
 
 ## Was sich an den Meilenstein-Vorlagen geändert hat (0.29.9 und 0.29.10)
 

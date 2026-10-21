@@ -116,7 +116,7 @@ export async function render(container, ctx) {
   const f = merk.filter;
   f.name = getName();
   if (f.mobi === undefined) f.mobi = true;   // Merker von vor 0.29.9
-  // Mobi-Kalender: Filter merken und auf Mobi umstellen (aus dem Reiter Mobi oder Knopf „Nur Mobi“)
+  // Mobi-Kalender: Filter merken und auf Mobi umstellen (Knopf „Kalender“ im Reiter Mobi)
   function mobiModusAn() {
     if (!merk.mobiModus) merk.vorMobi = Object.assign({}, f);
     Object.assign(f, MOBI_FILTER);
@@ -215,11 +215,6 @@ export async function render(container, ctx) {
   function schalterAbgleichen() {
     schalterBoxen.forEach(function (x) { x.cb.checked = !!f[x.key]; });
   }
-  filterBox.append(el('button', {
-    class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Nur Mobi',
-    title: 'Mobi-Beiträge, Projekt-Aktionen und Deadlines',
-    onclick: function () { mobiModusAn(); schalterAbgleichen(); zeichne(); }
-  }));
 
   // Hinweis-Leiste im Mobi-Kalender
   const mobiLeiste = el('div', { class: 'kal-mobi-leiste' },

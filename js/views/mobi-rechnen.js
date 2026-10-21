@@ -2,7 +2,7 @@
 // Rechenhelfer für Mobi: Status, Fälligkeit, Sortierung, Infozeile.
 
 import { normDatum, datumText, heuteIso, archivGrenze } from './todos-rechnen.js';
-import { zeitNorm } from './kalender-rechnen.js';
+import { zeitNorm, addTage } from './kalender-rechnen.js';
 import { FORMAT_TEXT, SCHRITTE_VIDEO, kanalInfo } from '../kanaele.js';
 
 const STATUS_TEXT = {
@@ -125,4 +125,40 @@ export function istArchiv(b) {
   if (!istVeroeffentlicht(b)) return false;
   const d = normDatum(b.geaendert_am) || normDatum(b.datum);
   return !!d && d < archivGrenze();
+}
+
+// { beitragId: Anzahl } aus der Liste Kommentare (nur Kommentare zu Mobi-Beiträgen, bezug_art "mobi")
+export function mobiKommentarZahlen(liste) {
+  const m = {};
+  (liste || []).forEach(function (k) {
+    if (String(k.bezug_art || '').trim() !== 'mobi') return;
+    const id = String(k.bezug_id || '').trim();
+    if (id) m[id] = (m[id] || 0) + 1;
+  });
+  return m;
+}
+
+// Warnungen für Mobi:
+// - ohneMobi: offene Projekte mit Aktionsdatum in den nächsten 21 Tagen (heute mitgezählt) ohne einen Beitrag
+// - ohneDatum: offene (nicht veröffentlichte) Beiträge ohne Datum, nicht von abgeschlossenen Projekten
+// projektOffen(p) sagt, ob ein Projekt noch läuft.
+export function mobiWarnungen(mobi, projekte, projektOffen) {
+  const h = heuteIso();
+  const grenze = addTage(h, 21);
+  const mitBeitrag = {};
+  const zu = {};
+  (projekte || []).forEach(function (p) { zu[String(p.id)] = !projektOffen(p); });
+  (mobi || []).forEach(function (b) {
+    const pid = String(b.projekt_id || '').trim();
+    if (pid) mitBeitrag[pid] = true;
+  });
+  const ohneMobi = (projekte || []).filter(function (p) {
+    const d = normDatum(p.aktionsdatum);
+    return projektOffen(p) && !!d && d >= h && d <= grenze && !mitBeitrag[String(p.id)];
+  }).sort(function (a, b) { return normDatum(a.aktionsdatum).localeCompare(normDatum(b.aktionsdatum)); });
+  const ohneDatum = (mobi || []).filter(function (b) {
+    const pid = String(b.projekt_id || '').trim();
+    return !istVeroeffentlicht(b) && !normDatum(b.datum) && !(pid && zu[pid]);
+  });
+  return { ohneMobi: ohneMobi, ohneDatum: ohneDatum };
 }

@@ -193,7 +193,9 @@ export function zeigeBeitragFormular(opt, b, vorgabe) {
       })
     ));
     inhalt.append(baueKommentare({
-      ctx: opt.ctx, token: opt.token, art: 'mobi', bezugId: b.id, projektId: txt(b.projekt_id)
+      ctx: opt.ctx, token: opt.token, art: 'mobi', bezugId: b.id, projektId: txt(b.projekt_id),
+      // Neuer oder gelöschter Kommentar: Liste neu laden, damit die 💬-Marke stimmt
+      beiAenderung: function () { if (opt.neuLaden) opt.neuLaden(); }
     }).el);
   }
   fenster = zeigeFenster(b ? 'Beitrag bearbeiten' : 'Neuer Beitrag', inhalt);

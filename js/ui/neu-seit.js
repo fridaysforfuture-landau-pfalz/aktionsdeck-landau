@@ -1,6 +1,7 @@
 // js/ui/neu-seit.js
 // "Was ist neu?": holt, was andere seit dem letzten Besuch geändert haben, und zeigt es im Fenster,
-// gegliedert in Umfragen, Mitteilungen, Kommentare, Projekte (mit Meilensteinen und ToDos) und ToDos ohne Projekt.
+// gegliedert in Umfragen, Mitteilungen, Veranstaltungen, Kommentare, Mobi (Beiträge zu Veranstaltungen),
+// Projekte (mit Meilensteinen, ToDos und Mobi-Beiträgen) und ToDos ohne Projekt.
 // Der Zeitpunkt des letzten Besuchs liegt im Gerät (store.js), pro Gruppe.
 
 import { el } from './dom.js';
@@ -27,7 +28,7 @@ export async function holeNeu(token, gruppeId, kurzname) {
   const alt = getLetzterBesuch(gruppeId);
   const seit = alt || new Date().toISOString();
   const r = await api('listMehrere', {
-    tabellen: ['ToDos', 'Meilensteine', 'Mitteilungen', 'Umfragen', 'Kommentare', 'Projekte', 'Veranstaltungen'],
+    tabellen: ['ToDos', 'Meilensteine', 'Mitteilungen', 'Umfragen', 'Kommentare', 'Projekte', 'Veranstaltungen', 'Mobi_Plan'],
     seit: seit
   }, token);
   const stand = (r && r.serverzeit) || new Date().toISOString();
@@ -130,13 +131,25 @@ export async function holeNeu(token, gruppeId, kurzname) {
       link: basis + 'kalender'
     };
   });
+  // Mobi-Beiträge: zum Projekt (dann unter dem Projekt) oder zu einer Veranstaltung (Abschnitt Mobi)
+  sammeln(t.Mobi_Plan, 'mobi', function (z, neu) {
+    const pid = txt(z.projekt_id);
+    return {
+      art: 'Mobi-Beitrag',
+      was: neu ? 'neu' : (txt(z.status) === 'veroeffentlicht' ? 'veröffentlicht' : 'geändert'),
+      titel: '📣 ' + (txt(z.kanal) ? txt(z.kanal) + ': ' : '') + kurz(z.titel, 70),
+      link: basis + 'mobi',
+      projektId: pid
+    };
+  });
   sammeln(t.Kommentare, 'kommentar', function (z, neu) {
     if (!neu) return null;
+    const art = txt(z.bezug_art);
     return {
       art: 'Kommentar',
       was: 'neu',
       titel: kurz(z.text, 80),
-      link: txt(z.bezug_art) === 'todo' ? basis + 'todos' : basis + 'start'
+      link: art === 'todo' ? basis + 'todos' : (art === 'mobi' ? basis + 'mobi' : basis + 'start')
     };
   });
 
@@ -190,6 +203,7 @@ export function zeigeNeu(items, beiZu) {
     abschnitt(titelText('Mitteilungen'), von('mitteilung'));
     abschnitt(titelText('Veranstaltungen'), von('veranstaltung'));
     abschnitt(titelText('Kommentare'), von('kommentar'));
+    abschnitt(titelText('Mobi'), von('mobi'));
 
     // Projekte: je Projekt eine Überschrift, darunter Projekt, Meilensteine und ToDos
     const gruppen = [];
