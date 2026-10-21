@@ -81,12 +81,13 @@ function testzeilenAnzeigen() {
   Logger.log('Projekte mit "test" im Titel: ' +
     p.map(function (z) { return 'Zeile ' + z._zeile + ' (' + z.titel + ')'; }).join(', '));
 }
+
 // Im Editor ausführen: zeigt alle Einträge der Etappen 5 und 6 mit Zeilennummer, damit du
 // Testdaten im Sheet von Hand löschen kannst. Löscht nichts.
 function testdatenListe() {
   var felder = {
     Umfragen: 'frage', Umfrage_Antworten: 'person', Mitteilungen: 'titel', Kommentare: 'text',
-    Ideen: 'titel', Veranstaltungen: 'titel', Termin_Vorlagen: 'name'
+    Ideen: 'titel', Veranstaltungen: 'titel', Termin_Vorlagen: 'name', Mobi_Plan: 'titel'
   };
   Object.keys(felder).forEach(function (tab) {
     var t = lies(tab);
