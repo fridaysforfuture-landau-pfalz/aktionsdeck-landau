@@ -10,7 +10,8 @@ import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { baueKommentare } from '../ui/kommentare.js';
 import { SCHEMA } from '../schema.js';
-import { kanaeleFuer, kanalInfo, FORMAT_HINWEIS } from '../kanaele.js';
+import { kanaeleFuer, kanalInfo, FORMAT_TEXT, FORMAT_HINWEIS } from '../kanaele.js';
+import { statusText, statiFuer } from './mobi-rechnen.js';
 import { normDatum, datumText, kurz } from './todos-rechnen.js';
 import { istWahr } from '../schema.js';
 import { zeitNorm, sichereUrl } from './kalender-rechnen.js';
@@ -97,6 +98,12 @@ export function zeigeBeitragFormular(opt, b, vorgabe) {
 
   const felder = SCHEMA.Mobi_Plan.felder.map(function (f) {
     if (f.name === 'kanal') return Object.assign({}, f, { typ: 'auswahl', optionen: namen });
+    // Formate groß anzeigen, klein speichern (Beschriftung direkt aus kanaele.js)
+    if (f.name === 'format') {
+      return Object.assign({}, f, {
+        optionen: Object.keys(FORMAT_TEXT).map(function (w) { return { wert: w, label: FORMAT_TEXT[w] }; })
+      });
+    }
     return f;
   });
   if (!b && opt.bezuege) {
@@ -121,6 +128,21 @@ export function zeigeBeitragFormular(opt, b, vorgabe) {
   const kanalWahl = form.querySelector('select[name="kanal"]');
   const formatWahl = form.querySelector('select[name="format"]');
   const tagFeld = form.querySelector('input[name="hashtags"]');
+  const statusWahl = form.querySelector('select[name="status"]');
+
+  // Status-Auswahl passend zum Kanal (Standard oder mit Video-Schritten).
+  // Ein gespeicherter Status, der nicht dazu passt, bleibt wählbar.
+  function statusOptionen() {
+    const alt = statusWahl.value;
+    const liste = statiFuer(kanalWahl.value);
+    if (alt && liste.indexOf(alt) < 0) liste.push(alt);
+    statusWahl.textContent = '';
+    statusWahl.append(el('option', { value: '', text: '–' }));
+    liste.forEach(function (w) { statusWahl.append(el('option', { value: w, text: statusText(w) })); });
+    statusWahl.value = alt;
+  }
+  kanalWahl.addEventListener('change', statusOptionen);
+  statusOptionen();
 
   // Hinweis zum Bildformat
   const formatHinweis = el('span', { class: 'leise' });

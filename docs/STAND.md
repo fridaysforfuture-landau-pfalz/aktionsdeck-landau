@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.29.5 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.29.6 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/KlimastreikLandau/aktionsdeck-landau
 Seite: https://klimastreiklandau.github.io/aktionsdeck-landau/
 
@@ -9,17 +9,24 @@ Seite: https://klimastreiklandau.github.io/aktionsdeck-landau/
 - Etappe 4 komplett (0.18.0 bis 0.25.x): Projekte, ToDos und Meilensteine im Projekt, Meilenstein-Vorlagen, Hüte, Material im Projekt, Finanzen, Planung und Abschluss, Learnings, Aufräumen.
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
-- Etappe 7 Mobi läuft (0.29.0 bis 0.29.5), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a.
+- Etappe 7 Mobi läuft (0.29.0 bis 0.29.6), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b.
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): vor dem Echtbetrieb im Sheet löschen. Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
-## Etappe 7 (Mobi), Stand 0.29.5
+## Etappe 7 (Mobi), Stand 0.29.6
 Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code übernommen. Bis 7.4 stand hier noch 0.28.13.
 - 7.1 / 7.1a (0.29.0, 0.29.1): Tab Mobi_Plan (projekt_id, veranstaltung_id, kanal, format, titel, text, kanal_text, hashtags, datum, uhrzeit, status, verantwortlich, canva_link, ergebnis, notiz). Projekte zusätzlich zielgruppe, werbeart, kampagnenziel, handlungsaufruf, kanaele. ToDos zusätzlich mobi_id. apps-script/Mobi.gs prüft den Bezug (Projekt oder Veranstaltung) und löscht mit Verknüpfung (mobiKaskade). Der alte Tab Posts ist ungenutzt.
 - 7.2 (0.29.2): js/kanaele.js (feste Kanalliste mit Farben und Zeichengrenzen), js/views/mobi-eintrag.js (Beitrag-Fenster), js/views/mobi-plan.js (Teil "Mobi" im Projekt), js/views/mobi-rechnen.js. Reiter "Posts" heißt "Mobi".
 - 7.3 (0.29.3): js/views/mobi.js (Reiter Mobi: Liste und Kanban, Filter, "Mehrere bearbeiten", Archiv, Zählzeile).
 - 7.4 (0.29.4): Vorlagen "Mobi: Demo / Großaktion" und "Mobi: Infostand / kleine Aktion" mit ToDo-Bausteinen (js/vorlagen.js, js/views/mobi-vorlage.js, projekt-todos.js, todos-abhaken.js). Untere Leiste am Handy: Start, Projekte, ToDos, Mobi, Mehr (Material steht unter "Mehr"). Abschnitt "Zugehörige ToDos" im Beitrag. Entscheidung B (21.10.2026): Die Bausteine werden in 7.5 zurückgebaut.
 - 7.4a (0.29.5): Im Teil "Mobi" im Projekt ist die Kanal-Checkliste (Hauptkanal/Zusatzkanal) weg. Stattdessen steht über der Beitragsliste eine Zeile "Kanäle: Instagram 5 · Pressemitteilung 1" (nur Kanäle mit Beiträgen, Kanalfarbe als Punkt). leseKanaele und schreibeKanaele sind aus js/kanaele.js entfernt. Die Spalte Projekte.kanaele bleibt im Sheet und im Schema, wird aber nicht mehr benutzt. Format und Status im Beitrag-Formular sind groß beschriftet (gespeichert wird weiter klein). Überfällige Beiträge: Balken bleibt in Kanalfarbe, Titel rot und fett; heute fällige: Titel orange und fett (Projekt, Liste, Karten, Kanban). Sortierung: überfällige (älteste zuerst), heute, übrige offene nach Datum, ohne Datum, Veröffentlichte. In sw.js war in Zeile 5 "onst" statt "const" (seit 0.29.4): korrigiert.
-- Nächster Schritt: 7.4b (Kanban je Kanal, Kanalgruppen, Kacheln in Spalten).
+- 7.4a geprüft (21.10.2026): alles bestätigt bis auf "Formate groß" im Beitrag-Formular (blieb klein). Nachbesserung in 0.29.6: mobi-eintrag.js baut die Format- und Status-Auswahl jetzt selbst aus kanaele.js und mobi-rechnen.js. Entscheidung: Der hellorange Hintergrund bei "heute fällig" kommt nicht zurück, die Titel in Rot und Orange reichen.
+- 7.4b (0.29.6): Neue Status gedreht ("Gedreht"), geschnitten ("Geschnitten"), anpassung ("Anpassung"). Zwei Reihenfolgen in js/kanaele.js: SCHRITTE_STANDARD (idee, entwurf, review, anpassung, bereit, veroeffentlicht) und SCHRITTE_VIDEO (idee, entwurf, gedreht, geschnitten, review, anpassung, bereit, veroeffentlicht; Instagram und TikTok). Jeder Kanal hat die Felder schritte und gruppe (social, digital, print, extern, sonstiges; ersetzt das alte Feld bereich). KANALGRUPPEN und kanaeleDerGruppe(gruppe, kurzname) in js/kanaele.js. mobi-rechnen.js: STATI = alle Status in Video-Reihenfolge, statiFuer(kanalName), nachbarStatus(b, -1|+1).
+- Reiter Mobi, Kanban: Spalten aus Kanalfilter und sichtbaren Beiträgen (nur Kanäle ohne Video-Schritte = 6 Spalten, sonst 8; ein vorhandener Status bekommt immer eine Spalte). "‹ Zurück" und "Weiter ›" folgen der Reihenfolge des Kanals der Karte. Bei "Anpassung" zusätzlich "Zurück zu Entwurf".
+- Reiter Mobi, Kanalfilter: oben die Gruppen "Social Media (alle)", "Digital (alle)", "Print (alle)", "Extern (alle)" (Werte g:social usw.), danach die einzelnen Kanäle.
+- Reiter Mobi, Ansicht Liste: Kacheln statt Tabelle (js/views/mobi-kachel.js). PC: vier Spalten Social Media, Digital, Print, Sonstiges (Extern, Sonstiges und unbekannte Kanäle) mit Anzahl. Handy: untereinander, leere Spalten ausgeblendet. "Veröffentlicht, letzte 2 Wochen" als graue Kacheln darunter. Das Archiv bleibt eine einfache Liste (zeigeListe).
+- Beitrag-Fenster: Die Status-Auswahl passt sich dem Kanal an (Standard oder mit Video-Schritten). Ein gespeicherter Status, der nicht passt, bleibt wählbar.
+- Skript-Dateien im Repo umbenannt: apps-script/Upload → Upload.gs, apps-script/termine.gs → Termine.gs (Inhalt gleich, im Editor nichts zu tun).
+- Nächster Schritt: 7.5 (Standard-Beiträge "+ Beiträge" und Rückbau der Bausteine aus 7.4, Entscheidung B = ja).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -106,17 +113,16 @@ Neue Reiter: Start, Projekte, ToDos, Material, Mobi, Veranstaltungen, Team, Wiki
 - GitHub Pages hält Dateien bis zu ca. 10 Minuten im Zwischenspeicher: warten und zweimal neu laden.
 - Der Reiter Projekte lädt neun bis zehn Tabellen auf einmal und kann langsam sein. Bei Bedarf Material und Finanzen erst beim Aufklappen laden.
 - Testdaten aus Etappe 5 und 6 im Sheet vor dem Echtbetrieb löschen (testdatenListe im Editor).
-- CSS-Regel .mobi-kanal-text wird seit 0.29.5 nicht mehr benutzt (stört nicht, kann später weg).
 - Das Kalender-Abo (Skript-Adresse mit Weiterleitung) in Google und Apple Kalender noch testen. Notfalls feste ICS-Datei auf GitHub Pages.
 - Alte, nicht mehr genutzte CSS-Regeln (.kal-pfeil, .kal-nav, .kal-datum, .kal-monat-kopf) stören nicht, können später entfernt werden.
 - Am Handy könnten die fünf Kalender-Knöpfe auf sehr schmalen Geräten eng werden. Bei Bedarf "Aktionskalender" kürzen.
 
 ## Dateiübersicht
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.29.5 am Ende)
-- apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs (Setup.gs nur im Editor). Hinweis: Im Repo heißen zwei Dateien anders: `apps-script/Upload` (ohne .gs) und `apps-script/termine.gs` (klein).
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.29.6 am Ende)
+- apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
-- js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-vorlage (entfällt in 7.5)
+- js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-vorlage (entfällt in 7.5)
 - Noch nicht vorhanden: Team, Wiki, Protokoll.
 
 ## Hinweise

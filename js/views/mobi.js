@@ -1,6 +1,6 @@
 // js/views/mobi.js
 // Reiter Mobi: alle Beiträge der Gruppe, über alle Projekte und Veranstaltungen.
-// Ansichten: Liste (offene oben, darunter "Veröffentlicht, letzte 2 Wochen") und Kanban.
+// Ansichten: Liste (Kacheln in Spalten nach Kanalgruppe, darunter "Veröffentlicht, letzte 2 Wochen") und Kanban.
 // Filter, Sammelbearbeitung (Status, Verantwortliche), Archiv, Zählzeile mit Wochenzahl.
 // Die Ansicht bleibt beim Reiterwechsel erhalten (Merker außerhalb von render).
 
@@ -16,12 +16,15 @@ import { zeitText } from './material-rechnen.js';
 import { normDatum, datumText, heuteIso, wochenEnde, istMeins, kurz } from './todos-rechnen.js';
 import { addTage } from './kalender-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
-import { kanaeleFuer, kanalInfo, FORMAT_TEXT } from '../kanaele.js';
+import {
+  kanaeleFuer, kanalInfo, FORMAT_TEXT, KANALGRUPPEN, kanaeleDerGruppe, SCHRITTE_STANDARD, SCHRITTE_VIDEO
+} from '../kanaele.js';
 import {
   STATI, statusKey, statusText, istVeroeffentlicht, faelligStatus,
-  sortiereBeitraege, datumZeile, istArchiv
+  sortiereBeitraege, datumZeile, istArchiv, nachbarStatus
 } from './mobi-rechnen.js';
 import { zeigeBeitragFormular } from './mobi-eintrag.js';
+import { baueSpalten, baueKachelFlaeche } from './mobi-kachel.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = { token: '', ansicht: 'liste' };
@@ -58,6 +61,12 @@ export async function render(container, ctx) {
   });
   const kanalWahl = el('select', { class: 'feld', 'aria-label': 'Kanal' },
     el('option', { value: '', text: 'Alle Kanäle' }));
+  // Zuerst die Kanalgruppen (Wert "g:<kennung>"), danach die einzelnen Kanäle
+  KANALGRUPPEN.filter(function (g) {
+    return g.id !== 'sonstiges' && kanaeleDerGruppe(g.id, s.kurzname).length;
+  }).forEach(function (g) {
+    kanalWahl.append(el('option', { value: 'g:' + g.id, text: g.name + ' (alle)' }));
+  });
   kanaeleFuer(s.kurzname).forEach(function (k) {
     kanalWahl.append(el('option', { value: k.id, text: k.name }));
   });
@@ -287,7 +296,11 @@ export async function render(container, ctx) {
         .join(' ').toLowerCase();
       if (heu.indexOf(q) < 0) return false;
     }
-    if (kanalWahl.value && kanalInfo(b.kanal).id !== kanalWahl.value) return false;
+    if (kanalWahl.value.indexOf('g:') === 0) {
+      if (kanalInfo(b.kanal).gruppe !== kanalWahl.value.slice(2)) return false;
+    } else if (kanalWahl.value && kanalInfo(b.kanal).id !== kanalWahl.value) {
+      return false;
+    }
     if (bezugWahl.value) {
       const id = bezugWahl.value.slice(2);
       const feld = bezugWahl.value.charAt(0) === 'p' ? b.projekt_id : b.veranstaltung_id;
@@ -462,6 +475,28 @@ export async function render(container, ctx) {
     });
   }
 
+  // Kacheln (Ansicht Liste): Auswahl beim "Mehrere bearbeiten", sonst Haken "veröffentlicht"
+  function kachelOpt(mitAuswahl) {
+    return {
+      bezugText: bezugText,
+      oeffnen: function (b) { beitragOeffnen(b); },
+      auswahl: mitAuswahl ? {
+        gewaehlt: function (b) { return !!gewaehlt[b.id]; },
+        umschalten: function (b, wert) {
+          if (wert) gewaehlt[b.id] = true;
+          else delete gewaehlt[b.id];
+          leisteAktualisieren();
+        }
+      } : null,
+      haken: mitAuswahl ? null : {
+        umschalten: function (b, wert) {
+          statusSetzen(finde(b.id), wert ? 'veroeffentlicht' : 'bereit');
+        }
+      }
+    };
+  }
+
+  // Archiv: einfache Liste (Tabelle am PC, Karten am Handy)
   function liste(box, zeilen, leerText, mitAuswahl, mitHaken) {
     zeigeListe(
       box,
@@ -481,26 +516,56 @@ export async function render(container, ctx) {
 
   // ---- Kanban ----
 
-  function kanbanKarte(b, i) {
+  // Hat ein Kanal Video-Schritte (gedreht, geschnitten)?
+  function mitVideo(k) {
+    return !!k && k.schritte.indexOf('gedreht') >= 0;
+  }
+
+  // Spalten aus Kanalfilter und sichtbaren Beiträgen:
+  // nur Kanäle ohne Video-Schritte im Filter = Standard, sonst Video-Reihenfolge.
+  // Status, die bei einer Karte vorkommen, aber fehlen, bekommen trotzdem eine Spalte.
+  function kanbanSpalten(passend) {
+    const f = kanalWahl.value;
+    let video = true;
+    if (f.indexOf('g:') === 0) {
+      video = kanaeleDerGruppe(f.slice(2), s.kurzname).some(mitVideo);
+    } else if (f) {
+      video = mitVideo(kanaeleFuer(s.kurzname).find(function (k) { return k.id === f; }));
+    }
+    const basis = video ? SCHRITTE_VIDEO : SCHRITTE_STANDARD;
+    const da = passend.map(statusKey);
+    return STATI.filter(function (st) { return basis.indexOf(st) >= 0 || da.indexOf(st) >= 0; });
+  }
+
+  function kanbanKarte(b) {
     const k = kanalInfo(b.kanal);
     const st = faelligStatus(b);
+    const zurueck = nachbarStatus(b, -1);
+    const weiter = nachbarStatus(b, 1);
     const knoepfe = el('div', { class: 'kanban-knoepfe' });
-    if (i > 0) {
+    if (zurueck) {
       knoepfe.append(el('button', {
         class: 'knopf knopf-hell knopf-klein', type: 'button', text: '‹ Zurück',
-        'aria-label': 'Zurück nach ' + statusText(STATI[i - 1]),
-        onclick: function () { statusSetzen(b, STATI[i - 1]); }
+        'aria-label': 'Zurück nach ' + statusText(zurueck),
+        onclick: function () { statusSetzen(b, zurueck); }
       }));
     } else {
       knoepfe.append(el('span'));
     }
-    if (i < STATI.length - 1) {
+    if (weiter) {
       knoepfe.append(el('button', {
         class: 'knopf knopf-klein', type: 'button', text: 'Weiter ›',
-        'aria-label': 'Weiter nach ' + statusText(STATI[i + 1]),
-        onclick: function () { statusSetzen(b, STATI[i + 1]); }
+        'aria-label': 'Weiter nach ' + statusText(weiter),
+        onclick: function () { statusSetzen(b, weiter); }
       }));
     }
+    // Feedbackschleife: von "Anpassung" zurück zum Entwurf
+    const extra = statusKey(b) === 'anpassung' && zurueck !== 'entwurf'
+      ? el('button', {
+        class: 'knopf knopf-hell knopf-klein kanban-entwurf', type: 'button', text: 'Zurück zu Entwurf',
+        onclick: function () { statusSetzen(b, 'entwurf'); }
+      })
+      : null;
     const karte = el('article', { class: 'karte kanban-karte' },
       el('button', {
         class: 'kanban-titel', type: 'button',
@@ -511,7 +576,8 @@ export async function render(container, ctx) {
         el('span', { class: 'leise ' + st, text: datumZeile(b) }),
         el('span', { class: 'leise', text: [bezugText(b), txt(b.verantwortlich)].filter(Boolean).join(' · ') })
       ),
-      knoepfe
+      knoepfe,
+      extra
     );
     karte.style.borderLeftColor = k.farbe;
     return karte;
@@ -520,13 +586,13 @@ export async function render(container, ctx) {
   function kanbanZeichnen(passend) {
     leeren(boxKanban);
     const wrap = el('div', { class: 'kanban' });
-    STATI.forEach(function (st, i) {
+    kanbanSpalten(passend).forEach(function (st) {
       let l = passend.filter(function (b) { return statusKey(b) === st; });
       if (st === 'veroeffentlicht') l = l.filter(function (b) { return !istArchiv(b); });
       l = sortiereBeitraege(l);
       const karten = el('div', { class: 'kanban-karten' });
       if (!l.length) karten.append(el('p', { class: 'leise', text: 'Nichts in dieser Spalte.' }));
-      l.forEach(function (b) { karten.append(kanbanKarte(b, i)); });
+      l.forEach(function (b) { karten.append(kanbanKarte(b)); });
       wrap.append(el('section', { class: 'kanban-spalte', 'aria-label': statusText(st) },
         el('h3', { class: 'kanban-kopf', text: statusText(st) + ' (' + l.length + ')' }),
         karten
@@ -630,11 +696,17 @@ export async function render(container, ctx) {
     }));
     sichtbareOffene = offen;
 
-    liste(boxListe, offen,
-      daten.mobi.length
-        ? 'Keine offenen Beiträge gefunden.'
-        : 'Noch keine Beiträge. Lege sie im Projekt an oder mit „+ Beitrag“.',
-      auswahlModus, !auswahlModus);
+    leeren(boxListe);
+    if (!offen.length) {
+      boxListe.append(el('p', {
+        class: 'leise',
+        text: daten.mobi.length
+          ? 'Keine offenen Beiträge gefunden.'
+          : 'Noch keine Beiträge. Lege sie im Projekt an oder mit „+ Beitrag“.'
+      }));
+    } else {
+      boxListe.append(baueSpalten(offen, kachelOpt(auswahlModus)));
+    }
 
     // Beim Auswählen ist die Liste der Veröffentlichten ausgeblendet
     const zeigeFertig = !auswahlModus && neuere.length > 0;
@@ -642,7 +714,8 @@ export async function render(container, ctx) {
     boxFertig.hidden = !zeigeFertig;
     if (zeigeFertig) {
       kopfFertig.textContent = 'Veröffentlicht, letzte 2 Wochen (' + neuere.length + ')';
-      liste(boxFertig, neuere, '', false, true);
+      leeren(boxFertig);
+      boxFertig.append(baueKachelFlaeche(neuere, kachelOpt(false)));
     }
     leisteAktualisieren();
     statusZeigen();

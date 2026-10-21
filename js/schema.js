@@ -186,7 +186,9 @@ export const SCHEMA = {
       { name: 'datum', label: 'Datum', typ: 'datum' },
       { name: 'uhrzeit', label: 'Uhrzeit', typ: 'zeit' },
       { name: 'status', label: 'Status', typ: 'auswahl', optionen: [
-        { wert: 'idee', label: 'Idee' }, { wert: 'entwurf', label: 'Entwurf' }, { wert: 'review', label: 'Review' },
+        { wert: 'idee', label: 'Idee' }, { wert: 'entwurf', label: 'Entwurf' },
+        { wert: 'gedreht', label: 'Gedreht' }, { wert: 'geschnitten', label: 'Geschnitten' },
+        { wert: 'review', label: 'Review' }, { wert: 'anpassung', label: 'Anpassung' },
         { wert: 'bereit', label: 'Bereit' }, { wert: 'veroeffentlicht', label: 'Veröffentlicht' }
       ] },
       { name: 'verantwortlich', label: 'Verantwortlich', typ: 'text' },

@@ -2236,7 +2236,6 @@ p.notiz.erledigt {
 
 /* ---- 0.29.2: Mobi ---- */
 .mobi-punkt { width: 14px; height: 14px; flex: none; margin-left: 4px; border-radius: 50%; }
-.mobi-kanal-text { display: grid; flex: 1; min-width: 140px; }
 .mobi-zaehler { font-size: 13px; }
 .mobi-zaehler.ueber { color: #b3261e; font-weight: 600; }
 .mobi-analyse dd { white-space: pre-wrap; }
@@ -2309,3 +2308,59 @@ p.notiz.erledigt {
 .tabelle td.mobi-titel-ueberfaellig { color: #b3261e; font-weight: 700; }
 .mobi-titel-heute,
 .tabelle td.mobi-titel-heute { color: #c77c00; font-weight: 700; }
+
+/* ---- 0.29.6: Mobi Kacheln in Spalten, Kanban je Kanal ---- */
+.mobi-spalten { display: grid; gap: 16px; }
+.mobi-spalte-kopf { margin: 0 0 8px; font-size: 15px; }
+.mobi-spalte.leer { display: none; }
+.mobi-kacheln { display: grid; gap: 8px; }
+
+.mobi-kachel {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border-left: 6px solid var(--gruppe);
+}
+
+.mobi-kachel-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.mobi-kachel-text {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px 8px 6px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mobi-kachel-text:focus-visible { outline: 2px solid var(--gruppe); }
+.mobi-kachel-kanal { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.mobi-kachel-kanal .mobi-punkt { width: 10px; height: 10px; margin-left: 0; }
+.mobi-kachel .mobi-datum-ueberfaellig { color: #b3261e; font-weight: 600; }
+.mobi-kachel .mobi-datum-heute { color: #c77c00; font-weight: 600; }
+.mobi-kachel.erledigt .mobi-kachel-text,
+.mobi-kachel.erledigt .mobi-kachel-text span { color: var(--text-leise); }
+.mobi-kacheln-flaeche { margin-top: 8px; }
+.kanban-entwurf { justify-self: start; }
+
+@media (min-width: 960px) {
+  .mobi-spalten { grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; }
+  .mobi-spalte.leer { display: block; }
+  .mobi-kacheln-flaeche { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
