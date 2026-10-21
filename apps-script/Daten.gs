@@ -6,7 +6,7 @@ var PROJEKT_PFLICHT = ['Meilensteine', 'Projekt_Team', 'Projekt_Material', 'Fina
 
 // Diese Tabs werden beim Löschen eines Projekts mitgelöscht (Posts zuerst, wegen der ToDos zu Posts)
 var PROJEKT_ABHAENGIG = ['Posts', 'ToDos', 'Meilensteine', 'Projekt_Team', 'Projekt_Material',
-                         'Finanzen', 'Protokolle', 'Kommentare'];
+                         'Finanzen', 'Protokolle', 'Kommentare', 'Mobi_Plan'];
 
 function tabelleCheck(name) {
   if (typeof name !== 'string' || !TABELLEN.hasOwnProperty(name)) fehler('ungueltig', 'Unbekannte Tabelle.');
@@ -191,7 +191,9 @@ function aktionCreate(ctx, p) {
     var kopf = kopfLesen(sh);
     pruefeKopf(tab, kopf);
     pruefeFelder(tab, p.daten);
-    bezugPruefen(ctx, tab, p.daten.projekt_id, p.daten.meilenstein_id, {});
+    var bezugCache = {};
+    bezugPruefen(ctx, tab, p.daten.projekt_id, p.daten.meilenstein_id, bezugCache);
+    mobiBezugPruefen(ctx, tab, p.daten.projekt_id, p.daten.veranstaltung_id, p.daten.mobi_id, bezugCache);
     var o = neuerEintrag(tab, ctx, p.daten, anzeige, jetzt());
     anhaengen(sh, [zeilenArray(kopf, o)]);
     protokoll(ctx, 'create', tab, [o.id], anzeige);
@@ -215,6 +217,7 @@ function aktionBatchCreate(ctx, p) {
     var eintraege = p.liste.map(function (d) {
       pruefeFelder(tab, d);
       bezugPruefen(ctx, tab, d.projekt_id, d.meilenstein_id, cache);
+      mobiBezugPruefen(ctx, tab, d.projekt_id, d.veranstaltung_id, d.mobi_id, cache);
       return neuerEintrag(tab, ctx, d, anzeige, zeit);
     });
     anhaengen(sh, eintraege.map(function (o) { return zeilenArray(kopf, o); }));
@@ -252,6 +255,12 @@ function aktionUpdate(ctx, p) {
       );
     }
 
+    // Mobi: Bezug des Beitrags bzw. mobi_id des ToDos prüfen (nur wenn sich dort etwas ändert)
+    var vor = function (sp) { return neu.hasOwnProperty(sp) ? neu[sp] : z[sp]; };
+    if ((tab === 'Mobi_Plan' && (neu.hasOwnProperty('projekt_id') || neu.hasOwnProperty('veranstaltung_id'))) ||
+        neu.hasOwnProperty('mobi_id')) {
+      mobiBezugPruefen(ctx, tab, vor('projekt_id'), vor('veranstaltung_id'), vor('mobi_id'), {});
+    }
     var zeit = jetzt();
     neu.geaendert_am = zeit;
     neu.geaendert_von = anzeige;
