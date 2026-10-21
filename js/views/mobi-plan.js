@@ -70,6 +70,9 @@ export function baueMobiTeil(opt) {
     kurzname: kurzname,
     projektId: pid,
     personen: personen,
+    todosVon: function (b) {
+      return (daten().todos || []).filter(function (t) { return txt(t.mobi_id) === String(b.id); });
+    },
     todoAnzahl: function (b) {
       return (daten().todos || []).filter(function (t) { return txt(t.mobi_id) === String(b.id); }).length;
     },
