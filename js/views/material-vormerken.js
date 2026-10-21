@@ -5,6 +5,7 @@
 import { el } from '../ui/dom.js';
 import { api } from '../api.js';
 import { toast } from '../ui/toast.js';
+import { xKnopf } from '../ui/fenster.js';
 
 function zuZahl(t) {
   const s = String(t).trim().replace(',', '.');
@@ -115,6 +116,7 @@ export async function zeigeVormerkDialog(opt) {
   );
 
   function zu() { hintergrund.remove(); }
+  hintergrund.firstChild.append(xKnopf(zu));
   abbrechen.addEventListener('click', zu);
   hintergrund.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') zu(); });
 
