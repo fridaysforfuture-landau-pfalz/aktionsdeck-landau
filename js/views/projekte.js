@@ -24,6 +24,7 @@ import { baueMaterialTeil } from './projekt-material.js';
 import { baueFinanzTeil } from './projekt-finanzen.js';
 import { baueLearningTeil, baueLearningUebersicht } from './projekt-learnings.js';
 import { baueIdeenTeil } from './ideen.js';
+import { baueMobiTeil } from './mobi-plan.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = leer.
 // offen: aufgeklappte Projekte. teile: aufgeklappte Teile ("<id>:todos", "<id>:team").
@@ -70,7 +71,7 @@ export async function render(container, ctx) {
   if (merk.token !== s.token) merk = { token: s.token, offen: {}, teile: {} };
   const offen = merk.offen;
 
-  let daten = { projekte: [], todos: [], meilensteine: [], team: [], material: [], ausleihe: [], pm: [], fin: [], learnings: [], ideen: [], kommentare: [] };
+  let daten = { projekte: [], todos: [], meilensteine: [], team: [], material: [], ausleihe: [], pm: [], fin: [], learnings: [], ideen: [], kommentare: [], mobi: [] };
   let archivModus = false;
   let sprungId = ctx.unter || '';   // von der Start-Kachel: dieses Projekt aufklappen
   let letzteJson = '';
@@ -314,6 +315,22 @@ export async function render(container, ctx) {
       neuLaden: function () { return laden(false); },
       merken: merken
     });
+    const mobiKey = id + ':mobi';
+    const mobiTeil = baueMobiTeil({
+      ctx: ctx,
+      token: s.token,
+      projekt: p,
+      holeDaten: function () { return daten; },
+      arbeitet: arbeitet,
+      offen: !!merk.teile[mobiKey],
+      beiToggle: function (o) {
+        if (o) merk.teile[mobiKey] = true;
+        else delete merk.teile[mobiKey];
+      },
+      neuZeichnen: zeichne,
+      neuLaden: function () { return laden(false); },
+      merken: merken
+    });
     const finKey = id + ':finanzen';
     const finanzTeil = baueFinanzTeil({
       ctx: ctx,
@@ -389,6 +406,7 @@ export async function render(container, ctx) {
         ),
         todoTeil,
         materialTeil,
+        mobiTeil,
         finanzTeil,
         learnTeil
       )
@@ -648,6 +666,7 @@ export async function render(container, ctx) {
     if (!neu.learnings) neu.learnings = [];
     if (!neu.ideen) neu.ideen = [];
     if (!neu.kommentare) neu.kommentare = [];
+    if (!neu.mobi) neu.mobi = [];
     const json = JSON.stringify(neu);
     const gleich = json === letzteJson;
     daten = neu;
@@ -681,7 +700,7 @@ export async function render(container, ctx) {
         s.gruppe_id + ':projekte',
         async function () {
           const r = await api('listMehrere', {
-              tabellen: ['Projekte', 'ToDos', 'Meilensteine', 'Material', 'Ausleihe', 'Projekt_Material', 'Finanzen', 'Learnings', 'Ideen', 'Kommentare']
+              tabellen: ['Projekte', 'ToDos', 'Meilensteine', 'Material', 'Ausleihe', 'Projekt_Material', 'Finanzen', 'Learnings', 'Ideen', 'Kommentare', 'Mobi_Plan']
           }, s.token);
           const t = (r && r.tabellen) || {};
           return {
@@ -694,7 +713,8 @@ export async function render(container, ctx) {
             fin: t.Finanzen || [],
             learnings: t.Learnings || [],
             ideen: t.Ideen || [],
-            kommentare: t.Kommentare || []
+            kommentare: t.Kommentare || [],
+            mobi: t.Mobi_Plan || []
           };
         },
         zeigen,
