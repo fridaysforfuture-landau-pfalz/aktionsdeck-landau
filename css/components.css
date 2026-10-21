@@ -2486,3 +2486,23 @@ p.notiz.erledigt {
   .kal-ansicht { flex-wrap: wrap; row-gap: 6px; }
   .kal-ansicht .knopf { flex: none; overflow: visible; }
 }
+
+/* ---- 0.29.10: Kanban-Seiten mittig, Mobi-Kalender ---- */
+.kanban-nav { justify-content: center; }
+
+.kal-mobi-leiste {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border-left: 4px solid #d6249f;
+  border-radius: var(--radius);
+  background: #fbe4f3;
+}
+.kal-mobi-leiste[hidden] { display: none; }
+.kal-mobi-knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
+.kal-mobi-knoepfe a.knopf { display: inline-flex; align-items: center; text-decoration: none; }
+.kal-filter > .knopf-klein { align-self: center; }

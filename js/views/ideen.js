@@ -1,9 +1,10 @@
 // js/views/ideen.js
 // Aktionsideen-Speicher: ruhiger Aufklapper im Reiter Projekte (unter den Learnings).
-// "Als Projekt starten" legt ein Projekt mit Status planung an und trägt die Projekt-ID in die Idee ein.
+// "Als Projekt starten" öffnet das Formular "Neues Projekt" (vorausgefüllt, mit Standard-ToDos, Status planung).
 // Ideen mit Projekt-ID werden nicht mehr gezeigt.
 //
-// opt: { ctx, token, holeDaten() -> { ideen, learnings }, offen, beiToggle(offen), neuLaden() -> Promise }
+// opt: { ctx, token, holeDaten() -> { ideen, learnings }, offen, beiToggle(offen), neuLaden() -> Promise,
+//        springe(projektId), projektAnlegen(vorgabe) }
 
 import { el } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -88,6 +89,13 @@ async function loeschen(opt, r, fenster) {
 
 // Aus der Idee ein Projekt in Planung machen
 async function starten(opt, r) {
+  // Normalfall: Formular „Neues Projekt“ mit den Werten der Idee (dort gibt es die Standard-ToDos)
+  if (opt.projektAnlegen) {
+    opt.projektAnlegen({
+      titel: txt(r.titel), beschreibung: txt(r.beschreibung), aktionsart: txt(r.aktionsart), status: 'planung'
+    });
+    return;
+  }
   if (!window.confirm('Aus der Idee „' + txt(r.titel) + '“ ein Projekt in Planung machen?\n\n' +
     'Die Idee bleibt in der Liste.')) return;
   let o;

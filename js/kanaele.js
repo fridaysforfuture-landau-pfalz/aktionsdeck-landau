@@ -32,6 +32,7 @@ export const KANAELE = [
   { id: 'kreide', name: 'Kreideaktion', farbe: '#8a5a2b', gruppe: 'print', limit: 0, schritte: S },
   { id: 'messenger', name: 'WhatsApp und Telegram', farbe: '#2fa142', gruppe: 'digital', limit: 0, schritte: S },
   { id: 'unimail', name: 'Unimail', farbe: '#3949ab', gruppe: 'digital', limit: 0, schritte: S },
+  { id: 'radio', name: 'Radio', farbe: '#e65100', gruppe: 'digital', limit: 0, schritte: S },
   { id: 'gruppen', name: 'Werbung über andere Gruppen', farbe: '#00796b', gruppe: 'extern', limit: 0, schritte: S },
   { id: 'schuldelis', name: 'Schuldelis', farbe: '#b45309', gruppe: 'extern', limit: 0, schritte: S },
   { id: 'foerder', name: 'Mail an Fördermitglieder (Hamburg)', farbe: '#a61e4d', gruppe: 'digital', limit: 0, schritte: S, nur: ['gp'] },
@@ -73,6 +74,7 @@ export const STANDARD_BEITRAEGE = {
     { name: 'Erinnerung', format: 'text', tage_vorher: 1 }
   ],
   unimail: [{ name: 'Unimail', format: 'text', tage_vorher: 5 }],
+  radio: [{ name: 'O-Ton Radio', format: 'sonstiges', tage_vorher: 3 }],
   newsletter: [{ name: 'Newsletter', format: 'text', tage_vorher: 5 }],
   facebook: [
     { name: 'Veranstaltung', format: 'beitrag', tage_vorher: 10 },

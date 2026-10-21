@@ -14,7 +14,7 @@ import { toast } from '../ui/toast.js';
 import { getName } from '../store.js';
 import { zeitText } from './material-rechnen.js';
 import { normDatum, datumText, heuteIso, wochenEnde, istMeins, kurz } from './todos-rechnen.js';
-import { addTage } from './kalender-rechnen.js';
+import { addTage, setzeMobiKalender } from './kalender-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
 import {
   kanaeleFuer, kanalInfo, FORMAT_TEXT, KANALGRUPPEN, kanaeleDerGruppe, SCHRITTE_STANDARD, SCHRITTE_VIDEO
@@ -100,6 +100,14 @@ export async function render(container, ctx) {
     class: 'knopf knopf-hell', type: 'button', text: 'Kanban',
     onclick: function () { ansichtSetzen('kanban'); }
   });
+  // Kalender: öffnet den Reiter Kalender als Mobi-Kalender (Beiträge, Aktionen, Deadlines)
+  const kalenderKnopf = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Kalender',
+    onclick: function () {
+      setzeMobiKalender();
+      location.hash = '#/g/' + encodeURIComponent(s.kurzname) + '/kalender';
+    }
+  });
   const archivKnopf = el('button', {
     class: 'knopf knopf-hell', type: 'button', text: 'Archiv',
     onclick: function () {
@@ -164,7 +172,7 @@ export async function render(container, ctx) {
       el('h1', { text: 'Mobi' }),
       el('div', { class: 'kopf-knoepfe' }, archivKnopf, mehrereKnopf, sammelKnopf, neuKnopf)
     ),
-    el('div', { class: 'mobi-ansicht' }, listenKnopf, kanbanKnopf),
+    el('div', { class: 'mobi-ansicht' }, listenKnopf, kanbanKnopf, kalenderKnopf),
     zahlen,
     el('div', { class: 'filterzeile filter-todos' },
       suche, kanalWahl, bezugWahl, werWahl, statusWahl, meineFeld),

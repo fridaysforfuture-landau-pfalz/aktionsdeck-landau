@@ -375,6 +375,21 @@ export function standardFilter(name) {
   };
 }
 
+// Mobi-Kalender: nur Mobi-Beiträge, Projekt-Aktionen und Deadlines (zum Vergleich mit dem Aktionsdatum)
+export const MOBI_FILTER = {
+  intern: false, extern: false, oeffentlich: false, projekte: true, deadlines: true,
+  meilensteine: false, todos: false, mobi: true, nurMeine: false
+};
+
+// Wunsch aus dem Reiter Mobi: Der Kalender öffnet sich einmal als Mobi-Kalender
+let mobiKalenderWunsch = false;
+export function setzeMobiKalender() { mobiKalenderWunsch = true; }
+export function nimmMobiKalender() {
+  const w = mobiKalenderWunsch;
+  mobiKalenderWunsch = false;
+  return w;
+}
+
 export function passt(t, f) {
   switch (t.quelle) {
     case 'veranstaltung': return t.art === 'intern' ? !!f.intern : !!f.extern;

@@ -1,4 +1,4 @@
-# Mobi: Standard-Beiträge und ihre Tage (Stand 0.29.9)
+# Mobi: Standard-Beiträge und ihre Tage (Stand 0.29.10)
 
 Diese Datei ist zum Nachlesen. Die App liest die Werte **nicht** von hier,
 sondern aus `js/kanaele.js` (Liste `STANDARD_BEITRAEGE`). Wer dort etwas ändert, ändert es auch hier.
@@ -57,6 +57,7 @@ Thema-Posts einmal pro Tag, Storys). Die Tage dazu und alle anderen Kanäle sind
 | WhatsApp und Telegram (Digital) | Ankündigung | Text | 7 |
 | WhatsApp und Telegram (Digital) | Erinnerung | Text | 1 |
 | Unimail (Digital) | Unimail | Text | 5 |
+| Radio (Digital, neu in 0.29.10) | O-Ton Radio | Sonstiges | 3 |
 | Mail an Fördermitglieder (Hamburg) (Digital, nur gp) | Mail an Fördermitglieder | Text | 5 |
 | Plakate und Flyer (Print) | Plakate und Flyer | Sonstiges | 14 |
 | Kreideaktion (Print) | Kreideaktion | Sonstiges | 1 |
