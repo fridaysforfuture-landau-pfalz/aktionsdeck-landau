@@ -24,6 +24,9 @@ import {
 } from './protokoll-rechnen.js';
 import { baueProtokollFormular, entwurfInfo, verwirfEntwurf, loescheAngelegte } from './protokoll-eintrag.js';
 import { baueTopSammlung, offeneTops, nimmProtokollWunsch } from './tops.js';
+import { baueVorschlaege, vorschlagZahl } from './protokoll-vorschlaege.js';
+import { namenVorschlaege } from './protokoll-rechnen.js';
+import { getName } from '../store.js';
 
 const NEUESTE = 2;
 
@@ -119,6 +122,7 @@ export async function render(container, ctx) {
   const neuKnopf = el('button', { class: 'knopf', type: 'button', text: '+ Protokoll', onclick: function () { formularOeffnen(null); } });
   const boxEntwuerfe = el('div', { class: 'protokoll-liste' });
   const boxNeueste = el('div', { class: 'protokoll-liste' });
+  const boxVorschlag = el('div', { class: 'protokoll-vorschlagplatz' });
   const boxForm = el('div', { class: 'protokoll-formplatz' });
   const boxRest = el('div', { class: 'protokoll-liste' });
 
@@ -143,6 +147,7 @@ export async function render(container, ctx) {
     ),
     boxEntwuerfe,
     boxNeueste,
+    boxVorschlag,
     boxForm,
     boxRest
   ));
@@ -296,6 +301,7 @@ export async function render(container, ctx) {
     const knoepfe = el('div', { class: 'form-knoepfe protokoll-knoepfe' });
     const link = info ? sichereUrl(info.link) : '';
     if (imDokument(p) && modus === 'dokument' && link) knoepfe.append(linkKnopf('Im Dokument bearbeiten', link));
+    if (imDokument(p)) vorschlagKnopf(p, knoepfe);
     if (modus === 'extern' && link) knoepfe.append(linkKnopf('Pad öffnen', link));
     knoepfe.append(el('button', {
       class: 'knopf knopf-hell', type: 'button', text: 'Protokoll kopieren',
@@ -313,6 +319,7 @@ export async function render(container, ctx) {
       inhalt.append(el('p', { class: 'leise', text: 'Gemeinsamer Entwurf: Alle in der Gruppe können ihn weiterschreiben. ' +
         'Ins Dokument kommt er mit „Speichern“ im Formular.' }));
     } else if (!imDokument(p)) {
+      vorschlagKnopf(p, knoepfe);
       knoepfe.append(el('button', {
         class: 'knopf knopf-hell', type: 'button', text: 'Bearbeiten',
         onclick: function () { formularOeffnen(p); }
@@ -327,6 +334,34 @@ export async function render(container, ctx) {
     }
     inhalt.append(knoepfe);
     zeigeDetail(ctx.detail, txt(p.titel) || 'Protokoll', inhalt, null, true);
+  }
+
+  // ---- Vorschläge aus dem Protokoll (8.5) ----
+
+  function vorschlagKnopf(p, knoepfe) {
+    const n = vorschlagZahl(p, daten.projekte);
+    if (!n) return;
+    const schon = istWahr(p.vorschlaege_erledigt);
+    knoepfe.append(el('button', {
+      class: schon ? 'knopf knopf-hell' : 'knopf', type: 'button',
+      text: (schon ? 'Vorschläge noch einmal ansehen (' : 'Vorschläge ansehen (') + n + ')',
+      onclick: function () { vorschlaegeZeigen(p, true); }
+    }));
+  }
+
+  // fragen = true: nachfragen, wenn schon einmal angelegt wurde
+  function vorschlaegeZeigen(p, fragen) {
+    if (fragen && istWahr(p.vorschlaege_erledigt) &&
+      !window.confirm('Es wurden schon Einträge aus diesem Protokoll angelegt. Trotzdem noch einmal?')) return;
+    if (ctx.detail && window.matchMedia('(max-width: 959px)').matches) schliesseDetail(ctx.detail);
+    leeren(boxVorschlag);
+    boxVorschlag.append(baueVorschlaege({
+      ctx: ctx, token: s.token, protokoll: p, daten: daten,
+      namen: namenVorschlaege(daten.personen, daten.protokolle, getName(), 30),
+      beiFertig: function () { laden(false); },
+      beiZu: function () { leeren(boxVorschlag); }
+    }));
+    if (boxVorschlag.scrollIntoView) boxVorschlag.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // Gemeinsamen Entwurf für alle verwerfen (fertige Protokolle sperrt das Skript)
@@ -411,6 +446,8 @@ export async function render(container, ctx) {
         // Nicht im Dokument: Detail mit Grund und „Ins Dokument übernehmen“ bzw. „Protokoll kopieren“
         if (res && !res.im_dokument) lesen(neu, 'Das Protokoll ist gespeichert, steht aber nicht im Dokument. ' + txt(res.hinweis));
         else if (!res) lesen(neu);
+        // Markierungen ohne ✔: gleich die Vorschläge zum Abhaken zeigen
+        if (res && vorschlagZahl(neu, daten.projekte)) vorschlaegeZeigen(neu, false);
       }
     });
     boxForm.append(formular.el);
