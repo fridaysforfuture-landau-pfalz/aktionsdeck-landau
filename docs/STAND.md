@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.30.1 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.30.2 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.md, abgeschlossen, bleibt als Nachweis)
@@ -11,7 +11,7 @@ Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.m
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
 - Etappe 7 Mobi komplett (0.29.0 bis 0.29.12), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7, 7.8. 0.29.11 geprüft (22.10.2026), Anpassungen in 0.29.12.
-- Etappe 8 Protokoll, Reden, Learnings läuft, siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1).
+- Etappe 8 Protokoll, Reden, Learnings läuft, siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2).
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
 ## Etappe 7 (Mobi), abgeschlossen mit 0.29.12
@@ -74,7 +74,23 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Lesefenster: alle Felder, Protokolltext mit Absätzen. Knöpfe: "Im Dokument bearbeiten" (nur im_dokument TRUE und Modus dokument, neuer Tab), "Pad öffnen" (Modus extern), "Protokoll kopieren" (Klartext), solange nicht im Dokument: "Bearbeiten" (einfaches Formular aus js/schema.js, mit Konfliktprüfung; das ganze Formular kommt mit 8.3) und "Ins Dokument übernehmen" (nur Modus dokument). Feste Hinweise zur Einfügestelle und "Die App zeigt den Stand beim Speichern".
   - "Vorschläge ansehen" kommt mit 8.5 (das Fenster gibt es noch nicht). Der Umschalter Protokolle · Reden kommt mit 8.6.
   - js/views/protokoll-rechnen.js: ARTEN, artText, rollenFuer (FFF und GP: Moderation, Protokoll, Awareness; KB keine), imDokument, datumVon, sortiereProtokolle, nachJahr, passtSuche, bezugSchluessel, kopierText, einfuegeHinweis.
-- Nächster Schritt: 8.3 (Protokoll schreiben: Formular, Entwurf, Speichern).
+- 8.2 geprüft (22.10.2026): Punkte 1 bis 3, 9 und 10 bestätigt. Punkte 4 bis 8 prüft die Person mit dem Formular aus 8.3.
+- Entscheidung 22.10.2026: Der Reiter heißt in der Anzeige "Dokumentation" (Protokolle und Reden). Die Kennung im Code und in der Adresse bleibt "protokoll" (#/g/<kurzname>/protokoll).
+- GP hat jetzt auch ein Google-Dokument (Skripteigenschaft PROTOKOLL_DOK_g2). Damit gilt für GP Modus "dokument" statt Pad (Entscheidung A ist damit für GP überholt). Der Editor-Test fand das Dokument nicht: Seit 0.30.2 nennt testenProtokollDok den Grund (Namen der Eigenschaften, falsche ID, kein Zugriff, keine Google-Docs-Datei), und protokollDokId nimmt auch eine ganze Adresse an (Teil nach /d/).
+- 8.3 (0.30.2): Knopf "+ Protokoll" im Reiter. Neues Formular js/views/protokoll-eintrag.js (zeigeProtokollFormular; Fenster, am Handy Vollbild, Klasse modal-vollbild):
+  - Titel (folgt Art und Datum, bis man ihn selbst ändert: "Protokoll Plenum TT.MM.JJJJ"), Datum (heute), Art.
+  - Anwesend: Textfeld (Komma) und Namen zum Antippen (Personen, eigener Anzeigename, Anwesende und Rollen bisheriger Protokolle, häufige zuerst, höchstens 30).
+  - Rollen je Gruppe (rollenFuer), Protokoll vorbelegt mit dem Anzeigenamen; Namensvorschläge. Gespeichert als "Rolle: Name" je Zeile, leere Rollen fallen weg.
+  - Projekt oder Veranstaltung: offene Projekte und Veranstaltungen ab 30 Tagen vor heute.
+  - Protokolltext: Plenum vorbefüllt mit "1.", "2.", "Sonstiges"; "+ TOP" fügt die nächste Nummer vor "Sonstiges" ein. Zähler bis 20 000 Zeichen (mit Schlusszeile). Datenschutzhinweis.
+  - Nächstes Plenum (nur neue Plenums-Protokolle): Datum und Uhrzeit aus der Termin-Vorlage, deren Name mit "Plenum" beginnt, sonst STANDARD aus kalender-vorlagen.js (jetzt exportiert); erster passender Wochentag nach dem Protokoll-Datum. Beim Speichern wird "Nächstes Plenum: TT.MM.JJJJ, HH:MM" angehängt.
+  - Entwurf (nur neue Protokolle): 1 Sekunde nach der letzten Eingabe und beim Schließen in localStorage (store.js: getEntwurf, setEntwurf, loescheEntwurf; ein Entwurf je Gruppe). "+ Protokoll" mit Entwurf fragt "Fortsetzen" oder "Verwerfen". Nach dem Speichern gelöscht. "Entwurf kopieren".
+  - Speichern über protokollSpeichern. Im Dokument: Meldung "Protokoll gespeichert und im Dokument ergänzt." Sonst öffnet das Lesefenster mit dem Grund und "Ins Dokument übernehmen" (Modus dokument) bzw. "Protokoll kopieren".
+  - "Bearbeiten" im Lesefenster öffnet dasselbe Formular (ohne Entwurf und ohne Nächstes Plenum, update mit Konfliktprüfung). Das einfache Formular aus 0.30.1 ist weg.
+  - Der Reiter lädt dafür auch Personen und Termin_Vorlagen (Zwischenspeicher gruppe_id:protokoll).
+  - "Vorschläge aus dem Protokoll" kommt mit 8.5 (Markierungen mit 8.4).
+- Offen (Rückfrage 22.10.2026): Soll der Entwurf beim Abmelden gelöscht werden? Zurzeit bleibt er auf dem Gerät.
+- Nächster Schritt: 8.4 (Markierungen und Einfügen im Protokolltext).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -151,7 +167,7 @@ Geplant: Etappe 8 bringt den Reiter "Protokoll" (📝, am PC nach "Kalender", am
 - AktionsDeck Dunkelgrau #1a1e20, Dunkelgrün #368469. FFF #1b7340; GP #70bd1c; KB #165834 (außerdem #2fa142, #0894ad). Hintergrund #dfe8e4. CSS-Variablen --gruppe, --gruppe-text, --gruen, --gruen-hell, --hintergrund.
 
 ## Oberfläche (Stand)
-- Reiter aktuell: Start, Projekte, ToDos, Material, Mobi, Kalender, Protokoll, Hilfe. Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Protokoll, Hilfe).
+- Reiter aktuell: Start, Projekte, ToDos, Material, Mobi, Kalender, Dokumentation (Kennung protokoll), Hilfe. Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Dokumentation, Hilfe).
 - Meldungen (toast) mittig. Projekte, Start, Kalender und Material-Dialoge nutzen Fenster (js/ui/fenster.js, zeigeFenster(titel, inhalt, beiZu, { aussenKlick }), mit ✕ oben rechts). Reiter ToDos und Material nutzen den Detailbereich rechts.
 - Öffentliche Seiten ohne Login: #/info/<seite> (Impressum, Info, Datenschutz, Texte kommen in 6.1/Etappe 10) und #/termine.
 
@@ -164,18 +180,18 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 
 ## Dateiübersicht
 - docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (laufend), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.30.1 am Ende)
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.30.2 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
-- js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen
-- Noch nicht vorhanden: Team, Wiki. Reiter Protokoll seit 0.30.1 (Liste und Lesen; Schreiben folgt mit 8.3, Reden mit 8.6).
+- js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag
+- Noch nicht vorhanden: Team, Wiki. Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden folgen mit 8.6.
 
 ## Hinweise
 - config.js enthält die echte API_URL: nie ersetzen, nur VERSION ändern.
 - Neue Dateien immer in sw.js (HUELLE) eintragen, gelöschte austragen. Dateien in HUELLE müssen im Repo existieren.
 - Skript geändert = neue Bereitstellung (Bereitstellen, Bereitstellungen verwalten, Stift, Neue Version). Neue Sheet-Spalte oder neuer Tab: erst im Sheet ergänzen (Kopfzeile von Hand tippen, ohne unsichtbare Zeichen), dann Schema.gs (Editor und GitHub), dann formatieren() ausführen (nur bei neuen Text-Spalten nötig), dann neu bereitstellen.
-- Skripteigenschaften (nur im Editor): TOKEN_GEHEIMNIS, FOTO_ORDNER_g1, g2, g3. Seit 0.30.0: PROTOKOLL_DOK_g1 (ID des FFF-Dokuments), freiwillig PROTOKOLL_LINK_<gruppe_id> (z. B. Etherpad von GP, nur https://).
+- Skripteigenschaften (nur im Editor): TOKEN_GEHEIMNIS, FOTO_ORDNER_g1, g2, g3. Seit 0.30.0: PROTOKOLL_DOK_g1 (ID des FFF-Dokuments), PROTOKOLL_DOK_g2 (GP, seit 22.10.2026), freiwillig PROTOKOLL_LINK_<gruppe_id> (externes Protokoll, nur https://; ein Dokument geht vor).
 - Nach jedem Commit: Actions grün abwarten, Seite zweimal neu laden.
 - Ein Syntaxfehler in einer Datei lässt den Reiter auf "Dieser Reiter ist noch in Arbeit" zurückfallen (app.js lädt jeden Reiter als Modul). Bei diesem Symptom zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern und übrig gebliebene Reste wie "..." prüfen, vor allem `});` und `}, s.token);`.
 - In Util.gs gibt es schon eine Funktion aus(): in neuen Skriptdateien keine Variable so nennen. Hilfsfunktionen in Termine.gs beginnen mit t oder ics.

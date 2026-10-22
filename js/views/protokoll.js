@@ -3,21 +3,22 @@
 // Suche (Titel, Text, Anwesend), Filter Art und Filter Projekt/Veranstaltung.
 // Klick öffnet das Lesefenster: alle Felder, „Protokoll kopieren“, „Im Dokument bearbeiten“ (nur wenn es
 // im Dokument steht), solange nicht im Dokument: „Bearbeiten“ und „Ins Dokument übernehmen“.
-// Protokolle werden nie gelöscht (das Skript sperrt es). Schreiben kommt mit 8.3, Reden mit 8.6.
+// „+ Protokoll“ und „Bearbeiten“ öffnen das Formular aus protokoll-eintrag.js (seit 8.3).
+// Der Reiter heißt in der Anzeige „Dokumentation“ (Protokolle und ab 8.6 Reden), die Kennung bleibt „protokoll“.
+// Protokolle werden nie gelöscht (das Skript sperrt es). Reden kommen mit 8.6.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { zeigeFenster } from '../ui/fenster.js';
-import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
-import { SCHEMA } from '../schema.js';
 import { zeitText } from './material-rechnen.js';
 import { normDatum, datumText, kurz } from './todos-rechnen.js';
 import { sichereUrl } from './kalender-rechnen.js';
 import {
   ARTEN, artText, imDokument, sortiereProtokolle, nachJahr, passtSuche, bezugSchluessel, kopierText, einfuegeHinweis
 } from './protokoll-rechnen.js';
+import { zeigeProtokollFormular } from './protokoll-eintrag.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -44,7 +45,7 @@ export async function render(container, ctx) {
   leeren(container);
 
   const cacheKey = s.gruppe_id + ':protokoll';
-  let daten = { protokolle: [], projekte: [], veranstaltungen: [] };
+  let daten = { protokolle: [], projekte: [], veranstaltungen: [], personen: [], vorlagen: [] };
   // Modus der Gruppe (dokument | extern | keins). Nur im Speicher, nicht im Gerät abgelegt.
   let info = null;
   let projektTitel = {};
@@ -66,7 +67,12 @@ export async function render(container, ctx) {
   const box = el('div', { class: 'protokoll-liste' });
 
   container.append(el('div', { class: 'seite' },
-    el('div', { class: 'kopfzeile' }, el('h1', { text: 'Protokoll' })),
+    el('div', { class: 'kopfzeile' },
+      el('h1', { text: 'Dokumentation' }),
+      el('div', { class: 'kopf-knoepfe' },
+        el('button', { class: 'knopf', type: 'button', text: '+ Protokoll', onclick: function () { formularOeffnen(null); } })
+      )
+    ),
     el('div', { class: 'filterzeile filter-todos' }, suche, artWahl, bezugWahl),
     status,
     box
@@ -136,8 +142,7 @@ export async function render(container, ctx) {
     if (!meta) return;
     if (!daten.protokolle.length) {
       box.append(el('p', { class: 'leise', text:
-        'Noch keine Protokolle. Hier stehen bald alle Protokolle deiner Gruppe. ' +
-        'Das Schreiben in der App kommt mit dem nächsten Schritt.' }));
+        'Noch keine Protokolle. Mit „+ Protokoll“ schreibst du das erste.' }));
       return;
     }
     const art = artWahl.value;
@@ -173,7 +178,8 @@ export async function render(container, ctx) {
 
   // ---- Lesefenster ----
 
-  function lesen(p) {
+  // meldung (freiwillig): Text oben im Fenster, zum Beispiel nach dem Speichern
+  function lesen(p, meldung) {
     let fenster = null;
     const dl = el('dl', { class: 'detail-liste' });
     function paar(name, wert, mehrzeilig) {
@@ -188,7 +194,9 @@ export async function render(container, ctx) {
     paar('Anwesend', p.teilnehmende, true);
     paar('Geschrieben', [txt(p.erstellt_von), txt(p.erstellt_am) ? zeitText(p.erstellt_am) : ''].filter(Boolean).join(', '));
 
-    const inhalt = el('div', { class: 'protokoll-lesen' }, dl);
+    const inhalt = el('div', { class: 'protokoll-lesen' });
+    if (meldung) inhalt.append(el('p', { class: 'fehler', role: 'alert', text: meldung }));
+    inhalt.append(dl);
     const marke = dokumentMarke(p);
     if (marke) inhalt.append(el('p', null, marke));
     inhalt.append(
@@ -222,7 +230,7 @@ export async function render(container, ctx) {
     if (!imDokument(p)) {
       knoepfe.append(el('button', {
         class: 'knopf knopf-hell', type: 'button', text: 'Bearbeiten',
-        onclick: function () { fenster.schliessen(); bearbeiten(p); }
+        onclick: function () { fenster.schliessen(); formularOeffnen(p); }
       }));
       if (modus === 'dokument') {
         const ins = el('button', {
@@ -262,42 +270,21 @@ export async function render(container, ctx) {
     knopf.textContent = 'Ins Dokument übernehmen';
   }
 
-  // Bearbeiten in der App (nur solange es nicht im Dokument steht). Das ganze Formular kommt mit 8.3.
-  function bearbeiten(p) {
-    let fenster = null;
-    const start = Object.assign({}, p, { datum: normDatum(p.datum) });
-    const form = baueFormular(SCHEMA.Protokolle.felder, start, {
-      speichernText: 'Speichern',
-      onSpeichern: async function (d) {
-        try {
-          const res = await api('update', {
-            tabelle: 'Protokolle', id: p.id, daten: d, bekannt: p.geaendert_am
-          }, s.token);
-          fenster.schliessen();
-          toast(res.geaendert ? 'Änderung gespeichert.' : 'Nichts geändert.');
-          await laden(false);
-          const neu = finde(p.id);
-          if (neu) lesen(neu);
-        } catch (e) {
-          if (ctx.behandleFehler(e)) return;
-          if (e.code === 'konflikt') {
-            laden(false);
-            throw new Error('Jemand anderes hat dieses Protokoll gerade geändert. ' +
-              'Klicke auf „Abbrechen“ und öffne es noch einmal.');
-          }
-          if (e.code === 'nicht_gefunden') {
-            laden(false);
-            throw new Error('Dieses Protokoll gibt es nicht mehr. Klicke auf „Abbrechen“.');
-          }
-          throw e;
-        }
-      },
-      onAbbrechen: function () { fenster.schliessen(); }
+  // Formular (protokoll-eintrag.js): neu (p = null) oder ändern (nur solange nicht im Dokument)
+  function formularOeffnen(p) {
+    zeigeProtokollFormular({
+      ctx: ctx, token: s.token, gruppeId: s.gruppe_id, kurzname: s.kurzname,
+      daten: daten, eintrag: p || null,
+      nachSpeichern: async function (eintrag, res) {
+        if (res && res.im_dokument) toast('Protokoll gespeichert und im Dokument ergänzt.');
+        else if (res) toast('Protokoll gespeichert.');
+        await laden(false);
+        const neu = finde(eintrag.id) || eintrag;
+        if (!res) { lesen(neu); return; }
+        // Nicht im Dokument: Lesefenster mit Grund und den Knöpfen „Ins Dokument übernehmen“ oder „Protokoll kopieren“
+        if (!res.im_dokument) lesen(neu, 'Das Protokoll ist gespeichert, steht aber nicht im Dokument. ' + txt(res.hinweis));
+      }
     });
-    fenster = zeigeFenster('Protokoll bearbeiten', el('div', null,
-      el('p', { class: 'leise', text: 'Du kannst das Protokoll ändern, solange es noch nicht im Dokument steht.' }),
-      form
-    ), null);
   }
 
   // ---- Laden ----
@@ -306,6 +293,8 @@ export async function render(container, ctx) {
     if (!neu.protokolle) neu.protokolle = [];
     if (!neu.projekte) neu.projekte = [];
     if (!neu.veranstaltungen) neu.veranstaltungen = [];
+    if (!neu.personen) neu.personen = [];
+    if (!neu.vorlagen) neu.vorlagen = [];
     daten = neu;
     meta = m;
     offline = false;
@@ -333,13 +322,15 @@ export async function render(container, ctx) {
         cacheKey,
         async function () {
           const r = await api('listMehrere', {
-            tabellen: ['Protokolle', 'Projekte', 'Veranstaltungen']
+            tabellen: ['Protokolle', 'Projekte', 'Veranstaltungen', 'Personen', 'Termin_Vorlagen']
           }, s.token);
           const t = (r && r.tabellen) || {};
           return {
             protokolle: t.Protokolle || [],
             projekte: t.Projekte || [],
-            veranstaltungen: t.Veranstaltungen || []
+            veranstaltungen: t.Veranstaltungen || [],
+            personen: t.Personen || [],
+            vorlagen: t.Termin_Vorlagen || []
           };
         },
         zeigen,
