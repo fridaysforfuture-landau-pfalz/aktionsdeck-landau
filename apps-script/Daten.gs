@@ -288,7 +288,8 @@ function aktionDelete(ctx, p) {
   if (tab === 'Projekte') {
     fehler('ungueltig', 'Projekte werden mit "projektLoeschen" gelöscht, damit alles dazu mitgelöscht wird.');
   }
-  if (NIE_LOESCHEN.indexOf(tab) >= 0) {
+  // Protokolle: nur gemeinsame Entwürfe (noch nicht im Dokument) dürfen verworfen werden, geprüft unten
+  if (NIE_LOESCHEN.indexOf(tab) >= 0 && tab !== 'Protokolle') {
     fehler('ungueltig', 'Protokolle und Reden werden nicht gelöscht.');
   }
   var anzeige = anzeigename(p);
@@ -296,6 +297,9 @@ function aktionDelete(ctx, p) {
     var t = lies(tab);
     pruefeKopf(tab, t.kopf);
     var z = eintragFinden(t, ctx, p.id);
+    if (tab === 'Protokolle' && (!truthy(z.entwurf) || truthy(z.im_dokument))) {
+      fehler('ungueltig', 'Fertige Protokolle werden nicht gelöscht. Nur Entwürfe lassen sich verwerfen.');
+    }
     konfliktPruefen(z, p.bekannt);
     var zeit = jetzt();
 
