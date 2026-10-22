@@ -2766,3 +2766,23 @@ p.notiz.erledigt {
 .pk-vorschlag-aus .pk-vorschlag-felder { opacity: 0.55; }
 .pk-vorschlag-art { margin: 8px 0 0; font-size: 15px; color: var(--gruppe); }
 .pk-vorschlag-fehler { margin: 0; font-size: 13px; }
+
+/* ---- 0.30.10: Reden-Archiv ---- */
+.doku-umschalter { margin-bottom: 12px; }
+.reden-filter { grid-template-columns: 1fr; }
+@media (min-width: 600px) {
+  .reden-filter { grid-template-columns: 2fr 1fr 1fr; }
+}
+.rede-marke {
+  justify-self: start;
+  margin-top: 2px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #eceeed;
+  color: var(--text-leise);
+}
+.rede-probelesen { background: #fff3dc; color: #8a5200; }
+.rede-fertig { background: var(--gruen-hell); color: #1f5e48; }
+.rede-gehalten { background: #e3e7f6; color: #2f3f8f; }
