@@ -2,7 +2,7 @@
 // Teil „Reden“ im Projekt (Etappe 8, Schritt 8.7), aufgebaut wie der Teil „Learnings“:
 // Reden dieses Projekts (neueste zuerst) und „+ Rede“ mit vorausgewähltem Projekt.
 // Ein Klick führt in den Reiter Dokumentation (Ansicht Reden) und öffnet dort die Rede.
-// Adressen: #/g/<kurzname>/protokoll/rede:<id> und #/g/<kurzname>/protokoll/rede-neu:p:<projekt-id>
+// Adressen: #/g/<kurzname>/protokoll/rede-bearbeiten:<id> (Klick öffnet das Formular, 8.8) und #/g/<kurzname>/protokoll/rede-neu:p:<projekt-id>
 //
 // opt: { kurzname, projekt, holeDaten() -> { reden, kommentare }, offen, beiToggle(offen) }
 
@@ -34,7 +34,7 @@ export function baueRedenTeil(opt) {
       const info = [normDatum(r.datum) ? datumText(r.datum) : '', txt(r.redner), redeStatusText(r.status)]
         .filter(Boolean).join(' · ');
       return el('li', { class: 'dash-zeile' },
-        el('a', { class: 'dash-todo pt-todo', href: basis + 'rede:' + encodeURIComponent(r.id) },
+        el('a', { class: 'dash-todo pt-todo', href: basis + 'rede-bearbeiten:' + encodeURIComponent(r.id) },
           el('strong', { text: (txt(r.titel) || 'Rede') + kommentarMarke(zahlen[String(r.id)]) }),
           el('span', { class: 'leise', text: info })));
     })));

@@ -1,18 +1,23 @@
 // js/views/rede-eintrag.js
 // Formular „+ Rede“ / „Rede bearbeiten“ (Etappe 8, Schritt 8.6). Steht direkt im Inhalt (kein Fenster),
 // wie das Protokoll-Formular. Felder: Titel, Redner, Datum, Projekt oder Veranstaltung, Aktionsart,
-// Redetext (seit 8.8, Standard: die Rede steht in der App), Status, Notiz,
+// Redetext (seit 8.8, Standard: die Rede steht in der App; Absätze mit Kommentaren, js/views/rede-text.js), Status, Notiz,
 // Link freiwillig (falls die Rede woanders geschrieben wird; nur https://, Warnung bei anderen Seiten als Google Docs/Drive).
 // Löschen nur von Hand im Detail (reden.js). Ändern mit Konfliktprüfung.
+// Jede Eingabe wird auf dem Gerät gemerkt (store.js, setRedeEntwurf). So geht beim Reiterwechsel nichts verloren:
+// reden.js öffnet das Formular danach mit opt.entwurf wieder. Speichern oder „Schließen“ löscht den Entwurf.
 //
-// baueRedeFormular(opt) -> { el, schliessen() }
-// opt: { ctx, token, daten: { reden, projekte, veranstaltungen, personen }, eintrag (null = neu),
-//        vorgabe ({ projekt_id, veranstaltung_id }, freiwillig), beiZu(), nachSpeichern(eintrag) }
+// baueRedeFormular(opt) -> { el, schliessen(still) } (schliessen gibt false zurück, wenn die Person abbricht)
+// opt: { ctx, token, daten: { reden, projekte, veranstaltungen, personen, kommentare }, eintrag (null = neu),
+//        vorgabe ({ projekt_id, veranstaltung_id }, freiwillig), entwurf (aus getRedeEntwurf, freiwillig),
+//        beiZu(), nachSpeichern(eintrag) }
 
 import { el } from '../ui/dom.js';
 import { api } from '../api.js';
 import { toast } from '../ui/toast.js';
-import { getName } from '../store.js';
+import { getName, setRedeEntwurf, loescheRedeEntwurf } from '../store.js';
+import { baueRedeText } from './rede-text.js';
+import { zeitText } from './material-rechnen.js';
 import { normDatum, datumText, heuteIso } from './todos-rechnen.js';
 import { addTage, sichereUrl } from './kalender-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
@@ -74,7 +79,12 @@ export function baueRedeFormular(opt) {
   const r = opt.eintrag || null;
   const d = opt.daten;
   const v = opt.vorgabe || {};
+  const ent = opt.entwurf || null;
+  const ef = ent ? ent.felder : null;
+  const gruppe = opt.ctx.session.gruppe_id;
+  const bekannt = ent ? ent.bekannt : (r ? r.geaendert_am : '');
   let zu = false;
+  let geaendert = !!ent;
 
   const startBezug = r
     ? (txt(r.projekt_id) ? 'p:' + txt(r.projekt_id) : (txt(r.veranstaltung_id) ? 'v:' + txt(r.veranstaltung_id) : ''))
@@ -112,8 +122,8 @@ export function baueRedeFormular(opt) {
       return el('option', { value: 'v:' + x.id, text: '📅 ' + datumText(x.datum) + ' ' + txt(x.titel) });
     })));
   }
-  bezug.value = startBezug;
-  if (bezug.value !== startBezug) bezug.value = '';
+  bezug.value = ef ? txt(ef.bezug) : startBezug;
+  if (bezug.value !== (ef ? txt(ef.bezug) : startBezug)) bezug.value = '';
 
   const aktionsart = el('input', { class: 'feld', type: 'text', maxlength: '60', list: 'rede-aktionsart' });
   aktionsart.value = r ? txt(r.aktionsart) : '';
@@ -131,12 +141,13 @@ export function baueRedeFormular(opt) {
     if (!txt(aktionsart.value) || aktionsart.value === artAuto) aktionsart.value = neu;
     artAuto = neu;
   }
-  if (!r) artNachfuehren();
+  if (!r && !ef) artNachfuehren();
   bezug.addEventListener('change', artNachfuehren);
 
-  const text = el('textarea', { class: 'feld rede-textfeld', rows: '12', maxlength: '20000',
-    placeholder: 'Schreib hier deine Rede. Eine Leerzeile trennt die Absätze. Zu jedem Absatz kann die Gruppe kommentieren.' });
-  text.value = r ? String(r.text || '') : '';
+  const redeText = baueRedeText({
+    ctx: opt.ctx, token: opt.token, rede: r, kommentare: d.kommentare || [],
+    text: ef ? ef.text : (r ? r.text : '')
+  });
   const link = el('input', { class: 'feld', type: 'url', maxlength: '500', placeholder: 'https://docs.google.com/document/d/…' });
   link.value = r ? txt(r.link) : '';
   const linkHinweis = el('p', { class: 'leise pk-hinweis' });
@@ -152,14 +163,45 @@ export function baueRedeFormular(opt) {
   const notiz = el('textarea', { class: 'feld', rows: '3', maxlength: '5000' });
   notiz.value = r ? String(r.notiz || '') : '';
 
+  // Nicht gespeicherte Werte vom Gerät (nach einem Reiterwechsel)
+  if (ef) {
+    titel.value = String(ef.titel || '');
+    redner.value = String(ef.redner || '');
+    datum.value = String(ef.datum || '');
+    aktionsart.value = String(ef.aktionsart || '');
+    link.value = String(ef.link || '');
+    status.value = String(ef.status || 'entwurf');
+    if (!status.value) status.value = 'entwurf';
+    notiz.value = String(ef.notiz || '');
+  }
+
   const fehler = el('p', { class: 'fehler', role: 'alert' });
   const speichernKnopf = el('button', { class: 'knopf', type: 'submit', text: r ? 'Speichern' : 'Anlegen' });
 
-  function schliessen() {
-    if (zu) return;
+  // Werte von der Seite lesen (für den Entwurf auf dem Gerät)
+  function felder() {
+    return {
+      titel: titel.value, redner: redner.value, datum: datum.value, bezug: bezug.value, aktionsart: aktionsart.value,
+      text: redeText.wert(), link: link.value, status: status.value, notiz: notiz.value
+    };
+  }
+  function merken(ev) {
+    // Kommentar-Felder gehören nicht zur Rede
+    if (ev && ev.target && ev.target.closest && ev.target.closest('.rede-schreibplatz')) return;
+    geaendert = true;
+    setRedeEntwurf(gruppe, r ? r.id : '', bekannt, felder());
+  }
+
+  // still = true: ohne Rückfrage (zum Beispiel nach dem Speichern oder Löschen)
+  function schliessen(still) {
+    if (zu) return true;
+    if (!still && geaendert &&
+      !window.confirm('Deine Änderungen an der Rede sind noch nicht gespeichert. Trotzdem schließen?')) return false;
     zu = true;
+    loescheRedeEntwurf(gruppe);
     form.remove();
     if (opt.beiZu) opt.beiZu();
+    return true;
   }
 
   async function speichern() {
@@ -172,7 +214,7 @@ export function baueRedeFormular(opt) {
       titel: txt(titel.value), redner: txt(redner.value), datum: datum.value,
       projekt_id: b.indexOf('p:') === 0 ? b.slice(2) : '',
       veranstaltung_id: b.indexOf('v:') === 0 ? b.slice(2) : '',
-      aktionsart: txt(aktionsart.value), text: String(text.value || '').replace(/\s+$/, ''),
+      aktionsart: txt(aktionsart.value), text: redeText.wert(),
       link: txt(link.value), status: status.value, notiz: txt(notiz.value)
     };
     speichernKnopf.disabled = true;
@@ -183,29 +225,34 @@ export function baueRedeFormular(opt) {
         eintrag = await api('create', { tabelle: 'Reden', daten: daten }, opt.token);
         toast('Rede angelegt.');
       } else {
-        const res = await api('update', { tabelle: 'Reden', id: r.id, daten: daten, bekannt: r.geaendert_am }, opt.token);
+        const res = await api('update', { tabelle: 'Reden', id: r.id, daten: daten, bekannt: bekannt }, opt.token);
         eintrag = res.eintrag;
         toast(res.geaendert ? 'Änderung gespeichert.' : 'Nichts geändert.');
       }
-      schliessen();
+      schliessen(true);
       if (opt.nachSpeichern) await opt.nachSpeichern(eintrag);
     } catch (e) {
       speichernKnopf.disabled = false;
       speichernKnopf.textContent = r ? 'Speichern' : 'Anlegen';
       if (opt.ctx.behandleFehler(e)) return;
       fehler.textContent = e.code === 'konflikt'
-        ? 'Jemand anderes hat diese Rede gerade geändert. Klicke auf „Schließen“ und öffne sie noch einmal.'
+        ? 'Jemand anderes hat diese Rede inzwischen geändert. Kopiere dir deinen Text, klicke auf „Schließen“ und öffne sie noch einmal.'
         : e.message;
     }
   }
 
   const form = el('form', { class: 'formular protokoll-form karte rede-form', novalidate: '' },
     el('h2', { text: r ? 'Rede bearbeiten' : 'Neue Rede' }),
+    ent ? el('p', { class: 'leise pk-hinweis', text: 'Deine nicht gespeicherten Änderungen vom ' + zeitText(ent.zeit) + ' sind wieder da.' }) : null,
     feld('Titel *', titel),
     el('div', { class: 'pk-zwei' }, feld('Redner', redner, rednerListe), feld('Datum', datum)),
     feld('Projekt oder Veranstaltung (freiwillig)', bezug),
     feld('Aktionsart (zum Beispiel Demo, Infostand)', aktionsart, artListe),
-    feld('Redetext', text),
+    el('div', { class: 'formfeld' },
+      el('span', { class: 'formlabel', text: 'Redetext' }),
+      r ? el('p', { class: 'leise pk-hinweis', text: 'Jeder Absatz hat ein eigenes Feld. Eine Leerzeile macht beim Speichern einen neuen Absatz. ' +
+        'Die Kommentare stehen am PC rechts neben dem Absatz, am Handy darunter.' }) : null,
+      redeText.el),
     feld('Status', status),
     feld('Notiz (zum Beispiel Dauer, Reihenfolge)', notiz),
     feld('Link (freiwillig, falls die Rede woanders geschrieben ist, https://…)', link),
@@ -213,9 +260,11 @@ export function baueRedeFormular(opt) {
     linkHinweis,
     fehler,
     el('div', { class: 'form-knoepfe' }, speichernKnopf,
-      el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Schließen', onclick: schliessen }))
+      el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Schließen', onclick: function () { schliessen(false); } }))
   );
   form.addEventListener('submit', function (ev) { ev.preventDefault(); speichern(); });
+  form.addEventListener('input', merken);
+  form.addEventListener('change', merken);
   linkZeigen();
   return { el: form, schliessen: schliessen };
 }

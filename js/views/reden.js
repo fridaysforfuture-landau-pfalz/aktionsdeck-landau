@@ -4,10 +4,12 @@
 // Status als Marke, 💬-Zahl. Suche (Titel, Redner, Aktionsart, Projekt, Veranstaltung, Notiz), Filter Status und Jahr.
 // Klick öffnet die Rede im Detailbereich: alle Felder, „Dokument öffnen“, Status weiterschalten, „Bearbeiten“,
 // darunter die Kommentare zum Probelesen (bezug_art „rede“).
-// Seit 8.8: Redetext mit Kommentaren je Absatz (js/views/rede-text.js), allgemeine Kommentare darunter,
-// Knopf „Löschen“ (nur von Hand, weich, mit Rückfrage).
+// Seit 8.8: Knopf „Löschen“ (nur von Hand, weich, mit Rückfrage). Der Redetext steht nicht im Detail
+// (zu schmal), sondern im Formular „Bearbeiten“: dort mit Kommentaren je Absatz (js/views/rede-text.js).
+// Im Detail stehen die Kommentare zur ganzen Rede. Nicht gespeicherte Formulare kommen nach einem
+// Reiterwechsel wieder (Entwurf auf dem Gerät, store.js).
 //
-// baueReden(container, ctx) -> Promise<{ neu(vorgabe), oeffne(id), laden(), weg() }>
+// baueReden(container, ctx) -> Promise<{ neu(vorgabe), oeffne(id), bearbeite(id), laden(), weg() }>
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -19,7 +21,8 @@ import { zeitText } from './material-rechnen.js';
 import { normDatum, datumText, kommentarZahlen, kommentarMarke } from './todos-rechnen.js';
 import { sichereUrl } from './kalender-rechnen.js';
 import { REDE_STATI, redeStatusText, naechsterStatus, baueRedeFormular } from './rede-eintrag.js';
-import { baueRedeText } from './rede-text.js';
+import { absaetze, stelleLesen } from './rede-text.js';
+import { getRedeEntwurf, loescheRedeEntwurf } from '../store.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -161,6 +164,15 @@ export async function baueReden(container, ctx) {
     paar('Veranstaltung', txt(r.veranstaltung_id) ? (veranstTitel(r.veranstaltung_id) || 'Veranstaltung (nicht mehr da)') : '');
     paar('Aktionsart', r.aktionsart);
     paar('Notiz', r.notiz, true);
+    // Redetext nur als Zusammenfassung (8.8): lesen und kommentieren im Formular
+    const teile = absaetze(r.text);
+    if (teile.length) {
+      const nAbs = daten.kommentare.filter(function (k) {
+        return txt(k.bezug_art) === 'rede' && txt(k.bezug_id) === String(r.id) && txt(k.stelle) && stelleLesen(k.stelle).nr > 0;
+      }).length;
+      paar('Redetext', teile.length + (teile.length === 1 ? ' Absatz' : ' Absätze') +
+        (nAbs ? ' · ' + nAbs + (nAbs === 1 ? ' Kommentar' : ' Kommentare') + ' zu Absätzen' : ''));
+    }
 
     const knoepfe = el('div', { class: 'form-knoepfe protokoll-knoepfe' });
     const link = sichereUrl(r.link);
@@ -190,27 +202,19 @@ export async function baueReden(container, ctx) {
       knoepfe.append(k);
     }
     knoepfe.append(el('button', {
-      class: 'knopf knopf-hell', type: 'button', text: 'Bearbeiten', onclick: function () { formularOeffnen(r); }
+      class: 'knopf' + (teile.length ? '' : ' knopf-hell'), type: 'button',
+      text: teile.length ? 'Bearbeiten und Absätze kommentieren' : 'Bearbeiten',
+      onclick: function () { formularOeffnen(r); }
     }));
     knoepfe.append(el('button', {
       class: 'knopf knopf-gefahr', type: 'button', text: 'Löschen', onclick: function () { loeschen(r); }
     }));
 
-    // Redetext mit Kommentaren je Absatz (8.8)
-    const redeText = baueRedeText({
-      ctx: ctx, token: s.token, rede: r, kommentare: daten.kommentare,
-      nachAenderung: async function () {
-        await laden(false);
-        const neu = finde(r.id);
-        if (neu) lesen(neu);
-      }
-    });
-
     const kommentare = baueKommentare({
       ctx: ctx, token: s.token, art: 'rede', bezugId: r.id, projektId: txt(r.projekt_id),
       titel: 'Probelesen: Kommentare zur ganzen Rede',
       platzhalter: 'Anmerkung zur ganzen Rede …',
-      leerText: 'Noch keine Anmerkungen zur ganzen Rede. Zu einem Absatz kommentierst du oben mit „💬 Kommentieren“.',
+      leerText: 'Noch keine Anmerkungen zur ganzen Rede. Zu einzelnen Absätzen kommentierst du unter „Bearbeiten“.',
       ohneStelle: true,
       // Neuer oder gelöschter Kommentar: Liste neu laden, damit die 💬-Zahl stimmt
       beiAenderung: function () { laden(false); }
@@ -220,7 +224,6 @@ export async function baueReden(container, ctx) {
       el('p', null, statusMarke(r.status)),
       dl,
       knoepfe,
-      redeText,
       kommentare.el
     );
     zeigeDetail(ctx.detail, txt(r.titel) || 'Rede', inhalt, function () { offeneId = ''; }, true);
@@ -238,7 +241,7 @@ export async function baueReden(container, ctx) {
       await laden(false);
       return;
     }
-    if (formular) formular.schliessen();
+    if (formular) formular.schliessen(true);
     toast('Rede gelöscht.');
     offeneId = '';
     schliesseDetail(ctx.detail);
@@ -247,11 +250,12 @@ export async function baueReden(container, ctx) {
 
   // ---- Formular im Inhalt ----
 
-  function formularOeffnen(r, vorgabe) {
-    if (formular) formular.schliessen();
-    if (r && ctx.detail && window.matchMedia('(max-width: 959px)').matches) schliesseDetail(ctx.detail);
+  function formularOeffnen(r, vorgabe, entwurf) {
+    if (formular && !formular.schliessen(false)) return;
+    // Für Text und Kommentare braucht das Formular die ganze Breite: Detail schließen (auch am PC, 8.8)
+    if (r && ctx.detail) schliesseDetail(ctx.detail);
     formular = baueRedeFormular({
-      ctx: ctx, token: s.token, daten: daten, eintrag: r || null, vorgabe: vorgabe || null,
+      ctx: ctx, token: s.token, daten: daten, eintrag: r || null, vorgabe: vorgabe || null, entwurf: entwurf || null,
       beiZu: function () { formular = null; },
       nachSpeichern: async function (eintrag) {
         await laden(false);
@@ -306,9 +310,21 @@ export async function baueReden(container, ctx) {
   jahrWahl.addEventListener('change', zeichne);
   await laden(true);
 
+  // Nicht gespeicherte Rede vom letzten Mal (zum Beispiel nach einem Reiterwechsel) wieder öffnen
+  function entwurfWiederOeffnen() {
+    const e = getRedeEntwurf(s.gruppe_id);
+    if (!e) return false;
+    const r = e.id ? finde(e.id) : null;
+    if (e.id && !r) { loescheRedeEntwurf(s.gruppe_id); return false; }
+    formularOeffnen(r, null, e);
+    return true;
+  }
+  entwurfWiederOeffnen();
+
   return {
     neu: function (vorgabe) { formularOeffnen(null, vorgabe); },
     oeffne: function (id) { const r = finde(id); if (r) lesen(r); else toast('Diese Rede gibt es nicht mehr.'); },
+    bearbeite: function (id) { const r = finde(id); if (r) formularOeffnen(r); else toast('Diese Rede gibt es nicht mehr.'); },
     laden: function () { return laden(false); },
     weg: function () { if (offeneId) schliesseDetail(ctx.detail); offeneId = ''; }
   };

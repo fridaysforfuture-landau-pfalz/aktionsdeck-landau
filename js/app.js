@@ -88,11 +88,11 @@ async function abmelden() {
   route();
 }
 
-// Knopf „Abmelden“: Protokoll-Entwürfe werden mitgelöscht (geteilte Geräte), vorher Warnung.
+// Knopf „Abmelden“: Entwürfe von Protokollen und Reden werden mitgelöscht (geteilte Geräte), vorher Warnung.
 // Läuft nur die Anmeldung ab (abmelden ohne Knopf), bleiben die Entwürfe.
 async function abmeldenVonHand() {
   if (gibtEntwurf()) {
-    if (!window.confirm('Auf diesem Gerät gibt es einen Protokoll-Entwurf, der noch nicht gespeichert ist.\n\n' +
+    if (!window.confirm('Auf diesem Gerät gibt es einen Entwurf (Protokoll oder Rede), der noch nicht gespeichert ist.\n\n' +
       'Beim Abmelden wird er gelöscht. Trotzdem abmelden?')) return;
     loescheAlleEntwuerfe();
   }
