@@ -31,6 +31,7 @@ import {
   plenumGliederung, naechstesPlenum, textMitSchluss, schlusszeile, kopierText,
   topNummer, topHinzu, topEntfernen, textAufraeumen, stichpunktEnter, stichpunktTab, stichpunktRueck
 } from './protokoll-rechnen.js';
+import { baueMarken } from './protokoll-marken.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -207,6 +208,25 @@ export function baueProtokollFormular(opt) {
   text.value = w.text;
   const zaehler = el('span', { class: 'leise pk-zaehler' });
 
+  // Markierungen (8.4): Knöpfe, kleine Formulare, @-Namen, Tastenkürzel, „+ Einfügen“, Übersicht
+  const aktionsarten = [];
+  d.projekte.forEach(function (x) {
+    const a = txt(x.aktionsart);
+    if (a && aktionsarten.indexOf(a) < 0) aktionsarten.push(a);
+  });
+  aktionsarten.sort(function (a, b) { return a.localeCompare(b, 'de'); });
+  const marken = baueMarken({
+    ctx: opt.ctx, token: opt.token, text: text, namen: namen, aktionsarten: aktionsarten,
+    projektAktionsart: function () {
+      const b = bezug.value;
+      if (b.indexOf('p:') !== 0) return '';
+      const pr = d.projekte.find(function (x) { return 'p:' + x.id === b; });
+      return pr ? txt(pr.aktionsart) : '';
+    },
+    einfuegen: function (r) { textSetzen(r); merken(); }
+  });
+  bezug.addEventListener('change', function () { marken.aktualisieren(); });
+
   function textSetzen(r) {
     text.value = r.text;
     text.focus();
@@ -330,6 +350,7 @@ export function baueProtokollFormular(opt) {
   function textGeaendert() {
     zaehlen();
     topsZeichnen();
+    marken.aktualisieren();
   }
 
   function artGeaendert() {
@@ -556,11 +577,18 @@ export function baueProtokollFormular(opt) {
         rueckenKnopf('⇤', 'Stichpunkt ausrücken', true),
         rueckenKnopf('⇥', 'Stichpunkt einrücken', false))
     ),
+    marken.leiste,
+    marken.panel,
     text,
+    marken.atListe,
     zaehler,
+    marken.uebersicht,
     el('p', { class: 'leise pk-hinweis', text:
       'Unter einem TOP geht es mit Stichpunkten („- “) weiter. Tab rückt ein, Umschalt+Tab rückt aus. ' +
       'Rücktaste auf einem leeren Stichpunkt macht normalen Text daraus. Mit Esc und dann Tab verlässt du das Feld.' }),
+    el('p', { class: 'leise pk-hinweis', text:
+      'Markierungen: Die Knöpfe über dem Feld fügen fertige Zeilen ein (am PC auch Strg+Alt+T, L, V, M, U, B). ' +
+      'Nur Zeilen, die mit ☐ 💡 📅 📌 📊 👉 beginnen, werden gelesen. Mit „@“ wählst du einen Namen.' }),
     el('p', { class: 'leise pk-hinweis', text:
       'Schreibe nichts auf, was Dritte persönlich betrifft (Namen von Personen außerhalb der Gruppe, Gesundheit, Adressen).' }),
     npBox,

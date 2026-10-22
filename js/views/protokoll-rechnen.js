@@ -396,3 +396,224 @@ export function stichpunktRueck(text, pos) {
   if (pos !== z.ende || !/^\t*- ?$/.test(z.zeile)) return null;
   return stichpunktTab(text, pos, true);
 }
+
+// ---- Markierungen im Protokolltext (8.4) ----
+// Gelesen werden NUR Zeilen, die mit einem dieser Symbole beginnen (davor darf ein Stichpunkt „- “ stehen).
+// Fließtext wird nie gedeutet, es gibt keine KI.
+//   ☐ @Name: Aufgabe (bis TT.MM.)        -> ToDo (ohne @Name = Hut frei, mehrere: @Anna @Ben:)
+//   💡 Aktionsart: Text                  -> Learning (ohne Aktionsart: die des verknüpften Projekts)
+//   📅 Titel, TT.MM.JJJJ, HH:MM, Ort      -> Termin (Uhrzeit und Ort freiwillig, Datum ohne Jahr = nächstes Vorkommen)
+//   📌 Titel: Text                       -> Mitteilung („📌 Mitteilung „Titel“: …“ aus „+ Einfügen“ wird übersprungen,
+//                                           wenn es die Mitteilung schon gibt)
+//   📊 Frage? | Antwort 1 | Antwort 2    -> Umfrage (mindestens zwei Antworten)
+//   👉 Text                              -> Beschluss (nur Hervorhebung, kein Vorschlag)
+// Dazu die Schlusszeile „Nächstes Plenum: TT.MM.JJJJ, HH:MM“ (Termin „Plenum“).
+//
+// Beispiele (heute = 22.10.2026, getestet mit node):
+//   '☐ @Anna: Flyer drucken (bis 20.10.)'  -> ToDo, verantwortlich 'Anna', faellig_am '2027-10-20' (nächstes Vorkommen)
+//   '☐ Plakate holen'                      -> ToDo ohne Verantwortliche (Hut frei)
+//   '☐ @Anna Flyer drucken'                -> Fehlerzeile: Nach dem Namen fehlt der Doppelpunkt
+//   '📅 Infostand, 07.11., Rathausplatz'   -> Termin 2026-11-07 ohne Uhrzeit, Ort 'Rathausplatz'
+//   '📊 Wann? | Mo | Di | Mi'              -> Umfrage mit drei Antworten
+//   '💡 Flyer früher bestellen'            -> Learning mit der Aktionsart des Projekts
+
+export const MARKEN = [
+  { art: 'todo', zeichen: '☐', label: 'ToDo' },
+  { art: 'learning', zeichen: '💡', label: 'Learning' },
+  { art: 'termin', zeichen: '📅', label: 'Termin' },
+  { art: 'mitteilung', zeichen: '📌', label: 'Mitteilung' },
+  { art: 'umfrage', zeichen: '📊', label: 'Umfrage' },
+  { art: 'beschluss', zeichen: '👉', label: 'Beschluss' }
+];
+
+const ISO = function (j, m, t) {
+  return j + '-' + (m < 10 ? '0' : '') + m + '-' + (t < 10 ? '0' : '') + t;
+};
+
+// "20.10." oder "20.10.2026" (auch "20.10.26") -> JJJJ-MM-TT. Ohne Jahr: nächstes Vorkommen ab heute.
+export function markenDatum(s, heute) {
+  const m = /^(\d{1,2})\.(\d{1,2})\.(\d{2}|\d{4})?$/.exec(txt(s));
+  if (!m) return '';
+  const tag = Number(m[1]);
+  const monat = Number(m[2]);
+  const h = normDatum(heute) || iso0();
+  let jahr = m[3] ? (m[3].length === 2 ? 2000 + Number(m[3]) : Number(m[3])) : Number(h.slice(0, 4));
+  const gueltig = function (j) {
+    const d = new Date(j, monat - 1, tag);
+    return d.getFullYear() === j && d.getMonth() === monat - 1 && d.getDate() === tag;
+  };
+  if (!gueltig(jahr) && !(!m[3] && gueltig(jahr + 1))) return '';
+  let d = ISO(jahr, monat, tag);
+  if (!m[3] && (d < h || !gueltig(jahr))) d = ISO(jahr + 1, monat, tag);
+  return d;
+}
+
+function iso0() {
+  const d = new Date();
+  return ISO(d.getFullYear(), d.getMonth() + 1, d.getDate());
+}
+
+// Kurze Schreibweise fürs Einfügen: "20.10." wenn das nächste Vorkommen genau dieses Datum ist, sonst mit Jahr
+export function markenDatumText(isoDatum, heute) {
+  const d = normDatum(isoDatum);
+  if (!d) return '';
+  const kurz = d.slice(8, 10) + '.' + d.slice(5, 7) + '.';
+  return markenDatum(kurz, heute) === d ? kurz : kurz + d.slice(0, 4);
+}
+
+function zeitAus(s) {
+  const m = /^(\d{1,2})[:.](\d{2})(\s*Uhr)?$/i.exec(txt(s)) || /^(\d{1,2})\s*Uhr$/i.exec(txt(s));
+  if (!m) return '';
+  const st = Number(m[1]);
+  const mi = m[2] && /^\d{2}$/.test(m[2]) ? Number(m[2]) : 0;
+  if (st > 23 || mi > 59) return '';
+  return (st < 10 ? '0' : '') + st + ':' + (mi < 10 ? '0' : '') + mi;
+}
+
+// Zeile ohne Stichpunkt davor; { art, rest } oder null
+function markeVon(zeile) {
+  const z = zeile.replace(/^\t*-\s*/, '').replace(/^\s+/, '');
+  for (let i = 0; i < MARKEN.length; i++) {
+    const k = MARKEN[i].zeichen;
+    if (z.indexOf(k) === 0) return { art: MARKEN[i].art, rest: txt(z.slice(k.length).replace(/^️/, '')) };
+  }
+  return null;
+}
+
+// text: Protokolltext. opt: { heute (JJJJ-MM-TT), projektAktionsart, mitteilungen (vorhandene, mit titel) }
+// Gibt { todos, learnings, termine, mitteilungen, umfragen, beschluesse, fehler, uebersprungen } zurück.
+// Jeder Eintrag hat zeile (Zeilennummer ab 1) und text (die ganze Zeile). fehler: { zeile, text, grund }.
+export function leseMarkierungen(text, opt) {
+  const o = opt || {};
+  const heute = normDatum(o.heute) || iso0();
+  const r = { todos: [], learnings: [], termine: [], mitteilungen: [], umfragen: [], beschluesse: [], fehler: [], uebersprungen: [] };
+  const vorhanden = {};
+  (o.mitteilungen || []).forEach(function (m) { vorhanden[txt(m.titel).toLowerCase()] = true; });
+
+  String(text === undefined || text === null ? '' : text).split(/\r?\n/).forEach(function (roh, i) {
+    const zeile = roh.replace(/\s+$/, '');
+    const nr = i + 1;
+    const fehler = function (grund) { r.fehler.push({ zeile: nr, text: zeile, grund: grund }); };
+
+    // Schlusszeile „Nächstes Plenum: 29.10.2026, 18:30“ = Termin
+    const np = /^Nächstes Plenum:\s*([0-9.]+)\s*(?:,\s*(.+))?$/.exec(txt(zeile));
+    if (np) {
+      const d = markenDatum(np[1], heute);
+      if (!d) { fehler('Das Datum ist nicht lesbar (TT.MM.JJJJ).'); return; }
+      r.termine.push({ zeile: nr, text: zeile, titel: 'Plenum', datum: d, zeit: zeitAus(np[2] || ''), ort: '' });
+      return;
+    }
+
+    const m = markeVon(zeile);
+    if (!m) return;
+    const rest = m.rest;
+
+    if (m.art === 'todo') {
+      let wer = [];
+      let aufgabe = rest;
+      if (rest.charAt(0) === '@') {
+        const dp = rest.indexOf(':');
+        if (dp < 0) { fehler('Nach dem Namen fehlt der Doppelpunkt („☐ @Name: Aufgabe“).'); return; }
+        wer = rest.slice(0, dp).split(/[@,]/).map(function (x) { return txt(x); }).filter(Boolean);
+        aufgabe = txt(rest.slice(dp + 1));
+      }
+      let frist = '';
+      const f = /\(\s*bis\s+([0-9.]+)\s*\)\s*$/i.exec(aufgabe);
+      if (f) {
+        frist = markenDatum(f[1], heute);
+        if (!frist) { fehler('Die Frist ist nicht lesbar („(bis TT.MM.)“).'); return; }
+        aufgabe = txt(aufgabe.slice(0, f.index));
+      }
+      if (!aufgabe) { fehler('Die Aufgabe fehlt.'); return; }
+      r.todos.push({ zeile: nr, text: zeile, aufgabe: aufgabe, verantwortlich: wer.join(', '), faellig_am: frist });
+      return;
+    }
+
+    if (m.art === 'learning') {
+      let aktionsart = '';
+      let t = rest;
+      const dp = rest.indexOf(':');
+      if (dp > 0 && dp <= 40) { aktionsart = txt(rest.slice(0, dp)); t = txt(rest.slice(dp + 1)); }
+      if (!t) { fehler('Der Text des Learnings fehlt.'); return; }
+      r.learnings.push({ zeile: nr, text: zeile, aktionsart: aktionsart || txt(o.projektAktionsart), learning: t, ausProjekt: !aktionsart });
+      return;
+    }
+
+    if (m.art === 'termin') {
+      const teile = rest.split(',').map(function (x) { return txt(x); });
+      const titel = teile[0];
+      if (!titel) { fehler('Der Titel des Termins fehlt („📅 Titel, TT.MM.JJJJ“).'); return; }
+      if (teile.length < 2) { fehler('Das Datum fehlt („📅 Titel, TT.MM.JJJJ“).'); return; }
+      const d = markenDatum(teile[1], heute);
+      if (!d) { fehler('Das Datum ist nicht lesbar (TT.MM.JJJJ).'); return; }
+      let zeit = '';
+      let ab = 2;
+      if (teile.length > 2 && zeitAus(teile[2])) { zeit = zeitAus(teile[2]); ab = 3; }
+      r.termine.push({ zeile: nr, text: zeile, titel: titel, datum: d, zeit: zeit, ort: teile.slice(ab).join(', ') });
+      return;
+    }
+
+    if (m.art === 'mitteilung') {
+      // Aus „+ Einfügen“: 📌 Mitteilung „Titel“: Text
+      const app = /^Mitteilung\s+„([^“”"]*)[“”"]\s*:\s*(.*)$/.exec(rest);
+      if (app) {
+        if (vorhanden[txt(app[1]).toLowerCase()]) { r.uebersprungen.push({ zeile: nr, text: zeile, grund: 'Mitteilung gibt es schon' }); return; }
+        r.mitteilungen.push({ zeile: nr, text: zeile, titel: txt(app[1]), inhalt: txt(app[2]) });
+        return;
+      }
+      const dp = rest.indexOf(':');
+      const titel = txt(dp >= 0 ? rest.slice(0, dp) : rest);
+      if (!titel) { fehler('Der Titel der Mitteilung fehlt („📌 Titel: Text“).'); return; }
+      r.mitteilungen.push({ zeile: nr, text: zeile, titel: titel, inhalt: dp >= 0 ? txt(rest.slice(dp + 1)) : '' });
+      return;
+    }
+
+    if (m.art === 'umfrage') {
+      const teile = rest.split('|').map(function (x) { return txt(x); });
+      const frage = teile[0];
+      const antworten = teile.slice(1).filter(Boolean);
+      if (!frage) { fehler('Die Frage fehlt („📊 Frage? | Antwort 1 | Antwort 2“).'); return; }
+      if (antworten.length < 2) { fehler('Eine Umfrage braucht mindestens zwei Antworten, getrennt mit „|“.'); return; }
+      r.umfragen.push({ zeile: nr, text: zeile, frage: frage, antworten: antworten });
+      return;
+    }
+
+    if (m.art === 'beschluss') {
+      if (!rest) { fehler('Der Text des Beschlusses fehlt.'); return; }
+      r.beschluesse.push({ zeile: nr, text: zeile, beschluss: rest });
+    }
+  });
+  return r;
+}
+
+// Kurze Übersicht: „2 ToDos · 1 Termin · 1 Fehlerzeile“ ('' ohne Markierungen)
+export function markenUebersicht(r) {
+  const teile = [];
+  const z = function (n, eins, mehr) { if (n) teile.push(n + ' ' + (n === 1 ? eins : mehr)); };
+  z(r.todos.length, 'ToDo', 'ToDos');
+  z(r.learnings.length, 'Learning', 'Learnings');
+  z(r.termine.length, 'Termin', 'Termine');
+  z(r.mitteilungen.length, 'Mitteilung', 'Mitteilungen');
+  z(r.umfragen.length, 'Umfrage', 'Umfragen');
+  z(r.beschluesse.length, 'Beschluss', 'Beschlüsse');
+  z(r.fehler.length, 'Fehlerzeile', 'Fehlerzeilen');
+  return teile.join(' · ');
+}
+
+// Eine Markierungszeile an der Cursorstelle einfügen: leere Zeile oder leerer Stichpunkt wird gefüllt,
+// sonst kommt eine neue Zeile unter die aktuelle (bei Stichpunkten wieder als Stichpunkt).
+// Gibt { text, pos } zurück (pos = Ende der eingefügten Zeile).
+export function zeileEinfuegen(text, pos, neu) {
+  const t = String(text === undefined || text === null ? '' : text);
+  const start = t.lastIndexOf('\n', pos - 1) + 1;
+  let ende = t.indexOf('\n', pos);
+  if (ende < 0) ende = t.length;
+  const zeile = t.slice(start, ende);
+  const punkt = /^(\t*- ?)/.exec(zeile);
+  if (!txt(zeile) || /^\t*-\s*$/.test(zeile)) {
+    const vorn = (punkt ? punkt[1].replace(/- ?$/, '- ') : '') + neu;
+    return { text: t.slice(0, start) + vorn + t.slice(ende), pos: start + vorn.length };
+  }
+  const rein = '\n' + (punkt ? punkt[1].replace(/- ?$/, '- ') : '') + neu;
+  return { text: t.slice(0, ende) + rein + t.slice(ende), pos: ende + rein.length };
+}

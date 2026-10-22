@@ -68,13 +68,15 @@ function textAnsicht(text) {
         listen.push(unter);
       }
       listen.length = ebene + 1;
-      listen[ebene].append(el('li', { text: m[2] }));
+      listen[ebene].append(el('li', { class: m[2].indexOf('👉') === 0 ? 'pk-ansicht-beschluss' : '', text: m[2] }));
       return;
     }
     listen = [];
     if (!zeile) return;
     const top = /^\d+\.[ \t]*\S/.test(zeile) || /^Sonstiges[ \t]*:?[ \t]*$/i.test(zeile);
-    box.append(el(top ? 'h4' : 'p', { class: top ? 'pk-ansicht-top' : 'pk-ansicht-absatz', text: zeile }));
+    // 👉 Beschluss: hervorgehoben (8.4)
+    const klasse = top ? 'pk-ansicht-top' : 'pk-ansicht-absatz' + (zeile.indexOf('👉') === 0 ? ' pk-ansicht-beschluss' : '');
+    box.append(el(top ? 'h4' : 'p', { class: klasse, text: zeile }));
   });
   return box;
 }
