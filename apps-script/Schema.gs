@@ -8,7 +8,12 @@ var BASIS = ['id', 'gruppe_id', 'erstellt_am', 'erstellt_von',
 // Material: typ = fest | verbrauch (leer zählt als fest)
 // Ausleihe: art = mitgenommen | zurueck | defekt
 // ToDos: text = Titel, details = weitere Informationen, meilenstein_id = Meilenstein im Projekt
-// Protokolle: Absprachen-Protokoll eines Projekts. Kommentare: freie Kommentare zu einem Projekt.
+// Protokolle: Protokoll eines Plenums, einer AG oder Aktion (Etappe 8). projekt_id und veranstaltung_id sind freiwillig.
+//   art = plenum | ag | aktion | sonstiges. rollen = eine Zeile je Rolle ("Moderation: Name").
+//   im_dokument = steht im Google-Dokument der Gruppe. vorschlaege_erledigt = Abhak-Liste wurde angelegt.
+//   Protokolle werden nie gelöscht (siehe NIE_LOESCHEN).
+// Reden: Archiv der Reden. status = entwurf | probelesen | fertig | gehalten. Werden nie gelöscht.
+// Kommentare: freie Kommentare zu einem Projekt.
 var TABELLEN = {
   Personen: ['name', 'aktiv'],
   Material: ['name', 'kategorie', 'unterkategorie', 'anzahl', 'einheit', 'ort', 'foto_id', 'notiz', 'aktiv', 'typ'],
@@ -21,7 +26,9 @@ var TABELLEN = {
   Finanzen: ['projekt_id', 'projekt_material_id', 'posten', 'art', 'menge', 'einzelpreis', 'betrag_geplant', 'betrag_tatsaechlich', 'bezahlt', 'bezahlt_von', 'datum', 'beleg_id'],
   Posts: ['projekt_id', 'titel', 'plattform', 'format', 'text', 'medien_id', 'veroeffentlichung_am', 'status', 'verantwortlich'],
   Vorlagen_ToDo: ['vorlage_name', 'schritt_text', 'tage_vorher', 'verantwortlich'],
-  Protokolle: ['projekt_id', 'datum', 'titel', 'teilnehmende', 'text'],
+  Protokolle: ['projekt_id', 'datum', 'titel', 'teilnehmende', 'text',
+               'art', 'veranstaltung_id', 'rollen', 'im_dokument', 'vorschlaege_erledigt'],
+  Reden: ['projekt_id', 'veranstaltung_id', 'titel', 'redner', 'datum', 'aktionsart', 'link', 'status', 'notiz'],
   Kommentare: ['projekt_id', 'bezug_art', 'bezug_id', 'text', 'angeheftet', 'farbe'],
   Learnings: ['projekt_id', 'aktionsart', 'text'],
   Umfragen: ['frage', 'optionen', 'ablauf_am', 'mehrfach', 'beendet', 'namentlich'],
@@ -49,10 +56,24 @@ var SYSTEM = {
 // Tabs, in die nur angehängt wird (kein Ändern, kein Löschen)
 var NUR_ANHAENGEN = ['Ausleihe'];
 
+// Tabs, deren Einträge nie gelöscht werden (Ändern bleibt erlaubt)
+var NIE_LOESCHEN = ['Protokolle', 'Reden'];
+
+// Höchstlänge für Textfelder: Standard 5000 Zeichen. Ausnahmen je "Tab.spalte".
+// Eine Sheet-Zelle fasst höchstens 50 000 Zeichen.
+var MAX_TEXT = 5000;
+var MAX_TEXT_AUSNAHMEN = { 'Protokolle.text': 20000 };
+
+function maxLaenge(tab, sp) {
+  var k = String(tab) + '.' + String(sp);
+  return MAX_TEXT_AUSNAHMEN.hasOwnProperty(k) ? MAX_TEXT_AUSNAHMEN[k] : MAX_TEXT;
+}
+
 // Spaltentypen: alles andere ist Text
 var ZAHL_SPALTEN = ['anzahl', 'menge', 'einzelpreis', 'betrag_geplant',
                     'betrag_tatsaechlich', 'budget_geplant', 'sortierung', 'tage_vorher'];
-var BOOL_SPALTEN = ['aktiv', 'geloescht', 'erledigt', 'beschafft', 'bezahlt', 'mehrfach', 'angeheftet', 'beendet', 'namentlich', 'oeffentlich'];
+var BOOL_SPALTEN = ['aktiv', 'geloescht', 'erledigt', 'beschafft', 'bezahlt', 'mehrfach', 'angeheftet', 'beendet', 'namentlich', 'oeffentlich',
+                    'im_dokument', 'vorschlaege_erledigt'];
 
 function spaltenTyp(sp) {
   if (ZAHL_SPALTEN.indexOf(sp) >= 0) return 'zahl';

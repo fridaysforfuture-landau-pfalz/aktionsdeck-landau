@@ -41,6 +41,9 @@ function verteile(p) {
     case 'projektLoeschen': return aktionProjektLoeschen(ctx, p);
     case 'buchen':          return aktionBuchen(ctx, p);
     case 'uploadImage':     return aktionUploadImage(ctx, p);
+    case 'protokollSpeichern':   return aktionProtokollSpeichern(ctx, p);
+    case 'protokollInsDokument': return aktionProtokollInsDokument(ctx, p);
+    case 'protokollInfo':        return aktionProtokollInfo(ctx, p);
     default: fehler('ungueltig', 'Unbekannte Aktion.');
   }
 }

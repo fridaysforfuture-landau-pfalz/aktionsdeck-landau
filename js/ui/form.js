@@ -90,7 +90,8 @@ function eingabe(f, wert, vorschlaege, fotoFn) {
   let extra = null;
   let zusatz = null;
   if (f.typ === 'langtext') {
-    feld = el('textarea', { class: 'feld', name: f.name, rows: '4', maxlength: '5000' });
+    // f.max: eigene Höchstlänge (zum Beispiel Protokolltext), sonst 5000 wie im Skript
+    feld = el('textarea', { class: 'feld', name: f.name, rows: '4', maxlength: String(f.max || 5000) });
   } else if (f.typ === 'auswahl') {
     feld = el('select', { class: 'feld', name: f.name });
     feld.append(el('option', { value: '', text: '–' }));
