@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.30.8 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.30.9 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.md, abgeschlossen, bleibt als Nachweis)
@@ -11,7 +11,7 @@ Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.m
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
 - Etappe 7 Mobi komplett (0.29.0 bis 0.29.12), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7, 7.8. 0.29.11 geprüft (22.10.2026), Anpassungen in 0.29.12.
-- Etappe 8 Protokoll, Reden, Learnings läuft, siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4), 8.4 Markierungen (0.30.5), 8.4a Anpassungen (0.30.6), 8.4b angelegte Einträge beim Verwerfen löschen (0.30.7), 8.5 Vorschläge aus dem Protokoll (0.30.8).
+- Etappe 8 Protokoll, Reden, Learnings läuft, siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4), 8.4 Markierungen (0.30.5), 8.4a Anpassungen (0.30.6), 8.4b angelegte Einträge beim Verwerfen löschen (0.30.7), 8.5 Vorschläge aus dem Protokoll (0.30.8), 8.5a Anpassungen (0.30.9).
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
 ## Etappe 7 (Mobi), abgeschlossen mit 0.29.12
@@ -132,7 +132,10 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Öffnet sich nach dem fertigen Speichern, wenn Markierungen ohne ✔ im Text stehen, und über "Vorschläge ansehen (n)" im Detail (fertige Protokolle, im Dokument oder nicht; nicht bei Entwürfen). Ist vorschlaege_erledigt TRUE: "Vorschläge noch einmal ansehen" mit Rückfrage.
   - Abschnitte (leere fehlen): ToDos (Text, Verantwortlich, Frist, Projekt vom Protokoll), Learnings nach Aktionsart (Text, Aktionsart, Projekt), Termine (Titel, Datum, Uhrzeit, Ort, intern/extern; gleiche Veranstaltung am selben Tag = "Gibt es schon", nicht angekreuzt; "Nächstes Plenum" nimmt Name, Ort und Ende der Plenums-Vorlage), Mitteilungen (angeheftet), Umfragen (Antworten, Frist, mehrere, namentlich), nicht lesbare Zeilen (grau mit Grund). Zeilen mit ✔ stehen nicht drin (Hinweis mit Zahl).
   - "Angekreuzte anlegen": je Tabelle ein batchCreate, Ergebnis je Bereich; bereits geklappte Bereiche werden bei einem zweiten Versuch nicht doppelt angelegt. Danach update vorschlaege_erledigt = TRUE ohne Konfliktprüfung. details/beschreibung = "Aus dem Protokoll vom …".
-- Nächster Schritt: 8.6 (Reden-Archiv, 0.30.9). Danach 8.7 (0.30.10).
+- 8.4b und 8.5 geprüft (22.10.2026): alles bestätigt bis auf zwei Wünsche, umgesetzt in 8.5a (0.30.9):
+  - Im Protokoll-Formular heißt "Abbrechen" jetzt "Schließen" (der Entwurf bleibt).
+  - Markierungen auch als Wort mit Doppelpunkt am Zeilenanfang (auch nach "- "): "ToDo:" (auch "To-Do:", "Aufgabe:"), "Learning:", "Termin:", "Mitteilung:", "Umfrage:", "Beschluss:"; Groß- und Kleinschreibung egal (MARKEN_WOERTER in protokoll-rechnen.js). Ohne Doppelpunkt wird nichts gedeutet.
+- Nächster Schritt: 8.6 (Reden-Archiv, 0.30.10). Danach 8.7 (0.30.11).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.

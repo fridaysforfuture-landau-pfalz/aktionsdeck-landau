@@ -399,6 +399,7 @@ export function stichpunktRueck(text, pos) {
 
 // ---- Markierungen im Protokolltext (8.4) ----
 // Gelesen werden NUR Zeilen, die mit einem dieser Symbole beginnen (davor darf ein Stichpunkt „- “ stehen).
+// Seit 0.30.9 geht statt des Symbols auch das Wort mit Doppelpunkt: „ToDo: …“, „Learning: …“ usw.
 // Fließtext wird nie gedeutet, es gibt keine KI.
 //   ☐ @Name: Aufgabe (bis TT.MM.)        -> ToDo (ohne @Name = Hut frei, mehrere: @Anna @Ben:)
 //   💡 Aktionsart: Text                  -> Learning (ohne Aktionsart: die des verknüpften Projekts)
@@ -472,11 +473,26 @@ function zeitAus(s) {
 }
 
 // Zeile ohne Stichpunkt davor; { art, rest } oder null
+// Markierung auch als Wort am Zeilenanfang (Wunsch 22.10.2026): „ToDo: …“, „Learning: …“, „Termin: …“,
+// „Mitteilung: …“, „Umfrage: …“, „Beschluss: …“ (Groß- und Kleinschreibung egal, Doppelpunkt nötig).
+const MARKEN_WOERTER = [
+  { art: 'todo', muster: /^(?:to-?do|aufgabe)\s*:\s*/i },
+  { art: 'learning', muster: /^learnings?\s*:\s*/i },
+  { art: 'termin', muster: /^termin\s*:\s*/i },
+  { art: 'mitteilung', muster: /^mitteilung\s*:\s*/i },
+  { art: 'umfrage', muster: /^umfrage\s*:\s*/i },
+  { art: 'beschluss', muster: /^beschluss\s*:\s*/i }
+];
+
 function markeVon(zeile) {
   const z = zeile.replace(/^\t*-\s*/, '').replace(/^\s+/, '');
   for (let i = 0; i < MARKEN.length; i++) {
     const k = MARKEN[i].zeichen;
-    if (z.indexOf(k) === 0) return { art: MARKEN[i].art, rest: txt(z.slice(k.length).replace(/^️/, '')) };
+    if (z.indexOf(k) === 0) return { art: MARKEN[i].art, rest: txt(z.slice(k.length).replace(/^\uFE0F/, '')) };
+  }
+  for (let i = 0; i < MARKEN_WOERTER.length; i++) {
+    const m = MARKEN_WOERTER[i].muster.exec(z);
+    if (m) return { art: MARKEN_WOERTER[i].art, rest: txt(z.slice(m[0].length)) };
   }
   return null;
 }
