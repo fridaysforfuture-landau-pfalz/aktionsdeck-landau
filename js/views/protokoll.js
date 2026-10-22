@@ -20,9 +20,9 @@ import { istWahr } from '../schema.js';
 import { normDatum, datumText, kurz } from './todos-rechnen.js';
 import { sichereUrl } from './kalender-rechnen.js';
 import {
-  artText, imDokument, sortiereProtokolle, nachJahr, passtSuche, kopierText, einfuegeHinweis
+  angelegtLesen, artText, imDokument, sortiereProtokolle, nachJahr, passtSuche, kopierText, einfuegeHinweis
 } from './protokoll-rechnen.js';
-import { baueProtokollFormular, entwurfInfo, verwirfEntwurf } from './protokoll-eintrag.js';
+import { baueProtokollFormular, entwurfInfo, verwirfEntwurf, loescheAngelegte } from './protokoll-eintrag.js';
 import { baueTopSammlung, offeneTops, nimmProtokollWunsch } from './tops.js';
 
 const NEUESTE = 2;
@@ -331,20 +331,27 @@ export async function render(container, ctx) {
 
   // Gemeinsamen Entwurf für alle verwerfen (fertige Protokolle sperrt das Skript)
   async function entwurfVerwerfen(p) {
-    if (!window.confirm('Den gemeinsamen Entwurf „' + (txt(p.titel) || 'Protokoll') + '“ für alle verwerfen? Das geht nicht rückgängig.')) return;
+    // Über die Knöpfe angelegte Einträge: aus dem Sheet und aus einer eigenen Fassung auf dem Gerät
+    const e = entwurfInfo(s.gruppe_id);
+    const eigen = e && e.serverId === String(p.id);
+    const liste = angelegtLesen(txt(p.angelegt) + '\n' + (eigen ? e.angelegt : ''));
+    const mit = liste.length
+      ? '\n\nAuch die ' + liste.length + ' über die Knöpfe angelegten Einträge (ToDos, Learnings, Termine …) werden gelöscht.'
+      : '';
+    if (!window.confirm('Den gemeinsamen Entwurf „' + (txt(p.titel) || 'Protokoll') + '“ für alle verwerfen? Das geht nicht rückgängig.' + mit)) return;
     try {
       await api('delete', { tabelle: 'Protokolle', id: p.id, bekannt: p.geaendert_am }, s.token);
-    } catch (e) {
-      if (ctx.behandleFehler(e)) return;
-      toast(e.code === 'konflikt' ? 'Jemand anderes hat den Entwurf gerade geändert. Bitte neu öffnen.' : e.message);
+    } catch (err) {
+      if (ctx.behandleFehler(err)) return;
+      toast(err.code === 'konflikt' ? 'Jemand anderes hat den Entwurf gerade geändert. Bitte neu öffnen.' : err.message);
       laden(false);
       return;
     }
+    const rest = await loescheAngelegte(liste, s.token);
     // Gehört der Entwurf auf diesem Gerät dazu, ist er auch weg
-    const e = entwurfInfo(s.gruppe_id);
-    if (e && e.serverId === String(p.id)) verwirfEntwurf(s.gruppe_id);
+    if (eigen) verwirfEntwurf(s.gruppe_id);
     if (formular && offenMerk && offenMerk.id === String(p.id)) formular.schliessen();
-    toast('Entwurf verworfen.');
+    toast(rest ? 'Entwurf verworfen. ' + rest + ' Einträge konnten nicht gelöscht werden.' : 'Entwurf verworfen.');
     schliesseDetail(ctx.detail);
     await laden(false);
   }

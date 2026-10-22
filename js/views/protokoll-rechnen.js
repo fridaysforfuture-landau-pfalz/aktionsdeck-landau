@@ -623,3 +623,24 @@ export function zeileEinfuegen(text, pos, neu) {
   const rein = '\n' + (punkt ? punkt[1].replace(/- ?$/, '- ') : '') + neu;
   return { text: t.slice(0, ende) + rein + t.slice(ende), pos: ende + rein.length };
 }
+
+// ---- Über die Knöpfe angelegte Einträge (8.4b) ----
+// Spalte Protokolle.angelegt: eine Zeile je Eintrag „Tabelle:id“ (zum Beispiel „ToDos:i1a2b3c“).
+// Wird ein Entwurf verworfen, werden diese Einträge mitgelöscht.
+
+const ANGELEGT_TABS = ['ToDos', 'Learnings', 'Veranstaltungen', 'Mitteilungen', 'Umfragen'];
+
+export function angelegtLesen(text) {
+  const l = [];
+  String(text === undefined || text === null ? '' : text).split(/\r?\n/).forEach(function (z) {
+    const m = /^([A-Za-z_]+):(\S+)$/.exec(txt(z));
+    if (m && ANGELEGT_TABS.indexOf(m[1]) >= 0 && !l.some(function (x) { return x.tabelle === m[1] && x.id === m[2]; })) {
+      l.push({ tabelle: m[1], id: m[2] });
+    }
+  });
+  return l;
+}
+
+export function angelegtText(liste) {
+  return (liste || []).map(function (x) { return x.tabelle + ':' + x.id; }).join('\n');
+}
