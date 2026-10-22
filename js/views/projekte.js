@@ -23,6 +23,7 @@ import { baueTodoTeil } from './projekt-todos.js';
 import { baueMaterialTeil } from './projekt-material.js';
 import { baueFinanzTeil } from './projekt-finanzen.js';
 import { baueLearningTeil, baueLearningUebersicht } from './projekt-learnings.js';
+import { baueRedenTeil } from './projekt-reden.js';
 import { baueIdeenTeil } from './ideen.js';
 import { baueMobiTeil } from './mobi-plan.js';
 import { STANDARD_TODOS, faelligAus } from '../vorlagen.js';
@@ -360,6 +361,17 @@ export async function render(container, ctx) {
       },
       neuLaden: function () { return laden(false); }
     });
+    const redenKey = id + ':reden';
+    const redenTeil = baueRedenTeil({
+      kurzname: s.kurzname,
+      projekt: p,
+      holeDaten: function () { return daten; },
+      offen: !!merk.teile[redenKey],
+      beiToggle: function (o) {
+        if (o) merk.teile[redenKey] = true;
+        else delete merk.teile[redenKey];
+      }
+    });
     const termine = terminText(p);
     d.append(
       el('summary', null,
@@ -408,7 +420,8 @@ export async function render(container, ctx) {
         materialTeil,
         mobiTeil,
         finanzTeil,
-        learnTeil
+        learnTeil,
+        redenTeil
       )
     );
     bloecke[id] = d;
@@ -764,7 +777,7 @@ export async function render(container, ctx) {
         s.gruppe_id + ':projekte',
         async function () {
           const r = await api('listMehrere', {
-              tabellen: ['Projekte', 'ToDos', 'Meilensteine', 'Material', 'Ausleihe', 'Projekt_Material', 'Finanzen', 'Learnings', 'Ideen', 'Kommentare', 'Mobi_Plan']
+              tabellen: ['Projekte', 'ToDos', 'Meilensteine', 'Material', 'Ausleihe', 'Projekt_Material', 'Finanzen', 'Learnings', 'Ideen', 'Kommentare', 'Mobi_Plan', 'Reden']
           }, s.token);
           const t = (r && r.tabellen) || {};
           return {
@@ -778,7 +791,8 @@ export async function render(container, ctx) {
             learnings: t.Learnings || [],
             ideen: t.Ideen || [],
             kommentare: t.Kommentare || [],
-            mobi: t.Mobi_Plan || []
+            mobi: t.Mobi_Plan || [],
+            reden: t.Reden || []
           };
         },
         zeigen,

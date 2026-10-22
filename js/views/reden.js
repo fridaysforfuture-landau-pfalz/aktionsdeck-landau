@@ -5,7 +5,7 @@
 // Klick öffnet die Rede im Detailbereich: alle Felder, „Dokument öffnen“, Status weiterschalten, „Bearbeiten“,
 // darunter die Kommentare zum Probelesen (bezug_art „rede“). Es gibt kein Löschen.
 //
-// baueReden(container, ctx) -> Promise<{ neu(), laden(), weg() }>
+// baueReden(container, ctx) -> Promise<{ neu(vorgabe), oeffne(id), laden(), weg() }>
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -272,6 +272,7 @@ export async function baueReden(container, ctx) {
 
   return {
     neu: function (vorgabe) { formularOeffnen(null, vorgabe); },
+    oeffne: function (id) { const r = finde(id); if (r) lesen(r); else toast('Diese Rede gibt es nicht mehr.'); },
     laden: function () { return laden(false); },
     weg: function () { if (offeneId) schliesseDetail(ctx.detail); offeneId = ''; }
   };

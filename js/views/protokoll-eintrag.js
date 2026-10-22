@@ -14,7 +14,7 @@
 // baueProtokollFormular(opt) -> { el, setzeTops(liste), hatAenderungen(), schliessen(), weg(), istNeu }
 // opt: { ctx, token, gruppeId, kurzname,
 //        daten: { protokolle, projekte, veranstaltungen, personen, vorlagen }, tops (offene TOPs),
-//        eintrag (null = neu), ausEntwurf (true = Werte aus dem Entwurf), beiZu(),
+//        eintrag (null = neu), ausEntwurf (true = Werte aus dem Entwurf), vorgabe (für ein neues Protokoll), beiZu(),
 //        kannEntwurf (Skript kennt gemeinsame Entwürfe, aus protokollInfo), nachVerwerfen(),
 //        nachSpeichern(eintrag, ergebnis) -> ergebnis von protokollSpeichern, bei Ändern null }
 
@@ -74,14 +74,18 @@ export function verwirfEntwurf(gruppeId) {
 }
 
 // Startwerte für ein neues Protokoll
+// opt.vorgabe (freiwillig, 8.7: aus dem Kalender): { datum, art, titel, bezug }
 function neueWerte(opt) {
-  const datum = heuteIso();
+  const v = opt.vorgabe || {};
+  const datum = normDatum(v.datum) || heuteIso();
+  const art = txt(v.art) || 'plenum';
   const rollen = {};
   if (rollenFuer(opt.kurzname).indexOf('Protokoll') >= 0) rollen.Protokoll = getName();
   const np = naechstesPlenum(opt.daten.vorlagen, STANDARD[txt(opt.kurzname).toLowerCase()], datum);
   return {
-    titel: autoTitel('plenum', datum), datum: datum, art: 'plenum', teilnehmende: '', rollen: rollen,
-    bezug: '', text: plenumGliederung(), np_datum: np ? np.datum : '', np_zeit: np ? np.zeit : ''
+    titel: txt(v.titel) || autoTitel(art, datum), datum: datum, art: art, teilnehmende: '', rollen: rollen,
+    bezug: txt(v.bezug), text: art === 'plenum' ? plenumGliederung() : '',
+    np_datum: np && art === 'plenum' ? np.datum : '', np_zeit: np && art === 'plenum' ? np.zeit : ''
   };
 }
 

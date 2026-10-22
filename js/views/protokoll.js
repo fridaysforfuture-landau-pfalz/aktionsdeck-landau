@@ -460,11 +460,11 @@ export async function render(container, ctx) {
     neuKnopf.hidden = false;
   }
 
-  function formularBauen(p, ausEntwurf) {
+  function formularBauen(p, ausEntwurf, vorgabe) {
     leeren(boxForm);
     formular = baueProtokollFormular({
       ctx: ctx, token: s.token, gruppeId: s.gruppe_id, kurzname: s.kurzname,
-      daten: daten, tops: offeneTops(tops), eintrag: p || null, ausEntwurf: ausEntwurf,
+      daten: daten, tops: offeneTops(tops), eintrag: p || null, ausEntwurf: ausEntwurf, vorgabe: vorgabe || null,
       beiZu: formularZu,
       kannEntwurf: !!(info && info.entwurf),
       beiZwischenspeichern: function () { laden(false); },
@@ -506,7 +506,7 @@ export async function render(container, ctx) {
   }
 
   // Entwurf vorhanden: Frage direkt im Inhalt
-  function entwurfFragen(e) {
+  function entwurfFragen(e, vorgabe) {
     leeren(boxForm);
     neuKnopf.hidden = true;
     boxForm.append(el('section', { class: 'karte pk-entwurf-frage' },
@@ -526,7 +526,7 @@ export async function render(container, ctx) {
           onclick: function () {
             if (!window.confirm('Den Entwurf wirklich verwerfen? Das geht nicht rückgängig.')) return;
             verwirfEntwurf(s.gruppe_id);
-            formularBauen(null, false);
+            formularBauen(null, false, vorgabe);
           }
         }),
         el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abbrechen', onclick: formularZu })
@@ -535,8 +535,8 @@ export async function render(container, ctx) {
     zumFormular();
   }
 
-  // p = null: neues Protokoll. Sonst ändern (nur solange nicht im Dokument).
-  function formularOeffnen(p) {
+  // p = null: neues Protokoll (vorgabe freiwillig, zum Beispiel aus dem Kalender). Sonst ändern.
+  function formularOeffnen(p, vorgabe) {
     if (formular) {
       if (!p && formular.istNeu) { zumFormular(); return; }
       if (formular.hatAenderungen() && !window.confirm(formular.istNeu
@@ -547,9 +547,43 @@ export async function render(container, ctx) {
     // Am Handy verdeckt das Detail den Inhalt: erst schließen
     if (p && ctx.detail && window.matchMedia('(max-width: 959px)').matches) schliesseDetail(ctx.detail);
     const e = p ? null : entwurfInfo(s.gruppe_id);
-    if (e) entwurfFragen(e);
+    if (e) entwurfFragen(e, vorgabe);
     // Gemeinsamer Entwurf: eine eigene, neuere Fassung auf dem Gerät wird mit übernommen
-    else formularBauen(p, !!p && istEntwurf(p));
+    else formularBauen(p, !!p && istEntwurf(p), vorgabe);
+  }
+
+  // Unterpunkt der Adresse (8.7): #/g/<kurz>/protokoll/<unter>
+  //   reden · rede:<id> · rede-neu:p:<projekt-id> · protokoll:<id> · protokoll-neu:v:<veranstaltung-id>
+  async function unterAusfuehren(unter) {
+    const u = txt(unter);
+    if (!u) return false;
+    // Adresse zurücksetzen, damit ein Neuaufbau das nicht noch einmal macht
+    try { history.replaceState(history.state, '', '#/g/' + encodeURIComponent(s.kurzname) + '/protokoll'); } catch (e) { /* ignorieren */ }
+    if (u === 'reden' || u.indexOf('rede:') === 0 || u.indexOf('rede-neu:') === 0) {
+      await ansichtSetzen('reden');
+      if (u.indexOf('rede:') === 0) reden.oeffne(u.slice(5));
+      if (u.indexOf('rede-neu:p:') === 0) reden.neu({ projekt_id: u.slice(11) });
+      if (u.indexOf('rede-neu:v:') === 0) reden.neu({ veranstaltung_id: u.slice(11) });
+      return true;
+    }
+    if (ansicht === 'reden') await ansichtSetzen('protokolle');
+    if (u.indexOf('protokoll:') === 0) {
+      const p = finde(u.slice(10));
+      if (p) lesen(p);
+      return true;
+    }
+    if (u.indexOf('protokoll-neu:v:') === 0) {
+      const id = u.slice(16);
+      const v = daten.veranstaltungen.find(function (x) { return String(x.id) === id; });
+      if (!v) { toast('Diese Veranstaltung gibt es nicht mehr.'); return true; }
+      const plenum = /^plenum/i.test(txt(v.titel));
+      formularOeffnen(null, {
+        datum: normDatum(v.datum), art: plenum ? 'plenum' : 'sonstiges',
+        titel: plenum ? '' : 'Protokoll ' + txt(v.titel), bezug: 'v:' + id
+      });
+      return true;
+    }
+    return false;
   }
 
   // ---- Laden ----
@@ -644,6 +678,7 @@ export async function render(container, ctx) {
   // Zuletzt gewählte Ansicht (bleibt beim Reiterwechsel)
   if (ansicht === 'reden') await ansichtSetzen('reden');
   // Formular wieder öffnen (Reiterwechsel) oder neu öffnen (Knopf „+ Protokoll“ auf dem Start)
+  if (await unterAusfuehren(ctx.unter)) return;
   if (!formularWiederOeffnen() && wunsch) formularOeffnen(null);
   // Marken „noch nicht im Dokument“ hängen vom Modus ab
   zeichne();

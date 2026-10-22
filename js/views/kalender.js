@@ -1045,6 +1045,14 @@ export async function render(container, ctx) {
           class: 'knopf knopf-hell', type: 'button', text: 'In Mobi einplanen',
           onclick: function () { fenster.schliessen(); inMobiEinplanen(v); }
         }),
+        // Interne Veranstaltung (zum Beispiel Plenum): Protokoll dazu schreiben (8.7)
+        (txt(v.art) || 'intern') === 'intern' ? el('button', {
+          class: 'knopf knopf-hell', type: 'button', text: 'Protokoll schreiben',
+          onclick: function () {
+            fenster.schliessen();
+            location.hash = basis + 'protokoll/protokoll-neu:v:' + encodeURIComponent(v.id);
+          }
+        }) : null,
         el('button', {
           class: 'knopf knopf-hell', type: 'button',
           text: aufsBrett(v) ? 'Als Mitteilung anheften' : 'An Pinnwand heften',

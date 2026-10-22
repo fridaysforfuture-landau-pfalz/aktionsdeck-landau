@@ -199,8 +199,8 @@ async function route() {
     const erlaubt = sichtbareTabs().map(function (t) { return t.id; }).concat('mehr');
     ctx.tab = erlaubt.indexOf(teile[2]) >= 0 ? teile[2] : 'start';
     ctx.tabLabel = tabLabel(ctx.tab);
-    // Unterpunkt, z. B. #/g/fff/projekte/<projekt-id> (nur für Projekte)
-    ctx.unter = ctx.tab === 'projekte' ? (teile[3] || '') : '';
+    // Unterpunkt, z. B. #/g/fff/projekte/<projekt-id> oder #/g/fff/protokoll/rede:<id> (Projekte und Dokumentation)
+    ctx.unter = ctx.tab === 'projekte' || ctx.tab === 'protokoll' ? (teile[3] || '') : '';
 
     const geruest = baueGeruest(container, ctx);
     ctx.detail = geruest.detail;
