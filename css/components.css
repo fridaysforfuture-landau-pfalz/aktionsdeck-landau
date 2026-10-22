@@ -2752,3 +2752,17 @@ p.notiz.erledigt {
 .pk-marken-uebersicht { display: grid; gap: 2px; font-size: 13px; }
 .pk-marken-fehler { font-size: 13px; }
 .pk-ansicht-beschluss { font-weight: 700; }
+
+/* ---- 0.30.8: Vorschläge aus dem Protokoll ---- */
+.pk-vorschlaege { margin: 16px 0; border-top: 5px solid var(--gruppe); display: grid; gap: 8px; }
+.pk-vorschlaege h2 { margin: 0; }
+.pk-vorschlag-teil { display: grid; gap: 6px; }
+.pk-vorschlag { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--rand); }
+.pk-vorschlag .auswahl-box { width: 22px; height: 22px; margin-top: 10px; flex: none; }
+.pk-vorschlag-felder { display: grid; gap: 6px; flex: 1; min-width: 0; }
+.pk-vorschlag-reihe { display: flex; flex-wrap: wrap; gap: 6px; }
+.pk-vorschlag-reihe .feld { flex: 1 1 140px; min-width: 0; }
+.pk-vorschlag-quelle { font-size: 12px; overflow-wrap: anywhere; }
+.pk-vorschlag-aus .pk-vorschlag-felder { opacity: 0.55; }
+.pk-vorschlag-art { margin: 8px 0 0; font-size: 15px; color: var(--gruppe); }
+.pk-vorschlag-fehler { margin: 0; font-size: 13px; }
