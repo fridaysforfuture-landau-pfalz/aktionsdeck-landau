@@ -11,6 +11,7 @@ Schritt 8.0 darfst du sofort bauen. Auch 8.1 darfst du bauen. Frage D ist am 22.
 8.4a (Version 0.30.6): **Entscheidung der Person:** Die Knöpfe legen den Eintrag sofort an (Zeile mit „✔“). 8.5 behandelt nur noch Zeilen ohne ✔ (von Hand getippt oder „Nur in den Text“). Die `@`-Auswahl entfällt. Gemeinsame Entwürfe dürfen verworfen werden. Versionen danach: 8.5 = 0.30.7, 8.6 = 0.30.8, 8.7 = 0.30.9.
 8.4b (Version 0.30.7): Spalte `Protokolle.angelegt`, angelegte Einträge werden beim Verwerfen eines Entwurfs mitgelöscht (Entscheidung der Person). Versionen danach: 8.5 = 0.30.8, 8.6 = 0.30.9, 8.7 = 0.30.10.
 8.5 (Version 0.30.8): Vorschläge im Inhalt statt Fenster, nur Zeilen ohne ✔, auch für Protokolle im Dokument.
+8.5a (Version 0.30.9): Markierungen auch als Wort („ToDo:“ usw.), „Schließen“ statt „Abbrechen“. Versionen danach: 8.6 = 0.30.10, 8.7 = 0.30.11.
 **Änderungen der Person (22.10.2026):** Der Reiter heißt in der Anzeige **„Dokumentation“** (Kennung bleibt `protokoll`). GP hat jetzt ebenfalls ein Google-Dokument (`PROTOKOLL_DOK_g2`), Entscheidung A gilt für GP damit nicht mehr.
 
 ## 1. Ziel

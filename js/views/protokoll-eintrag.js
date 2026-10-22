@@ -473,7 +473,7 @@ export function baueProtokollFormular(opt) {
   }
 
   const konfliktText = 'Jemand anderes hat diesen Entwurf inzwischen gespeichert. Deine Fassung bleibt auf diesem Gerät. ' +
-    'Tipp: „Entwurf kopieren“, dann „Abbrechen“ und den Entwurf neu öffnen.';
+    'Tipp: „Entwurf kopieren“, dann „Schließen“ und den Entwurf neu öffnen.';
 
   // Gemeinsamen Entwurf ins Sheet (nicht ins Dokument). automatisch = vom 2-Minuten-Takt
   async function zwischenspeichern(automatisch) {
@@ -571,7 +571,7 @@ export function baueProtokollFormular(opt) {
       if (opt.ctx.behandleFehler(e)) return;
       if (e.code === 'konflikt') {
         fehler.textContent = neu ? konfliktText
-          : 'Jemand anderes hat dieses Protokoll gerade geändert. Klicke auf „Abbrechen“ und öffne es noch einmal.';
+          : 'Jemand anderes hat dieses Protokoll gerade geändert. Klicke auf „Schließen“ und öffne es noch einmal.';
       } else if (e.code === 'nicht_gefunden') {
         fehler.textContent = e.message;
       } else {
@@ -609,7 +609,7 @@ export function baueProtokollFormular(opt) {
         } catch (e) {
           if (opt.ctx.behandleFehler(e)) return;
           fehler.textContent = e.code === 'konflikt'
-            ? 'Jemand anderes hat den Entwurf gerade geändert. Bitte „Abbrechen“ und neu öffnen.'
+            ? 'Jemand anderes hat den Entwurf gerade geändert. Bitte „Schließen“ und neu öffnen.'
             : 'Nicht verworfen: ' + e.message;
           return;
         }
@@ -667,7 +667,7 @@ export function baueProtokollFormular(opt) {
       'Rücktaste auf einem leeren Stichpunkt macht normalen Text daraus. Mit Esc und dann Tab verlässt du das Feld.' }),
     el('p', { class: 'leise pk-hinweis', text:
       'Markierungen: Knöpfe über dem Feld (am PC auch Strg+Alt+T, L, V, M, U, B). ' +
-      'Die Knöpfe legen den Eintrag gleich an (Zeile mit ✔). Nur Zeilen, die mit ☐ 💡 📅 📌 📊 👉 beginnen, werden gelesen.' }),
+      'Die Knöpfe legen den Eintrag gleich an (Zeile mit ✔). Gelesen werden nur Zeilen, die mit ☐ 💡 📅 📌 📊 👉 oder mit „ToDo:“, „Learning:“, „Termin:“, „Mitteilung:“, „Umfrage:“, „Beschluss:“ beginnen.' }),
     el('p', { class: 'leise pk-hinweis', text:
       'Schreibe nichts auf, was Dritte persönlich betrifft (Namen von Personen außerhalb der Gruppe, Gesundheit, Adressen).' }),
     npBox,
@@ -690,7 +690,8 @@ export function baueProtokollFormular(opt) {
       : el('p', { class: 'leise', text: 'Du kannst das Protokoll ändern, solange es noch nicht im Dokument steht.' }),
     fehler,
     el('div', { class: 'form-knoepfe' }, speichernKnopf, neu ? zwKnopf : null,
-      el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abbrechen', onclick: schliessen }),
+      // „Schließen“ statt „Abbrechen“: Der Entwurf bleibt erhalten (Wunsch 22.10.2026)
+      el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Schließen', onclick: schliessen }),
       neu ? verwerfenKnopf : null)
   );
   form.addEventListener('input', merken);
