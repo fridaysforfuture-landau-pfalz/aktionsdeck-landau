@@ -2737,3 +2737,18 @@ p.notiz.erledigt {
   /* Etwas mehr Platz, damit in ToDos und TOPs ein paar Einträge zu sehen sind */
   .dash-projekte { min-height: 480px; }
 }
+
+/* ---- 0.30.5: Markierungen im Protokolltext ---- */
+.pk-marken-leiste { display: flex; flex-wrap: wrap; gap: 6px; }
+.pk-marke-knopf { padding: 0 12px; font-size: 14px; }
+.pk-marke-panel { margin: 0; padding: 12px; border-left: 4px solid var(--gruppe); }
+.pk-marke-form { display: grid; gap: 10px; }
+.pk-marke-form h3 { margin: 0; }
+.pk-einfuegen-listen { display: grid; gap: 8px; max-height: 360px; overflow-y: auto; }
+@media (min-width: 960px) {
+  .pk-einfuegen-listen { grid-template-columns: 1fr 1fr; }
+}
+.pk-at-liste { margin: 4px 0; align-items: center; }
+.pk-marken-uebersicht { display: grid; gap: 2px; font-size: 13px; }
+.pk-marken-fehler { font-size: 13px; }
+.pk-ansicht-beschluss { font-weight: 700; }
