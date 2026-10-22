@@ -1,7 +1,9 @@
 // js/views/protokoll.js
 // Reiter „Dokumentation“ (Kennung „protokoll“, Etappe 8). Aufbau seit 8.3a:
-// Kopf mit „+ Protokoll“, Suche (Titel, Text, Anwesend), TOP-Sammlung (js/views/tops.js),
-// die zwei neuesten Protokolle, darunter das Formular (direkt im Inhalt, kein Fenster), darunter die älteren.
+// Kopf mit „+ Protokoll“, zwei Spalten (links Suche und Umschalter Protokolle · Reden, rechts TOP-Sammlung,
+// js/views/tops.js), gemeinsame Entwürfe (seit 0.30.4), die zwei neuesten Protokolle, darunter das Formular
+// (direkt im Inhalt, kein Fenster), darunter die älteren. Der Protokolltext wird wie im Dokument gezeigt
+// (TOPs fett in Gruppenfarbe, Stichpunkte eingerückt).
 // Klick auf ein Protokoll öffnet es im Detailbereich (PC rechts, Handy Vollbild mit „← Zurück“).
 // Das Formular bleibt dabei offen, so lässt sich aus alten Protokollen kopieren.
 // Im Detail: „Protokoll kopieren“, „Im Dokument bearbeiten“ (nur wenn es im Dokument steht),
@@ -14,6 +16,7 @@ import { ladeMitCache } from '../cache.js';
 import { zeigeDetail, schliesseDetail } from '../ui/detail.js';
 import { toast } from '../ui/toast.js';
 import { zeitText } from './material-rechnen.js';
+import { istWahr } from '../schema.js';
 import { normDatum, datumText, kurz } from './todos-rechnen.js';
 import { sichereUrl } from './kalender-rechnen.js';
 import {
@@ -42,6 +45,38 @@ function linkKnopf(text, url) {
   return el('a', {
     class: 'knopf knopf-hell', href: url, target: '_blank', rel: 'noopener noreferrer', text: text
   });
+}
+
+// Protokolltext wie im Dokument: TOP-Zeilen („1. Titel“, „Sonstiges“) als fette Überschrift in Gruppenfarbe,
+// Stichpunkte („- “, Tabs davor = tiefer) als Liste, übrige Zeilen als Absatz. Nur textContent.
+function textAnsicht(text) {
+  const box = el('div', { class: 'protokoll-text pk-ansicht' });
+  let listen = [];   // offene Listen je Ebene
+  String(text).split(/\r?\n/).forEach(function (roh) {
+    const zeile = roh.replace(/\s+$/, '');
+    const m = /^(\t*)- ?(.*)$/.exec(zeile);
+    if (m && zeile.indexOf('-') === m[1].length) {
+      const ebene = Math.min(m[1].length, 6);
+      if (!listen.length) {
+        listen = [el('ul', { class: 'pk-ansicht-liste' })];
+        box.append(listen[0]);
+      }
+      while (listen.length - 1 < ebene) {
+        const unter = el('ul', { class: 'pk-ansicht-liste' });
+        const letzter = listen[listen.length - 1].lastElementChild;
+        (letzter || listen[listen.length - 1]).append(unter);
+        listen.push(unter);
+      }
+      listen.length = ebene + 1;
+      listen[ebene].append(el('li', { text: m[2] }));
+      return;
+    }
+    listen = [];
+    if (!zeile) return;
+    const top = /^\d+\.[ \t]*\S/.test(zeile) || /^Sonstiges[ \t]*:?[ \t]*$/i.test(zeile);
+    box.append(el(top ? 'h4' : 'p', { class: top ? 'pk-ansicht-top' : 'pk-ansicht-absatz', text: zeile }));
+  });
+  return box;
 }
 
 export async function render(container, ctx) {
@@ -74,6 +109,7 @@ export async function render(container, ctx) {
     fehlerText: function () { return topsFehler; }
   });
   const neuKnopf = el('button', { class: 'knopf', type: 'button', text: '+ Protokoll', onclick: function () { formularOeffnen(null); } });
+  const boxEntwuerfe = el('div', { class: 'protokoll-liste' });
   const boxNeueste = el('div', { class: 'protokoll-liste' });
   const boxForm = el('div', { class: 'protokoll-formplatz' });
   const boxRest = el('div', { class: 'protokoll-liste' });
@@ -83,9 +119,21 @@ export async function render(container, ctx) {
       el('h1', { text: 'Dokumentation' }),
       el('div', { class: 'kopf-knoepfe' }, neuKnopf)
     ),
-    el('div', { class: 'filterzeile' }, suche),
-    el('section', { class: 'karte top-karte' }, el('h2', { text: 'TOPs fürs nächste Plenum' }), sammlung.el),
-    status,
+    el('div', { class: 'doku-kopf' },
+      el('div', { class: 'doku-links' },
+        suche,
+        el('div', { class: 'doku-umschalter', role: 'group', 'aria-label': 'Protokolle oder Reden' },
+          el('button', { class: 'knopf', type: 'button', text: 'Protokolle', 'aria-pressed': 'true' }),
+          el('button', {
+            class: 'knopf knopf-hell', type: 'button', text: 'Reden (bald)', disabled: '',
+            title: 'Das Reden-Archiv kommt mit Schritt 8.6.'
+          })
+        ),
+        status
+      ),
+      el('section', { class: 'karte top-karte' }, el('h2', { text: 'TOPs fürs nächste Plenum' }), sammlung.el)
+    ),
+    boxEntwuerfe,
     boxNeueste,
     boxForm,
     boxRest
@@ -106,7 +154,15 @@ export async function render(container, ctx) {
     return teile.join(' · ');
   }
 
+  function istEntwurf(p) {
+    return istWahr(p.entwurf) && !imDokument(p);
+  }
+
   function dokumentMarke(p) {
+    if (istEntwurf(p)) {
+      return el('span', { class: 'protokoll-marke protokoll-entwurf', text: '✎ Entwurf von ' + (txt(p.geaendert_von) || 'unbekannt') +
+        (isNaN(new Date(p.geaendert_am).getTime()) ? '' : ', ' + zeitText(p.geaendert_am).slice(0, -3)) });
+    }
     if (imDokument(p)) return el('span', { class: 'protokoll-marke protokoll-ok', text: '✔ im Dokument' });
     // Nur bei Gruppen mit Dokument ist „noch nicht im Dokument“ eine Warnung
     if (info && info.modus === 'dokument') {
@@ -149,14 +205,25 @@ export async function render(container, ctx) {
 
   function zeichne() {
     statusZeigen();
+    leeren(boxEntwuerfe);
     leeren(boxNeueste);
     leeren(boxRest);
     if (!meta) return;
-    if (!daten.protokolle.length) {
+    const entwuerfe = sortiereProtokolle(daten.protokolle.filter(function (p) {
+      return istEntwurf(p) && passtSuche(p, suche.value);
+    }));
+    if (entwuerfe.length) {
+      boxEntwuerfe.append(
+        el('h2', { class: 'liste-titel protokoll-jahr', text: 'Gemeinsame Entwürfe (' + entwuerfe.length + ')' }),
+        el('ul', { class: 'dash-todo-liste' }, ...entwuerfe.map(zeileVon))
+      );
+    }
+    const fertige = daten.protokolle.filter(function (p) { return !istEntwurf(p); });
+    if (!fertige.length) {
       boxNeueste.append(el('p', { class: 'leise', text: 'Noch keine Protokolle. Mit „+ Protokoll“ schreibst du das erste.' }));
       return;
     }
-    const liste = sortiereProtokolle(daten.protokolle.filter(function (p) { return passtSuche(p, suche.value); }));
+    const liste = sortiereProtokolle(fertige.filter(function (p) { return passtSuche(p, suche.value); }));
     if (!liste.length) {
       boxNeueste.append(el('p', { class: 'leise', text: 'Kein Protokoll passt zur Suche.' }));
       return;
@@ -201,7 +268,7 @@ export async function render(container, ctx) {
     inhalt.append(
       el('h3', { class: 'teil-titel-klein', text: 'Protokolltext' }),
       txt(p.text)
-        ? el('div', { class: 'notiz protokoll-text', text: String(p.text) })
+        ? textAnsicht(p.text)
         : el('p', { class: 'leise', text: 'Kein Protokolltext.' })
     );
 
@@ -226,7 +293,14 @@ export async function render(container, ctx) {
       class: 'knopf knopf-hell', type: 'button', text: 'Protokoll kopieren',
       onclick: function () { kopieren(kopierText(p)); }
     }));
-    if (!imDokument(p)) {
+    if (istEntwurf(p)) {
+      knoepfe.append(el('button', {
+        class: 'knopf', type: 'button', text: 'Weiterschreiben',
+        onclick: function () { formularOeffnen(p); }
+      }));
+      inhalt.append(el('p', { class: 'leise', text: 'Gemeinsamer Entwurf: Alle in der Gruppe können ihn weiterschreiben. ' +
+        'Ins Dokument kommt er mit „Speichern“ im Formular.' }));
+    } else if (!imDokument(p)) {
       knoepfe.append(el('button', {
         class: 'knopf knopf-hell', type: 'button', text: 'Bearbeiten',
         onclick: function () { formularOeffnen(p); }
@@ -285,6 +359,7 @@ export async function render(container, ctx) {
       ctx: ctx, token: s.token, gruppeId: s.gruppe_id, kurzname: s.kurzname,
       daten: daten, tops: offeneTops(tops), eintrag: p || null, ausEntwurf: ausEntwurf,
       beiZu: formularZu,
+      beiZwischenspeichern: function () { laden(false); },
       nachSpeichern: async function (eintrag, res) {
         if (res && res.im_dokument) toast('Protokoll gespeichert und im Dokument ergänzt.');
         else if (res) toast('Protokoll gespeichert.');
@@ -308,7 +383,14 @@ export async function render(container, ctx) {
       el('h2', { text: 'Entwurf' + e.wann + ' fortsetzen?' }),
       el('p', { text: 'Auf diesem Gerät gibt es einen Entwurf: „' + (e.titel || 'ohne Titel') + '“.' }),
       el('div', { class: 'form-knoepfe' },
-        el('button', { class: 'knopf', type: 'button', text: 'Fortsetzen', onclick: function () { formularBauen(null, true); } }),
+        el('button', {
+          class: 'knopf', type: 'button', text: 'Fortsetzen',
+          onclick: function () {
+            // Gehört der Entwurf zu einem gemeinsamen Entwurf, wird dieser weitergeschrieben
+            const g = e.serverId ? finde(e.serverId) : null;
+            formularBauen(g && istEntwurf(g) ? g : null, true);
+          }
+        }),
         el('button', {
           class: 'knopf knopf-hell', type: 'button', text: 'Verwerfen',
           onclick: function () {
@@ -336,7 +418,8 @@ export async function render(container, ctx) {
     if (p && ctx.detail && window.matchMedia('(max-width: 959px)').matches) schliesseDetail(ctx.detail);
     const e = p ? null : entwurfInfo(s.gruppe_id);
     if (e) entwurfFragen(e);
-    else formularBauen(p, false);
+    // Gemeinsamer Entwurf: eine eigene, neuere Fassung auf dem Gerät wird mit übernommen
+    else formularBauen(p, !!p && istEntwurf(p));
   }
 
   // ---- Laden ----

@@ -2696,3 +2696,44 @@ p.notiz.erledigt {
   .dash-rechts-offen .dash-kachel:not(.dash-offen) { flex: none; max-height: 220px; }
   .dash-rechts-teil > .dash-kachel.dash-offen { flex: none; overflow: visible; }
 }
+
+/* ---- 0.30.4: Dokumentation zwei Spalten, Textansicht wie im Dokument, Umschalter in den Start-Kacheln ---- */
+/* Mehr Abstand zwischen Hinweistext und TOPs (die Chips lagen leicht über dem Text) */
+.pk-gruppe .pk-chips,
+.top-sammlung .pk-chips { margin: 6px 0 4px; }
+.dash-tops .top-sammlung { margin-top: 8px; }
+
+.doku-kopf { display: grid; gap: 12px; margin-bottom: 12px; align-items: start; }
+.doku-links { display: grid; gap: 10px; }
+.doku-umschalter { display: flex; gap: 8px; flex-wrap: wrap; }
+.doku-kopf .top-karte { margin: 0; padding: 12px; }
+.doku-kopf .top-karte h2 { font-size: 16px; }
+@media (min-width: 960px) {
+  .doku-kopf { grid-template-columns: 1fr 1fr; }
+}
+
+.protokoll-entwurf { background: #eef1fb; color: #2f3f8f; }
+
+/* Protokolltext wie im Dokument */
+.pk-ansicht { white-space: normal; }
+.pk-ansicht-top { margin: 14px 0 4px; font-size: 17px; font-weight: 700; color: var(--gruppe); }
+.pk-ansicht-top:first-child { margin-top: 0; }
+.pk-ansicht-absatz { margin: 4px 0; }
+.pk-ansicht-liste { margin: 2px 0 6px; padding-left: 22px; }
+.pk-ansicht-liste .pk-ansicht-liste { margin: 2px 0; }
+
+/* Start: Umschalter unten in der Kachel (ersetzt „Ganz zeigen“ aus 0.30.3) */
+.dash-rechts > .dash-kachel { display: flex; flex-direction: column; }
+.dash-aufklapper { flex: none; margin-top: 4px; }
+@media (min-width: 600px) {
+  .dash-rechts > .dash-kachel { flex: 1 1 0; min-height: 0; }
+  .dash-kachel-inhalt { flex: 1 1 0; min-height: 0; overflow: hidden; }
+  .dash-rechts > .dash-kachel.dash-offen { flex: none; }
+  .dash-offen > .dash-kachel-inhalt { flex: none; overflow: visible; }
+  .dash-rechts-offen > .dash-kachel:not(.dash-offen) { flex: none; }
+  .dash-rechts-offen > .dash-kachel:not(.dash-offen) > .dash-kachel-inhalt { flex: none; max-height: 180px; }
+}
+@media (min-width: 600px) {
+  /* Etwas mehr Platz, damit in ToDos und TOPs ein paar Einträge zu sehen sind */
+  .dash-projekte { min-height: 480px; }
+}

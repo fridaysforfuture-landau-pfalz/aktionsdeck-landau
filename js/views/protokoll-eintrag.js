@@ -5,8 +5,11 @@
 // TOPs (aus der TOP-Sammlung antippen oder neu eintippen), Protokolltext, Nächstes Plenum (Schlusszeile).
 // Im Protokolltext: Unter einem TOP geht es mit Stichpunkten („- “) weiter. Tab rückt ein, Umschalt+Tab aus.
 // Neues Protokoll: Entwurf auf dem Gerät (1 Sekunde nach der letzten Eingabe), Speichern über protokollSpeichern.
-// Danach bekommen die benutzten TOPs der Sammlung die protokoll_id (sie sind damit besprochen).
-// Vorhandenes Protokoll (nur solange nicht im Dokument): Ändern über update mit Konfliktprüfung, ohne Entwurf.
+// Gemeinsamer Entwurf (seit 0.30.4): „Zwischenspeichern“ (und alle 2 Minuten automatisch) legt das Protokoll mit
+// entwurf = TRUE im Sheet ab. Die Gruppe sieht es, ins Dokument kommt es erst mit „Speichern“.
+// Einen gemeinsamen Entwurf (eintrag.entwurf) schreibt man mit demselben Formular weiter.
+// Nach dem fertigen Speichern bekommen die benutzten TOPs der Sammlung die protokoll_id (sie sind damit besprochen).
+// Fertiges Protokoll (nur solange nicht im Dokument): Ändern über update mit Konfliktprüfung, ohne Entwurf.
 //
 // baueProtokollFormular(opt) -> { el, setzeTops(liste), hatAenderungen(), schliessen(), istNeu }
 // opt: { ctx, token, gruppeId, kurzname,
@@ -15,6 +18,7 @@
 //        nachSpeichern(eintrag, ergebnis) -> ergebnis von protokollSpeichern, bei Ändern null }
 
 import { el } from '../ui/dom.js';
+import { istWahr } from '../schema.js';
 import { api } from '../api.js';
 import { toast } from '../ui/toast.js';
 import { getName, getEntwurf, setEntwurf, loescheEntwurf } from '../store.js';
@@ -51,7 +55,8 @@ function feld(label, eingabe, extra) {
   return el('label', { class: 'formfeld' }, el('span', { class: 'formlabel', text: label }), eingabe, extra || null);
 }
 
-// Entwurf auf diesem Gerät: { wann: ' vom 22.10. um 18:40', titel } oder null
+// Entwurf auf diesem Gerät: { wann: ' vom 22.10. um 18:40', titel, serverId } oder null
+// serverId: der Entwurf gehört zu einem gemeinsamen Entwurf im Sheet
 export function entwurfInfo(gruppeId) {
   const e = getEntwurf(gruppeId);
   if (!e) return null;
@@ -59,7 +64,7 @@ export function entwurfInfo(gruppeId) {
   const wann = isNaN(zeit.getTime()) ? '' :
     ' vom ' + zeit.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) +
     ' um ' + zeit.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-  return { wann: wann, titel: txt(e.felder.titel) };
+  return { wann: wann, titel: txt(e.felder.titel), serverId: txt(e.felder.server_id) };
 }
 
 export function verwirfEntwurf(gruppeId) {
@@ -88,13 +93,35 @@ function werteAus(p) {
   };
 }
 
+// Alle 2 Minuten wird ein gemeinsamer Entwurf gespeichert (wenn sich etwas geändert hat)
+const AUTO_MS = 2 * 60 * 1000;
+
 export function baueProtokollFormular(opt) {
-  const neu = !opt.eintrag;
+  // gemeinsam = neues Protokoll oder gemeinsamer Entwurf (beide mit Zwischenspeichern und Entwurf auf dem Gerät)
+  const gemeinsamerEntwurf = !!opt.eintrag && istWahr(opt.eintrag.entwurf);
+  const neu = !opt.eintrag || gemeinsamerEntwurf;
+  const ganzNeu = !opt.eintrag;
   const d = opt.daten;
   let w;
+  // Stand im Sheet (id und geaendert_am), sobald zwischengespeichert wurde
+  let server = gemeinsamerEntwurf ? { id: opt.eintrag.id, geaendert_am: opt.eintrag.geaendert_am } : null;
+  const lokal = getEntwurf(opt.gruppeId);
+  let eigeneFassung = false;   // eigene, neuere Fassung vom Gerät übernommen
   if (!neu) w = werteAus(opt.eintrag);
-  else if (opt.ausEntwurf && getEntwurf(opt.gruppeId)) w = Object.assign(neueWerte(opt), getEntwurf(opt.gruppeId).felder);
+  else if (gemeinsamerEntwurf) {
+    w = werteAus(opt.eintrag);
+    // Eigene, noch nicht zwischengespeicherte Fassung zu diesem Entwurf auf dem Gerät?
+    if (opt.ausEntwurf && lokal && String(lokal.felder.server_id) === String(opt.eintrag.id)) {
+      w = Object.assign(w, lokal.felder);
+      server = { id: opt.eintrag.id, geaendert_am: lokal.felder.server_bekannt || opt.eintrag.geaendert_am };
+      eigeneFassung = true;
+    }
+  } else if (opt.ausEntwurf && lokal) w = Object.assign(neueWerte(opt), lokal.felder);
   else w = neueWerte(opt);
+  const anfrage = function (aktion, par) { return api(aktion, par, opt.token); };
+  let seitServer = false;   // geändert seit dem letzten Zwischenspeichern
+  let autoAus = false;      // nach einem Konflikt kein automatisches Speichern mehr
+  let zwLaeuft = false;
   let tops = (opt.tops || []).slice();
   let timer = null;
   let geaendert = false;
@@ -276,9 +303,18 @@ export function baueProtokollFormular(opt) {
     npVorschau
   );
 
+  function mitSchluss() {
+    return ganzNeu && art.value === 'plenum';
+  }
+
   function endText() {
     const t = textAufraeumen(text.value);
-    return neu && art.value === 'plenum' ? textMitSchluss(t, npDatum.value, npZeit.value) : t;
+    return mitSchluss() ? textMitSchluss(t, npDatum.value, npZeit.value) : t;
+  }
+
+  // Text für den gemeinsamen Entwurf: ohne Aufräumen (Gliederung bleibt), mit Schlusszeile
+  function entwurfText() {
+    return mitSchluss() ? textMitSchluss(text.value, npDatum.value, npZeit.value) : text.value;
   }
 
   function zaehlen() {
@@ -297,11 +333,11 @@ export function baueProtokollFormular(opt) {
   }
 
   function artGeaendert() {
-    npBox.hidden = !(neu && art.value === 'plenum');
+    npBox.hidden = !mitSchluss();
     if (art.value === 'plenum' && !txt(text.value)) text.value = plenumGliederung();
     // Unberührte Gliederung passt nur zum Plenum
     if (art.value !== 'plenum' && text.value === plenumGliederung()) text.value = '';
-    if (neu && art.value === 'plenum' && !npDatum.value) {
+    if (mitSchluss() && !npDatum.value) {
       const np = naechstesPlenum(d.vorlagen, STANDARD[txt(opt.kurzname).toLowerCase()], datum.value);
       if (np) { npDatum.value = np.datum; npZeit.value = npZeit.value || np.zeit; npAuto = np.datum; }
     }
@@ -315,7 +351,7 @@ export function baueProtokollFormular(opt) {
   }
   datum.addEventListener('change', function () {
     titelNachfuehren();
-    if (neu && npDatum.value === npAuto) {
+    if (ganzNeu && npDatum.value === npAuto) {
       const np = naechstesPlenum(d.vorlagen, STANDARD[txt(opt.kurzname).toLowerCase()], datum.value);
       npDatum.value = np ? np.datum : '';
       npAuto = npDatum.value;
@@ -333,7 +369,8 @@ export function baueProtokollFormular(opt) {
     reihenfolge.forEach(function (r) { rollen[r] = txt(rollenFelder[r].value); });
     return {
       titel: titel.value, datum: datum.value, art: art.value, teilnehmende: anwesend.value, rollen: rollen,
-      bezug: bezug.value, text: text.value, np_datum: npDatum.value, np_zeit: npZeit.value
+      bezug: bezug.value, text: text.value, np_datum: npDatum.value, np_zeit: npZeit.value,
+      server_id: server ? server.id : '', server_bekannt: server ? server.geaendert_am : ''
     };
   }
 
@@ -345,6 +382,7 @@ export function baueProtokollFormular(opt) {
 
   function merken() {
     geaendert = true;
+    seitServer = true;
     if (!neu) return;
     clearTimeout(timer);
     timer = setTimeout(sichern, 1000);
@@ -353,6 +391,7 @@ export function baueProtokollFormular(opt) {
   function schliessen() {
     if (zu) return;
     zu = true;
+    clearInterval(autoTimer);
     const offen = timer !== null;
     sichern();
     if (neu && geaendert && !gespeichert && (offen || getEntwurf(opt.gruppeId))) toast('Der Entwurf ist auf diesem Gerät gesichert.');
@@ -369,10 +408,69 @@ export function baueProtokollFormular(opt) {
   async function topsAbhaken(inhalt, protokollId) {
     const benutzt = tops.filter(function (t) { return topNummer(inhalt, t.titel) > 0; });
     const ergebnis = await Promise.all(benutzt.map(function (t) {
-      return api('update', { tabelle: 'TOPs', id: t.id, daten: { protokoll_id: protokollId } }, opt.token)
+      return anfrage('update', { tabelle: 'TOPs', id: t.id, daten: { protokoll_id: protokollId } })
         .then(function () { return true; }, function () { return false; });
     }));
     if (ergebnis.indexOf(false) >= 0) toast('Nicht alle TOPs konnten als besprochen markiert werden.');
+  }
+
+  function datenAusFormular(inhalt) {
+    const b = bezug.value;
+    return {
+      titel: txt(titel.value),
+      datum: datum.value,
+      art: art.value,
+      teilnehmende: namenAusListe(anwesend.value).join(', '),
+      rollen: rollenText(sammeln().rollen, reihenfolge),
+      projekt_id: b.indexOf('p:') === 0 ? b.slice(2) : '',
+      veranstaltung_id: b.indexOf('v:') === 0 ? b.slice(2) : '',
+      text: inhalt
+    };
+  }
+
+  const konfliktText = 'Jemand anderes hat diesen Entwurf inzwischen gespeichert. Deine Fassung bleibt auf diesem Gerät. ' +
+    'Tipp: „Entwurf kopieren“, dann „Abbrechen“ und den Entwurf neu öffnen.';
+
+  // Gemeinsamen Entwurf ins Sheet (nicht ins Dokument). automatisch = vom 2-Minuten-Takt
+  async function zwischenspeichern(automatisch) {
+    if (zwLaeuft || gespeichert || zu) return;
+    if (automatisch && (!seitServer || autoAus)) return;
+    if (!txt(titel.value)) {
+      if (!automatisch) { fehler.textContent = '„Titel“ darf nicht leer sein.'; titel.focus(); }
+      return;
+    }
+    const inhalt = entwurfText();
+    if (inhalt.length > MAX_TEXT) {
+      if (!automatisch) fehler.textContent = 'Der Protokolltext ist zu lang (höchstens ' + MAX_TEXT.toLocaleString('de-DE') + ' Zeichen).';
+      return;
+    }
+    zwLaeuft = true;
+    zwKnopf.disabled = true;
+    const warSeitServer = seitServer;
+    seitServer = false;
+    try {
+      const par = { daten: datenAusFormular(inhalt), entwurf: true };
+      if (server) { par.id = server.id; par.bekannt = server.geaendert_am; }
+      const res = await anfrage('protokollSpeichern', par);
+      server = { id: res.eintrag.id, geaendert_am: res.eintrag.geaendert_am };
+      fehler.textContent = '';
+      const z = new Date(res.eintrag.geaendert_am);
+      zwStand.textContent = 'Für die Gruppe zwischengespeichert' +
+        (isNaN(z.getTime()) ? '.' : ' um ' + z.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr.');
+      // Der Stand im Sheet ist aktuell: Entwurf auf dem Gerät nur noch mit Verweis darauf
+      sichern();
+      if (!automatisch) toast('Entwurf für die Gruppe gespeichert.');
+      if (opt.beiZwischenspeichern) opt.beiZwischenspeichern();
+    } catch (e) {
+      seitServer = seitServer || warSeitServer;
+      if (!opt.ctx.behandleFehler(e)) {
+        if (e.code === 'konflikt') { autoAus = true; fehler.textContent = konfliktText; }
+        else if (!automatisch) fehler.textContent = 'Nicht zwischengespeichert: ' + e.message + ' Der Entwurf bleibt auf diesem Gerät.';
+        else zwStand.textContent = 'Automatisches Zwischenspeichern hat nicht geklappt (' + e.message + '). Der Entwurf bleibt auf diesem Gerät.';
+      }
+    }
+    zwLaeuft = false;
+    zwKnopf.disabled = false;
   }
 
   async function speichern() {
@@ -388,17 +486,7 @@ export function baueProtokollFormular(opt) {
       text.focus();
       return;
     }
-    const b = bezug.value;
-    const daten = {
-      titel: txt(titel.value),
-      datum: datum.value,
-      art: art.value,
-      teilnehmende: namenAusListe(anwesend.value).join(', '),
-      rollen: rollenText(sammeln().rollen, reihenfolge),
-      projekt_id: b.indexOf('p:') === 0 ? b.slice(2) : '',
-      veranstaltung_id: b.indexOf('v:') === 0 ? b.slice(2) : '',
-      text: inhalt
-    };
+    const daten = datenAusFormular(inhalt);
     sichern();
     speichernKnopf.disabled = true;
     speichernKnopf.textContent = 'Speichere …';
@@ -406,14 +494,16 @@ export function baueProtokollFormular(opt) {
       let eintrag;
       let res = null;
       if (neu) {
-        res = await api('protokollSpeichern', { daten: daten }, opt.token);
+        const par = { daten: daten, entwurf: false };
+        if (server) { par.id = server.id; par.bekannt = server.geaendert_am; }
+        res = await anfrage('protokollSpeichern', par);
         eintrag = res.eintrag;
         gespeichert = true;
         loescheEntwurf(opt.gruppeId);
       } else {
-        const r = await api('update', {
+        const r = await anfrage('update', {
           tabelle: 'Protokolle', id: opt.eintrag.id, daten: daten, bekannt: opt.eintrag.geaendert_am
-        }, opt.token);
+        });
         eintrag = r.eintrag;
         gespeichert = true;
         toast(r.geaendert ? 'Änderung gespeichert.' : 'Nichts geändert.');
@@ -426,7 +516,8 @@ export function baueProtokollFormular(opt) {
       speichernKnopf.textContent = 'Speichern';
       if (opt.ctx.behandleFehler(e)) return;
       if (e.code === 'konflikt') {
-        fehler.textContent = 'Jemand anderes hat dieses Protokoll gerade geändert. Klicke auf „Abbrechen“ und öffne es noch einmal.';
+        fehler.textContent = neu ? konfliktText
+          : 'Jemand anderes hat dieses Protokoll gerade geändert. Klicke auf „Abbrechen“ und öffne es noch einmal.';
       } else if (e.code === 'nicht_gefunden') {
         fehler.textContent = e.message;
       } else {
@@ -435,10 +526,20 @@ export function baueProtokollFormular(opt) {
     }
   }
 
+  const zwKnopf = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Zwischenspeichern',
+    onclick: function () { zwischenspeichern(false); }
+  });
+  const zwStand = el('p', { class: 'leise pk-hinweis', text: server
+    ? 'Gemeinsamer Entwurf, zuletzt gespeichert von ' + (txt(opt.eintrag && opt.eintrag.geaendert_von) || 'unbekannt') + '.'
+    : 'Noch nicht für die Gruppe gespeichert.' });
+  const autoTimer = neu ? setInterval(function () { zwischenspeichern(true); }, AUTO_MS) : null;
+
   // ---- Aufbau ----
 
   const form = el('form', { class: 'formular protokoll-form karte', novalidate: '' },
-    el('h2', { text: neu ? 'Neues Protokoll' : 'Protokoll bearbeiten' }),
+    el('h2', { text: ganzNeu ? 'Neues Protokoll' : (gemeinsamerEntwurf ? 'Entwurf weiterschreiben' : 'Protokoll bearbeiten') }),
+    eigeneFassung ? el('p', { class: 'fehler', text: 'Du siehst deine eigene Fassung von diesem Gerät. Sie ist noch nicht für die Gruppe gespeichert.' }) : null,
     feld('Titel *', titel),
     el('div', { class: 'pk-zwei' }, feld('Datum', datum), feld('Art', art)),
     feld('Anwesend', anwesend, namenListe),
@@ -465,7 +566,10 @@ export function baueProtokollFormular(opt) {
     npBox,
     neu
       ? el('div', { class: 'pk-entwurf' },
-        el('p', { class: 'leise', text: 'Der Entwurf bleibt auf diesem Gerät, bis du speicherst oder verwirfst. Andere Geräte sehen ihn nicht. Beim Abmelden wird er gelöscht.' }),
+        el('p', { class: 'leise', text: 'Auf diesem Gerät wird jede Eingabe sofort gesichert (beim Abmelden gelöscht). ' +
+          'Für die Gruppe sichtbar wird der Entwurf mit „Zwischenspeichern“ und alle 2 Minuten automatisch. ' +
+          'Ins Dokument kommt er erst mit „Speichern“.' }),
+        zwStand,
         el('button', {
           class: 'knopf knopf-hell', type: 'button', text: 'Entwurf kopieren',
           onclick: function () {
@@ -478,7 +582,7 @@ export function baueProtokollFormular(opt) {
         }))
       : el('p', { class: 'leise', text: 'Du kannst das Protokoll ändern, solange es noch nicht im Dokument steht.' }),
     fehler,
-    el('div', { class: 'form-knoepfe' }, speichernKnopf,
+    el('div', { class: 'form-knoepfe' }, speichernKnopf, neu ? zwKnopf : null,
       el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abbrechen', onclick: schliessen }))
   );
   form.addEventListener('input', merken);

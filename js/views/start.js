@@ -7,7 +7,7 @@
 // Erledigte (nur die der letzten 2 Wochen) per Schalter oben rechts. ToDos haben ein Kästchen zum Abhaken.
 // Die anderen Kacheln sind noch Platzhalter (Posts/Kalender Etappe 5).
 // Rechts unter den ToDos steht die Kachel TOPs (js/views/tops.js, seit 0.30.3). ToDos und TOPs sind zusammen
-// so hoch wie die Kachel Projekte; ist eine abgeschnitten, gibt es darunter „Ganz zeigen“.
+// so hoch wie die Kachel Projekte; ist eine abgeschnitten, gibt es unten in der Kachel „▸ Alle anzeigen“.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -105,39 +105,48 @@ export async function render(container, ctx) {
     neuLaden: function () { return ladeTops(false); },
     fehlerText: function () { return topFehler; }
   });
-  const topKachel = el('section', { class: 'karte dash-kachel dash-tops' },
+  const topKachel = el('section', {
+    class: 'karte dash-kachel dash-tops',
+    title: 'Was soll beim nächsten Plenum besprochen werden? Klick auf einen TOP = bearbeiten.'
+  },
     el('div', { class: 'dash-kachel-titel' },
       el('h2', { text: 'TOPs' }),
       el('a', { class: 'knopf knopf-hell', href: basis + 'protokoll', text: 'Zur Dokumentation →' })
     ),
-    el('p', { class: 'leise', text: 'Was soll beim nächsten Plenum besprochen werden? Klick auf einen TOP = bearbeiten.' }),
     topSammlung.el
   );
-  // Rechte Spalte: ToDos und TOPs zusammen so hoch wie die Kachel Projekte, mehr Inhalt per Aufklapper
+  // Rechte Spalte: ToDos und TOPs zusammen so hoch wie die Kachel Projekte. Passt der Inhalt nicht hinein,
+  // steht unten in der Kachel ein Umschalter (wie bei den Projekten), der den Rest ausklappt.
   const rechts = el('div', { class: 'dash-rechts' });
   function aufklapper(kachel) {
+    const inhalt = el('div', { class: 'dash-kachel-inhalt' });
+    while (kachel.firstChild) inhalt.append(kachel.firstChild);
+    const pfeil = el('span', { class: 'teil-pfeil', 'aria-hidden': 'true', text: '▸' });
+    const label = el('span', { text: 'Alle anzeigen' });
     const knopf = el('button', {
-      class: 'knopf knopf-hell dash-aufklapper', type: 'button', text: '▾ Ganz zeigen',
+      class: 'dash-schalter dash-aufklapper', type: 'button', 'aria-expanded': 'false',
       onclick: function () {
         const auf = !kachel.classList.contains('dash-offen');
         kachel.classList.toggle('dash-offen', auf);
         rechts.classList.toggle('dash-rechts-offen', !!rechts.querySelector('.dash-offen'));
-        knopf.textContent = auf ? '▴ Weniger zeigen' : '▾ Ganz zeigen';
+        pfeil.classList.toggle('auf', auf);
+        label.textContent = auf ? 'Weniger anzeigen' : 'Alle anzeigen';
+        knopf.setAttribute('aria-expanded', String(auf));
         hoehePruefen();
       }
-    });
+    }, pfeil, label);
     knopf.hidden = true;
-    const huelle = el('div', { class: 'dash-rechts-teil' }, kachel, knopf);
-    rechts.append(huelle);
-    return { kachel: kachel, knopf: knopf };
+    kachel.append(inhalt, knopf);
+    rechts.append(kachel);
+    return { kachel: kachel, inhalt: inhalt, knopf: knopf };
   }
   const teileRechts = [aufklapper(todoKachel), aufklapper(topKachel)];
-  // Aufklapper nur zeigen, wenn eine Kachel abgeschnitten ist
+  // Umschalter nur zeigen, wenn eine Kachel abgeschnitten ist
   function hoehePruefen() {
     requestAnimationFrame(function () {
       teileRechts.forEach(function (t) {
         const offen = t.kachel.classList.contains('dash-offen');
-        t.knopf.hidden = !offen && t.kachel.scrollHeight <= t.kachel.clientHeight + 2;
+        t.knopf.hidden = !offen && t.inhalt.scrollHeight <= t.inhalt.clientHeight + 2;
       });
     });
   }

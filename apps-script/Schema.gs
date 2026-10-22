@@ -11,6 +11,7 @@ var BASIS = ['id', 'gruppe_id', 'erstellt_am', 'erstellt_von',
 // Protokolle: Protokoll eines Plenums, einer AG oder Aktion (Etappe 8). projekt_id und veranstaltung_id sind freiwillig.
 //   art = plenum | ag | aktion | sonstiges. rollen = eine Zeile je Rolle ("Moderation: Name").
 //   im_dokument = steht im Google-Dokument der Gruppe. vorschlaege_erledigt = Abhak-Liste wurde angelegt.
+//   entwurf = gemeinsamer Entwurf (seit 0.30.4): für die Gruppe sichtbar, noch nicht im Dokument.
 //   Protokolle werden nie gelöscht (siehe NIE_LOESCHEN).
 // Reden: Archiv der Reden. status = entwurf | probelesen | fertig | gehalten. Werden nie gelöscht.
 // TOPs: Sammlung der Tagesordnungspunkte fürs nächste Plenum (seit 0.30.3). protokoll_id = in diesem Protokoll besprochen.
@@ -28,7 +29,7 @@ var TABELLEN = {
   Posts: ['projekt_id', 'titel', 'plattform', 'format', 'text', 'medien_id', 'veroeffentlichung_am', 'status', 'verantwortlich'],
   Vorlagen_ToDo: ['vorlage_name', 'schritt_text', 'tage_vorher', 'verantwortlich'],
   Protokolle: ['projekt_id', 'datum', 'titel', 'teilnehmende', 'text',
-               'art', 'veranstaltung_id', 'rollen', 'im_dokument', 'vorschlaege_erledigt'],
+               'art', 'veranstaltung_id', 'rollen', 'im_dokument', 'vorschlaege_erledigt', 'entwurf'],
   Reden: ['projekt_id', 'veranstaltung_id', 'titel', 'redner', 'datum', 'aktionsart', 'link', 'status', 'notiz'],
   TOPs: ['titel', 'notiz', 'protokoll_id'],
   Kommentare: ['projekt_id', 'bezug_art', 'bezug_id', 'text', 'angeheftet', 'farbe'],
@@ -75,7 +76,7 @@ function maxLaenge(tab, sp) {
 var ZAHL_SPALTEN = ['anzahl', 'menge', 'einzelpreis', 'betrag_geplant',
                     'betrag_tatsaechlich', 'budget_geplant', 'sortierung', 'tage_vorher'];
 var BOOL_SPALTEN = ['aktiv', 'geloescht', 'erledigt', 'beschafft', 'bezahlt', 'mehrfach', 'angeheftet', 'beendet', 'namentlich', 'oeffentlich',
-                    'im_dokument', 'vorschlaege_erledigt'];
+                    'im_dokument', 'vorschlaege_erledigt', 'entwurf'];
 
 function spaltenTyp(sp) {
   if (ZAHL_SPALTEN.indexOf(sp) >= 0) return 'zahl';
