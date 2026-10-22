@@ -2,7 +2,7 @@
 // Lädt die App-Hülle vor. Dateien der App: zuerst Netz, sonst Zwischenspeicher.
 // Daten der API liegen nicht hier, sondern in IndexedDB (js/cache.js).
 
-const VERSION = '0.30.0';
+const VERSION = '0.30.1';
 const CACHE = 'aktionsdeck-' + VERSION;
 
 const HUELLE = [
@@ -73,6 +73,8 @@ const HUELLE = [
   'js/views/mobi-sammlung.js',
   'js/views/mobi-todo.js',
   'js/views/mobi-zeitstrahl.js',
+  'js/views/protokoll.js',
+  'js/views/protokoll-rechnen.js',
   'icons/icon.svg',
   'icons/logo.svg'
 ];
