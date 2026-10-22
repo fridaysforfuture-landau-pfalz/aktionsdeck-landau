@@ -110,6 +110,14 @@ export const SCHEMA = {
       { name: 'text', label: 'Protokolltext (höchstens 20 000 Zeichen)', typ: 'langtext', max: 20000 }
     ]
   },
+  // TOPs: Sammlung fürs nächste Plenum (js/views/tops.js). protokoll_id setzt das Protokoll-Formular.
+  TOPs: {
+    titel: 'TOPs',
+    felder: [
+      { name: 'titel', label: 'TOP', typ: 'text', pflicht: true },
+      { name: 'notiz', label: 'Notiz', typ: 'langtext' }
+    ]
+  },
   // Reden: Projekt oder Veranstaltung baut das Reden-Formular selbst (8.6). Werden nie gelöscht.
   Reden: {
     titel: 'Reden',

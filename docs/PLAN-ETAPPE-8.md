@@ -5,7 +5,7 @@ Regeln für die Arbeit stehen in `CLAUDE.md`.
 
 **Status:** Die Person hat die Fragen aus Fassung 1 beantwortet (Abschnitt 3). Die Fragen A bis C und E aus Abschnitt 4 sind am 22.10.2026 bestätigt.
 Schritt 8.0 darfst du sofort bauen. Auch 8.1 darfst du bauen. Frage D ist am 22.10.2026 beantwortet (Adresse der Seite, siehe Abschnitt 4).
-**Erledigt:** 8.0 (Version 0.29.12), 8.1 (Version 0.30.0, von Hand bereitgestellt), 8.2 (Version 0.30.1), 8.3 (Version 0.30.2).
+**Erledigt:** 8.0 (Version 0.29.12), 8.1 (Version 0.30.0, von Hand bereitgestellt), 8.2 (Version 0.30.1), 8.3 (Version 0.30.2), 8.3a Anpassungen aus der Prüfung (Version 0.30.3: Formular im Inhalt, TOP-Sammlung mit neuem Tab TOPs, Formatierung im Dokument). Die Versionen von 8.4 bis 8.7 verschieben sich um eins.
 **Änderungen der Person (22.10.2026):** Der Reiter heißt in der Anzeige **„Dokumentation“** (Kennung bleibt `protokoll`). GP hat jetzt ebenfalls ein Google-Dokument (`PROTOKOLL_DOK_g2`), Entscheidung A gilt für GP damit nicht mehr.
 
 ## 1. Ziel

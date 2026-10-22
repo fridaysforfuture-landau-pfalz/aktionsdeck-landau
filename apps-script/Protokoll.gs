@@ -80,53 +80,82 @@ function protokollMarkeIndex(body) {
   return -1;
 }
 
-// Neuer Absatz mit festem Aussehen (nicht grau und klein wie die Markierung)
-function pkAbsatz(body, idx, text, fett) {
+// Aussehen im Dokument (Wunsch der Person, 22.10.2026):
+// Titel = Überschrift 2, Arial 23, schwarz. TOPs („1. Titel“, „Sonstiges“) = Überschrift 3, Arial 17, Gruppenfarbe.
+// Alles andere = normaler Text, Arial 11, schwarz. Stichpunkte „- “ (Tabs davor = tiefer eingerückt).
+var PK_STIL = {
+  titel: { heading: 'HEADING2', groesse: 23, fett: true },
+  top: { heading: 'HEADING3', groesse: 17, fett: false },
+  normal: { heading: 'NORMAL', groesse: 11, fett: false }
+};
+
+// Farbe der Gruppe aus dem Tab Gruppen (#rrggbb), sonst schwarz
+function protokollFarbe(gid) {
+  var g = lies('Gruppen').zeilen.filter(function (z) { return String(z.gruppe_id) === String(gid); })[0];
+  var f = g ? pkTxt(g.farbe) : '';
+  return /^#[0-9a-fA-F]{6}$/.test(f) ? f : '#000000';
+}
+
+// Schrift setzen (nicht bei leeren Absätzen, dort gibt es keinen Text)
+function pkSchrift(element, stil, farbe) {
+  var t = element.editAsText();
+  if (!t.getText().length) return;
+  t.setFontFamily('Arial');
+  t.setFontSize(stil.groesse);
+  t.setBold(stil.fett);
+  t.setItalic(false);
+  t.setForegroundColor(farbe);
+}
+
+// Neuer Absatz mit festem Aussehen (nicht grau und klein wie die Markierung). art: titel | top | normal
+function pkAbsatz(body, idx, text, art, farbe) {
+  var stil = PK_STIL[art] || PK_STIL.normal;
   var a = body.insertParagraph(idx, text);
-  a.setHeading(DocumentApp.ParagraphHeading.NORMAL);
-  if (text) {
-    var t = a.editAsText();
-    t.setBold(!!fett);
-    t.setForegroundColor('#000000');
-  }
+  a.setHeading(DocumentApp.ParagraphHeading[stil.heading]);
+  pkSchrift(a, stil, art === 'top' ? farbe : '#000000');
   return a;
 }
 
 // Fügt das Protokoll o (Felder wie im Tab) direkt unter der Markierung ein. Nur Klartext.
-// Gibt { ok, hinweis } zurück. Fehlt die Markierung, wird nichts geschrieben.
-function protokollEinfuegen(doc, o) {
+// farbe = Gruppenfarbe für die TOP-Überschriften. Gibt { ok, hinweis } zurück. Fehlt die Markierung, wird nichts geschrieben.
+function protokollEinfuegen(doc, o, farbe) {
   var body = doc.getBody();
   var marke = protokollMarkeIndex(body);
   if (marke < 0) return { ok: false, hinweis: 'Markierung fehlt im Dokument (' + PK_MARKE + ').' };
+  var topFarbe = /^#[0-9a-fA-F]{6}$/.test(pkTxt(farbe)) ? pkTxt(farbe) : '#000000';
 
   var idx = marke + 1;
-  pkAbsatz(body, idx++, pkTxt(o.titel) || 'Protokoll', true);
-  if (pkTxt(o.datum)) pkAbsatz(body, idx++, 'Datum: ' + pkDatum(o.datum), false);
+  pkAbsatz(body, idx++, pkTxt(o.titel) || 'Protokoll', 'titel');
+  if (pkTxt(o.datum)) pkAbsatz(body, idx++, 'Datum: ' + pkDatum(o.datum), 'normal');
   pkTxt(o.rollen).split(/\r?\n/).forEach(function (z) {
-    if (pkTxt(z)) pkAbsatz(body, idx++, pkTxt(z), false);
+    if (pkTxt(z)) pkAbsatz(body, idx++, pkTxt(z), 'normal');
   });
-  if (pkTxt(o.teilnehmende)) pkAbsatz(body, idx++, 'Anwesend: ' + pkTxt(o.teilnehmende), false);
-  pkAbsatz(body, idx++, '', false);
+  if (pkTxt(o.teilnehmende)) pkAbsatz(body, idx++, 'Anwesend: ' + pkTxt(o.teilnehmende), 'normal');
+  pkAbsatz(body, idx++, '', 'normal');
 
-  // Protokolltext: Zeilen mit "- " am Anfang werden Aufzählungspunkte
+  // Protokolltext: TOP-Zeilen werden Überschriften, Zeilen mit "- " Stichpunkte (Tabs davor = Ebene)
   var liste = null;
   String(o.text === undefined || o.text === null ? '' : o.text).split(/\r?\n/).forEach(function (z) {
     var zeile = z.replace(/\s+$/, '');
-    if (/^\s*- /.test(zeile)) {
-      var punkt = body.insertListItem(idx++, zeile.replace(/^\s*- /, ''));
-      punkt.setGlyphType(DocumentApp.GlyphType.BULLET);
-      punkt.editAsText().setBold(false);
-      punkt.editAsText().setForegroundColor('#000000');
+    var m = /^(\t*)- ?(.*)$/.exec(zeile);
+    if (m && zeile.indexOf('-') === m[1].length) {
+      var punkt = body.insertListItem(idx++, m[2]);
       if (liste) punkt.setListId(liste); else liste = punkt;
+      punkt.setNestingLevel(Math.min(m[1].length, 8));
+      punkt.setGlyphType(DocumentApp.GlyphType.BULLET);
+      pkSchrift(punkt, PK_STIL.normal, '#000000');
       return;
     }
     liste = null;
-    pkAbsatz(body, idx++, zeile, false);
+    var istTop = /^\d+\.[ \t]*\S/.test(zeile) || /^Sonstiges[ \t]*:?[ \t]*$/i.test(zeile);
+    pkAbsatz(body, idx++, zeile, istTop ? 'top' : 'normal', topFarbe);
   });
 
-  // Trennlinie nach jedem Protokoll
+  // Trennlinie nach jedem Protokoll, danach eine Leerzeile (Abstand zum nächsten Protokoll)
   var linie = body.insertParagraph(idx++, '');
+  linie.setHeading(DocumentApp.ParagraphHeading.NORMAL);
   linie.appendHorizontalRule();
+  pkAbsatz(body, idx++, '', 'normal');
   return { ok: true, hinweis: '' };
 }
 
@@ -142,7 +171,7 @@ function protokollAnsDokument(gid, o) {
     return { ok: false, hinweis: 'Das Dokument ist nicht erreichbar. Bitte die Freigabe für das Skript prüfen.' };
   }
   try {
-    var r = protokollEinfuegen(doc, o);
+    var r = protokollEinfuegen(doc, o, protokollFarbe(gid));
     doc.saveAndClose();
     return r;
   } catch (e2) {
@@ -287,9 +316,9 @@ function testenProtokollAnhaengen() {
 
     var a = protokollEinfuegen(doc, {
       titel: 'Test A', datum: '2026-01-01', rollen: 'Moderation: Test\nProtokoll: Test',
-      teilnehmende: 'Test 1, Test 2', text: '1. Punkt\n- Stichpunkt eins\n- Stichpunkt zwei\nSonstiges'
-    });
-    var b = protokollEinfuegen(doc, { titel: 'Test B', datum: '2026-01-08', text: '=1+1 bleibt Text' });
+      teilnehmende: 'Test 1, Test 2', text: '1. Punkt\n- Stichpunkt eins\n\t- Stichpunkt eingerückt\n- Stichpunkt zwei\nSonstiges'
+    }, '#1b7340');
+    var b = protokollEinfuegen(doc, { titel: 'Test B', datum: '2026-01-08', text: '=1+1 bleibt Text' }, '#1b7340');
     doc.saveAndClose();
 
     var text = DocumentApp.openById(id).getBody().getText();
@@ -302,6 +331,21 @@ function testenProtokollAnhaengen() {
     Logger.log((iKopf < iMarke && iMarke < iB && iB < iA && iA < iAlt ? 'OK' : 'FEHLER') +
       ': Reihenfolge Kopf, Markierung, Test B (neu), Test A, älteres Protokoll');
     Logger.log((text.indexOf('Stichpunkt eins') > iA ? 'OK' : 'FEHLER') + ': Stichpunkte stehen im Protokoll');
+
+    // Aussehen: Titel Überschrift 2, TOP Überschrift 3, eingerückter Stichpunkt auf Ebene 1
+    var b0 = DocumentApp.openById(id).getBody();
+    var kinder = [];
+    for (var i = 0; i < b0.getNumChildren(); i++) kinder.push(b0.getChild(i));
+    var finde = function (t) {
+      return kinder.filter(function (c) { return c.asText().getText() === t; })[0];
+    };
+    var tA = finde('Test A');
+    var top1 = finde('1. Punkt');
+    var ein = finde('Stichpunkt eingerückt');
+    var stilOk = !!tA && tA.getHeading() === DocumentApp.ParagraphHeading.HEADING2 &&
+      !!top1 && top1.getHeading() === DocumentApp.ParagraphHeading.HEADING3 &&
+      !!ein && ein.getType() === DocumentApp.ElementType.LIST_ITEM && ein.getNestingLevel() === 1;
+    Logger.log((stilOk ? 'OK' : 'FEHLER') + ': Überschriften und eingerückter Stichpunkt');
     Logger.log((text.indexOf('=1+1 bleibt Text') > iB ? 'OK' : 'FEHLER') + ': Text mit = bleibt Klartext');
 
     // Ohne Markierung wird nichts geschrieben
@@ -309,7 +353,7 @@ function testenProtokollAnhaengen() {
     var b2 = doc2.getBody();
     b2.getChild(protokollMarkeIndex(b2)).asText().setText('Markierung entfernt');
     var vorher = b2.getText();
-    var c = protokollEinfuegen(doc2, { titel: 'Test C' });
+    var c = protokollEinfuegen(doc2, { titel: 'Test C' }, '');
     Logger.log((!c.ok && b2.getText() === vorher ? 'OK' : 'FEHLER') + ': ohne Markierung nichts geschrieben (' + c.hinweis + ')');
     doc2.saveAndClose();
   } catch (e) {
