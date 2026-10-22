@@ -7,7 +7,7 @@
 //   protokollSpeichern   { daten, entwurf, id, bekannt } -> { eintrag, im_dokument, hinweis }
 //                        (ohne id = neu; mit id = gemeinsamen Entwurf weiterschreiben; entwurf true = nicht ins Dokument)
 //   protokollInsDokument { id }     -> { eintrag, im_dokument, hinweis }
-//   protokollInfo        {}         -> { modus: 'dokument' | 'extern' | 'keins', link, entwurf: true }
+//   protokollInfo        {}         -> { modus: 'dokument' | 'extern' | 'keins', link }
 //
 // Hilfsfunktionen in dieser Datei beginnen mit "protokoll" oder "pk" (in Util.gs gibt es schon aus() und protokoll()).
 
@@ -59,14 +59,12 @@ function protokollLinkExtern(gid) {
   return /^https:\/\/[^\s]+$/i.test(link) ? link : '';
 }
 
-// entwurf: true sagt der App, dass dieses Skript gemeinsame Entwürfe kennt (seit 0.30.6). Fehlt es, ist noch
-// ein älteres Skript bereitgestellt: Dann bietet die App kein Zwischenspeichern an (sonst landete es im Dokument).
 function aktionProtokollInfo(ctx, p) {
   var dok = protokollDokId(ctx.gruppe_id);
-  if (dok) return { modus: 'dokument', link: 'https://docs.google.com/document/d/' + encodeURIComponent(dok) + '/edit', entwurf: true };
+  if (dok) return { modus: 'dokument', link: 'https://docs.google.com/document/d/' + encodeURIComponent(dok) + '/edit' };
   var extern = protokollLinkExtern(ctx.gruppe_id);
-  if (extern) return { modus: 'extern', link: extern, entwurf: true };
-  return { modus: 'keins', link: '', entwurf: true };
+  if (extern) return { modus: 'extern', link: extern };
+  return { modus: 'keins', link: '' };
 }
 
 // ---- Einfügen im Dokument ----

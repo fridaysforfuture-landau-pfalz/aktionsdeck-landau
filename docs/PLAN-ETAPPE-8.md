@@ -8,7 +8,6 @@ Schritt 8.0 darfst du sofort bauen. Auch 8.1 darfst du bauen. Frage D ist am 22.
 **Erledigt:** 8.0 (Version 0.29.12), 8.1 (Version 0.30.0, von Hand bereitgestellt), 8.2 (Version 0.30.1), 8.3 (Version 0.30.2), 8.3a Anpassungen aus der Prüfung (Version 0.30.3: Formular im Inhalt, TOP-Sammlung mit neuem Tab TOPs, Formatierung im Dokument). Die Versionen von 8.4 bis 8.7 verschieben sich um eins.
 8.3b (Version 0.30.4): Anpassungen aus der Prüfung von 8.3a und **gemeinsamer Entwurf** (neue Spalte `Protokolle.entwurf`, Zwischenspeichern für die Gruppe). Damit gilt Regel „Entwurf nur lokal“ aus Abschnitt 7 nicht mehr. Die Versionen von 8.4 bis 8.7 verschieben sich damit um zwei (0.30.5 bis 0.30.8).
 8.4 (Version 0.30.5): Markierungen, Einfüge-Knöpfe (kleine Formulare unter der Knopfreihe statt Fenster), `@`, Tastenkürzel, „+ Einfügen“ (im Formular statt Fenster).
-8.4a (Version 0.30.6): **Entscheidung der Person:** Die Knöpfe legen den Eintrag sofort an (Zeile mit „✔“). 8.5 behandelt nur noch Zeilen ohne ✔ (von Hand getippt oder „Nur in den Text“). Die `@`-Auswahl entfällt. Gemeinsame Entwürfe dürfen verworfen werden. Versionen danach: 8.5 = 0.30.7, 8.6 = 0.30.8, 8.7 = 0.30.9.
 **Änderungen der Person (22.10.2026):** Der Reiter heißt in der Anzeige **„Dokumentation“** (Kennung bleibt `protokoll`). GP hat jetzt ebenfalls ein Google-Dokument (`PROTOKOLL_DOK_g2`), Entscheidung A gilt für GP damit nicht mehr.
 
 ## 1. Ziel
