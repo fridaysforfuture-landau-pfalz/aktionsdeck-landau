@@ -15,6 +15,15 @@ function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
 }
 
+// Knopf „+ Protokoll“ auf dem Start (8.4a): Wunsch merken, der Reiter Dokumentation öffnet dann das Formular
+let protokollWunsch = false;
+export function setzeProtokollWunsch() { protokollWunsch = true; }
+export function nimmProtokollWunsch() {
+  const w = protokollWunsch;
+  protokollWunsch = false;
+  return w;
+}
+
 // Offene TOPs, älteste zuerst (Reihenfolge des Eintragens)
 export function offeneTops(liste) {
   return (liste || []).filter(function (t) { return !txt(t.protokoll_id) && txt(t.titel); })

@@ -408,6 +408,7 @@ export function stichpunktRueck(text, pos) {
 //   📊 Frage? | Antwort 1 | Antwort 2    -> Umfrage (mindestens zwei Antworten)
 //   👉 Text                              -> Beschluss (nur Hervorhebung, kein Vorschlag)
 // Dazu die Schlusszeile „Nächstes Plenum: TT.MM.JJJJ, HH:MM“ (Termin „Plenum“).
+// Seit 8.4a: Endet eine Zeile mit „✔“, wurde der Eintrag schon über den Knopf angelegt (steht in uebersprungen).
 //
 // Beispiele (heute = 22.10.2026, getestet mit node):
 //   '☐ @Anna: Flyer drucken (bis 20.10.)'  -> ToDo, verantwortlich 'Anna', faellig_am '2027-10-20' (nächstes Vorkommen)
@@ -506,7 +507,11 @@ export function leseMarkierungen(text, opt) {
 
     const m = markeVon(zeile);
     if (!m) return;
-    const rest = m.rest;
+    // Schon über den Knopf angelegt
+    if (/\s✔$/.test(zeile)) {
+      if (m.art !== 'beschluss') { r.uebersprungen.push({ zeile: nr, text: zeile, art: m.art, grund: 'schon angelegt' }); return; }
+    }
+    const rest = m.rest.replace(/\s*✔$/, '');
 
     if (m.art === 'todo') {
       let wer = [];
@@ -596,6 +601,7 @@ export function markenUebersicht(r) {
   z(r.mitteilungen.length, 'Mitteilung', 'Mitteilungen');
   z(r.umfragen.length, 'Umfrage', 'Umfragen');
   z(r.beschluesse.length, 'Beschluss', 'Beschlüsse');
+  z(r.uebersprungen.length, 'schon angelegt', 'schon angelegt');
   z(r.fehler.length, 'Fehlerzeile', 'Fehlerzeilen');
   return teile.join(' · ');
 }
