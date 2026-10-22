@@ -78,3 +78,26 @@ export function setEntwurf(gruppeId, felder) {
 export function loescheEntwurf(gruppeId) {
   try { localStorage.removeItem(ENTWURF_KEY + gruppeId); } catch (e) { /* ignorieren */ }
 }
+
+// Gibt es auf diesem Gerät Protokoll-Entwürfe (egal welche Gruppe)?
+function entwurfSchluessel() {
+  const l = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.indexOf(ENTWURF_KEY) === 0) l.push(k);
+    }
+  } catch (e) { /* ignorieren */ }
+  return l;
+}
+
+export function gibtEntwurf() {
+  return entwurfSchluessel().length > 0;
+}
+
+// Beim Abmelden: alle Entwürfe löschen (wichtig bei geteilten Geräten)
+export function loescheAlleEntwuerfe() {
+  entwurfSchluessel().forEach(function (k) {
+    try { localStorage.removeItem(k); } catch (e) { /* ignorieren */ }
+  });
+}

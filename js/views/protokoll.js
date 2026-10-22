@@ -1,24 +1,28 @@
 // js/views/protokoll.js
-// Reiter „Protokoll“ (Etappe 8, Schritt 8.2): Liste der Protokolle, neueste zuerst, nach Jahr gruppiert.
-// Suche (Titel, Text, Anwesend), Filter Art und Filter Projekt/Veranstaltung.
-// Klick öffnet das Lesefenster: alle Felder, „Protokoll kopieren“, „Im Dokument bearbeiten“ (nur wenn es
-// im Dokument steht), solange nicht im Dokument: „Bearbeiten“ und „Ins Dokument übernehmen“.
-// „+ Protokoll“ und „Bearbeiten“ öffnen das Formular aus protokoll-eintrag.js (seit 8.3).
-// Der Reiter heißt in der Anzeige „Dokumentation“ (Protokolle und ab 8.6 Reden), die Kennung bleibt „protokoll“.
+// Reiter „Dokumentation“ (Kennung „protokoll“, Etappe 8). Aufbau seit 8.3a:
+// Kopf mit „+ Protokoll“, Suche (Titel, Text, Anwesend), TOP-Sammlung (js/views/tops.js),
+// die zwei neuesten Protokolle, darunter das Formular (direkt im Inhalt, kein Fenster), darunter die älteren.
+// Klick auf ein Protokoll öffnet es im Detailbereich (PC rechts, Handy Vollbild mit „← Zurück“).
+// Das Formular bleibt dabei offen, so lässt sich aus alten Protokollen kopieren.
+// Im Detail: „Protokoll kopieren“, „Im Dokument bearbeiten“ (nur wenn es im Dokument steht),
+// solange nicht im Dokument: „Bearbeiten“ und „Ins Dokument übernehmen“.
 // Protokolle werden nie gelöscht (das Skript sperrt es). Reden kommen mit 8.6.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
-import { zeigeFenster } from '../ui/fenster.js';
+import { zeigeDetail, schliesseDetail } from '../ui/detail.js';
 import { toast } from '../ui/toast.js';
 import { zeitText } from './material-rechnen.js';
 import { normDatum, datumText, kurz } from './todos-rechnen.js';
 import { sichereUrl } from './kalender-rechnen.js';
 import {
-  ARTEN, artText, imDokument, sortiereProtokolle, nachJahr, passtSuche, bezugSchluessel, kopierText, einfuegeHinweis
+  artText, imDokument, sortiereProtokolle, nachJahr, passtSuche, kopierText, einfuegeHinweis
 } from './protokoll-rechnen.js';
-import { zeigeProtokollFormular } from './protokoll-eintrag.js';
+import { baueProtokollFormular, entwurfInfo, verwirfEntwurf } from './protokoll-eintrag.js';
+import { baueTopSammlung, offeneTops } from './tops.js';
+
+const NEUESTE = 2;
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -43,15 +47,19 @@ function linkKnopf(text, url) {
 export async function render(container, ctx) {
   const s = ctx.session;
   leeren(container);
+  if (ctx.detail) schliesseDetail(ctx.detail);
 
   const cacheKey = s.gruppe_id + ':protokoll';
   let daten = { protokolle: [], projekte: [], veranstaltungen: [], personen: [], vorlagen: [] };
+  let tops = [];
+  let topsFehler = '';
   // Modus der Gruppe (dokument | extern | keins). Nur im Speicher, nicht im Gerät abgelegt.
   let info = null;
   let projektTitel = {};
   let veranstTitel = {};
   let meta = null;
   let offline = false;
+  let formular = null;     // offenes Formular (baueProtokollFormular)
 
   // ---- Bedienelemente ----
 
@@ -59,23 +67,28 @@ export async function render(container, ctx) {
   const suche = el('input', {
     class: 'feld suche-feld', type: 'search', placeholder: 'Suchen (Titel, Text, Anwesend) …', 'aria-label': 'Suchen'
   });
-  const artWahl = el('select', { class: 'feld', 'aria-label': 'Art' },
-    el('option', { value: '', text: 'Alle Arten' }),
-    ...ARTEN.map(function (a) { return el('option', { value: a.wert, text: a.label }); })
-  );
-  const bezugWahl = el('select', { class: 'feld', 'aria-label': 'Projekt oder Veranstaltung' });
-  const box = el('div', { class: 'protokoll-liste' });
+  const sammlung = baueTopSammlung({
+    ctx: ctx, token: s.token,
+    holeTops: function () { return tops; },
+    neuLaden: function () { return ladeTops(false); },
+    fehlerText: function () { return topsFehler; }
+  });
+  const neuKnopf = el('button', { class: 'knopf', type: 'button', text: '+ Protokoll', onclick: function () { formularOeffnen(null); } });
+  const boxNeueste = el('div', { class: 'protokoll-liste' });
+  const boxForm = el('div', { class: 'protokoll-formplatz' });
+  const boxRest = el('div', { class: 'protokoll-liste' });
 
   container.append(el('div', { class: 'seite' },
     el('div', { class: 'kopfzeile' },
       el('h1', { text: 'Dokumentation' }),
-      el('div', { class: 'kopf-knoepfe' },
-        el('button', { class: 'knopf', type: 'button', text: '+ Protokoll', onclick: function () { formularOeffnen(null); } })
-      )
+      el('div', { class: 'kopf-knoepfe' }, neuKnopf)
     ),
-    el('div', { class: 'filterzeile filter-todos' }, suche, artWahl, bezugWahl),
+    el('div', { class: 'filterzeile' }, suche),
+    el('section', { class: 'karte top-karte' }, el('h2', { text: 'TOPs fürs nächste Plenum' }), sammlung.el),
     status,
-    box
+    boxNeueste,
+    boxForm,
+    boxRest
   ));
 
   // ---- Hilfen ----
@@ -91,24 +104,6 @@ export async function render(container, ctx) {
     if (pid) teile.push(projektTitel[pid] || 'Projekt');
     if (vid) teile.push('📅 ' + (veranstTitel[vid] || 'Veranstaltung'));
     return teile.join(' · ');
-  }
-
-  // Auswahl „Projekt oder Veranstaltung“: nur, was in Protokollen vorkommt
-  function bezugAufbauen() {
-    const alt = bezugWahl.value;
-    leeren(bezugWahl);
-    bezugWahl.append(el('option', { value: '', text: 'Alle Projekte und Veranstaltungen' }));
-    const da = {};
-    daten.protokolle.forEach(function (p) { bezugSchluessel(p).forEach(function (k) { da[k] = true; }); });
-    const eintraege = Object.keys(da).map(function (k) {
-      const id = k.slice(2);
-      return k.charAt(0) === 'p'
-        ? { wert: k, label: 'Projekt: ' + (projektTitel[id] || 'Projekt') }
-        : { wert: k, label: '📅 ' + (veranstTitel[id] || 'Veranstaltung') };
-    }).sort(function (a, b) { return a.label.localeCompare(b.label, 'de'); });
-    eintraege.forEach(function (x) { bezugWahl.append(el('option', { value: x.wert, text: x.label })); });
-    bezugWahl.value = da[alt] ? alt : '';
-    bezugWahl.hidden = !eintraege.length;
   }
 
   function dokumentMarke(p) {
@@ -136,51 +131,56 @@ export async function render(container, ctx) {
       : 'Zwischengespeichert von ' + zeitText(meta.stand) + '. Aktualisiere …';
   }
 
+  function zeileVon(p) {
+    const zeile1 = [normDatum(p.datum) ? datumText(p.datum) : '', artText(p.art), bezugText(p)]
+      .filter(Boolean).join(' · ');
+    return el('li', null,
+      el('button', {
+        class: 'dash-todo protokoll-zeile', type: 'button',
+        onclick: function () { lesen(p); }
+      },
+        zeile1 ? el('span', { class: 'leise', text: zeile1 }) : null,
+        el('strong', { text: txt(p.titel) || 'Protokoll' }),
+        txt(p.teilnehmende) ? el('span', { class: 'leise', text: 'Anwesend: ' + kurz(p.teilnehmende, 80) }) : null,
+        dokumentMarke(p)
+      )
+    );
+  }
+
   function zeichne() {
     statusZeigen();
-    leeren(box);
+    leeren(boxNeueste);
+    leeren(boxRest);
     if (!meta) return;
     if (!daten.protokolle.length) {
-      box.append(el('p', { class: 'leise', text:
-        'Noch keine Protokolle. Mit „+ Protokoll“ schreibst du das erste.' }));
+      boxNeueste.append(el('p', { class: 'leise', text: 'Noch keine Protokolle. Mit „+ Protokoll“ schreibst du das erste.' }));
       return;
     }
-    const art = artWahl.value;
-    const bezug = bezugWahl.value;
-    const liste = sortiereProtokolle(daten.protokolle.filter(function (p) {
-      if (art && txt(p.art).toLowerCase() !== art) return false;
-      if (bezug && bezugSchluessel(p).indexOf(bezug) < 0) return false;
-      return passtSuche(p, suche.value);
-    }));
+    const liste = sortiereProtokolle(daten.protokolle.filter(function (p) { return passtSuche(p, suche.value); }));
     if (!liste.length) {
-      box.append(el('p', { class: 'leise', text: 'Kein Protokoll passt zu Suche und Filter.' }));
+      boxNeueste.append(el('p', { class: 'leise', text: 'Kein Protokoll passt zur Suche.' }));
       return;
     }
-    nachJahr(liste).forEach(function (g) {
-      box.append(el('h2', { class: 'liste-titel protokoll-jahr', text: g.jahr + ' (' + g.liste.length + ')' }));
-      box.append(el('ul', { class: 'dash-todo-liste' }, ...g.liste.map(function (p) {
-        const zeile1 = [normDatum(p.datum) ? datumText(p.datum) : '', artText(p.art), bezugText(p)]
-          .filter(Boolean).join(' · ');
-        return el('li', null,
-          el('button', {
-            class: 'dash-todo protokoll-zeile', type: 'button',
-            onclick: function () { lesen(p); }
-          },
-            zeile1 ? el('span', { class: 'leise', text: zeile1 }) : null,
-            el('strong', { text: txt(p.titel) || 'Protokoll' }),
-            txt(p.teilnehmende) ? el('span', { class: 'leise', text: 'Anwesend: ' + kurz(p.teilnehmende, 80) }) : null,
-            dokumentMarke(p)
-          )
-        );
-      })));
+    const oben = liste.slice(0, NEUESTE);
+    const rest = liste.slice(NEUESTE);
+    boxNeueste.append(
+      el('h2', { class: 'liste-titel protokoll-jahr', text: txt(suche.value) ? 'Treffer' : 'Neueste Protokolle' }),
+      el('ul', { class: 'dash-todo-liste' }, ...oben.map(zeileVon))
+    );
+    if (!rest.length) return;
+    boxRest.append(el('h2', { class: 'liste-titel protokoll-jahr', text: txt(suche.value) ? 'Weitere Treffer' : 'Ältere Protokolle' }));
+    nachJahr(rest).forEach(function (g) {
+      boxRest.append(
+        el('h3', { class: 'teil-titel-klein', text: g.jahr + ' (' + g.liste.length + ')' }),
+        el('ul', { class: 'dash-todo-liste' }, ...g.liste.map(zeileVon))
+      );
     });
   }
 
-  // ---- Lesefenster ----
+  // ---- Lesen im Detailbereich ----
 
-  // meldung (freiwillig): Text oben im Fenster, zum Beispiel nach dem Speichern
+  // meldung (freiwillig): Text oben, zum Beispiel nach dem Speichern
   function lesen(p, meldung) {
-    let fenster = null;
     const dl = el('dl', { class: 'detail-liste' });
     function paar(name, wert, mehrzeilig) {
       if (!txt(wert)) return;
@@ -192,7 +192,6 @@ export async function render(container, ctx) {
     paar('Veranstaltung', txt(p.veranstaltung_id) ? (veranstTitel[txt(p.veranstaltung_id)] || 'Veranstaltung (nicht mehr da)') : '');
     paar('Rollen', p.rollen, true);
     paar('Anwesend', p.teilnehmende, true);
-    paar('Geschrieben', [txt(p.erstellt_von), txt(p.erstellt_am) ? zeitText(p.erstellt_am) : ''].filter(Boolean).join(', '));
 
     const inhalt = el('div', { class: 'protokoll-lesen' });
     if (meldung) inhalt.append(el('p', { class: 'fehler', role: 'alert', text: meldung }));
@@ -230,38 +229,36 @@ export async function render(container, ctx) {
     if (!imDokument(p)) {
       knoepfe.append(el('button', {
         class: 'knopf knopf-hell', type: 'button', text: 'Bearbeiten',
-        onclick: function () { fenster.schliessen(); formularOeffnen(p); }
+        onclick: function () { formularOeffnen(p); }
       }));
       if (modus === 'dokument') {
         const ins = el('button', {
           class: 'knopf', type: 'button', text: 'Ins Dokument übernehmen',
-          onclick: function () { insDokument(p, ins, fenster); }
+          onclick: function () { insDokument(p, ins); }
         });
         knoepfe.append(ins);
       }
     }
     inhalt.append(knoepfe);
-    fenster = zeigeFenster(txt(p.titel) || 'Protokoll', inhalt, null, { aussenKlick: true });
+    zeigeDetail(ctx.detail, txt(p.titel) || 'Protokoll', inhalt, null, true);
   }
 
-  async function insDokument(p, knopf, fenster) {
+  async function insDokument(p, knopf) {
     knopf.disabled = true;
     knopf.textContent = 'Übernehme …';
     try {
       const r = await api('protokollInsDokument', { id: p.id }, s.token);
       if (r && r.im_dokument) {
-        fenster.schliessen();
         toast(r.hinweis || 'Protokoll im Dokument ergänzt.');
         await laden(false);
-        const neu = finde(p.id);
-        if (neu) lesen(neu);
+        lesen(finde(p.id) || r.eintrag || p);
         return;
       }
       toast((r && r.hinweis) || 'Das Dokument konnte nicht ergänzt werden.');
     } catch (e) {
       if (ctx.behandleFehler(e)) return;
       if (e.code === 'nicht_gefunden') {
-        fenster.schliessen();
+        schliesseDetail(ctx.detail);
         laden(false);
       }
       toast(e.message);
@@ -270,21 +267,76 @@ export async function render(container, ctx) {
     knopf.textContent = 'Ins Dokument übernehmen';
   }
 
-  // Formular (protokoll-eintrag.js): neu (p = null) oder ändern (nur solange nicht im Dokument)
-  function formularOeffnen(p) {
-    zeigeProtokollFormular({
+  // ---- Formular im Inhalt ----
+
+  function zumFormular() {
+    if (boxForm.scrollIntoView) boxForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function formularZu() {
+    formular = null;
+    leeren(boxForm);
+    neuKnopf.hidden = false;
+  }
+
+  function formularBauen(p, ausEntwurf) {
+    leeren(boxForm);
+    formular = baueProtokollFormular({
       ctx: ctx, token: s.token, gruppeId: s.gruppe_id, kurzname: s.kurzname,
-      daten: daten, eintrag: p || null,
+      daten: daten, tops: offeneTops(tops), eintrag: p || null, ausEntwurf: ausEntwurf,
+      beiZu: formularZu,
       nachSpeichern: async function (eintrag, res) {
         if (res && res.im_dokument) toast('Protokoll gespeichert und im Dokument ergänzt.');
         else if (res) toast('Protokoll gespeichert.');
-        await laden(false);
+        await Promise.all([laden(false), ladeTops(false)]);
         const neu = finde(eintrag.id) || eintrag;
-        if (!res) { lesen(neu); return; }
-        // Nicht im Dokument: Lesefenster mit Grund und den Knöpfen „Ins Dokument übernehmen“ oder „Protokoll kopieren“
-        if (!res.im_dokument) lesen(neu, 'Das Protokoll ist gespeichert, steht aber nicht im Dokument. ' + txt(res.hinweis));
+        // Nicht im Dokument: Detail mit Grund und „Ins Dokument übernehmen“ bzw. „Protokoll kopieren“
+        if (res && !res.im_dokument) lesen(neu, 'Das Protokoll ist gespeichert, steht aber nicht im Dokument. ' + txt(res.hinweis));
+        else if (!res) lesen(neu);
       }
     });
+    boxForm.append(formular.el);
+    neuKnopf.hidden = true;
+    zumFormular();
+  }
+
+  // Entwurf vorhanden: Frage direkt im Inhalt
+  function entwurfFragen(e) {
+    leeren(boxForm);
+    neuKnopf.hidden = true;
+    boxForm.append(el('section', { class: 'karte pk-entwurf-frage' },
+      el('h2', { text: 'Entwurf' + e.wann + ' fortsetzen?' }),
+      el('p', { text: 'Auf diesem Gerät gibt es einen Entwurf: „' + (e.titel || 'ohne Titel') + '“.' }),
+      el('div', { class: 'form-knoepfe' },
+        el('button', { class: 'knopf', type: 'button', text: 'Fortsetzen', onclick: function () { formularBauen(null, true); } }),
+        el('button', {
+          class: 'knopf knopf-hell', type: 'button', text: 'Verwerfen',
+          onclick: function () {
+            if (!window.confirm('Den Entwurf wirklich verwerfen? Das geht nicht rückgängig.')) return;
+            verwirfEntwurf(s.gruppe_id);
+            formularBauen(null, false);
+          }
+        }),
+        el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abbrechen', onclick: formularZu })
+      )
+    ));
+    zumFormular();
+  }
+
+  // p = null: neues Protokoll. Sonst ändern (nur solange nicht im Dokument).
+  function formularOeffnen(p) {
+    if (formular) {
+      if (!p && formular.istNeu) { zumFormular(); return; }
+      if (formular.hatAenderungen() && !window.confirm(formular.istNeu
+        ? 'Das offene Formular wird geschlossen. Dein Entwurf bleibt auf diesem Gerät gesichert. Weiter?'
+        : 'Das offene Formular hat ungespeicherte Änderungen. Trotzdem schließen?')) return;
+      formular.schliessen();
+    }
+    // Am Handy verdeckt das Detail den Inhalt: erst schließen
+    if (p && ctx.detail && window.matchMedia('(max-width: 959px)').matches) schliesseDetail(ctx.detail);
+    const e = p ? null : entwurfInfo(s.gruppe_id);
+    if (e) entwurfFragen(e);
+    else formularBauen(p, false);
   }
 
   // ---- Laden ----
@@ -302,7 +354,6 @@ export async function render(container, ctx) {
     veranstTitel = {};
     daten.projekte.forEach(function (p) { projektTitel[String(p.id)] = txt(p.titel); });
     daten.veranstaltungen.forEach(function (v) { veranstTitel[String(v.id)] = txt(v.titel); });
-    bezugAufbauen();
     zeichne();
   }
 
@@ -313,6 +364,30 @@ export async function render(container, ctx) {
     } catch (e) {
       if (ctx.behandleFehler(e)) return;
       info = null;
+    }
+  }
+
+  // TOPs getrennt laden: Fehlt der Tab noch, bleibt der Rest des Reiters nutzbar
+  async function ladeTops(zuerstCache) {
+    try {
+      await ladeMitCache(
+        s.gruppe_id + ':tops',
+        async function () {
+          const r = await api('list', { tabelle: 'TOPs' }, s.token);
+          return { tops: r.zeilen || [] };
+        },
+        function (d) {
+          tops = d.tops || [];
+          topsFehler = '';
+          sammlung.zeichne();
+          if (formular) formular.setzeTops(offeneTops(tops));
+        },
+        zuerstCache
+      );
+    } catch (e) {
+      if (ctx.behandleFehler(e)) return;
+      topsFehler = 'Die TOP-Sammlung ist noch nicht eingerichtet oder gerade nicht erreichbar (' + e.message + ').';
+      sammlung.zeichne();
     }
   }
 
@@ -348,11 +423,8 @@ export async function render(container, ctx) {
   }
 
   suche.addEventListener('input', zeichne);
-  artWahl.addEventListener('change', zeichne);
-  bezugWahl.addEventListener('change', zeichne);
-  ctx.setzeRefresh(function () { return laden(false); });
-  bezugAufbauen();
-  await Promise.all([infoLaden(), laden(true)]);
+  ctx.setzeRefresh(function () { return Promise.all([laden(false), ladeTops(false)]); });
+  await Promise.all([infoLaden(), laden(true), ladeTops(true)]);
   // Marken „noch nicht im Dokument“ hängen vom Modus ab
   zeichne();
 }

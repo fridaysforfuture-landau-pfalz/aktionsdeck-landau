@@ -6,6 +6,8 @@
 // aus Mobi (js/views/mobi-todo.js, ohne Kästchen). Sie zählen nicht bei "ToDos".
 // Erledigte (nur die der letzten 2 Wochen) per Schalter oben rechts. ToDos haben ein Kästchen zum Abhaken.
 // Die anderen Kacheln sind noch Platzhalter (Posts/Kalender Etappe 5).
+// Rechts unter den ToDos steht die Kachel TOPs (js/views/tops.js, seit 0.30.3). ToDos und TOPs sind zusammen
+// so hoch wie die Kachel Projekte; ist eine abgeschnitten, gibt es darunter „Ganz zeigen“.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -33,6 +35,7 @@ import {
   istAbgeschlossen, fortschritt, fortschrittText, sortiereProjekte, terminText
 } from './projekt-rechnen.js';
 import { sammelTodos, istSammel, sammelInfo, oeffneSammel } from './mobi-todo.js';
+import { baueTopSammlung } from './tops.js';
 
 const MAX_OFFEN = 10;
 const MAX_ERLEDIGT = 10;
@@ -43,6 +46,9 @@ const projektOffen = {};
 
 // Das Fenster "Was ist neu?" öffnet sich nur einmal pro Seitenaufruf von selbst
 let neuAutoGezeigt = false;
+
+// Lauscher für die Fenstergröße (Aufklapper der rechten Kacheln)
+let groesseLauscher = null;
 
 const KACHELN = [
   { titel: 'Projekte', projekte: true },
@@ -89,6 +95,56 @@ export async function render(container, ctx) {
     zahlen,
     liste
   );
+
+  // Kachel TOPs (8.3a): dieselbe TOP-Sammlung wie im Reiter Dokumentation
+  let topDaten = [];
+  let topFehler = '';
+  const topSammlung = baueTopSammlung({
+    ctx: ctx, token: s.token,
+    holeTops: function () { return topDaten; },
+    neuLaden: function () { return ladeTops(false); },
+    fehlerText: function () { return topFehler; }
+  });
+  const topKachel = el('section', { class: 'karte dash-kachel dash-tops' },
+    el('div', { class: 'dash-kachel-titel' },
+      el('h2', { text: 'TOPs' }),
+      el('a', { class: 'knopf knopf-hell', href: basis + 'protokoll', text: 'Zur Dokumentation →' })
+    ),
+    el('p', { class: 'leise', text: 'Was soll beim nächsten Plenum besprochen werden? Klick auf einen TOP = bearbeiten.' }),
+    topSammlung.el
+  );
+  // Rechte Spalte: ToDos und TOPs zusammen so hoch wie die Kachel Projekte, mehr Inhalt per Aufklapper
+  const rechts = el('div', { class: 'dash-rechts' });
+  function aufklapper(kachel) {
+    const knopf = el('button', {
+      class: 'knopf knopf-hell dash-aufklapper', type: 'button', text: '▾ Ganz zeigen',
+      onclick: function () {
+        const auf = !kachel.classList.contains('dash-offen');
+        kachel.classList.toggle('dash-offen', auf);
+        rechts.classList.toggle('dash-rechts-offen', !!rechts.querySelector('.dash-offen'));
+        knopf.textContent = auf ? '▴ Weniger zeigen' : '▾ Ganz zeigen';
+        hoehePruefen();
+      }
+    });
+    knopf.hidden = true;
+    const huelle = el('div', { class: 'dash-rechts-teil' }, kachel, knopf);
+    rechts.append(huelle);
+    return { kachel: kachel, knopf: knopf };
+  }
+  const teileRechts = [aufklapper(todoKachel), aufklapper(topKachel)];
+  // Aufklapper nur zeigen, wenn eine Kachel abgeschnitten ist
+  function hoehePruefen() {
+    requestAnimationFrame(function () {
+      teileRechts.forEach(function (t) {
+        const offen = t.kachel.classList.contains('dash-offen');
+        t.knopf.hidden = !offen && t.kachel.scrollHeight <= t.kachel.clientHeight + 2;
+      });
+    });
+  }
+  // Nur ein Lauscher, auch wenn der Start öfter aufgebaut wird
+  if (groesseLauscher) window.removeEventListener('resize', groesseLauscher);
+  groesseLauscher = hoehePruefen;
+  window.addEventListener('resize', hoehePruefen);
 
   const projektListe = el('div', { class: 'dash-projekt-liste' },
     el('p', { class: 'leise', text: 'Lade Projekte …' }));
@@ -195,7 +251,7 @@ export async function render(container, ctx) {
     el('div', { class: 'dash-raster' },
       ...KACHELN.map(function (k) {
         if (k.projekte) return projektKachel;
-        if (k.todos) return todoKachel;
+        if (k.todos) return rechts;
         return el('section', { class: 'karte dash-kachel' },
           el('h2', { text: k.titel }),
           el('p', { class: 'leise', text: k.hinweis })
@@ -219,6 +275,7 @@ export async function render(container, ctx) {
   // ---- Projekte ----
 
   function zeichneProjekte() {
+    hoehePruefen();
     leeren(projektListe);
     if (projektFehler && !projektDaten) {
       projektListe.append(el('p', {
@@ -651,9 +708,34 @@ export async function render(container, ctx) {
   
   erledigteCb.addEventListener('change', zeichne);
   // Während ein Häkchen noch gespeichert wird, wird nicht aktualisiert
+  // TOPs getrennt laden: Fehlt der Tab noch, bleibt der Start nutzbar
+  async function ladeTops(zuerstCache) {
+    try {
+      await ladeMitCache(
+        s.gruppe_id + ':tops',
+        async function () {
+          const r = await api('list', { tabelle: 'TOPs' }, s.token);
+          return { tops: r.zeilen || [] };
+        },
+        function (d) {
+          topDaten = d.tops || [];
+          topFehler = '';
+          topSammlung.zeichne();
+          hoehePruefen();
+        },
+        zuerstCache
+      );
+    } catch (e) {
+      if (ctx.behandleFehler(e)) return;
+      topFehler = 'Die TOP-Sammlung ist noch nicht eingerichtet oder gerade nicht erreichbar.';
+      topSammlung.zeichne();
+    }
+  }
+
   ctx.setzeRefresh(function () {
     if (Object.keys(arbeitet).length) return Promise.resolve();
-    return Promise.all([laden(false), ladeProjekte(false), ladeMobi(false), ladeExtra(false), pinnwand.laden(), ladeNeuSeit(false)]);
+    return Promise.all([laden(false), ladeProjekte(false), ladeMobi(false), ladeExtra(false), pinnwand.laden(), ladeNeuSeit(false), ladeTops(false)]);
   });
-  await Promise.all([laden(true), ladeProjekte(true), ladeMobi(true), ladeExtra(true), ladeNeuSeit(true)]);
+  await Promise.all([laden(true), ladeProjekte(true), ladeMobi(true), ladeExtra(true), ladeNeuSeit(true), ladeTops(true)]);
+  hoehePruefen();
 }

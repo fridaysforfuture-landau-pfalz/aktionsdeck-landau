@@ -13,6 +13,7 @@ var BASIS = ['id', 'gruppe_id', 'erstellt_am', 'erstellt_von',
 //   im_dokument = steht im Google-Dokument der Gruppe. vorschlaege_erledigt = Abhak-Liste wurde angelegt.
 //   Protokolle werden nie gelöscht (siehe NIE_LOESCHEN).
 // Reden: Archiv der Reden. status = entwurf | probelesen | fertig | gehalten. Werden nie gelöscht.
+// TOPs: Sammlung der Tagesordnungspunkte fürs nächste Plenum (seit 0.30.3). protokoll_id = in diesem Protokoll besprochen.
 // Kommentare: freie Kommentare zu einem Projekt.
 var TABELLEN = {
   Personen: ['name', 'aktiv'],
@@ -29,6 +30,7 @@ var TABELLEN = {
   Protokolle: ['projekt_id', 'datum', 'titel', 'teilnehmende', 'text',
                'art', 'veranstaltung_id', 'rollen', 'im_dokument', 'vorschlaege_erledigt'],
   Reden: ['projekt_id', 'veranstaltung_id', 'titel', 'redner', 'datum', 'aktionsart', 'link', 'status', 'notiz'],
+  TOPs: ['titel', 'notiz', 'protokoll_id'],
   Kommentare: ['projekt_id', 'bezug_art', 'bezug_id', 'text', 'angeheftet', 'farbe'],
   Learnings: ['projekt_id', 'aktionsart', 'text'],
   Umfragen: ['frage', 'optionen', 'ablauf_am', 'mehrfach', 'beendet', 'namentlich'],

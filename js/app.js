@@ -4,7 +4,7 @@
 import { VERSION, REFRESH_SEKUNDEN } from './config.js';
 import { api } from './api.js';
 import {
-  getSession, clearSession, getName, setName, getGruppenCache, setGruppenCache
+  getSession, clearSession, getName, setName, getGruppenCache, setGruppenCache, gibtEntwurf, loescheAlleEntwuerfe
 } from './store.js';
 import { cacheLeeren } from './cache.js';
 import { baueGeruest, sichtbareTabs, tabLabel } from './ui/nav.js';
@@ -88,6 +88,17 @@ async function abmelden() {
   route();
 }
 
+// Knopf „Abmelden“: Protokoll-Entwürfe werden mitgelöscht (geteilte Geräte), vorher Warnung.
+// Läuft nur die Anmeldung ab (abmelden ohne Knopf), bleiben die Entwürfe.
+async function abmeldenVonHand() {
+  if (gibtEntwurf()) {
+    if (!window.confirm('Auf diesem Gerät gibt es einen Protokoll-Entwurf, der noch nicht gespeichert ist.\n\n' +
+      'Beim Abmelden wird er gelöscht. Trotzdem abmelden?')) return;
+    loescheAlleEntwuerfe();
+  }
+  await abmelden();
+}
+
 async function nameAendern() {
   const n = await frageName(getName(), true);
   if (n) {
@@ -126,7 +137,7 @@ async function route() {
     gruppenSofort: gruppenSofort,
     neuLaden: route,
     version: VERSION,
-    abmelden: abmelden,
+    abmelden: abmeldenVonHand,
     nameAendern: nameAendern,
     behandleFehler: behandleFehler,
     setzeRefresh: function (fn) { refreshFn = fn; }

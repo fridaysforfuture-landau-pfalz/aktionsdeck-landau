@@ -2664,3 +2664,35 @@ p.notiz.erledigt {
 .pk-zaehler.fehler { font-weight: 600; }
 .pk-hinweis { font-size: 13px; margin: 0; }
 .pk-entwurf { display: grid; gap: 6px; justify-items: start; }
+
+/* ---- 0.30.3: Dokumentation mit Formular im Inhalt, TOP-Sammlung, Kachel TOPs auf dem Start ---- */
+.protokoll-form.karte { margin: 16px 0; border-top: 5px solid var(--gruppe); }
+.protokoll-form h2 { margin: 0; }
+.pk-entwurf-frage { margin: 16px 0; }
+.top-karte h2 { margin: 0 0 8px; font-size: 18px; }
+.top-sammlung { display: grid; gap: 8px; }
+.top-eingabe { display: flex; flex-wrap: wrap; gap: 8px; }
+.top-eingabe .feld { flex: 1 1 200px; min-width: 0; }
+.pk-ruecken-knoepfe { display: flex; gap: 6px; }
+.pk-ruecken { min-width: 44px; padding: 0 10px; font-size: 18px; }
+.protokoll-feld { tab-size: 4; }
+.protokoll-text { tab-size: 4; }
+.detail .protokoll-knoepfe .knopf { flex: 1 1 auto; }
+
+/* Start: rechte Spalte mit ToDos und TOPs */
+.dash-rechts { display: grid; gap: 12px; align-content: start; }
+.dash-rechts-teil { display: flex; flex-direction: column; gap: 4px; min-height: 0; }
+.dash-aufklapper { align-self: center; }
+@media (min-width: 600px) {
+  /* Höhe kommt von der Kachel Projekte (gleiche Zeile im Raster), mindestens 340 px */
+  .dash-projekte { min-height: 340px; }
+  .dash-rechts { display: flex; flex-direction: column; height: 0; min-height: 100%; }
+  .dash-rechts-teil { flex: 1 1 0; }
+  .dash-rechts-teil > .dash-kachel { flex: 1 1 0; min-height: 0; overflow: hidden; }
+  .dash-rechts-teil > .dash-aufklapper { flex: none; }
+  /* Eine Kachel ganz gezeigt: Spalte wächst mit, die andere bleibt kurz */
+  .dash-rechts.dash-rechts-offen { height: auto; }
+  .dash-rechts-offen .dash-rechts-teil { flex: none; }
+  .dash-rechts-offen .dash-kachel:not(.dash-offen) { flex: none; max-height: 220px; }
+  .dash-rechts-teil > .dash-kachel.dash-offen { flex: none; overflow: visible; }
+}
