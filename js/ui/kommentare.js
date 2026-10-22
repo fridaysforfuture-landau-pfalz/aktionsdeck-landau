@@ -2,7 +2,8 @@
 // Kommentare zu einem Eintrag (ToDo, später Mobi u. a.) oder die Pinnwand auf dem Start.
 // Tab Kommentare: projekt_id (freiwillig), bezug_art, bezug_id, text.
 // opt: { ctx, token, art ('todo' | 'pinnwand' | ...), bezugId, projektId, titel,
-//        platzhalter, leerText, neuesteZuerst (Formular steht dann oben), max }
+//        platzhalter, leerText, neuesteZuerst (Formular steht dann oben), max,
+//        ohneStelle (nur Kommentare ohne Absatz-Stelle, für Reden seit 0.30.12) }
 // Gibt { el, laden } zurück. Das Element lädt seine Kommentare selbst.
 
 import { el, leeren } from './dom.js';
@@ -96,6 +97,8 @@ export function baueKommentare(opt) {
       const r = await api('list', { tabelle: 'Kommentare' }, opt.token);
       const passend = r.zeilen.filter(function (k) {
         if (txt(k.bezug_art) !== art || txt(k.bezug_id) !== bezug) return false;
+        // Kommentare zu einem Absatz stehen beim Absatz (js/views/rede-text.js)
+        if (opt.ohneStelle && txt(k.stelle)) return false;
         // Veranstaltung (hat Farbe), die schon als Mitteilung hängt: nicht doppelt auf der Pinnwand
         if (art === 'pinnwand' && farbeOk(k.farbe) && istWahr(k.angeheftet)) return false;
         return true;

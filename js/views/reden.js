@@ -3,7 +3,9 @@
 // Liste neueste zuerst, nichts wird ausgeblendet. Je Rede: Titel, Redner, Datum, Projekt oder Veranstaltung,
 // Status als Marke, 💬-Zahl. Suche (Titel, Redner, Aktionsart, Projekt, Veranstaltung, Notiz), Filter Status und Jahr.
 // Klick öffnet die Rede im Detailbereich: alle Felder, „Dokument öffnen“, Status weiterschalten, „Bearbeiten“,
-// darunter die Kommentare zum Probelesen (bezug_art „rede“). Es gibt kein Löschen.
+// darunter die Kommentare zum Probelesen (bezug_art „rede“).
+// Seit 8.8: Redetext mit Kommentaren je Absatz (js/views/rede-text.js), allgemeine Kommentare darunter,
+// Knopf „Löschen“ (nur von Hand, weich, mit Rückfrage).
 //
 // baueReden(container, ctx) -> Promise<{ neu(vorgabe), oeffne(id), laden(), weg() }>
 
@@ -17,6 +19,7 @@ import { zeitText } from './material-rechnen.js';
 import { normDatum, datumText, kommentarZahlen, kommentarMarke } from './todos-rechnen.js';
 import { sichereUrl } from './kalender-rechnen.js';
 import { REDE_STATI, redeStatusText, naechsterStatus, baueRedeFormular } from './rede-eintrag.js';
+import { baueRedeText } from './rede-text.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -96,7 +99,7 @@ export async function baueReden(container, ctx) {
     if (jahrWahl.value && datumVon(r).slice(0, 4) !== jahrWahl.value) return false;
     const q = txt(suche.value).toLowerCase();
     if (!q) return true;
-    return [r.titel, r.redner, r.aktionsart, r.notiz, bezugText(r)].some(function (x) {
+    return [r.titel, r.redner, r.aktionsart, r.notiz, r.text, bezugText(r)].some(function (x) {
       return txt(x).toLowerCase().indexOf(q) >= 0;
     });
   }
@@ -189,12 +192,26 @@ export async function baueReden(container, ctx) {
     knoepfe.append(el('button', {
       class: 'knopf knopf-hell', type: 'button', text: 'Bearbeiten', onclick: function () { formularOeffnen(r); }
     }));
+    knoepfe.append(el('button', {
+      class: 'knopf knopf-gefahr', type: 'button', text: 'Löschen', onclick: function () { loeschen(r); }
+    }));
+
+    // Redetext mit Kommentaren je Absatz (8.8)
+    const redeText = baueRedeText({
+      ctx: ctx, token: s.token, rede: r, kommentare: daten.kommentare,
+      nachAenderung: async function () {
+        await laden(false);
+        const neu = finde(r.id);
+        if (neu) lesen(neu);
+      }
+    });
 
     const kommentare = baueKommentare({
       ctx: ctx, token: s.token, art: 'rede', bezugId: r.id, projektId: txt(r.projekt_id),
-      titel: 'Probelesen: Kommentare',
-      platzhalter: 'Anmerkung zur Rede …',
-      leerText: 'Noch keine Anmerkungen. Hier kann die Gruppe zum Probelesen kommentieren.',
+      titel: 'Probelesen: Kommentare zur ganzen Rede',
+      platzhalter: 'Anmerkung zur ganzen Rede …',
+      leerText: 'Noch keine Anmerkungen zur ganzen Rede. Zu einem Absatz kommentierst du oben mit „💬 Kommentieren“.',
+      ohneStelle: true,
       // Neuer oder gelöschter Kommentar: Liste neu laden, damit die 💬-Zahl stimmt
       beiAenderung: function () { laden(false); }
     });
@@ -202,11 +219,30 @@ export async function baueReden(container, ctx) {
     const inhalt = el('div', { class: 'protokoll-lesen' },
       el('p', null, statusMarke(r.status)),
       dl,
-      link ? null : el('p', { class: 'leise', text: 'Noch kein Link zum Dokument eingetragen.' }),
       knoepfe,
+      redeText,
       kommentare.el
     );
     zeigeDetail(ctx.detail, txt(r.titel) || 'Rede', inhalt, function () { offeneId = ''; }, true);
+  }
+
+  // Löschen nur von Hand (8.8): weich, das Skript prüft vonHand
+  async function loeschen(r) {
+    if (!window.confirm('Die Rede „' + (txt(r.titel) || 'Rede') + '“ wirklich löschen? Sie verschwindet für die ganze Gruppe ' +
+      'aus der App, auch mit ihren Kommentaren. Im Sheet bleibt sie als gelöscht markiert stehen.')) return;
+    try {
+      await api('delete', { tabelle: 'Reden', id: r.id, bekannt: r.geaendert_am, vonHand: true }, s.token);
+    } catch (e) {
+      if (ctx.behandleFehler(e)) return;
+      toast(e.code === 'konflikt' ? 'Jemand anderes hat die Rede gerade geändert. Bitte neu öffnen.' : e.message);
+      await laden(false);
+      return;
+    }
+    if (formular) formular.schliessen();
+    toast('Rede gelöscht.');
+    offeneId = '';
+    schliesseDetail(ctx.detail);
+    await laden(false);
   }
 
   // ---- Formular im Inhalt ----

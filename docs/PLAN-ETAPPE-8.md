@@ -14,6 +14,7 @@ Schritt 8.0 darfst du sofort bauen. Auch 8.1 darfst du bauen. Frage D ist am 22.
 8.5a (Version 0.30.9): Markierungen auch als Wort („ToDo:“ usw.), „Schließen“ statt „Abbrechen“. Versionen danach: 8.6 = 0.30.10, 8.7 = 0.30.11.
 8.6 (Version 0.30.10): Reden-Archiv. Formular im Inhalt statt Fenster, Detail im Detailbereich. Filter nur Status und Jahr, Aktionsart, Redner und Projekt über die Suche.
 8.7 (Version 0.30.11): Verknüpfungen (Projekt-Teil Reden, „Protokoll schreiben“ im Kalender, „Was ist neu?“). Damit ist Etappe 8 fertig gebaut. Bei Titeln, die nicht mit „Plenum“ beginnen, wird Art „Sonstiges“ gewählt.
+8.8 (Version 0.30.12, Wunsch der Person nach 8.7, Sheet und Skript ändern sich): Löschen von Hand für Protokolle und Reden, Redetext in der App (Link freiwillig), Kommentare zu einzelnen Absätzen. Entscheidung 5 gilt damit nur noch für automatisches Löschen (siehe Abschnitt 8.8).
 **Änderungen der Person (22.10.2026):** Der Reiter heißt in der Anzeige **„Dokumentation“** (Kennung bleibt `protokoll`). GP hat jetzt ebenfalls ein Google-Dokument (`PROTOKOLL_DOK_g2`), Entscheidung A gilt für GP damit nicht mehr.
 
 ## 1. Ziel
@@ -42,7 +43,7 @@ Schritt 8.0 darfst du sofort bauen. Auch 8.1 darfst du bauen. Frage D ist am 22.
 2. **FFF:** Das Protokoll kommt in ein Google-Dokument, **immer oben** unter einer festen Stelle (siehe 8.1). Die Dokument-ID steht nur in der Skripteigenschaft, nie im Repo oder in diesem Plan.
 3. **Ein Dokument je Gruppe.** Die Person legt es an und gibt es von Hand frei. Das Skript teilt nie etwas.
 4. **Kein Bearbeiten in der App nach dem Speichern.** „Bearbeiten" öffnet das **Dokument**. Solange ein Protokoll noch nicht im Dokument steht (`im_dokument` = FALSE), darf die App es ändern.
-5. **Protokolle und Reden werden nie gelöscht.** Es gibt kein Löschen in der App. Das Skript sperrt `delete` für beide Tabs. Protokolle bleiben auch beim Löschen eines Projekts erhalten.
+5. **Protokolle und Reden werden nie gelöscht.** (Geändert in 8.8: Löschen nur von Hand, einzeln, mit Rückfrage, weich. Nie automatisch.) Es gibt kein Löschen in der App. Das Skript sperrt `delete` für beide Tabs. Protokolle bleiben auch beim Löschen eines Projekts erhalten.
 6. **Protokolle können mit einem Projekt verknüpft sein**, damit Learnings zur Aktionsart des Projekts angelegt werden können.
 7. **Reden** haben einen Status (Entwurf · Probelesen · Fertig · Gehalten), können mit Projekt oder Veranstaltung verknüpft sein und stehen **auch im Projekt** (Teil „Reden"). Das ToDo „Reden festlegen" bleibt wie es ist.
 8. **Markierungen im Text:** Per Knopf (und optional Tastenkürzel) wird eine Markierung eingefügt. Es gibt **keine KI-Erkennung**.
@@ -225,7 +226,7 @@ Version: 0.30.5. Sheet und Skript bleiben unverändert.
 3. Formular „+ Rede": Titel, Redner (Vorschläge aus bisherigen Rednern und Anzeigenamen), Datum, Projekt oder Veranstaltung (freiwillig), Aktionsart (Vorschläge wie bei Learnings), Link zum Drive-Dokument, Status, Notiz. Der Link muss mit `https://` beginnen (`sichereUrl`). Bei anderen Adressen als `docs.google.com` oder `drive.google.com` erscheint nur eine Warnung. Über dem Link: „Gib das Dokument in Drive so frei, dass deine Gruppe kommentieren kann. Die App teilt nichts."
 4. Fenster zu einer Rede: alle Felder, „Dokument öffnen" (neuer Tab, `rel="noopener noreferrer"`), Knopf zum Weiterschalten des Status (Entwurf → Probelesen → Fertig → Gehalten), darunter **Kommentare** zum Probelesen (`baueKommentare` mit `art: 'rede'`, `bezugId` = Rede-ID, `projektId` wenn vorhanden).
 5. Die 💬-Zahl kommt aus `kommentarZahlen` (`js/views/todos-rechnen.js`). Lies die Funktion zuerst und ergänze sie, wenn sie nur einzelne Arten kennt.
-6. **Es gibt kein Löschen** (Entscheidung 5, das Skript sperrt es). Bearbeiten ist erlaubt, mit Konfliktprüfung.
+6. **Es gibt kein Löschen** (Entscheidung 5, das Skript sperrt es; geändert in 8.8: Löschen von Hand). Bearbeiten ist erlaubt, mit Konfliktprüfung.
 
 **Prüfen:** Rede anlegen, Link einfügen, Kommentar schreiben, Zahl in der Liste, Status ändern, Filter Jahr. Link ohne https wird abgelehnt. Es gibt keinen Löschen-Knopf.
 
@@ -240,12 +241,22 @@ Version: 0.30.6. Sheet und Skript bleiben unverändert.
 
 **Prüfen:** Plenum aus dem Kalender: Formular kommt vorbefüllt. Das Projekt zeigt seine Reden. „Was ist neu?" nennt ein Protokoll, das jemand anderes geschrieben hat.
 
+### 8.8 – Löschen von Hand, Redetext in der App, Kommentare je Absatz
+
+Version: 0.30.12. **Sheet und Skript ändern sich** (Wunsch der Person nach der Prüfung von 8.7, ein Pull Request).
+
+1. **Löschen von Hand:** Im Detail eines fertigen Protokolls und einer Rede gibt es den Knopf „Löschen“ mit Rückfrage. Die App schickt `vonHand: true`. Das Skript (`Daten.gs`, `aktionDelete`) erlaubt das Löschen von Protokollen und Reden nur damit. Ohne `vonHand` bleiben nur gemeinsame Entwürfe verwerfbar (wie bisher). Löschen ist weich (`geloescht = TRUE`). Einträge, die aus einem Protokoll angelegt wurden, bleiben (Entscheidung der Person). Das Google-Dokument ändert die App nicht.
+2. **Redetext in der App:** Neue Spalte `Reden.text` (bis 20 000 Zeichen). Der Text steht standardmäßig in der App. Der Link ist freiwillig (falls die Rede woanders geschrieben ist).
+3. **Kommentare je Absatz:** Neue Spalte `Kommentare.stelle` ("Nummer|Anfang des Absatzes"). Absätze trennt eine Leerzeile. Unter jedem Absatz stehen seine Kommentare und „💬 Kommentieren“. Findet die App den Absatz nach einer Textänderung nicht mehr, steht der Kommentar unter „Kommentare zu geänderten Stellen“ mit Zitat. Kommentare zur ganzen Rede bleiben darunter. Neue Datei `js/views/rede-text.js`.
+
+**Prüfen:** Rede mit Text anlegen, Absatz kommentieren, Text ändern, Rede löschen, Protokoll löschen (Dokument bleibt).
+
 ## 7. Regeln und Risiken für Etappe 8
 
 - **Dokument ≠ App:** Das Dokument wird nur angehängt, nie von der App gelesen oder später geändert. Was jemand im Dokument von Hand ändert, kommt nicht zurück in die App. Die App-Kopie zeigt den Stand beim Speichern. Das steht im Lesefenster.
 - **Zugriff:** Das Skript teilt kein Dokument und setzt keine Freigabe. Die Dokument-ID steht nur in den Skripteigenschaften. `protokollInfo` liefert den Link nur an angemeldete Nutzer der Gruppe.
 - **Datenschutz:** Protokolle können Personendaten enthalten. `Protokolle` und `Reden` liefern nur Daten der eigenen Gruppe und sind **nicht öffentlich** (keine Aktion ohne Login, kein Eintrag in `Termine.gs`). Wer das Dokument öffnen darf, bestimmt die Person in Drive.
-- **Entwurf nur lokal:** Zwei Personen am selben Protokoll gleichzeitig sind nicht vorgesehen.
+- **Entwurf nur lokal:** Zwei Personen am selben Protokoll gleichzeitig sind nicht vorgesehen. (Überholt seit 8.3b: gemeinsamer Entwurf.)
 - **Keine KI:** Es werden nur Zeilen gelesen, die mit einem Markierungs-Symbol beginnen. Fließtext wird nie gedeutet.
 - **Texte** nur mit `textContent`. Im Dokument steht nur Klartext. Beim Schreiben ins Sheet schützt das Skript Werte, die mit `=`, `+`, `-` oder `@` beginnen (wie überall).
 - **Berechtigung:** Google fragt nach der Berechtigung für Dokumente. Der Hinweis „nicht verifiziert" bei eigenen Skripten ist normal.
@@ -262,6 +273,9 @@ Version: 0.30.6. Sheet und Skript bleiben unverändert.
 | 8.4 | Markierungen, Einfüge-Knöpfe, `@`, Einfügen aus der App | 0.30.3 | nein |
 | 8.5 | Vorschläge aus dem Protokoll zum Abhaken | 0.30.4 | nein |
 | 8.6 | Reden-Archiv | 0.30.5 | nein |
-| 8.7 | Projekt-Teil Reden, Plenum aus dem Kalender, Was ist neu | 0.30.6 | nein |
+| 8.7 | Projekt-Teil Reden, Plenum aus dem Kalender, Was ist neu | 0.30.6 (wurde 0.30.11) | nein |
+| 8.8 | Löschen von Hand, Redetext in der App, Kommentare je Absatz | 0.30.12 | **ja, von Hand** |
+
+Die Versionen in dieser Tabelle sind die geplanten. Die echten stehen oben unter „Erledigt“.
 
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt, dann der nächste Schritt.

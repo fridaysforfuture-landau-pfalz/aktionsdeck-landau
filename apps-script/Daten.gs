@@ -6,7 +6,7 @@
 var PROJEKT_PFLICHT = ['Meilensteine', 'Projekt_Team', 'Projekt_Material', 'Finanzen'];
 
 // Diese Tabs werden beim Löschen eines Projekts mitgelöscht (Posts zuerst, wegen der ToDos zu Posts).
-// Protokolle und Reden bleiben erhalten (sie werden nie gelöscht).
+// Protokolle und Reden bleiben erhalten (sie werden nur von Hand einzeln gelöscht, seit 0.30.12).
 var PROJEKT_ABHAENGIG = ['Posts', 'ToDos', 'Meilensteine', 'Projekt_Team', 'Projekt_Material',
                          'Finanzen', 'Kommentare', 'Mobi_Plan'];
 
@@ -288,16 +288,18 @@ function aktionDelete(ctx, p) {
   if (tab === 'Projekte') {
     fehler('ungueltig', 'Projekte werden mit "projektLoeschen" gelöscht, damit alles dazu mitgelöscht wird.');
   }
-  // Protokolle: nur gemeinsame Entwürfe (noch nicht im Dokument) dürfen verworfen werden, geprüft unten
-  if (NIE_LOESCHEN.indexOf(tab) >= 0 && tab !== 'Protokolle') {
-    fehler('ungueltig', 'Protokolle und Reden werden nicht gelöscht.');
+  // Protokolle und Reden: nur von Hand (Knopf „Löschen“, die App schickt vonHand: true).
+  // Ohne vonHand dürfen nur gemeinsame Entwürfe (noch nicht im Dokument) verworfen werden, geprüft unten.
+  var vonHand = p.vonHand === true;
+  if (NIE_LOESCHEN.indexOf(tab) >= 0 && !vonHand && tab !== 'Protokolle') {
+    fehler('ungueltig', 'Reden werden nur von Hand gelöscht.');
   }
   var anzeige = anzeigename(p);
   return mitSperre(function () {
     var t = lies(tab);
     pruefeKopf(tab, t.kopf);
     var z = eintragFinden(t, ctx, p.id);
-    if (tab === 'Protokolle' && (!truthy(z.entwurf) || truthy(z.im_dokument))) {
+    if (tab === 'Protokolle' && !vonHand && (!truthy(z.entwurf) || truthy(z.im_dokument))) {
       fehler('ungueltig', 'Fertige Protokolle werden nicht gelöscht. Nur Entwürfe lassen sich verwerfen.');
     }
     konfliktPruefen(z, p.bekannt);

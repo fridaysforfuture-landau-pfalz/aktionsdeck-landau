@@ -1,8 +1,9 @@
 // js/views/rede-eintrag.js
 // Formular „+ Rede“ / „Rede bearbeiten“ (Etappe 8, Schritt 8.6). Steht direkt im Inhalt (kein Fenster),
 // wie das Protokoll-Formular. Felder: Titel, Redner, Datum, Projekt oder Veranstaltung, Aktionsart,
-// Link zum Drive-Dokument (nur https://, Warnung bei anderen Seiten als Google Docs/Drive), Status, Notiz.
-// Reden werden nie gelöscht (das Skript sperrt es). Ändern mit Konfliktprüfung.
+// Redetext (seit 8.8, Standard: die Rede steht in der App), Status, Notiz,
+// Link freiwillig (falls die Rede woanders geschrieben wird; nur https://, Warnung bei anderen Seiten als Google Docs/Drive).
+// Löschen nur von Hand im Detail (reden.js). Ändern mit Konfliktprüfung.
 //
 // baueRedeFormular(opt) -> { el, schliessen() }
 // opt: { ctx, token, daten: { reden, projekte, veranstaltungen, personen }, eintrag (null = neu),
@@ -133,6 +134,9 @@ export function baueRedeFormular(opt) {
   if (!r) artNachfuehren();
   bezug.addEventListener('change', artNachfuehren);
 
+  const text = el('textarea', { class: 'feld rede-textfeld', rows: '12', maxlength: '20000',
+    placeholder: 'Schreib hier deine Rede. Eine Leerzeile trennt die Absätze. Zu jedem Absatz kann die Gruppe kommentieren.' });
+  text.value = r ? String(r.text || '') : '';
   const link = el('input', { class: 'feld', type: 'url', maxlength: '500', placeholder: 'https://docs.google.com/document/d/…' });
   link.value = r ? txt(r.link) : '';
   const linkHinweis = el('p', { class: 'leise pk-hinweis' });
@@ -168,7 +172,8 @@ export function baueRedeFormular(opt) {
       titel: txt(titel.value), redner: txt(redner.value), datum: datum.value,
       projekt_id: b.indexOf('p:') === 0 ? b.slice(2) : '',
       veranstaltung_id: b.indexOf('v:') === 0 ? b.slice(2) : '',
-      aktionsart: txt(aktionsart.value), link: txt(link.value), status: status.value, notiz: txt(notiz.value)
+      aktionsart: txt(aktionsart.value), text: String(text.value || '').replace(/\s+$/, ''),
+      link: txt(link.value), status: status.value, notiz: txt(notiz.value)
     };
     speichernKnopf.disabled = true;
     speichernKnopf.textContent = 'Speichere …';
@@ -200,11 +205,12 @@ export function baueRedeFormular(opt) {
     el('div', { class: 'pk-zwei' }, feld('Redner', redner, rednerListe), feld('Datum', datum)),
     feld('Projekt oder Veranstaltung (freiwillig)', bezug),
     feld('Aktionsart (zum Beispiel Demo, Infostand)', aktionsart, artListe),
-    el('p', { class: 'leise pk-hinweis', text: 'Gib das Dokument in Drive so frei, dass deine Gruppe kommentieren kann. Die App teilt nichts.' }),
-    feld('Link zum Drive-Dokument (https://…)', link),
-    linkHinweis,
+    feld('Redetext', text),
     feld('Status', status),
-    feld('Notiz', notiz),
+    feld('Notiz (zum Beispiel Dauer, Reihenfolge)', notiz),
+    feld('Link (freiwillig, falls die Rede woanders geschrieben ist, https://…)', link),
+    el('p', { class: 'leise pk-hinweis', text: 'Bei einem Drive-Dokument: Gib es so frei, dass deine Gruppe kommentieren kann. Die App teilt nichts.' }),
+    linkHinweis,
     fehler,
     el('div', { class: 'form-knoepfe' }, speichernKnopf,
       el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Schließen', onclick: schliessen }))

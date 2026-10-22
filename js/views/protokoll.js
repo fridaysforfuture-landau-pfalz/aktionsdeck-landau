@@ -8,7 +8,7 @@
 // Das Formular bleibt dabei offen, so lässt sich aus alten Protokollen kopieren.
 // Im Detail: „Protokoll kopieren“, „Im Dokument bearbeiten“ (nur wenn es im Dokument steht),
 // solange nicht im Dokument: „Bearbeiten“ und „Ins Dokument übernehmen“.
-// Protokolle werden nie gelöscht (das Skript sperrt es). Umschalter „Reden“: Reden-Archiv (js/views/reden.js, 8.6).
+// Fertige Protokolle werden nur von Hand gelöscht (Knopf „Löschen“, 8.8, weich; das Dokument bleibt, wie es ist). Umschalter „Reden“: Reden-Archiv (js/views/reden.js, 8.6).
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -363,6 +363,12 @@ export async function render(container, ctx) {
         knoepfe.append(ins);
       }
     }
+    if (!istEntwurf(p)) {
+      knoepfe.append(el('button', {
+        class: 'knopf knopf-gefahr', type: 'button', text: 'Löschen',
+        onclick: function () { protokollLoeschen(p); }
+      }));
+    }
     inhalt.append(knoepfe);
     zeigeDetail(ctx.detail, txt(p.titel) || 'Protokoll', inhalt, null, true);
   }
@@ -418,6 +424,26 @@ export async function render(container, ctx) {
     if (eigen) verwirfEntwurf(s.gruppe_id);
     if (formular && offenMerk && offenMerk.id === String(p.id)) formular.schliessen();
     toast(rest ? 'Entwurf verworfen. ' + rest + ' Einträge konnten nicht gelöscht werden.' : 'Entwurf verworfen.');
+    schliesseDetail(ctx.detail);
+    await laden(false);
+  }
+
+  // Fertiges Protokoll von Hand löschen (8.8): weich, das Skript prüft vonHand.
+  // Einträge, die daraus angelegt wurden (ToDos, Termine, Learnings …), bleiben. Das Dokument ändert die App nicht.
+  async function protokollLoeschen(p) {
+    const imDok = imDokument(p) ? '\n\nIm Google-Dokument bleibt es stehen. Dort löschst du es von Hand, wenn du willst.' : '';
+    if (!window.confirm('Das Protokoll „' + (txt(p.titel) || 'Protokoll') + '“ wirklich löschen? Es verschwindet für die ganze Gruppe aus der App. ' +
+      'ToDos, Termine und Learnings, die daraus angelegt wurden, bleiben.' + imDok)) return;
+    try {
+      await api('delete', { tabelle: 'Protokolle', id: p.id, bekannt: p.geaendert_am, vonHand: true }, s.token);
+    } catch (err) {
+      if (ctx.behandleFehler(err)) return;
+      toast(err.code === 'konflikt' ? 'Jemand anderes hat das Protokoll gerade geändert. Bitte neu öffnen.' : err.message);
+      laden(false);
+      return;
+    }
+    if (formular && offenMerk && offenMerk.id === String(p.id)) formular.schliessen();
+    toast('Protokoll gelöscht.');
     schliesseDetail(ctx.detail);
     await laden(false);
   }

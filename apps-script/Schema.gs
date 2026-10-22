@@ -13,10 +13,12 @@ var BASIS = ['id', 'gruppe_id', 'erstellt_am', 'erstellt_von',
 //   im_dokument = steht im Google-Dokument der Gruppe. vorschlaege_erledigt = Abhak-Liste wurde angelegt.
 //   entwurf = gemeinsamer Entwurf (seit 0.30.4): für die Gruppe sichtbar, noch nicht im Dokument.
 //   angelegt = über die Knöpfe angelegte Einträge, je Zeile „Tabelle:id“ (seit 0.30.7, beim Verwerfen mitgelöscht).
-//   Protokolle werden nie gelöscht (siehe NIE_LOESCHEN). Ausnahme seit 0.30.6: gemeinsame Entwürfe dürfen verworfen werden.
-// Reden: Archiv der Reden. status = entwurf | probelesen | fertig | gehalten. Werden nie gelöscht.
+//   Protokolle werden nur von Hand gelöscht (siehe NIE_LOESCHEN). Gemeinsame Entwürfe dürfen verworfen werden (seit 0.30.6).
+// Reden: Archiv der Reden. status = entwurf | probelesen | fertig | gehalten. Werden nur von Hand gelöscht.
+//   text = Redetext in der App (seit 0.30.12), link ist freiwillig (Rede woanders geschrieben).
 // TOPs: Sammlung der Tagesordnungspunkte fürs nächste Plenum (seit 0.30.3). protokoll_id = in diesem Protokoll besprochen.
 // Kommentare: freie Kommentare zu einem Projekt.
+//   stelle = Absatz im Redetext, zu dem der Kommentar gehört ("Nummer|Anfang des Absatzes", seit 0.30.12).
 var TABELLEN = {
   Personen: ['name', 'aktiv'],
   Material: ['name', 'kategorie', 'unterkategorie', 'anzahl', 'einheit', 'ort', 'foto_id', 'notiz', 'aktiv', 'typ'],
@@ -31,9 +33,9 @@ var TABELLEN = {
   Vorlagen_ToDo: ['vorlage_name', 'schritt_text', 'tage_vorher', 'verantwortlich'],
   Protokolle: ['projekt_id', 'datum', 'titel', 'teilnehmende', 'text',
                'art', 'veranstaltung_id', 'rollen', 'im_dokument', 'vorschlaege_erledigt', 'entwurf', 'angelegt'],
-  Reden: ['projekt_id', 'veranstaltung_id', 'titel', 'redner', 'datum', 'aktionsart', 'link', 'status', 'notiz'],
+  Reden: ['projekt_id', 'veranstaltung_id', 'titel', 'redner', 'datum', 'aktionsart', 'link', 'status', 'notiz', 'text'],
   TOPs: ['titel', 'notiz', 'protokoll_id'],
-  Kommentare: ['projekt_id', 'bezug_art', 'bezug_id', 'text', 'angeheftet', 'farbe'],
+  Kommentare: ['projekt_id', 'bezug_art', 'bezug_id', 'text', 'angeheftet', 'farbe', 'stelle'],
   Learnings: ['projekt_id', 'aktionsart', 'text'],
   Umfragen: ['frage', 'optionen', 'ablauf_am', 'mehrfach', 'beendet', 'namentlich'],
   Umfrage_Antworten: ['umfrage_id', 'person', 'auswahl'],
@@ -60,13 +62,13 @@ var SYSTEM = {
 // Tabs, in die nur angehängt wird (kein Ändern, kein Löschen)
 var NUR_ANHAENGEN = ['Ausleihe'];
 
-// Tabs, deren Einträge nie gelöscht werden (Ändern bleibt erlaubt)
+// Tabs, deren Einträge nur von Hand gelöscht werden (vonHand: true, Ändern bleibt erlaubt)
 var NIE_LOESCHEN = ['Protokolle', 'Reden'];
 
 // Höchstlänge für Textfelder: Standard 5000 Zeichen. Ausnahmen je "Tab.spalte".
 // Eine Sheet-Zelle fasst höchstens 50 000 Zeichen.
 var MAX_TEXT = 5000;
-var MAX_TEXT_AUSNAHMEN = { 'Protokolle.text': 20000 };
+var MAX_TEXT_AUSNAHMEN = { 'Protokolle.text': 20000, 'Reden.text': 20000 };
 
 function maxLaenge(tab, sp) {
   var k = String(tab) + '.' + String(sp);

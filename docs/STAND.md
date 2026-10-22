@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.30.11 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.30.12 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.md, abgeschlossen, bleibt als Nachweis)
@@ -11,7 +11,7 @@ Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.m
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
 - Etappe 7 Mobi komplett (0.29.0 bis 0.29.12), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7, 7.8. 0.29.11 geprüft (22.10.2026), Anpassungen in 0.29.12.
-- Etappe 8 Protokoll, Reden, Learnings komplett (0.29.12 bis 0.30.11), siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4), 8.4 Markierungen (0.30.5), 8.4a Anpassungen (0.30.6), 8.4b angelegte Einträge beim Verwerfen löschen (0.30.7), 8.5 Vorschläge aus dem Protokoll (0.30.8), 8.5a Anpassungen (0.30.9), 8.6 Reden-Archiv (0.30.10), 8.7 Verknüpfungen (0.30.11). Noch zu prüfen: 8.6 und 8.7.
+- Etappe 8 Protokoll, Reden, Learnings komplett (0.29.12 bis 0.30.12), siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4), 8.4 Markierungen (0.30.5), 8.4a Anpassungen (0.30.6), 8.4b angelegte Einträge beim Verwerfen löschen (0.30.7), 8.5 Vorschläge aus dem Protokoll (0.30.8), 8.5a Anpassungen (0.30.9), 8.6 Reden-Archiv (0.30.10), 8.7 Verknüpfungen (0.30.11), 8.8 Löschen von Hand, Redetext und Kommentare je Absatz (0.30.12, Sheet und Skript von Hand). Noch zu prüfen: 8.5a, 8.6, 8.7 und 8.8.
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
 ## Etappe 7 (Mobi), abgeschlossen mit 0.29.12
@@ -60,7 +60,7 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - 7.8 geprüft (22.10.2026): alles bestätigt. Anpassung in 0.29.12 (Schritt 8.0): Der ganze Zeitstrahl steht im Reiter Mobi (Knopf "Zeitstrahl" neben Liste, Kanban, Kalender), je Projekt oder Veranstaltung ein Strahl (gefiltert wie der Kanban), mit Tagesstrichen und Datum je Montag (am Handy nur Anfang, Ende, Heute, Aktion). Im Projekt (Teil "Mobi") steht nur noch ein Balken (baueZeitbalken): Abschnitte mit Beiträgen in Kanalfarbe, grau wenn veröffentlicht, Linien für Aktion und Heute; Knopf "Ganzer Zeitstrahl im Reiter Mobi →" (oeffneMobiAnsicht in mobi-todo.js, setzt Projekt-Filter und Ansicht). Drag-and-Drop: nein (Entscheidung 22.10.2026).
 - 8.0 geprüft (22.10.2026): alles bestätigt. Anpassung in 0.30.0: Im Zeitstrahl (Reiter Mobi) stehen Beiträge mit Status "Idee" nicht mehr (Hinweis in der Legende). Seit 0.30.1 fehlen sie auch im Balken im Projekt (Entscheidung 22.10.2026).
 
-## Etappe 8 (Protokoll, Reden, Learnings), abgeschlossen mit 0.30.11
+## Etappe 8 (Protokoll, Reden, Learnings), abgeschlossen mit 0.30.12
 - 8.1 (0.30.0): Sheet und Skript.
   - Tab Protokolle hat zusätzlich art, veranstaltung_id, rollen, im_dokument, vorschlaege_erledigt. Neuer Tab Reden (projekt_id, veranstaltung_id, titel, redner, datum, aktionsart, link, status, notiz). Schema.gs und js/schema.js sind angepasst (Formularfelder Protokolle: Datum, Titel, Art, Anwesend, Protokolltext; Reden: Titel, Redner, Datum, Aktionsart, Link, Status groß beschriftet, Notiz).
   - Höchstlänge für Textfelder: 5000 Zeichen, nur Protokolle.text 20 000 (MAX_TEXT und MAX_TEXT_AUSNAHMEN in Schema.gs, typisieren in Util.gs bekommt den Tab). form.js: Feld-Angabe max für langtext (Standard 5000).
@@ -145,7 +145,12 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Adressen im Reiter Dokumentation (app.js gibt ctx.unter jetzt auch für protokoll weiter): #/g/<kurz>/protokoll/rede:<id> öffnet eine Rede, rede-neu:p:<projekt-id> öffnet "+ Rede" mit Projekt, protokoll:<id> öffnet ein Protokoll, protokoll-neu:v:<veranstaltung-id> öffnet "+ Protokoll" vorbelegt. Danach steht wieder #/g/<kurz>/protokoll in der Adresszeile.
   - Kalender: Im Fenster einer internen Veranstaltung Knopf "Protokoll schreiben": Datum, Titel und Veranstaltung vorbelegt. Beginnt der Titel mit "Plenum", ist die Art Plenum (mit Gliederung), sonst Art Sonstiges und Titel "Protokoll <Titel>". Gibt es einen offenen Entwurf, kommt erst die Frage "Weiterschreiben oder verwerfen" (beim Verwerfen gilt die Vorbelegung).
   - "Was ist neu?": neuer Abschnitt "Dokumentation" mit Protokollen (📝, auch Entwürfe) und Reden (🎤) von anderen. Kommentare zu Reden führen jetzt zur Rede.
-- Nächster Schritt: Etappe 9 (Team). Vorher prüft die Person 8.6 und 8.7; Plan für Etappe 9 schreiben (docs/PLAN-ETAPPE-9.md).
+- 8.7 geprüft: Rückfrage beantwortet, Reden-Filter nur Status und Jahr reicht.
+- 8.8 (0.30.12), Wünsche der Person nach 8.7. **Sheet und Skript geändert** (neue Spalten Reden.text und Kommentare.stelle; Daten.gs und Schema.gs).
+  - Löschen von Hand: Knopf "Löschen" im Detail eines fertigen Protokolls und einer Rede, mit Rückfrage. Die App schickt vonHand: true, nur dann löscht das Skript (weich). Nie automatisch. Aus dem Protokoll angelegte Einträge bleiben. Das Google-Dokument bleibt, wie es ist (die App liest und ändert es nie).
+  - Redetext in der App (Feld "Redetext" im Formular, bis 20 000 Zeichen). Der Link ist freiwillig. Suche findet auch Wörter im Redetext.
+  - Kommentare je Absatz (neue Datei js/views/rede-text.js): Absätze trennt eine Leerzeile; unter jedem Absatz "💬 Kommentieren" und seine Kommentare. stelle = "Nummer|Anfang des Absatzes". Nicht mehr gefundene Absätze: "Kommentare zu geänderten Stellen" mit Zitat. baueKommentare kennt ohneStelle (Kommentare zur ganzen Rede ohne Absatz-Kommentare). Die 💬-Zahl in der Liste zählt alle Kommentare.
+- Nächster Schritt: Etappe 9 (Team). Vorher prüft die Person 8.5a bis 8.8; dann Plan für Etappe 9 schreiben (docs/PLAN-ETAPPE-9.md).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -235,11 +240,11 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 
 ## Dateiübersicht
 - docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (laufend), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.30.10 am Ende)
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.30.12 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
-- js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, projekt-reden
+- js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
 - Noch nicht vorhanden: Team, Wiki. Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
 
 ## Hinweise
