@@ -4,7 +4,8 @@
 // Das Skript teilt nie etwas und ändert keine Freigabe. Es fügt nur ein, liest das Dokument nicht in die App.
 //
 // Aktionen (alle mit Token, wie die anderen):
-//   protokollSpeichern   { daten }  -> { eintrag, im_dokument, hinweis }
+//   protokollSpeichern   { daten, entwurf, id, bekannt } -> { eintrag, im_dokument, hinweis }
+//                        (ohne id = neu; mit id = gemeinsamen Entwurf weiterschreiben; entwurf true = nicht ins Dokument)
 //   protokollInsDokument { id }     -> { eintrag, im_dokument, hinweis }
 //   protokollInfo        {}         -> { modus: 'dokument' | 'extern' | 'keins', link }
 //
@@ -191,6 +192,9 @@ function protokollMarkieren(sh, kopf, zeile, zeit, anzeige) {
 
 // ---- Aktionen ----
 
+// Neu anlegen (ohne id) oder einen gemeinsamen Entwurf weiterschreiben (mit id und bekannt).
+// entwurf = true: nur ins Sheet (für die Gruppe sichtbar), nicht ins Dokument.
+// entwurf = false: fertig, wird ans Dokument angehängt (klappt das nicht, bleibt im_dokument = FALSE).
 function aktionProtokollSpeichern(ctx, p) {
   var tab = 'Protokolle';
   var anzeige = anzeigename(p);
@@ -199,25 +203,62 @@ function aktionProtokollSpeichern(ctx, p) {
   if (!pkTxt(daten.titel)) fehler('ungueltig', 'Bitte einen Titel angeben.');
   var art = pkTxt(daten.art).toLowerCase();
   if (art && PK_ARTEN.indexOf(art) < 0) fehler('ungueltig', 'Unbekannte Art des Protokolls.');
+  var alsEntwurf = p.entwurf === true;
 
-  // Diese beiden Felder setzt nur das Skript
+  // im_dokument und vorschlaege_erledigt setzt nur das Skript, entwurf kommt aus p.entwurf
   var d = {};
-  Object.keys(daten).forEach(function (k) { d[k] = daten[k]; });
+  Object.keys(daten).forEach(function (k) {
+    if (k !== 'im_dokument' && k !== 'vorschlaege_erledigt' && k !== 'entwurf') d[k] = daten[k];
+  });
   d.art = art;
-  d.im_dokument = false;
-  d.vorschlaege_erledigt = false;
+  d.entwurf = alsEntwurf;
 
   return mitSperre(function () {
-    var sh = blatt(tab);
-    var kopf = kopfLesen(sh);
-    pruefeKopf(tab, kopf);
+    var o;
+    var zeile;
+    var sh;
+    var kopf;
     var cache = {};
-    bezugPruefen(ctx, tab, d.projekt_id, '', cache);
-    protokollBezugPruefen(ctx, tab, d.veranstaltung_id, cache);
-    var o = neuerEintrag(tab, ctx, d, anzeige, jetzt());
-    var zeile = sh.getLastRow() + 1;
-    anhaengen(sh, [zeilenArray(kopf, o)]);
-    protokoll(ctx, 'create', tab, [o.id], anzeige);
+    if (p.id) {
+      // Entwurf weiterschreiben: nur solange er nicht im Dokument steht, mit Konfliktprüfung
+      var t = lies(tab);
+      pruefeKopf(tab, t.kopf);
+      var z = eintragFinden(t, ctx, p.id);
+      if (truthy(z.im_dokument)) fehler('ungueltig', 'Dieses Protokoll steht schon im Dokument. Ändern geht nur dort.');
+      konfliktPruefen(z, p.bekannt);
+      var aenderung = {};
+      Object.keys(d).forEach(function (sp) {
+        var wert = typisieren(d[sp], sp, tab);
+        if (String(wert) !== String(z[sp])) aenderung[sp] = wert;
+      });
+      if (aenderung.hasOwnProperty('projekt_id')) bezugPruefen(ctx, tab, aenderung.projekt_id, '', cache);
+      if (aenderung.hasOwnProperty('veranstaltung_id')) protokollBezugPruefen(ctx, tab, aenderung.veranstaltung_id, cache);
+      aenderung.geaendert_am = jetzt();
+      aenderung.geaendert_von = anzeige;
+      Object.keys(aenderung).forEach(function (sp) {
+        t.sh.getRange(z._zeile, t.kopf.indexOf(sp) + 1).setValue(schuetzen(aenderung[sp]));
+        z[sp] = aenderung[sp];
+      });
+      protokoll(ctx, 'update', tab, [z.id], anzeige);
+      o = sauber(z);
+      sh = t.sh;
+      kopf = t.kopf;
+      zeile = z._zeile;
+    } else {
+      sh = blatt(tab);
+      kopf = kopfLesen(sh);
+      pruefeKopf(tab, kopf);
+      bezugPruefen(ctx, tab, d.projekt_id, '', cache);
+      protokollBezugPruefen(ctx, tab, d.veranstaltung_id, cache);
+      d.im_dokument = false;
+      d.vorschlaege_erledigt = false;
+      o = neuerEintrag(tab, ctx, d, anzeige, jetzt());
+      zeile = sh.getLastRow() + 1;
+      anhaengen(sh, [zeilenArray(kopf, o)]);
+      protokoll(ctx, 'create', tab, [o.id], anzeige);
+    }
+
+    if (alsEntwurf) return { eintrag: o, im_dokument: false, hinweis: '' };
 
     // Die Zeile ist gespeichert. Klappt das Dokument nicht, bleibt im_dokument = FALSE.
     var r = protokollAnsDokument(ctx.gruppe_id, o);
@@ -236,6 +277,7 @@ function aktionProtokollInsDokument(ctx, p) {
     var t = lies(tab);
     pruefeKopf(tab, t.kopf);
     var z = eintragFinden(t, ctx, p.id);
+    if (truthy(z.entwurf)) fehler('ungueltig', 'Ein Entwurf kommt erst mit „Speichern“ im Formular ins Dokument.');
     // Steht es schon im Dokument, wird nichts doppelt angehängt
     if (truthy(z.im_dokument)) {
       return { eintrag: sauber(z), im_dokument: true, hinweis: 'Das Protokoll steht schon im Dokument.' };

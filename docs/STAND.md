@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.30.3 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.30.4 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.md, abgeschlossen, bleibt als Nachweis)
@@ -11,7 +11,7 @@ Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.m
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
 - Etappe 7 Mobi komplett (0.29.0 bis 0.29.12), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7, 7.8. 0.29.11 geprüft (22.10.2026), Anpassungen in 0.29.12.
-- Etappe 8 Protokoll, Reden, Learnings läuft, siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3).
+- Etappe 8 Protokoll, Reden, Learnings läuft, siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4).
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
 ## Etappe 7 (Mobi), abgeschlossen mit 0.29.12
@@ -101,8 +101,15 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Start: rechte Spalte mit ToDos und TOPs, zusammen so hoch wie die Kachel Projekte (am PC und ab 600 px; Projekte mindestens 340 px). Ist eine Kachel abgeschnitten, steht darunter "▾ Ganz zeigen".
   - Entwurf: Beim Knopf "Abmelden" werden alle Protokoll-Entwürfe des Geräts gelöscht, vorher kommt eine Warnung (store.js: gibtEntwurf, loescheAlleEntwuerfe; app.js: abmeldenVonHand). Läuft nur die Anmeldung ab, bleibt der Entwurf.
   - Die CSS-Regeln .modal-vollbild aus 0.30.2 werden nicht mehr benutzt (stören nicht, Aufräumen vor 1.0).
-- Offen (Vorschlag im Pull Request 8.3a, Entscheidung fehlt): Gemeinsamer Entwurf, den andere sehen (gespeichert im Sheet, noch nicht im Dokument).
-- Nächster Schritt: 8.4 (Markierungen und Einfügen im Protokolltext). Die Versionen der Schritte 8.4 bis 8.7 verschieben sich um eins (0.30.4 bis 0.30.7).
+- 8.3a geprüft (22.10.2026): alles bestätigt. Entscheidungen: Titel im Dokument fett, TOPs nicht fett (passt). ToDos und TOPs auf dem Start untereinander (passt).
+- 8.3b (0.30.4), Wünsche aus der Prüfung von 8.3a und gemeinsamer Entwurf:
+  - Reiter Dokumentation oben in zwei Spalten (am PC ab 960 px): links Suche und Umschalter "Protokolle" · "Reden (bald)" (Reden kommt mit 8.6, Knopf bis dahin gesperrt) und die Statuszeile, rechts eine kleinere Kachel "TOPs fürs nächste Plenum".
+  - Mehr Abstand zwischen Hinweistext und TOP-Chips (im Formular, in der Sammlung, auf dem Start).
+  - Standard im Protokolltext: TOP-Überschrift, Stichpunkt, Leerzeile, nächster TOP (plenumGliederung, topHinzu setzt den Cursor in den Stichpunkt). Leere Stichpunkte fallen beim Speichern weg (textAufraeumen).
+  - Start: statt Knopf "Ganz zeigen" ein Umschalter "▸ Alle anzeigen" unten in der Kachel (Stil wie bei den Projekten, dash-schalter), nur wenn etwas abgeschnitten ist. Die Kachel Projekte ist ab 600 px mindestens 480 px hoch. Der Erklärsatz in der Kachel TOPs steht als Tooltip.
+  - Protokolltext in der App wie im Dokument (textAnsicht in protokoll.js): TOP-Zeilen fett in Gruppenfarbe (17 px), Stichpunkte als eingerückte Liste, übrige Zeilen als Absatz.
+  - Gemeinsamer Entwurf: neue Spalte Protokolle.entwurf (BOOL_SPALTEN). protokollSpeichern nimmt { daten, entwurf, id, bekannt }: ohne id neu, mit id einen Entwurf weiterschreiben (Konfliktprüfung, gesperrt sobald im Dokument), entwurf true = nur Sheet, false = ins Dokument. protokollInsDokument lehnt Entwürfe ab. Im Formular "Zwischenspeichern" und automatisch alle 2 Minuten (wenn sich etwas geändert hat; nach einem Konflikt nicht mehr automatisch). Der Entwurf auf dem Gerät merkt sich server_id und server_bekannt. Im Reiter steht oben "Gemeinsame Entwürfe" mit "✎ Entwurf von Name, Zeit"; im Detail "Weiterschreiben". Ins Dokument kommt ein Entwurf erst mit "Speichern" (danach werden auch die TOPs abgehakt). Löschen von Entwürfen gibt es nicht (Protokolle werden nie gelöscht).
+- Nächster Schritt: 8.4 (Markierungen und Einfügen im Protokolltext, 0.30.5). Die Versionen der Schritte 8.4 bis 8.7 verschieben sich um zwei (0.30.5 bis 0.30.8).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -187,12 +194,12 @@ Geplant: Etappe 8 bringt den Reiter "Protokoll" (📝, am PC nach "Kalender", am
 Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - **Etappe 11 (Komfort)**, früher nur, wenn die Actions rot werden: GitHub Actions zeigen Warnungen (Node 20 veraltet), ubuntu-latest ist seit 19.10.2026 Ubuntu 26. Läuft. Action-Versionen in .github/workflows anheben (steht schon im Plan für Etappe 11). Zeitpunkt ist ein Vorschlag.
 - **Etappe 10 (öffentliche Seiten)**: Das Kalender-Abo (Skript-Adresse mit Weiterleitung) in Google und Apple Kalender testen. Die Person kann das jederzeit vorher testen und das Ergebnis melden. Notfalls feste ICS-Datei auf GitHub Pages. Zeitpunkt ist ein Vorschlag.
-- **Aufräumen vor dem Update auf 1.0**: Alte, nicht mehr genutzte CSS-Regeln (.kal-pfeil, .kal-nav, .kal-datum, .kal-monat-kopf, .modal-vollbild) und die ungenutzte Funktion topEinfuegen in protokoll-rechnen.js entfernen. Stören bis dahin nicht.
+- **Aufräumen vor dem Update auf 1.0**: Alte, nicht mehr genutzte CSS-Regeln (.kal-pfeil, .kal-nav, .kal-datum, .kal-monat-kopf, .modal-vollbild, .dash-rechts-teil) und die ungenutzte Funktion topEinfuegen in protokoll-rechnen.js entfernen. Stören bis dahin nicht.
 - **Vor 1.0**: Test-ToDos und Test-Einträge im Sheet löscht die Person.
 
 ## Dateiübersicht
 - docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (laufend), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.30.3 am Ende)
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.30.4 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit

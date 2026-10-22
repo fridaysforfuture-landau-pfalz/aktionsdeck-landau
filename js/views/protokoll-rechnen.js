@@ -170,9 +170,9 @@ export function rollenText(rollen, reihenfolge) {
     .map(function (r) { return r + ': ' + txt(rollen[r]); }).join('\n');
 }
 
-// Gliederung für ein Plenum
+// Gliederung für ein Plenum: je TOP Überschrift, ein Stichpunkt, Leerzeile (Wunsch 22.10.2026)
 export function plenumGliederung() {
-  return '1. \n\n2. \n\nSonstiges\n';
+  return '1. \n- \n\n2. \n- \n\nSonstiges\n- \n';
 }
 
 // „+ TOP“: nächste Nummer vor der Zeile „Sonstiges“ einfügen (ohne „Sonstiges“: am Ende).
@@ -282,7 +282,8 @@ export function topNummer(text, titel) {
 }
 
 // TOP anhängen: zuerst eine leere Nummer („2. “ ohne Inhalt) füllen, sonst vor „Sonstiges“ einfügen.
-// Gibt { text, pos } zurück (pos = Ende der neuen TOP-Zeile).
+// Ein neuer TOP bekommt gleich einen leeren Stichpunkt („- “) und eine Leerzeile.
+// Gibt { text, pos } zurück (pos = Ende des ersten Stichpunkts unter dem TOP, sonst Ende der TOP-Zeile).
 export function topHinzu(text, titel) {
   const z = zeilen(text);
   const t = txt(titel);
@@ -296,17 +297,19 @@ export function topHinzu(text, titel) {
     if (s < 0) {
       while (z.length && !txt(z[z.length - 1])) z.pop();
       if (z.length) z.push('');
-      z.push('0. ' + t);
-      zeile = z.length - 1;
+      z.push('0. ' + t, '- ');
+      zeile = z.length - 2;
     } else {
       // Leerzeilen vor „Sonstiges“: eine bleibt als Abstand
       while (s > 0 && !txt(z[s - 1])) { z.splice(s - 1, 1); s -= 1; }
-      const neu = s > 0 ? ['', '0. ' + t, ''] : ['0. ' + t, ''];
+      const neu = s > 0 ? ['', '0. ' + t, '- ', ''] : ['0. ' + t, '- ', ''];
       z.splice(s, 0, ...neu);
       zeile = s + (s > 0 ? 1 : 0);
     }
   }
   const fertig = topsNummerieren(z.join('\n')).split('\n');
+  // Cursor in den Stichpunkt direkt darunter, wenn es einen gibt
+  if (zeile + 1 < fertig.length && /^\t*- ?$/.test(fertig[zeile + 1])) zeile += 1;
   let pos = 0;
   for (let i = 0; i <= zeile; i++) pos += fertig[i].length + (i < zeile ? 1 : 0);
   return { text: fertig.join('\n'), pos: pos };
@@ -327,7 +330,8 @@ export function topEntfernen(text, titel) {
   return { text: topsNummerieren(z.join('\n')), hatteInhalt: hatteInhalt, gefunden: true };
 }
 
-// Vor dem Speichern: leere Nummern ohne Titel und ohne Inhalt weg, neu nummerieren, höchstens eine Leerzeile.
+// Vor dem Speichern: leere Nummern ohne Titel und ohne Inhalt weg, leere Stichpunkte weg, neu nummerieren,
+// höchstens eine Leerzeile.
 export function textAufraeumen(text) {
   const z = zeilen(text);
   const weg = {};
@@ -337,7 +341,8 @@ export function textAufraeumen(text) {
       for (let k = x.zeile; k < ende; k++) weg[k] = true;
     }
   });
-  const rest = z.filter(function (_, i) { return !weg[i]; }).join('\n');
+  // Leere Stichpunkte („- “ ohne Text) fallen auch weg
+  const rest = z.filter(function (x, i) { return !weg[i] && !/^\t*-\s*$/.test(x); }).join('\n');
   return topsNummerieren(rest).replace(/\n{3,}/g, '\n\n');
 }
 
