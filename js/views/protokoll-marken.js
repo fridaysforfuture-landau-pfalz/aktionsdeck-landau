@@ -1,19 +1,24 @@
 // js/views/protokoll-marken.js
-// Markierungen im Protokolltext (Etappe 8, Schritt 8.4), eingebaut im Formular (protokoll-eintrag.js):
+// Markierungen im Protokolltext (Etappe 8, Schritt 8.4, umgebaut in 8.4a), eingebaut im Formular (protokoll-eintrag.js):
 // - Knopfreihe ☐ ToDo · 💡 Learning · 📅 Termin · 📌 Mitteilung · 📊 Umfrage · 👉 Beschluss · + Einfügen.
-//   Jeder Knopf öffnet ein kleines Formular unter der Reihe und fügt danach die fertige Zeile an der Cursorstelle ein.
+//   Jeder Knopf öffnet ein kleines Formular unter der Reihe. „Anlegen und einfügen“ legt den Eintrag sofort an
+//   (ToDo, Learning, Veranstaltung, Mitteilung, Umfrage) und schreibt die Zeile mit „✔“ am Ende in den Text.
+//   „Nur in den Text“ schreibt nur die Zeile (ohne ✔, sie kann später aus dem Protokoll angelegt werden, 8.5).
+//   👉 Beschluss legt nichts an.
 // - Tastenkürzel am PC: Strg+Alt+T (ToDo), L (Learning), V (Termin), M (Mitteilung), U (Umfrage), B (Beschluss).
-// - „@“ im Text: Namensauswahl unter dem Feld.
-// - „+ Einfügen“: neueste Mitteilungen und Pinnwand-Kommentare mit Quelle einfügen.
-// - Übersicht unter dem Feld: welche Markierungen erkannt wurden und welche Zeilen nicht lesbar sind.
+// - „+ Einfügen“: bestehende Mitteilungen und Pinnwand-Kommentare mit Quelle einfügen. Das legt nichts Neues an
+//   („↪ Mitteilung …“ und „💬 Pinnwand …“ sind keine Markierungen).
+// - Übersicht unter dem Feld: erkannte Markierungen, schon angelegte (✔) und nicht lesbare Zeilen.
 // Gelesen werden nur Zeilen mit Symbol am Anfang (leseMarkierungen in protokoll-rechnen.js). Keine KI.
 //
-// baueMarken(opt) -> { leiste, panel, atListe, uebersicht, aktualisieren() }
-// opt: { ctx, token, text (Textfeld), namen [..], aktionsarten [..], projektAktionsart() -> '',
+// baueMarken(opt) -> { leiste, panel, uebersicht, aktualisieren() }
+// opt: { ctx, token, text (Textfeld), namen [..], aktionsarten [..], projekte (offene Projekte),
+//        projektVorgabe() -> Projekt-ID des Protokolls oder '', herkunft() -> 'Aus dem Protokoll vom …',
 //        einfuegen({ text, pos }) (setzt den Text und merkt die Änderung) }
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
+import { toast } from '../ui/toast.js';
 import { istWahr } from '../schema.js';
 import { datumText, heuteIso } from './todos-rechnen.js';
 import { MARKEN, leseMarkierungen, markenUebersicht, markenDatumText, zeileEinfuegen } from './protokoll-rechnen.js';
@@ -30,9 +35,18 @@ function einzeilig(v) {
 // Tastenkürzel (Strg+Alt+Taste) je Art
 const KUERZEL = { t: 'todo', l: 'learning', v: 'termin', m: 'mitteilung', u: 'umfrage', b: 'beschluss' };
 const KUERZEL_TEXT = { todo: 'T', learning: 'L', termin: 'V', mitteilung: 'M', umfrage: 'U', beschluss: 'B' };
+const ANGELEGT = { todo: 'ToDo angelegt.', learning: 'Learning angelegt.', termin: 'Veranstaltung angelegt.',
+  mitteilung: 'Mitteilung angeheftet.', umfrage: 'Umfrage angelegt.' };
 
 function eingabe(label, feld, extra) {
   return el('label', { class: 'formfeld' }, el('span', { class: 'formlabel', text: label }), feld, extra || null);
+}
+
+// Ganzes Datums- oder Zeitfeld öffnet die Auswahl (nicht nur das kleine Symbol)
+function auswahlBeiKlick(feld) {
+  feld.addEventListener('click', function () {
+    try { if (typeof feld.showPicker === 'function') feld.showPicker(); } catch (e) { /* ignorieren */ }
+  });
 }
 
 export function baueMarken(opt) {
@@ -44,8 +58,6 @@ export function baueMarken(opt) {
   const panel = el('div', { class: 'pk-marke-panel karte' });
   panel.hidden = true;
   const uebersicht = el('div', { class: 'pk-marken-uebersicht leise', 'aria-live': 'polite' });
-  const atListe = el('div', { class: 'pk-chips pk-at-liste' });
-  atListe.hidden = true;
 
   // ---- Knopfreihe ----
 
@@ -53,7 +65,7 @@ export function baueMarken(opt) {
     ...MARKEN.map(function (m) {
       return el('button', {
         class: 'knopf knopf-hell pk-marke-knopf', type: 'button',
-        title: m.label + ' einfügen (Strg+Alt+' + KUERZEL_TEXT[m.art] + ')',
+        title: m.label + ' (Strg+Alt+' + KUERZEL_TEXT[m.art] + ')',
         text: m.zeichen + ' ' + m.label,
         onmousedown: function () { merkPos = text.selectionStart; },
         onclick: function () { oeffnen(m.art); }
@@ -61,7 +73,7 @@ export function baueMarken(opt) {
     }),
     el('button', {
       class: 'knopf knopf-hell pk-marke-knopf', type: 'button', text: '+ Einfügen',
-      title: 'Mitteilung oder Pinnwand-Kommentar einfügen',
+      title: 'Bestehende Mitteilung oder Pinnwand-Kommentar einfügen (legt nichts Neues an)',
       onmousedown: function () { merkPos = text.selectionStart; },
       onclick: function () { oeffnen('einfuegen'); }
     })
@@ -83,17 +95,41 @@ export function baueMarken(opt) {
     opt.einfuegen(r);
   }
 
-  // Kleines Formular: felder = [{ name, label, typ, pflicht, liste }], bauen(werte) -> Zeile oder Fehlertext { fehler }
-  function miniFormular(titel, felder, bauen) {
+  function projektOptionen() {
+    return [{ wert: '', label: '– kein Projekt (allgemein) –' }].concat(
+      (opt.projekte || []).map(function (p) { return { wert: String(p.id), label: txt(p.titel) }; }));
+  }
+
+  function projektAktionsart(pid) {
+    const p = (opt.projekte || []).find(function (x) { return String(x.id) === String(pid); });
+    return p ? txt(p.aktionsart) : '';
+  }
+
+  // Kleines Formular.
+  // felder: [{ name, label, typ (text|date|time|langtext|bool|auswahl), pflicht, liste, optionen, wert }]
+  // art.zeile(w) -> Zeile oder { fehler }; art.anlegen(w) -> { tabelle, daten } oder { fehler } (fehlt = nichts anlegen)
+  function miniFormular(titel, felder, art) {
     const fehler = el('p', { class: 'fehler', role: 'alert' });
     const ein = {};
+    let laeuft = false;
     const form = el('form', { class: 'formular pk-marke-form', novalidate: '' },
       el('h3', { class: 'teil-titel-klein', text: titel }));
     felder.forEach(function (f) {
       let feld;
       if (f.typ === 'langtext') feld = el('textarea', { class: 'feld', rows: '3', maxlength: '1000' });
-      else feld = el('input', { class: 'feld', type: f.typ || 'text', maxlength: '300' });
-      if (f.platzhalter) feld.setAttribute('placeholder', f.platzhalter);
+      else if (f.typ === 'bool') feld = el('input', { type: 'checkbox' });
+      else if (f.typ === 'auswahl') {
+        feld = el('select', { class: 'feld' }, ...(f.optionen || []).map(function (o) {
+          return el('option', { value: o.wert, text: o.label });
+        }));
+      } else {
+        feld = el('input', { class: 'feld', type: f.typ || 'text', maxlength: '300' });
+        if (f.typ === 'date' || f.typ === 'time') auswahlBeiKlick(feld);
+      }
+      if (f.wert !== undefined) {
+        if (f.typ === 'bool') feld.checked = !!f.wert;
+        else feld.value = f.wert;
+      }
       let extra = null;
       if (f.liste && f.liste.length) {
         const id = 'pk-marke-' + f.name;
@@ -101,106 +137,199 @@ export function baueMarken(opt) {
         extra = el('datalist', { id: id }, ...f.liste.slice(0, 30).map(function (v) { return el('option', { value: v }); }));
       }
       ein[f.name] = feld;
-      form.append(eingabe(f.label + (f.pflicht ? ' *' : ''), feld, extra));
+      if (f.typ === 'bool') form.append(el('label', { class: 'formfeld-bool' }, feld, el('span', { text: f.label })));
+      else form.append(eingabe(f.label + (f.pflicht ? ' *' : ''), feld, extra));
     });
+
+    function lesen() {
+      const w = {};
+      for (let i = 0; i < felder.length; i++) {
+        const f = felder[i];
+        if (f.typ === 'bool') { w[f.name] = ein[f.name].checked; continue; }
+        w[f.name] = f.typ === 'langtext' ? ein[f.name].value : einzeilig(ein[f.name].value);
+        if (f.pflicht && !txt(w[f.name])) {
+          fehler.textContent = '„' + f.label + '“ darf nicht leer sein.';
+          ein[f.name].focus();
+          return null;
+        }
+      }
+      return w;
+    }
+
+    async function los(anlegen) {
+      if (laeuft) return;
+      fehler.textContent = '';
+      const w = lesen();
+      if (!w) return;
+      const zeile = art.zeile(w);
+      if (zeile && zeile.fehler) { fehler.textContent = zeile.fehler; return; }
+      if (!anlegen || !art.anlegen) { setzen(zeile); return; }
+      const auftrag = art.anlegen(w);
+      if (auftrag && auftrag.fehler) { fehler.textContent = auftrag.fehler; return; }
+      laeuft = true;
+      hauptKnopf.disabled = true;
+      hauptKnopf.textContent = 'Lege an …';
+      try {
+        await api('create', { tabelle: auftrag.tabelle, daten: auftrag.daten }, opt.token);
+        toast(ANGELEGT[art.art] || 'Angelegt.');
+        setzen(zeile + ' ✔');
+      } catch (e) {
+        laeuft = false;
+        hauptKnopf.disabled = false;
+        hauptKnopf.textContent = 'Anlegen und einfügen';
+        if (opt.ctx.behandleFehler(e)) return;
+        fehler.textContent = 'Nicht angelegt: ' + e.message + ' Mit „Nur in den Text“ kommt die Zeile trotzdem ins Protokoll.';
+      }
+    }
+
+    const hauptKnopf = el('button', { class: 'knopf', type: 'submit', text: art.anlegen ? 'Anlegen und einfügen' : 'Einfügen' });
     form.append(fehler, el('div', { class: 'form-knoepfe' },
-      el('button', { class: 'knopf', type: 'submit', text: 'Einfügen' }),
+      hauptKnopf,
+      art.anlegen ? el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Nur in den Text', onclick: function () { los(false); } }) : null,
       el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abbrechen', onclick: function () { schliessen(true); } })
     ));
     form.addEventListener('keydown', function (ev) {
       if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); schliessen(true); }
     });
-    form.addEventListener('submit', function (ev) {
-      ev.preventDefault();
-      const w = {};
-      for (let i = 0; i < felder.length; i++) {
-        const f = felder[i];
-        w[f.name] = f.typ === 'langtext' ? ein[f.name].value : einzeilig(ein[f.name].value);
-        if (f.pflicht && !txt(w[f.name])) {
-          fehler.textContent = '„' + f.label + '“ darf nicht leer sein.';
-          ein[f.name].focus();
-          return;
-        }
-      }
-      const r = bauen(w);
-      if (r && r.fehler) { fehler.textContent = r.fehler; return; }
-      setzen(r);
-    });
-    return { form: form, erstes: ein[felder[0].name] };
+    form.addEventListener('submit', function (ev) { ev.preventDefault(); los(true); });
+    return { form: form, erstes: ein[felder[0].name], ein: ein };
   }
 
-  function oeffnen(art) {
-    if (offen === art) { schliessen(true); return; }
+  function oeffnen(was) {
+    if (offen === was) { schliessen(true); return; }
     leeren(panel);
-    offen = art;
+    offen = was;
     panel.hidden = false;
-    let m = null;
+    if (was === 'einfuegen') { einfuegenZeigen(); return; }
     const heute = heuteIso();
-    if (art === 'todo') {
-      m = miniFormular('☐ ToDo', [
-        { name: 'wer', label: 'Verantwortlich (leer = Hut frei, mehrere mit Komma)', liste: opt.namen },
+    const vorgabe = opt.projektVorgabe();
+    let m = null;
+    if (was === 'todo') {
+      m = miniFormular('☐ ToDo anlegen', [
         { name: 'aufgabe', label: 'Aufgabe', pflicht: true },
-        { name: 'frist', label: 'Frist', typ: 'date' }
-      ], function (w) {
-        const wer = w.wer.split(',').map(function (x) { return txt(x).replace(/^@/, '').replace(/[:@]/g, ' ').trim(); }).filter(Boolean);
-        const frist = w.frist ? ' (bis ' + markenDatumText(w.frist, heute) + ')' : '';
-        return '☐ ' + (wer.length ? wer.map(function (n) { return '@' + n; }).join(' ') + ': ' : '') + w.aufgabe + frist;
+        { name: 'wer', label: 'Verantwortlich (leer = Hut frei, mehrere mit Komma)', liste: opt.namen },
+        { name: 'frist', label: 'Frist (freiwillig)', typ: 'date' },
+        { name: 'projekt', label: 'Projekt (freiwillig, leer = allgemeines ToDo)', typ: 'auswahl', optionen: projektOptionen(), wert: vorgabe }
+      ], {
+        art: 'todo',
+        zeile: function (w) {
+          const wer = namenListe(w.wer);
+          const frist = w.frist ? ' (bis ' + markenDatumText(w.frist, heute) + ')' : '';
+          return '☐ ' + (wer.length ? wer.map(function (n) { return '@' + n; }).join(' ') + ': ' : '') + w.aufgabe + frist;
+        },
+        anlegen: function (w) {
+          return { tabelle: 'ToDos', daten: {
+            text: w.aufgabe, verantwortlich: namenListe(w.wer).join(', '), faellig_am: w.frist,
+            projekt_id: w.projekt, details: opt.herkunft(), erledigt: false
+          } };
+        }
       });
-    } else if (art === 'learning') {
-      m = miniFormular('💡 Learning', [
-        { name: 'aktionsart', label: 'Aktionsart (leer = die des Projekts)', liste: opt.aktionsarten },
-        { name: 'learning', label: 'Was haben wir gelernt?', pflicht: true }
-      ], function (w) {
-        const a = w.aktionsart.replace(/:/g, ' ').trim();
-        return '💡 ' + (a ? a + ': ' : '') + w.learning;
+    } else if (was === 'learning') {
+      m = miniFormular('💡 Learning anlegen', [
+        { name: 'learning', label: 'Was haben wir gelernt?', pflicht: true },
+        { name: 'projekt', label: 'Projekt (freiwillig)', typ: 'auswahl', optionen: projektOptionen(), wert: vorgabe },
+        { name: 'aktionsart', label: 'Aktionsart (leer = die des Projekts)', liste: opt.aktionsarten, wert: projektAktionsart(vorgabe) }
+      ], {
+        art: 'learning',
+        zeile: function (w) {
+          const a = (w.aktionsart || projektAktionsart(w.projekt)).replace(/:/g, ' ').trim();
+          return '💡 ' + (a ? a + ': ' : '') + w.learning;
+        },
+        anlegen: function (w) {
+          const a = w.aktionsart || projektAktionsart(w.projekt);
+          if (!a) return { fehler: 'Bitte eine Aktionsart angeben (zum Beispiel Demo oder Infostand).' };
+          return { tabelle: 'Learnings', daten: { projekt_id: w.projekt, aktionsart: a, text: w.learning } };
+        }
       });
-    } else if (art === 'termin') {
-      m = miniFormular('📅 Termin', [
+      // Anderes Projekt gewählt: Aktionsart nachführen, solange sie noch die alte Vorgabe ist
+      let alt = projektAktionsart(vorgabe);
+      m.ein.projekt.addEventListener('change', function () {
+        if (txt(m.ein.aktionsart.value) === alt) m.ein.aktionsart.value = projektAktionsart(m.ein.projekt.value);
+        alt = projektAktionsart(m.ein.projekt.value);
+      });
+    } else if (was === 'termin') {
+      m = miniFormular('📅 Veranstaltung anlegen', [
         { name: 'titel', label: 'Titel', pflicht: true },
         { name: 'datum', label: 'Datum', typ: 'date', pflicht: true },
         { name: 'zeit', label: 'Uhrzeit (freiwillig)', typ: 'time' },
-        { name: 'ort', label: 'Ort (freiwillig)' }
-      ], function (w) {
-        // Kommas trennen die Teile: im Titel werden sie zu Bindestrichen
-        const titel = w.titel.replace(/,/g, ' –');
-        return '📅 ' + titel + ', ' + datumText(w.datum) + (w.zeit ? ', ' + w.zeit : '') + (w.ort ? ', ' + w.ort : '');
+        { name: 'ort', label: 'Ort (freiwillig)' },
+        { name: 'art', label: 'Art', typ: 'auswahl', optionen: [
+          { wert: 'intern', label: 'Intern (nur die Gruppe)' }, { wert: 'extern', label: 'Extern (nach außen, nicht veröffentlicht)' }
+        ], wert: 'intern' }
+      ], {
+        art: 'termin',
+        zeile: function (w) {
+          // Kommas trennen die Teile: im Titel werden sie zu Bindestrichen
+          const titel = w.titel.replace(/,/g, ' –');
+          return '📅 ' + titel + ', ' + datumText(w.datum) + (w.zeit ? ', ' + w.zeit : '') + (w.ort ? ', ' + w.ort : '');
+        },
+        anlegen: function (w) {
+          return { tabelle: 'Veranstaltungen', daten: {
+            titel: w.titel, art: w.art || 'intern', datum: w.datum, zeit_von: w.zeit, ort: w.ort,
+            beschreibung: opt.herkunft(), oeffentlich: false
+          } };
+        }
       });
-    } else if (art === 'mitteilung') {
-      m = miniFormular('📌 Mitteilung', [
+    } else if (was === 'mitteilung') {
+      m = miniFormular('📌 Mitteilung anheften', [
         { name: 'titel', label: 'Titel', pflicht: true },
-        { name: 'inhalt', label: 'Text (freiwillig)' }
-      ], function (w) {
-        return '📌 ' + w.titel.replace(/:/g, ' –') + (w.inhalt ? ': ' + w.inhalt : '');
+        { name: 'inhalt', label: 'Text (freiwillig)', typ: 'langtext' }
+      ], {
+        art: 'mitteilung',
+        zeile: function (w) {
+          return '📌 ' + w.titel.replace(/:/g, ' –') + (txt(w.inhalt) ? ': ' + einzeilig(w.inhalt) : '');
+        },
+        anlegen: function (w) {
+          return { tabelle: 'Mitteilungen', daten: { titel: w.titel, text: txt(w.inhalt), angeheftet: true } };
+        }
       });
-    } else if (art === 'umfrage') {
-      m = miniFormular('📊 Umfrage', [
+    } else if (was === 'umfrage') {
+      const antworten = function (w) {
+        return String(w.antworten).split(/\r?\n/).map(einzeilig).filter(Boolean);
+      };
+      m = miniFormular('📊 Umfrage anlegen', [
         { name: 'frage', label: 'Frage', pflicht: true },
-        { name: 'antworten', label: 'Antworten (eine pro Zeile, mindestens zwei)', typ: 'langtext', pflicht: true }
-      ], function (w) {
-        const antworten = String(w.antworten).split(/\r?\n/).map(einzeilig).filter(Boolean)
-          .map(function (a) { return a.replace(/\|/g, '/'); });
-        if (antworten.length < 2) return { fehler: 'Bitte mindestens zwei Antworten eintragen (eine pro Zeile).' };
-        return '📊 ' + w.frage.replace(/\|/g, '/') + ' | ' + antworten.join(' | ');
+        { name: 'antworten', label: 'Antworten (eine pro Zeile, mindestens zwei)', typ: 'langtext', pflicht: true },
+        { name: 'frist', label: 'Frist (freiwillig)', typ: 'date' },
+        { name: 'mehrfach', label: 'Mehrere Antworten erlaubt', typ: 'bool' },
+        { name: 'namentlich', label: 'Namentlich abstimmen', typ: 'bool' }
+      ], {
+        art: 'umfrage',
+        zeile: function (w) {
+          const a = antworten(w);
+          if (a.length < 2) return { fehler: 'Bitte mindestens zwei Antworten eintragen (eine pro Zeile).' };
+          return '📊 ' + w.frage.replace(/\|/g, '/') + ' | ' + a.map(function (x) { return x.replace(/\|/g, '/'); }).join(' | ');
+        },
+        anlegen: function (w) {
+          return { tabelle: 'Umfragen', daten: {
+            frage: w.frage, optionen: antworten(w).join('\n'), ablauf_am: w.frist,
+            mehrfach: !!w.mehrfach, namentlich: !!w.namentlich, beendet: false
+          } };
+        }
       });
-    } else if (art === 'beschluss') {
+    } else if (was === 'beschluss') {
       m = miniFormular('👉 Beschluss', [
         { name: 'beschluss', label: 'Was wurde beschlossen?', pflicht: true }
-      ], function (w) { return '👉 ' + w.beschluss; });
-    } else if (art === 'einfuegen') {
-      einfuegenZeigen();
-      return;
+      ], { art: 'beschluss', zeile: function (w) { return '👉 ' + w.beschluss; } });
     }
     panel.append(m.form);
     m.erstes.focus();
   }
 
-  // ---- „+ Einfügen“: Mitteilungen und Pinnwand-Kommentare ----
+  function namenListe(s) {
+    return String(s || '').split(',').map(function (x) {
+      return txt(x).replace(/^@/, '').replace(/[:@]/g, ' ').trim();
+    }).filter(Boolean);
+  }
+
+  // ---- „+ Einfügen“: bestehende Mitteilungen und Pinnwand-Kommentare (legt nichts an) ----
 
   async function einfuegenZeigen() {
     const suche = el('input', { class: 'feld suche-feld', type: 'search', placeholder: 'Suchen …', 'aria-label': 'Suchen' });
     const listen = el('div', { class: 'pk-einfuegen-listen' }, el('p', { class: 'leise', text: 'Lade …' }));
     panel.append(el('div', { class: 'pk-marke-form' },
       el('h3', { class: 'teil-titel-klein', text: '+ Einfügen aus der App' }),
+      el('p', { class: 'leise pk-hinweis', text: 'Fügt den Text mit Quelle ein. Es wird nichts Neues angelegt.' }),
       suche, listen,
       el('div', { class: 'form-knoepfe' },
         el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Schließen', onclick: function () { schliessen(true); } }))
@@ -220,7 +349,6 @@ export function baueMarken(opt) {
         listen.append(el('p', { class: 'fehler', text: 'Laden hat nicht geklappt: ' + e.message }));
         return;
       }
-      aktualisieren();
     }
     if (offen !== 'einfuegen') return;
 
@@ -250,7 +378,7 @@ export function baueMarken(opt) {
       }
       listen.append(
         liste('Mitteilungen (Schwarzes Brett)', mitt, function (x) {
-          return '📌 Mitteilung „' + einzeilig(x.titel).replace(/[“”"]/g, '\'') + '“: ' + einzeilig(x.text);
+          return '↪ Mitteilung „' + einzeilig(x.titel).replace(/[“”"]/g, '\'') + '“: ' + einzeilig(x.text);
         }, function (x) {
           return [el('strong', { text: (istWahr(x.angeheftet) ? '📌 ' : '') + txt(x.titel) }),
             txt(x.text) ? el('span', { class: 'leise', text: einzeilig(x.text).slice(0, 120) }) : null];
@@ -278,61 +406,19 @@ export function baueMarken(opt) {
     oeffnen(art);
   });
 
-  // ---- „@“: Namensauswahl ----
-
-  function atPruefen() {
-    const pos = text.selectionStart;
-    if (pos !== text.selectionEnd) { atListe.hidden = true; return; }
-    const vorher = text.value.slice(0, pos);
-    const m = /(^|[\s(])@([^\s@:,()]*)$/.exec(vorher);
-    leeren(atListe);
-    if (!m) { atListe.hidden = true; return; }
-    const teil = m[2].toLowerCase();
-    const treffer = opt.namen.filter(function (n) { return n.toLowerCase().indexOf(teil) === 0; }).slice(0, 8);
-    if (!treffer.length) { atListe.hidden = true; return; }
-    atListe.hidden = false;
-    atListe.append(el('span', { class: 'leise', text: 'Name wählen:' }));
-    treffer.forEach(function (n) {
-      atListe.append(el('button', {
-        class: 'pk-chip', type: 'button', text: '@' + n,
-        onmousedown: function (ev) { ev.preventDefault(); },
-        onclick: function () {
-          const start = pos - m[2].length - 1;
-          const neu = text.value.slice(0, start) + '@' + n + text.value.slice(pos);
-          atListe.hidden = true;
-          opt.einfuegen({ text: neu, pos: start + n.length + 1 });
-        }
-      }));
-    });
-  }
-  text.addEventListener('input', atPruefen);
-  text.addEventListener('click', atPruefen);
-  text.addEventListener('keyup', function (ev) {
-    if (ev.key === 'Escape') { atListe.hidden = true; return; }
-    if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') atPruefen();
-  });
-  text.addEventListener('blur', function () {
-    // Cursorstelle merken (auch für Knöpfe, die mit der Tastatur bedient werden)
-    merkPos = text.selectionStart;
-    setTimeout(function () { atListe.hidden = true; }, 200);
-  });
+  // Cursorstelle merken (auch für Knöpfe, die mit der Tastatur bedient werden)
+  text.addEventListener('blur', function () { merkPos = text.selectionStart; });
 
   // ---- Übersicht der erkannten Markierungen ----
 
   function aktualisieren() {
     leeren(uebersicht);
-    const r = leseMarkierungen(text.value, {
-      projektAktionsart: opt.projektAktionsart(),
-      mitteilungen: einfuegeDaten ? einfuegeDaten.mitteilungen : []
-    });
+    const r = leseMarkierungen(text.value, { projektAktionsart: projektAktionsart(opt.projektVorgabe()) });
     const kurz = markenUebersicht(r);
-    if (!kurz && !r.uebersprungen.length) return;
-    if (kurz) uebersicht.append(el('span', { text: 'Erkannt: ' + kurz }));
+    if (!kurz) return;
+    uebersicht.append(el('span', { text: 'Im Text: ' + kurz }));
     r.fehler.forEach(function (f) {
       uebersicht.append(el('span', { class: 'fehler pk-marken-fehler', text: 'Zeile ' + f.zeile + ': ' + f.grund }));
-    });
-    r.uebersprungen.forEach(function (u) {
-      uebersicht.append(el('span', { text: 'Zeile ' + u.zeile + ': Diese Mitteilung gibt es schon, sie wird nicht neu angelegt.' }));
     });
     r.learnings.forEach(function (l) {
       if (l.ausProjekt && !l.aktionsart) {
@@ -342,5 +428,5 @@ export function baueMarken(opt) {
   }
   text.addEventListener('input', aktualisieren);
 
-  return { leiste: leiste, panel: panel, atListe: atListe, uebersicht: uebersicht, aktualisieren: aktualisieren };
+  return { leiste: leiste, panel: panel, uebersicht: uebersicht, aktualisieren: aktualisieren };
 }
