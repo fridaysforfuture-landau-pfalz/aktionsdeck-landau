@@ -53,3 +53,28 @@ export function getLetzterBesuch(gruppeId) {
 export function setLetzterBesuch(gruppeId, iso) {
   try { localStorage.setItem('aktionsdeck_besuch_' + gruppeId, String(iso)); } catch (e) { /* ignorieren */ }
 }
+
+// Entwurf eines Protokolls: einer je Gruppe, nur auf diesem Gerät. { zeit: ISO-Text, felder: {...} } oder null
+const ENTWURF_KEY = 'aktionsdeck_entwurf_protokoll_';
+
+export function getEntwurf(gruppeId) {
+  try {
+    const e = JSON.parse(localStorage.getItem(ENTWURF_KEY + gruppeId));
+    return e && e.felder && typeof e.felder === 'object' ? e : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+export function setEntwurf(gruppeId, felder) {
+  try {
+    localStorage.setItem(ENTWURF_KEY + gruppeId, JSON.stringify({ zeit: new Date().toISOString(), felder: felder }));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+export function loescheEntwurf(gruppeId) {
+  try { localStorage.removeItem(ENTWURF_KEY + gruppeId); } catch (e) { /* ignorieren */ }
+}

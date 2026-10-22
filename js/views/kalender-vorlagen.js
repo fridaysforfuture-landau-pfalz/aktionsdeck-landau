@@ -12,8 +12,9 @@ import { toast } from '../ui/toast.js';
 import { SCHEMA } from '../schema.js';
 import { naechsterWochentag, zeitNorm } from './kalender-rechnen.js';
 
-// Plenum-Vorlagen zum Anlegen per Klick (nur wenn die Gruppe noch keine Vorlage hat)
-const STANDARD = {
+// Plenum-Vorlagen zum Anlegen per Klick (nur wenn die Gruppe noch keine Vorlage hat).
+// Auch das Protokoll-Formular (protokoll-eintrag.js) nimmt sie für „Nächstes Plenum“.
+export const STANDARD = {
   fff: {
     name: 'Plenum FFF', art: 'intern', wochentag: 'Donnerstag',
     zeit_von: '18:30', zeit_bis: '', ort: 'KHG, Moltkestraße 9, Landau', beschreibung: ''

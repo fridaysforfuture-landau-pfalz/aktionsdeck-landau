@@ -2625,3 +2625,42 @@ p.notiz.erledigt {
 }
 .protokoll-knoepfe { flex-wrap: wrap; margin-top: 12px; }
 .protokoll-knoepfe a.knopf { display: inline-flex; align-items: center; text-decoration: none; }
+
+/* ---- 0.30.2: Protokoll schreiben (Formular, am Handy Vollbild) ---- */
+.modal-box.modal-vollbild { max-width: 760px; }
+@media (max-width: 599px) {
+  .modal-box.modal-vollbild {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+}
+.protokoll-form .pk-zwei { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+.pk-gruppe { margin: 4px 0; padding: 8px 12px 12px; border: 1px solid var(--rand); border-radius: var(--radius); }
+.pk-gruppe legend { padding: 0 6px; color: var(--text-leise); font-weight: 600; }
+.pk-rollen { display: grid; gap: 8px; }
+@media (min-width: 600px) {
+  .pk-rollen { grid-template-columns: repeat(3, 1fr); }
+}
+.pk-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 4px; }
+.pk-chip {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.pk-chip-an { border-color: var(--gruen); background: var(--gruen-hell); font-weight: 600; }
+.pk-text-kopf { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.protokoll-feld { min-height: 280px; font-family: inherit; line-height: 1.45; }
+.pk-zaehler { display: block; text-align: right; font-size: 13px; }
+.pk-zaehler.fehler { font-weight: 600; }
+.pk-hinweis { font-size: 13px; margin: 0; }
+.pk-entwurf { display: grid; gap: 6px; justify-items: start; }

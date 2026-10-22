@@ -45,8 +45,11 @@ function protokollBezugPruefen(ctx, tab, veranstaltungId, cache) {
 
 // ---- Skripteigenschaften ----
 
+// Nimmt die ID oder (aus Versehen eingefügt) die ganze Adresse des Dokuments: dann zählt der Teil nach /d/
 function protokollDokId(gid) {
-  return pkTxt(PropertiesService.getScriptProperties().getProperty('PROTOKOLL_DOK_' + gid));
+  var wert = pkTxt(PropertiesService.getScriptProperties().getProperty('PROTOKOLL_DOK_' + gid));
+  var m = /\/d\/([A-Za-z0-9_-]+)/.exec(wert);
+  return m ? m[1] : wert;
 }
 
 // Nur https://-Adressen ohne Leerzeichen, sonst ''
@@ -220,26 +223,53 @@ function aktionProtokollInsDokument(ctx, p) {
 
 // ---- Tests für den Editor ----
 
+// Sucht den Grund, warum ein Dokument nicht aufgeht (nur für den Editor-Test).
+function pkGrund(dokId) {
+  if (!/^[A-Za-z0-9_-]{20,}$/.test(dokId)) {
+    return 'die ID sieht falsch aus (' + dokId.length + ' Zeichen; erlaubt sind nur Buchstaben, Ziffern, - und _; ' +
+      'nur den Teil zwischen /d/ und /edit eintragen)';
+  }
+  var datei;
+  try {
+    datei = DriveApp.getFileById(dokId);
+  } catch (e) {
+    return 'die Datei gibt es nicht, oder das Google-Konto des Skripts darf sie nicht öffnen ' +
+      '(im Dokument „Teilen“ → das Konto des Skripts als „Bearbeiter“ eintragen)';
+  }
+  var art = String(datei.getMimeType());
+  if (art !== 'application/vnd.google-apps.document') {
+    return '„' + datei.getName() + '“ ist kein Google-Dokument, sondern ' + art +
+      ' (zum Beispiel eine Word-Datei). In Drive öffnen → Datei → „Als Google Docs speichern“, dann die neue ID eintragen';
+  }
+  return 'Google meldet keinen Grund (Berechtigung für Dokumente zugelassen?)';
+}
+
 // Je aktive Gruppe: Modus, Dokument erreichbar (Name), Markierung gefunden. Schreibt nichts.
 function testenProtokollDok() {
+  // Nur die Namen der Eigenschaften (keine Werte), damit Tippfehler auffallen
+  var namen = Object.keys(PropertiesService.getScriptProperties().getProperties()).filter(function (k) {
+    return k.indexOf('PROTOKOLL') >= 0;
+  });
+  Logger.log('Skripteigenschaften mit PROTOKOLL: ' + (namen.length ? namen.join(', ') : 'keine'));
   lies('Gruppen').zeilen.forEach(function (g) {
     if (!truthy(g.aktiv)) return;
     var gid = String(g.gruppe_id);
     var dokId = protokollDokId(gid);
     if (!dokId) {
       var extern = protokollLinkExtern(gid);
-      Logger.log(g.kurzname + ': ' + (extern ? 'Modus extern (Link vorhanden)' : 'Modus keins (kein Dokument eingerichtet)'));
+      Logger.log(g.kurzname + ' (' + gid + '): ' + (extern ? 'Modus extern (Link vorhanden)' :
+        'Modus keins (keine Eigenschaft PROTOKOLL_DOK_' + gid + ')'));
       return;
     }
     var doc;
     try {
       doc = DocumentApp.openById(dokId);
     } catch (e) {
-      Logger.log(g.kurzname + ': FEHLER, Dokument nicht erreichbar (ID und Freigabe prüfen)');
+      Logger.log(g.kurzname + ' (' + gid + '): FEHLER, Dokument nicht erreichbar: ' + pkGrund(dokId));
       return;
     }
     var marke = protokollMarkeIndex(doc.getBody());
-    Logger.log(g.kurzname + ': Modus dokument, "' + doc.getName() + '", ' +
+    Logger.log(g.kurzname + ' (' + gid + '): Modus dokument, "' + doc.getName() + '", ' +
       (marke >= 0 ? 'Markierung gefunden' : 'FEHLER, Markierung ' + PK_MARKE + ' fehlt'));
   });
 }
