@@ -35,7 +35,7 @@ import {
   istAbgeschlossen, fortschritt, fortschrittText, sortiereProjekte, terminText
 } from './projekt-rechnen.js';
 import { sammelTodos, istSammel, sammelInfo, oeffneSammel } from './mobi-todo.js';
-import { baueTopSammlung, setzeProtokollWunsch } from './tops.js';
+import { baueTopSammlung } from './tops.js';
 
 const MAX_OFFEN = 10;
 const MAX_ERLEDIGT = 10;
@@ -111,12 +111,7 @@ export async function render(container, ctx) {
   },
     el('div', { class: 'dash-kachel-titel' },
       el('h2', { text: 'TOPs' }),
-      el('a', { class: 'knopf knopf-hell', href: basis + 'protokoll', text: 'Zur Dokumentation →' }),
-      // „+ Protokoll“: Reiter Dokumentation mit offenem Formular
-      el('a', {
-        class: 'knopf', href: basis + 'protokoll', text: '+ Protokoll',
-        onclick: function () { setzeProtokollWunsch(); }
-      })
+      el('a', { class: 'knopf knopf-hell', href: basis + 'protokoll', text: 'Zur Dokumentation →' })
     ),
     topSammlung.el
   );

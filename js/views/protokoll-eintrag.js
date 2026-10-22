@@ -11,11 +11,10 @@
 // Nach dem fertigen Speichern bekommen die benutzten TOPs der Sammlung die protokoll_id (sie sind damit besprochen).
 // Fertiges Protokoll (nur solange nicht im Dokument): Ändern über update mit Konfliktprüfung, ohne Entwurf.
 //
-// baueProtokollFormular(opt) -> { el, setzeTops(liste), hatAenderungen(), schliessen(), weg(), istNeu }
+// baueProtokollFormular(opt) -> { el, setzeTops(liste), hatAenderungen(), schliessen(), istNeu }
 // opt: { ctx, token, gruppeId, kurzname,
 //        daten: { protokolle, projekte, veranstaltungen, personen, vorlagen }, tops (offene TOPs),
 //        eintrag (null = neu), ausEntwurf (true = Werte aus dem Entwurf), beiZu(),
-//        kannEntwurf (Skript kennt gemeinsame Entwürfe, aus protokollInfo), nachVerwerfen(),
 //        nachSpeichern(eintrag, ergebnis) -> ergebnis von protokollSpeichern, bei Ändern null }
 
 import { el } from '../ui/dom.js';
@@ -218,15 +217,11 @@ export function baueProtokollFormular(opt) {
   aktionsarten.sort(function (a, b) { return a.localeCompare(b, 'de'); });
   const marken = baueMarken({
     ctx: opt.ctx, token: opt.token, text: text, namen: namen, aktionsarten: aktionsarten,
-    projekte: d.projekte.filter(function (x) { return !istAbgeschlossen(x); })
-      .sort(function (a, b) { return txt(a.titel).localeCompare(txt(b.titel), 'de'); }),
-    projektVorgabe: function () {
+    projektAktionsart: function () {
       const b = bezug.value;
-      return b.indexOf('p:') === 0 ? b.slice(2) : '';
-    },
-    herkunft: function () {
-      return 'Aus dem Protokoll' + (normDatum(datum.value) ? ' vom ' + datumText(datum.value) : '') +
-        (txt(titel.value) ? ': ' + txt(titel.value) : '');
+      if (b.indexOf('p:') !== 0) return '';
+      const pr = d.projekte.find(function (x) { return 'p:' + x.id === b; });
+      return pr ? txt(pr.aktionsart) : '';
     },
     einfuegen: function (r) { textSetzen(r); merken(); }
   });
@@ -418,8 +413,6 @@ export function baueProtokollFormular(opt) {
     if (zu) return;
     zu = true;
     clearInterval(autoTimer);
-    window.removeEventListener('hashchange', weg);
-    window.removeEventListener('pagehide', sichern);
     const offen = timer !== null;
     sichern();
     if (neu && geaendert && !gespeichert && (offen || getEntwurf(opt.gruppeId))) toast('Der Entwurf ist auf diesem Gerät gesichert.');
@@ -480,16 +473,6 @@ export function baueProtokollFormular(opt) {
       const par = { daten: datenAusFormular(inhalt), entwurf: true };
       if (server) { par.id = server.id; par.bekannt = server.geaendert_am; }
       const res = await anfrage('protokollSpeichern', par);
-      // Schutz: Ein altes Skript kennt keine Entwürfe und hängt alles ans Dokument
-      if (!res || !res.eintrag || !istWahr(res.eintrag.entwurf) || res.im_dokument) {
-        autoAus = true;
-        gespeichert = true;
-        loescheEntwurf(opt.gruppeId);
-        fehler.textContent = 'Das bereitgestellte Skript kennt noch keine Entwürfe: Das Protokoll wurde gespeichert und ins Dokument übernommen. ' +
-          'Bitte das Skript neu bereitstellen (siehe Pull Request 8.4a).';
-        zwLaeuft = false;
-        return;
-      }
       server = { id: res.eintrag.id, geaendert_am: res.eintrag.geaendert_am };
       fehler.textContent = '';
       const z = new Date(res.eintrag.geaendert_am);
@@ -568,53 +551,10 @@ export function baueProtokollFormular(opt) {
     class: 'knopf knopf-hell', type: 'button', text: 'Zwischenspeichern',
     onclick: function () { zwischenspeichern(false); }
   });
-  const kannEntwurf = opt.kannEntwurf !== false;
-  zwKnopf.hidden = !kannEntwurf;
-  const zwStand = el('p', { class: 'leise pk-hinweis', text: !kannEntwurf
-    ? 'Zwischenspeichern für die Gruppe geht erst, wenn das neue Skript bereitgestellt ist (oder gerade keine Verbindung).'
-    : (server
-      ? 'Gemeinsamer Entwurf, zuletzt gespeichert von ' + (txt(opt.eintrag && opt.eintrag.geaendert_von) || 'unbekannt') + '.'
-      : 'Noch nicht für die Gruppe gespeichert.') });
-  const autoTimer = neu && kannEntwurf ? setInterval(function () { zwischenspeichern(true); }, AUTO_MS) : null;
-
-  // Entwurf verwerfen: der auf dem Gerät und (falls vorhanden) der gemeinsame im Sheet
-  const verwerfenKnopf = el('button', {
-    class: 'knopf knopf-gefahr', type: 'button', text: 'Entwurf verwerfen',
-    onclick: async function () {
-      if (!window.confirm(server
-        ? 'Den gemeinsamen Entwurf für alle verwerfen? Das geht nicht rückgängig.'
-        : 'Den Entwurf auf diesem Gerät verwerfen? Das geht nicht rückgängig.')) return;
-      if (server) {
-        try {
-          await anfrage('delete', { tabelle: 'Protokolle', id: server.id, bekannt: server.geaendert_am });
-        } catch (e) {
-          if (opt.ctx.behandleFehler(e)) return;
-          fehler.textContent = e.code === 'konflikt'
-            ? 'Jemand anderes hat den Entwurf gerade geändert. Bitte „Abbrechen“ und neu öffnen.'
-            : 'Nicht verworfen: ' + e.message;
-          return;
-        }
-      }
-      gespeichert = true;
-      loescheEntwurf(opt.gruppeId);
-      toast('Entwurf verworfen.');
-      schliessen();
-      if (opt.nachVerwerfen) opt.nachVerwerfen();
-    }
-  });
-
-  // Reiterwechsel: Entwurf sofort sichern und dieses Formular anhalten (kein Speichern mehr im Hintergrund).
-  // Der Reiter öffnet das Formular beim Zurückkommen wieder (protokoll.js).
-  function weg() {
-    if (zu) return;
-    sichern();
-    zu = true;
-    clearInterval(autoTimer);
-    window.removeEventListener('hashchange', weg);
-    window.removeEventListener('pagehide', sichern);
-  }
-  window.addEventListener('hashchange', weg);
-  window.addEventListener('pagehide', sichern);
+  const zwStand = el('p', { class: 'leise pk-hinweis', text: server
+    ? 'Gemeinsamer Entwurf, zuletzt gespeichert von ' + (txt(opt.eintrag && opt.eintrag.geaendert_von) || 'unbekannt') + '.'
+    : 'Noch nicht für die Gruppe gespeichert.' });
+  const autoTimer = neu ? setInterval(function () { zwischenspeichern(true); }, AUTO_MS) : null;
 
   // ---- Aufbau ----
 
@@ -640,14 +580,15 @@ export function baueProtokollFormular(opt) {
     marken.leiste,
     marken.panel,
     text,
+    marken.atListe,
     zaehler,
     marken.uebersicht,
     el('p', { class: 'leise pk-hinweis', text:
       'Unter einem TOP geht es mit Stichpunkten („- “) weiter. Tab rückt ein, Umschalt+Tab rückt aus. ' +
       'Rücktaste auf einem leeren Stichpunkt macht normalen Text daraus. Mit Esc und dann Tab verlässt du das Feld.' }),
     el('p', { class: 'leise pk-hinweis', text:
-      'Markierungen: Knöpfe über dem Feld (am PC auch Strg+Alt+T, L, V, M, U, B). ' +
-      'Die Knöpfe legen den Eintrag gleich an (Zeile mit ✔). Nur Zeilen, die mit ☐ 💡 📅 📌 📊 👉 beginnen, werden gelesen.' }),
+      'Markierungen: Die Knöpfe über dem Feld fügen fertige Zeilen ein (am PC auch Strg+Alt+T, L, V, M, U, B). ' +
+      'Nur Zeilen, die mit ☐ 💡 📅 📌 📊 👉 beginnen, werden gelesen. Mit „@“ wählst du einen Namen.' }),
     el('p', { class: 'leise pk-hinweis', text:
       'Schreibe nichts auf, was Dritte persönlich betrifft (Namen von Personen außerhalb der Gruppe, Gesundheit, Adressen).' }),
     npBox,
@@ -670,8 +611,7 @@ export function baueProtokollFormular(opt) {
       : el('p', { class: 'leise', text: 'Du kannst das Protokoll ändern, solange es noch nicht im Dokument steht.' }),
     fehler,
     el('div', { class: 'form-knoepfe' }, speichernKnopf, neu ? zwKnopf : null,
-      el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abbrechen', onclick: schliessen }),
-      neu ? verwerfenKnopf : null)
+      el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abbrechen', onclick: schliessen }))
   );
   form.addEventListener('input', merken);
   form.addEventListener('change', merken);
@@ -693,7 +633,6 @@ export function baueProtokollFormular(opt) {
     },
     hatAenderungen: function () { return geaendert && !gespeichert; },
     schliessen: schliessen,
-    weg: weg,
     istNeu: neu
   };
 }

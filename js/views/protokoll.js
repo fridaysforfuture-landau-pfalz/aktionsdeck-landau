@@ -23,13 +23,9 @@ import {
   artText, imDokument, sortiereProtokolle, nachJahr, passtSuche, kopierText, einfuegeHinweis
 } from './protokoll-rechnen.js';
 import { baueProtokollFormular, entwurfInfo, verwirfEntwurf } from './protokoll-eintrag.js';
-import { baueTopSammlung, offeneTops, nimmProtokollWunsch } from './tops.js';
+import { baueTopSammlung, offeneTops } from './tops.js';
 
 const NEUESTE = 2;
-
-// Offenes Formular über Reiterwechsel hinweg (8.4a): { gruppe, id } (id leer = neues Protokoll)
-let offenMerk = null;
-let aktivesFormular = null;
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -89,8 +85,6 @@ export async function render(container, ctx) {
   const s = ctx.session;
   leeren(container);
   if (ctx.detail) schliesseDetail(ctx.detail);
-  // Ein Formular vom letzten Aufbau anhalten (es sichert seinen Entwurf)
-  if (aktivesFormular) { aktivesFormular.weg(); aktivesFormular = null; }
 
   const cacheKey = s.gruppe_id + ':protokoll';
   let daten = { protokolle: [], projekte: [], veranstaltungen: [], personen: [], vorlagen: [] };
@@ -306,10 +300,6 @@ export async function render(container, ctx) {
         class: 'knopf', type: 'button', text: 'Weiterschreiben',
         onclick: function () { formularOeffnen(p); }
       }));
-      knoepfe.append(el('button', {
-        class: 'knopf knopf-gefahr', type: 'button', text: 'Entwurf verwerfen',
-        onclick: function () { entwurfVerwerfen(p); }
-      }));
       inhalt.append(el('p', { class: 'leise', text: 'Gemeinsamer Entwurf: Alle in der Gruppe können ihn weiterschreiben. ' +
         'Ins Dokument kommt er mit „Speichern“ im Formular.' }));
     } else if (!imDokument(p)) {
@@ -327,26 +317,6 @@ export async function render(container, ctx) {
     }
     inhalt.append(knoepfe);
     zeigeDetail(ctx.detail, txt(p.titel) || 'Protokoll', inhalt, null, true);
-  }
-
-  // Gemeinsamen Entwurf für alle verwerfen (fertige Protokolle sperrt das Skript)
-  async function entwurfVerwerfen(p) {
-    if (!window.confirm('Den gemeinsamen Entwurf „' + (txt(p.titel) || 'Protokoll') + '“ für alle verwerfen? Das geht nicht rückgängig.')) return;
-    try {
-      await api('delete', { tabelle: 'Protokolle', id: p.id, bekannt: p.geaendert_am }, s.token);
-    } catch (e) {
-      if (ctx.behandleFehler(e)) return;
-      toast(e.code === 'konflikt' ? 'Jemand anderes hat den Entwurf gerade geändert. Bitte neu öffnen.' : e.message);
-      laden(false);
-      return;
-    }
-    // Gehört der Entwurf auf diesem Gerät dazu, ist er auch weg
-    const e = entwurfInfo(s.gruppe_id);
-    if (e && e.serverId === String(p.id)) verwirfEntwurf(s.gruppe_id);
-    if (formular && offenMerk && offenMerk.id === String(p.id)) formular.schliessen();
-    toast('Entwurf verworfen.');
-    schliesseDetail(ctx.detail);
-    await laden(false);
   }
 
   async function insDokument(p, knopf) {
@@ -381,8 +351,6 @@ export async function render(container, ctx) {
 
   function formularZu() {
     formular = null;
-    aktivesFormular = null;
-    offenMerk = null;
     leeren(boxForm);
     neuKnopf.hidden = false;
   }
@@ -393,9 +361,7 @@ export async function render(container, ctx) {
       ctx: ctx, token: s.token, gruppeId: s.gruppe_id, kurzname: s.kurzname,
       daten: daten, tops: offeneTops(tops), eintrag: p || null, ausEntwurf: ausEntwurf,
       beiZu: formularZu,
-      kannEntwurf: !!(info && info.entwurf),
       beiZwischenspeichern: function () { laden(false); },
-      nachVerwerfen: function () { schliesseDetail(ctx.detail); laden(false); },
       nachSpeichern: async function (eintrag, res) {
         if (res && res.im_dokument) toast('Protokoll gespeichert und im Dokument ergänzt.');
         else if (res) toast('Protokoll gespeichert.');
@@ -407,27 +373,8 @@ export async function render(container, ctx) {
       }
     });
     boxForm.append(formular.el);
-    aktivesFormular = formular;
-    offenMerk = { gruppe: s.gruppe_id, id: p ? String(p.id) : '' };
     neuKnopf.hidden = true;
     zumFormular();
-  }
-
-  // Nach einem Reiterwechsel: das Formular wieder öffnen, wie es war (ohne Rückfrage)
-  function formularWiederOeffnen() {
-    const m = offenMerk;
-    offenMerk = null;
-    if (!m || m.gruppe !== s.gruppe_id) return false;
-    if (m.id) {
-      const p = finde(m.id);
-      if (!p || imDokument(p)) return false;
-      formularBauen(p, istEntwurf(p));
-      return true;
-    }
-    const e = entwurfInfo(s.gruppe_id);
-    const g = e && e.serverId ? finde(e.serverId) : null;
-    formularBauen(g && istEntwurf(g) ? g : null, !!e);
-    return true;
   }
 
   // Entwurf vorhanden: Frage direkt im Inhalt
@@ -563,8 +510,6 @@ export async function render(container, ctx) {
   suche.addEventListener('input', zeichne);
   ctx.setzeRefresh(function () { return Promise.all([laden(false), ladeTops(false)]); });
   await Promise.all([infoLaden(), laden(true), ladeTops(true)]);
-  // Formular wieder öffnen (Reiterwechsel) oder neu öffnen (Knopf „+ Protokoll“ auf dem Start)
-  if (!formularWiederOeffnen() && nimmProtokollWunsch()) formularOeffnen(null);
   // Marken „noch nicht im Dokument“ hängen vom Modus ab
   zeichne();
 }

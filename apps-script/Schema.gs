@@ -12,7 +12,7 @@ var BASIS = ['id', 'gruppe_id', 'erstellt_am', 'erstellt_von',
 //   art = plenum | ag | aktion | sonstiges. rollen = eine Zeile je Rolle ("Moderation: Name").
 //   im_dokument = steht im Google-Dokument der Gruppe. vorschlaege_erledigt = Abhak-Liste wurde angelegt.
 //   entwurf = gemeinsamer Entwurf (seit 0.30.4): für die Gruppe sichtbar, noch nicht im Dokument.
-//   Protokolle werden nie gelöscht (siehe NIE_LOESCHEN). Ausnahme seit 0.30.6: gemeinsame Entwürfe dürfen verworfen werden.
+//   Protokolle werden nie gelöscht (siehe NIE_LOESCHEN).
 // Reden: Archiv der Reden. status = entwurf | probelesen | fertig | gehalten. Werden nie gelöscht.
 // TOPs: Sammlung der Tagesordnungspunkte fürs nächste Plenum (seit 0.30.3). protokoll_id = in diesem Protokoll besprochen.
 // Kommentare: freie Kommentare zu einem Projekt.
