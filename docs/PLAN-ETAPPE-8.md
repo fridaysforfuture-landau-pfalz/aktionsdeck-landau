@@ -12,6 +12,7 @@ Schritt 8.0 darfst du sofort bauen. Auch 8.1 darfst du bauen. Frage D ist am 22.
 8.4b (Version 0.30.7): Spalte `Protokolle.angelegt`, angelegte Einträge werden beim Verwerfen eines Entwurfs mitgelöscht (Entscheidung der Person). Versionen danach: 8.5 = 0.30.8, 8.6 = 0.30.9, 8.7 = 0.30.10.
 8.5 (Version 0.30.8): Vorschläge im Inhalt statt Fenster, nur Zeilen ohne ✔, auch für Protokolle im Dokument.
 8.5a (Version 0.30.9): Markierungen auch als Wort („ToDo:“ usw.), „Schließen“ statt „Abbrechen“. Versionen danach: 8.6 = 0.30.10, 8.7 = 0.30.11.
+8.6 (Version 0.30.10): Reden-Archiv. Formular im Inhalt statt Fenster, Detail im Detailbereich. Filter nur Status und Jahr, Aktionsart, Redner und Projekt über die Suche.
 **Änderungen der Person (22.10.2026):** Der Reiter heißt in der Anzeige **„Dokumentation“** (Kennung bleibt `protokoll`). GP hat jetzt ebenfalls ein Google-Dokument (`PROTOKOLL_DOK_g2`), Entscheidung A gilt für GP damit nicht mehr.
 
 ## 1. Ziel

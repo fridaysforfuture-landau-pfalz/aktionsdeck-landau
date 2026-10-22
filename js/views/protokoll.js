@@ -8,7 +8,7 @@
 // Das Formular bleibt dabei offen, so lässt sich aus alten Protokollen kopieren.
 // Im Detail: „Protokoll kopieren“, „Im Dokument bearbeiten“ (nur wenn es im Dokument steht),
 // solange nicht im Dokument: „Bearbeiten“ und „Ins Dokument übernehmen“.
-// Protokolle werden nie gelöscht (das Skript sperrt es). Reden kommen mit 8.6.
+// Protokolle werden nie gelöscht (das Skript sperrt es). Umschalter „Reden“: Reden-Archiv (js/views/reden.js, 8.6).
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -27,8 +27,12 @@ import { baueTopSammlung, offeneTops, nimmProtokollWunsch } from './tops.js';
 import { baueVorschlaege, vorschlagZahl } from './protokoll-vorschlaege.js';
 import { namenVorschlaege } from './protokoll-rechnen.js';
 import { getName } from '../store.js';
+import { baueReden } from './reden.js';
 
 const NEUESTE = 2;
+
+// Gewählte Ansicht im Reiter: 'protokolle' oder 'reden' (8.6)
+let ansicht = 'protokolle';
 
 // Offenes Formular über Reiterwechsel hinweg (8.4a): { gruppe, id } (id leer = neues Protokoll)
 let offenMerk = null;
@@ -119,30 +123,22 @@ export async function render(container, ctx) {
     neuLaden: function () { return ladeTops(false); },
     fehlerText: function () { return topsFehler; }
   });
-  const neuKnopf = el('button', { class: 'knopf', type: 'button', text: '+ Protokoll', onclick: function () { formularOeffnen(null); } });
+  const neuKnopf = el('button', {
+    class: 'knopf', type: 'button', text: '+ Protokoll',
+    onclick: function () { if (ansicht === 'reden' && reden) reden.neu(); else formularOeffnen(null); }
+  });
   const boxEntwuerfe = el('div', { class: 'protokoll-liste' });
   const boxNeueste = el('div', { class: 'protokoll-liste' });
   const boxVorschlag = el('div', { class: 'protokoll-vorschlagplatz' });
   const boxForm = el('div', { class: 'protokoll-formplatz' });
   const boxRest = el('div', { class: 'protokoll-liste' });
 
-  container.append(el('div', { class: 'seite' },
-    el('div', { class: 'kopfzeile' },
-      el('h1', { text: 'Dokumentation' }),
-      el('div', { class: 'kopf-knoepfe' }, neuKnopf)
-    ),
+  // Umschalter Protokolle · Reden (8.6). Die Reden stehen in js/views/reden.js.
+  const knopfProtokolle = el('button', { class: 'knopf', type: 'button', text: 'Protokolle', onclick: function () { ansichtSetzen('protokolle'); } });
+  const knopfReden = el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Reden', onclick: function () { ansichtSetzen('reden'); } });
+  const protoBox = el('div', null,
     el('div', { class: 'doku-kopf' },
-      el('div', { class: 'doku-links' },
-        suche,
-        el('div', { class: 'doku-umschalter', role: 'group', 'aria-label': 'Protokolle oder Reden' },
-          el('button', { class: 'knopf', type: 'button', text: 'Protokolle', 'aria-pressed': 'true' }),
-          el('button', {
-            class: 'knopf knopf-hell', type: 'button', text: 'Reden (bald)', disabled: '',
-            title: 'Das Reden-Archiv kommt mit Schritt 8.6.'
-          })
-        ),
-        status
-      ),
+      el('div', { class: 'doku-links' }, suche, status),
       el('section', { class: 'karte top-karte' }, el('h2', { text: 'TOPs fürs nächste Plenum' }), sammlung.el)
     ),
     boxEntwuerfe,
@@ -150,7 +146,42 @@ export async function render(container, ctx) {
     boxVorschlag,
     boxForm,
     boxRest
+  );
+  const redenBox = el('div', { class: 'reden-box' });
+  redenBox.hidden = true;
+  let reden = null;   // Reden-Ansicht (baueReden), erst beim ersten Umschalten gebaut
+
+  container.append(el('div', { class: 'seite' },
+    el('div', { class: 'kopfzeile' },
+      el('h1', { text: 'Dokumentation' }),
+      el('div', { class: 'kopf-knoepfe' }, neuKnopf)
+    ),
+    el('div', { class: 'doku-umschalter', role: 'group', 'aria-label': 'Protokolle oder Reden' }, knopfProtokolle, knopfReden),
+    protoBox,
+    redenBox
   ));
+
+  const protokollRefresh = function () { return Promise.all([laden(false), ladeTops(false)]); };
+
+  async function ansichtSetzen(a) {
+    ansicht = a;
+    const istReden = a === 'reden';
+    knopfProtokolle.className = 'knopf' + (istReden ? ' knopf-hell' : '');
+    knopfReden.className = 'knopf' + (istReden ? '' : ' knopf-hell');
+    knopfProtokolle.setAttribute('aria-pressed', String(!istReden));
+    knopfReden.setAttribute('aria-pressed', String(istReden));
+    protoBox.hidden = istReden;
+    redenBox.hidden = !istReden;
+    if (ctx.detail) schliesseDetail(ctx.detail);
+    neuKnopf.textContent = istReden ? '+ Rede' : '+ Protokoll';
+    neuKnopf.hidden = !istReden && !!formular;
+    if (istReden) {
+      if (!reden) reden = await baueReden(redenBox, ctx);
+      ctx.setzeRefresh(reden.laden);
+    } else {
+      ctx.setzeRefresh(protokollRefresh);
+    }
+  }
 
   // ---- Hilfen ----
 
@@ -605,10 +636,15 @@ export async function render(container, ctx) {
   }
 
   suche.addEventListener('input', zeichne);
-  ctx.setzeRefresh(function () { return Promise.all([laden(false), ladeTops(false)]); });
+  ctx.setzeRefresh(protokollRefresh);
   await Promise.all([infoLaden(), laden(true), ladeTops(true)]);
+  // „+ Protokoll“ vom Start: immer die Protokolle zeigen
+  const wunsch = nimmProtokollWunsch();
+  if (wunsch) ansicht = 'protokolle';
+  // Zuletzt gewählte Ansicht (bleibt beim Reiterwechsel)
+  if (ansicht === 'reden') await ansichtSetzen('reden');
   // Formular wieder öffnen (Reiterwechsel) oder neu öffnen (Knopf „+ Protokoll“ auf dem Start)
-  if (!formularWiederOeffnen() && nimmProtokollWunsch()) formularOeffnen(null);
+  if (!formularWiederOeffnen() && wunsch) formularOeffnen(null);
   // Marken „noch nicht im Dokument“ hängen vom Modus ab
   zeichne();
 }

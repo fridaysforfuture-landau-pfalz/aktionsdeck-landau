@@ -183,11 +183,13 @@ export function treffer(t, f) {
 
 // ---- Kommentare ----
 
-// { todoId: Anzahl } aus der Liste Kommentare (nur Kommentare zu ToDos)
-export function kommentarZahlen(liste) {
+// { todoId: Anzahl } aus der Liste Kommentare (nur Kommentare zu ToDos).
+// art (freiwillig, seit 8.6): andere Art zählen, zum Beispiel 'rede'.
+export function kommentarZahlen(liste, art) {
   const m = {};
+  const welche = art || 'todo';
   (liste || []).forEach(function (k) {
-    if (String(k.bezug_art || '').trim() !== 'todo') return;
+    if (String(k.bezug_art || '').trim() !== welche) return;
     const id = String(k.bezug_id || '').trim();
     if (id) m[id] = (m[id] || 0) + 1;
   });
