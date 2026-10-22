@@ -1,9 +1,9 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.30.13 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.30.14 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.md, abgeschlossen, bleibt als Nachweis)
+Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team; die Datei wird als erste Aufgabe von Etappe 9 geschrieben). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
 
 ## Erledigt
 - Etappe 0 und 1 (Fundament), Etappe 2 Material und Ausleihe, Zwischenplan Z1 bis Z8, Etappe 3 ToDos.
@@ -11,7 +11,7 @@ Plan der laufenden Etappe: docs/PLAN-ETAPPE-8.md (Etappe 7: docs/PLAN-ETAPPE-7.m
 - Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
 - Etappe 7 Mobi komplett (0.29.0 bis 0.29.12), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7, 7.8. 0.29.11 geprüft (22.10.2026), Anpassungen in 0.29.12.
-- Etappe 8 Protokoll, Reden, Learnings komplett (0.29.12 bis 0.30.13), siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4), 8.4 Markierungen (0.30.5), 8.4a Anpassungen (0.30.6), 8.4b angelegte Einträge beim Verwerfen löschen (0.30.7), 8.5 Vorschläge aus dem Protokoll (0.30.8), 8.5a Anpassungen (0.30.9), 8.6 Reden-Archiv (0.30.10), 8.7 Verknüpfungen (0.30.11), 8.8 Löschen von Hand, Redetext und Kommentare je Absatz (0.30.12, Sheet und Skript von Hand), 8.8a Anpassungen zu 8.8 (0.30.13). Noch zu prüfen: 8.5a, 8.6, 8.7 und 8.8.
+- Etappe 8 Protokoll, Reden, Learnings komplett und geprüft (0.29.12 bis 0.30.13, Abschluss der Doku 0.30.14), siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4), 8.4 Markierungen (0.30.5), 8.4a Anpassungen (0.30.6), 8.4b angelegte Einträge beim Verwerfen löschen (0.30.7), 8.5 Vorschläge aus dem Protokoll (0.30.8), 8.5a Anpassungen (0.30.9), 8.6 Reden-Archiv (0.30.10), 8.7 Verknüpfungen (0.30.11), 8.8 Löschen von Hand, Redetext und Kommentare je Absatz (0.30.12, Sheet und Skript von Hand), 8.8a Anpassungen zu 8.8 (0.30.13). Alles geprüft: 8.5a bis 8.8a am 22.10.2026 bestätigt.
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
 ## Etappe 7 (Mobi), abgeschlossen mit 0.29.12
@@ -153,7 +153,10 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Beim Bearbeiten schließt sich das Detail (auch am PC), damit das Formular die ganze Breite hat.
   - Nicht gespeicherte Rede bleibt beim Reiterwechsel: Jede Eingabe wird auf dem Gerät gemerkt (store.js: getRedeEntwurf, setRedeEntwurf, loescheRedeEntwurf; eine je Gruppe). Beim Zurückkommen öffnet das Formular wieder mit Hinweis. Speichern oder "Schließen" löscht den Entwurf ("Schließen" fragt bei Änderungen nach). Die Konfliktprüfung nutzt den Stand beim ersten Öffnen. Abmelden löscht ihn mit (Warnung wie beim Protokoll).
   - Projekt: Klick auf eine Rede öffnet das Formular (Adresse #/g/<kurz>/protokoll/rede-bearbeiten:<id>).
-- Nächster Schritt: Etappe 9 (Team). Vorher prüft die Person 8.5a bis 8.8; dann Plan für Etappe 9 schreiben (docs/PLAN-ETAPPE-9.md).
+- 8.5a, 8.6, 8.7, 8.8 und 8.8a geprüft (22.10.2026): alles bestätigt. Damit sind auch die Sheet-Spalten Reden.text und Kommentare.stelle sowie Daten.gs und Schema.gs aus 8.8 im Einsatz (Löschen und Kommentare je Absatz liefen bei der Prüfung).
+- Etappe 8 ist abgeschlossen (0.30.13). 0.30.14 schließt nur die Doku ab.
+- Hinweis aus 8.8: Ein Pull Request wurde angenommen, bevor eine Nachbesserung im selben Zweig ankam. Regel ab jetzt: Jede Nachbesserung zählt die Version hoch, auch in einem noch offenen Pull Request. So zeigt die App sicher, welcher Stand da ist.
+- Nächster Schritt: Etappe 9 (Team). Erste Aufgabe: docs/PLAN-ETAPPE-9.md schreiben (Fassung 1, aufgebaut wie die Pläne für Etappe 7 und 8, mit gesammelten Rückfragen). Noch kein Code.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -176,11 +179,11 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - Mobi im Kalender: erledigt in 7.7 (0.29.9), im normalen Kalender mit Filter "Mobi" (kein eigener Mobi-Kalender).
 
 ## Plan Etappen 7 bis 11
-Reiter (Stand 0.29.12): Start, Projekte, ToDos, Material, Mobi, Kalender, Hilfe. "Posts" heißt Mobi. Der Reiter **Kalender bleibt** (Entscheidung Etappe 7). Untere Leiste am Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Hilfe unter "Mehr").
-Geplant: Etappe 8 bringt den Reiter "Protokoll" (📝, am PC nach "Kalender", am Handy unter "Mehr"). Später Team (Etappe 9) und Wiki statt Hilfe (Etappe 10).
+Reiter (Stand 0.30.13): Start, Projekte, ToDos, Material, Mobi, Kalender, Dokumentation, Hilfe. "Posts" heißt Mobi. Der Reiter **Kalender bleibt** (Entscheidung Etappe 7). Untere Leiste am Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Dokumentation, Hilfe unter "Mehr").
+Geplant: Etappe 9 bringt den Reiter Team. Später Wiki statt Hilfe (Etappe 10). (Etappe 8 brachte den Reiter "Dokumentation", 📝, Kennung protokoll.)
 - Etappe 7 Mobi: abgeschlossen (siehe oben und docs/PLAN-ETAPPE-7.md).
-- Etappe 8 Protokoll, Reden, Learnings: Plan und Schritte in **docs/PLAN-ETAPPE-8.md** (Dauerprotokoll mit Google-Dokument für FFF, Etherpad bei GP von Hand, Markierungen im Text mit Vorschlägen zum Abhaken, Reden-Archiv mit Probelesen über Kommentare, Learnings aus dem Protokoll).
-- Etappe 9 Team: Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
+- Etappe 8 Protokoll, Reden, Learnings: abgeschlossen. Plan und Schritte in **docs/PLAN-ETAPPE-8.md** (Dauerprotokoll mit Google-Dokument für FFF, Etherpad bei GP von Hand, Markierungen im Text mit Vorschlägen zum Abhaken, Reden-Archiv mit Probelesen über Kommentare, Learnings aus dem Protokoll).
+- Etappe 9 Team (läuft, Plan folgt in docs/PLAN-ETAPPE-9.md): Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
 - Etappe 10 Wiki und öffentliche Seiten: Wiki mit Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlichem Bereich. Impressum, Info, Datenschutz (Texte aus 6.1). Die Seite #/termine gibt es schon.
 - Etappe 11 Komfort: OpenCollective-Kontostand (nur Klimastreik Landau, https://opencollective.com/klimastreik-landau, einmal pro Woche per Skript; erst testen, noch keine Zusage). Erinnerungen und Push so planen, dass sie später auf Push oder E-Mail aufsetzen können (Umfragen, überfällige ToDos, Pinnwand-Kommentare). Sicherung, Übersicht und Export, Dunkelmodus, Feinschliff, GitHub-Actions-Versionen anheben.
 - Neue Sheet-Tabs für spätere Etappen: Kapazitaet, Wiki (Mobi_Plan seit 0.29.0, Reden seit 0.30.0). Jede Etappe nennt vorher, was im Sheet und Skript zu ergänzen ist und wann neu bereitgestellt wird.
@@ -242,7 +245,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - **Vor 1.0**: Test-ToDos und Test-Einträge im Sheet löscht die Person.
 
 ## Dateiübersicht
-- docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (laufend), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
+- docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (folgt), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
 - index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.30.12 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
@@ -258,6 +261,6 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - Nach jedem Commit: Actions grün abwarten, Seite zweimal neu laden.
 - Ein Syntaxfehler in einer Datei lässt den Reiter auf "Dieser Reiter ist noch in Arbeit" zurückfallen (app.js lädt jeden Reiter als Modul). Bei diesem Symptom zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern und übrig gebliebene Reste wie "..." prüfen, vor allem `});` und `}, s.token);`.
 - In Util.gs gibt es schon eine Funktion aus(): in neuen Skriptdateien keine Variable so nennen. Hilfsfunktionen in Termine.gs beginnen mit t oder ics.
-- Zwischenspeicher je Reiter: ladeMitCache(key, ladeFn, anzeigen, zuerstCache), Schlüssel gruppe_id:<name> (Start: :todos, :projekteliste, :startextra; Kalender: :kalender; Protokoll: :protokoll). Öffentliche Termine: Schlüssel oeffentlich:termine. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in zeigen() Fehlendes ergänzen.
+- Zwischenspeicher je Reiter: ladeMitCache(key, ladeFn, anzeigen, zuerstCache), Schlüssel gruppe_id:<name> (Start: :todos, :projekteliste, :startextra; Kalender: :kalender; Protokoll: :protokoll; Reden: :reden). Entwürfe nur auf dem Gerät (js/store.js): Protokoll aktionsdeck_entwurf_protokoll_<gruppe_id>, Rede aktionsdeck_entwurf_rede_<gruppe_id>; Abmelden löscht beide. Öffentliche Termine: Schlüssel oeffentlich:termine. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in zeigen() Fehlendes ergänzen.
 - Formulare: js/ui/form.js (Feldtypen text, zahl, datum, zeit, farbe, langtext, auswahl, bool, foto). Listen: zeigeListe in js/ui/table.js.
 - Arbeitsweise im Chat: neue Dateien ganz, bei bestehenden Dateien nur die zitierten Änderungen (erste und letzte Zeile des Bereichs, vollständig mit Klammern und Semikolons), CSS ans Ende anhängen. Am Ende Prüfliste und Tabelle "Wenn etwas nicht klappt". Der Nutzer arbeitet nur im Browser, Konsole gesperrt, und sammelt Anmerkungen zur Anzeige.
