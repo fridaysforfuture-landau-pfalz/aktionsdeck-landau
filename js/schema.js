@@ -118,7 +118,7 @@ export const SCHEMA = {
       { name: 'notiz', label: 'Notiz', typ: 'langtext' }
     ]
   },
-  // Reden: Projekt oder Veranstaltung baut das Reden-Formular selbst (8.6). Werden nie gelöscht.
+  // Reden: Projekt oder Veranstaltung baut das Reden-Formular selbst (8.6). Löschen nur von Hand (8.8).
   Reden: {
     titel: 'Reden',
     felder: [
@@ -126,7 +126,8 @@ export const SCHEMA = {
       { name: 'redner', label: 'Redner', typ: 'text' },
       { name: 'datum', label: 'Datum', typ: 'datum' },
       { name: 'aktionsart', label: 'Aktionsart (z. B. Demo, Infostand)', typ: 'text' },
-      { name: 'link', label: 'Link zum Drive-Dokument (https://…)', typ: 'text' },
+      { name: 'text', label: 'Redetext', typ: 'langtext' },
+      { name: 'link', label: 'Link (freiwillig, https://…)', typ: 'text' },
       // Angezeigt groß, gespeichert klein
       { name: 'status', label: 'Status', typ: 'auswahl', optionen: [
         { wert: 'entwurf', label: 'Entwurf' }, { wert: 'probelesen', label: 'Probelesen' },

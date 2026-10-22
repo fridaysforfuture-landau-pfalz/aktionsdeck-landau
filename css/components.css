@@ -2786,3 +2786,20 @@ p.notiz.erledigt {
 .rede-probelesen { background: #fff3dc; color: #8a5200; }
 .rede-fertig { background: var(--gruen-hell); color: #1f5e48; }
 .rede-gehalten { background: #e3e7f6; color: #2f3f8f; }
+
+/* ---- 0.30.12: Redetext mit Kommentaren je Absatz ---- */
+.rede-textfeld { min-height: 14em; }
+.rede-text { margin-top: 1rem; }
+.rede-absatz {
+  border-left: 3px solid var(--rand, #d7dcda);
+  padding: 0.25rem 0 0.25rem 0.75rem;
+  margin: 0 0 0.75rem;
+}
+.rede-absatz-mit { border-left-color: #e0a030; }
+.rede-absatz-text { margin: 0 0 0.25rem; }
+.rede-absatz-aktion { display: flex; justify-content: flex-end; }
+.rede-absatz-knopf { min-height: 44px; }
+.rede-absatz .kommentar-liste { margin: 0.25rem 0; }
+.rede-absatz-form .kommentar-form { margin-top: 0.25rem; }
+.rede-zitat { font-style: italic; }
+.rede-verschoben { margin: 1rem 0 0.25rem; }
