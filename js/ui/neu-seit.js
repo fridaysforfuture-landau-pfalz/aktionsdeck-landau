@@ -2,6 +2,7 @@
 // "Was ist neu?": holt, was andere seit dem letzten Besuch geändert haben, und zeigt es im Fenster,
 // gegliedert in Umfragen, Mitteilungen, Veranstaltungen, Kommentare, Mobi (Beiträge zu Veranstaltungen),
 // Projekte (mit Meilensteinen, ToDos und Mobi-Beiträgen) und ToDos ohne Projekt.
+// Seit 8.7 auch Protokolle und Reden (Abschnitt „Dokumentation“, mit Projekt beim Projekt).
 // Der Zeitpunkt des letzten Besuchs liegt im Gerät (store.js), pro Gruppe.
 
 import { el } from './dom.js';
@@ -28,7 +29,8 @@ export async function holeNeu(token, gruppeId, kurzname) {
   const alt = getLetzterBesuch(gruppeId);
   const seit = alt || new Date().toISOString();
   const r = await api('listMehrere', {
-    tabellen: ['ToDos', 'Meilensteine', 'Mitteilungen', 'Umfragen', 'Kommentare', 'Projekte', 'Veranstaltungen', 'Mobi_Plan'],
+    tabellen: ['ToDos', 'Meilensteine', 'Mitteilungen', 'Umfragen', 'Kommentare', 'Projekte', 'Veranstaltungen', 'Mobi_Plan',
+      'Protokolle', 'Reden'],
     seit: seit
   }, token);
   const stand = (r && r.serverzeit) || new Date().toISOString();
@@ -146,10 +148,31 @@ export async function holeNeu(token, gruppeId, kurzname) {
     if (!neu) return null;
     const art = txt(z.bezug_art);
     return {
-      art: 'Kommentar',
+      art: art === 'rede' ? 'Kommentar zu einer Rede' : 'Kommentar',
       was: 'neu',
       titel: kurz(z.text, 80),
-      link: art === 'todo' ? basis + 'todos' : (art === 'mobi' ? basis + 'mobi' : basis + 'start')
+      link: art === 'todo' ? basis + 'todos' : (art === 'mobi' ? basis + 'mobi'
+        : (art === 'rede' ? basis + 'protokoll/rede:' + encodeURIComponent(txt(z.bezug_id)) : basis + 'start'))
+    };
+  });
+  // Protokolle (auch gemeinsame Entwürfe) und Reden: Abschnitt Dokumentation, mit Projekt beim Projekt
+  sammeln(t.Protokolle, 'doku', function (z, neu) {
+    const entwurf = istWahr(z.entwurf) && !istWahr(z.im_dokument);
+    return {
+      art: entwurf ? 'Protokoll-Entwurf' : 'Protokoll',
+      was: neu ? 'neu' : 'geändert',
+      titel: '📝 ' + kurz(z.titel, 70),
+      link: basis + 'protokoll/protokoll:' + encodeURIComponent(z.id),
+      projektId: txt(z.projekt_id)
+    };
+  });
+  sammeln(t.Reden, 'doku', function (z, neu) {
+    return {
+      art: 'Rede',
+      was: neu ? 'neu' : 'geändert',
+      titel: '🎤 ' + kurz(z.titel, 70) + (txt(z.redner) ? ' (' + kurz(z.redner, 30) + ')' : ''),
+      link: basis + 'protokoll/rede:' + encodeURIComponent(z.id),
+      projektId: txt(z.projekt_id)
     };
   });
 
@@ -204,6 +227,7 @@ export function zeigeNeu(items, beiZu) {
     abschnitt(titelText('Veranstaltungen'), von('veranstaltung'));
     abschnitt(titelText('Kommentare'), von('kommentar'));
     abschnitt(titelText('Mobi'), von('mobi'));
+    abschnitt(titelText('Dokumentation'), von('doku'));
 
     // Projekte: je Projekt eine Überschrift, darunter Projekt, Meilensteine und ToDos
     const gruppen = [];
