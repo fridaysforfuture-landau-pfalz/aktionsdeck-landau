@@ -189,7 +189,10 @@ export function baueZeitstrahl(beitraege, bezugsdatum, oeffnen, bezugName) {
 
 // Gibt null ohne Beiträge mit Datum.
 export function baueZeitbalken(beitraege, aktionsdatum) {
-  const mitDatum = beitraege.filter(function (b) { return !!normDatum(b.datum); });
+  // Wie im Zeitstrahl: Beiträge mit Status „Idee“ stehen nicht im Balken (Entscheidung 22.10.2026)
+  const mitDatum = beitraege.filter(function (b) {
+    return !!normDatum(b.datum) && txt(b.status).toLowerCase() !== 'idee';
+  });
   const aktion = normDatum(aktionsdatum);
   const r = zeitraum(mitDatum, aktion);
   if (!r) return null;

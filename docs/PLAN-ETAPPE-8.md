@@ -5,7 +5,7 @@ Regeln für die Arbeit stehen in `CLAUDE.md`.
 
 **Status:** Die Person hat die Fragen aus Fassung 1 beantwortet (Abschnitt 3). Die Fragen A bis C und E aus Abschnitt 4 sind am 22.10.2026 bestätigt.
 Schritt 8.0 darfst du sofort bauen. Auch 8.1 darfst du bauen. Frage D ist am 22.10.2026 beantwortet (Adresse der Seite, siehe Abschnitt 4).
-**Erledigt:** 8.0 (Version 0.29.12), 8.1 (Version 0.30.0, Bereitstellung von Hand durch die Person).
+**Erledigt:** 8.0 (Version 0.29.12), 8.1 (Version 0.30.0, von Hand bereitgestellt), 8.2 (Version 0.30.1).
 
 ## 1. Ziel
 

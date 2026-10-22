@@ -11,7 +11,7 @@ export function render(container, ctx) {
   const box = el('div', { class: 'seite' }, el('h1', { text: 'Mehr' }));
 
   sichtbareTabs()
-    .filter(function (t) { return ['material', 'kalender', 'hilfe'].indexOf(t.id) >= 0; })
+    .filter(function (t) { return ['material', 'kalender', 'protokoll', 'hilfe'].indexOf(t.id) >= 0; })
     .forEach(function (t) {
       box.append(el('a', { class: 'karte listenlink', href: basis + t.id, text: t.icon + '  ' + t.label }));
     });

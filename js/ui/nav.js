@@ -13,6 +13,7 @@ export const TABS = [
   { id: 'material', label: 'Material', icon: '📦' },
   { id: 'mobi', label: 'Mobi', icon: '📣' },
   { id: 'kalender', label: 'Kalender', icon: '📅' },
+  { id: 'protokoll', label: 'Protokoll', icon: '📝' },
   { id: 'hilfe', label: 'Hilfe', icon: '❓' }
 ];
 
