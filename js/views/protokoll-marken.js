@@ -14,7 +14,7 @@
 // baueMarken(opt) -> { leiste, panel, uebersicht, aktualisieren() }
 // opt: { ctx, token, text (Textfeld), namen [..], aktionsarten [..], projekte (offene Projekte),
 //        projektVorgabe() -> Projekt-ID des Protokolls oder '', herkunft() -> 'Aus dem Protokoll vom …',
-//        einfuegen({ text, pos }) (setzt den Text und merkt die Änderung) }
+//        einfuegen({ text, pos }) (setzt den Text und merkt die Änderung), beiAngelegt(tabelle, id) }
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -170,7 +170,9 @@ export function baueMarken(opt) {
       hauptKnopf.disabled = true;
       hauptKnopf.textContent = 'Lege an …';
       try {
-        await api('create', { tabelle: auftrag.tabelle, daten: auftrag.daten }, opt.token);
+        const neu = await api('create', { tabelle: auftrag.tabelle, daten: auftrag.daten }, opt.token);
+        // Merken, damit der Eintrag beim Verwerfen des Entwurfs mitgelöscht werden kann
+        if (opt.beiAngelegt && neu && neu.id) opt.beiAngelegt(auftrag.tabelle, String(neu.id));
         toast(ANGELEGT[art.art] || 'Angelegt.');
         setzen(zeile + ' ✔');
       } catch (e) {

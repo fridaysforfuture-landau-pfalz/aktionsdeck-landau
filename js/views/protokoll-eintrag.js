@@ -30,7 +30,7 @@ import { istAbgeschlossen } from './projekt-rechnen.js';
 import {
   ARTEN, artText, rollenFuer, MAX_TEXT, namenVorschlaege, namenAusListe, nameUmschalten, rollenAusText, rollenText,
   plenumGliederung, naechstesPlenum, textMitSchluss, schlusszeile, kopierText,
-  topNummer, topHinzu, topEntfernen, textAufraeumen, stichpunktEnter, stichpunktTab, stichpunktRueck
+  angelegtLesen, angelegtText, topNummer, topHinzu, topEntfernen, textAufraeumen, stichpunktEnter, stichpunktTab, stichpunktRueck
 } from './protokoll-rechnen.js';
 import { baueMarken } from './protokoll-marken.js';
 
@@ -66,7 +66,7 @@ export function entwurfInfo(gruppeId) {
   const wann = isNaN(zeit.getTime()) ? '' :
     ' vom ' + zeit.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) +
     ' um ' + zeit.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-  return { wann: wann, titel: txt(e.felder.titel), serverId: txt(e.felder.server_id) };
+  return { wann: wann, titel: txt(e.felder.titel), serverId: txt(e.felder.server_id), angelegt: txt(e.felder.angelegt) };
 }
 
 export function verwirfEntwurf(gruppeId) {
@@ -91,8 +91,20 @@ function werteAus(p) {
   return {
     titel: txt(p.titel), datum: normDatum(p.datum), art: txt(p.art).toLowerCase(), teilnehmende: txt(p.teilnehmende),
     rollen: rollenAusText(p.rollen), bezug: pid ? 'p:' + pid : (vid ? 'v:' + vid : ''),
-    text: String(p.text === undefined || p.text === null ? '' : p.text), np_datum: '', np_zeit: ''
+    text: String(p.text === undefined || p.text === null ? '' : p.text), np_datum: '', np_zeit: '',
+    angelegt: txt(p.angelegt)
   };
+}
+
+// Über die Knöpfe angelegte Einträge löschen (beim Verwerfen eines Entwurfs). Fehler je Eintrag stören nicht.
+// Gibt die Zahl der nicht gelöschten zurück.
+export async function loescheAngelegte(liste, token) {
+  const ergebnis = await Promise.all((liste || []).map(function (x) {
+    return api('delete', { tabelle: x.tabelle, id: x.id }, token).then(function () { return true; }, function (e) {
+      return e && e.code === 'nicht_gefunden';
+    });
+  }));
+  return ergebnis.filter(function (ok) { return !ok; }).length;
 }
 
 // Alle 2 Minuten wird ein gemeinsamer Entwurf gespeichert (wenn sich etwas geändert hat)
@@ -121,6 +133,7 @@ export function baueProtokollFormular(opt) {
   } else if (opt.ausEntwurf && lokal) w = Object.assign(neueWerte(opt), lokal.felder);
   else w = neueWerte(opt);
   const anfrage = function (aktion, par) { return api(aktion, par, opt.token); };
+  let angelegt = angelegtLesen(w.angelegt);   // über die Knöpfe angelegte Einträge (8.4b)
   let seitServer = false;   // geändert seit dem letzten Zwischenspeichern
   let autoAus = false;      // nach einem Konflikt kein automatisches Speichern mehr
   let zwLaeuft = false;
@@ -228,7 +241,8 @@ export function baueProtokollFormular(opt) {
       return 'Aus dem Protokoll' + (normDatum(datum.value) ? ' vom ' + datumText(datum.value) : '') +
         (txt(titel.value) ? ': ' + txt(titel.value) : '');
     },
-    einfuegen: function (r) { textSetzen(r); merken(); }
+    einfuegen: function (r) { textSetzen(r); merken(); },
+    beiAngelegt: function (tabelle, id) { angelegt.push({ tabelle: tabelle, id: id }); merken(); }
   });
   bezug.addEventListener('change', function () { marken.aktualisieren(); });
 
@@ -396,7 +410,8 @@ export function baueProtokollFormular(opt) {
     return {
       titel: titel.value, datum: datum.value, art: art.value, teilnehmende: anwesend.value, rollen: rollen,
       bezug: bezug.value, text: text.value, np_datum: npDatum.value, np_zeit: npZeit.value,
-      server_id: server ? server.id : '', server_bekannt: server ? server.geaendert_am : ''
+      server_id: server ? server.id : '', server_bekannt: server ? server.geaendert_am : '',
+      angelegt: angelegtText(angelegt)
     };
   }
 
@@ -452,7 +467,8 @@ export function baueProtokollFormular(opt) {
       rollen: rollenText(sammeln().rollen, reihenfolge),
       projekt_id: b.indexOf('p:') === 0 ? b.slice(2) : '',
       veranstaltung_id: b.indexOf('v:') === 0 ? b.slice(2) : '',
-      text: inhalt
+      text: inhalt,
+      angelegt: angelegtText(angelegt)
     };
   }
 
@@ -581,9 +597,12 @@ export function baueProtokollFormular(opt) {
   const verwerfenKnopf = el('button', {
     class: 'knopf knopf-gefahr', type: 'button', text: 'Entwurf verwerfen',
     onclick: async function () {
-      if (!window.confirm(server
+      const mit = angelegt.length
+        ? '\n\nAuch die ' + angelegt.length + ' über die Knöpfe angelegten Einträge (ToDos, Learnings, Termine …) werden gelöscht.'
+        : '';
+      if (!window.confirm((server
         ? 'Den gemeinsamen Entwurf für alle verwerfen? Das geht nicht rückgängig.'
-        : 'Den Entwurf auf diesem Gerät verwerfen? Das geht nicht rückgängig.')) return;
+        : 'Den Entwurf auf diesem Gerät verwerfen? Das geht nicht rückgängig.') + mit)) return;
       if (server) {
         try {
           await anfrage('delete', { tabelle: 'Protokolle', id: server.id, bekannt: server.geaendert_am });
@@ -595,9 +614,10 @@ export function baueProtokollFormular(opt) {
           return;
         }
       }
+      const rest = await loescheAngelegte(angelegt, opt.token);
       gespeichert = true;
       loescheEntwurf(opt.gruppeId);
-      toast('Entwurf verworfen.');
+      toast(rest ? 'Entwurf verworfen. ' + rest + ' Einträge konnten nicht gelöscht werden.' : 'Entwurf verworfen.');
       schliessen();
       if (opt.nachVerwerfen) opt.nachVerwerfen();
     }
