@@ -2787,19 +2787,26 @@ p.notiz.erledigt {
 .rede-fertig { background: var(--gruen-hell); color: #1f5e48; }
 .rede-gehalten { background: #e3e7f6; color: #2f3f8f; }
 
-/* ---- 0.30.12: Redetext mit Kommentaren je Absatz ---- */
-.rede-textfeld { min-height: 14em; }
-.rede-text { margin-top: 1rem; }
-.rede-absatz {
-  border-left: 3px solid var(--rand, #d7dcda);
-  padding: 0.25rem 0 0.25rem 0.75rem;
-  margin: 0 0 0.75rem;
+/* ---- 0.30.12: Redetext mit Kommentaren je Absatz (im Formular) ---- */
+.rede-text { display: grid; gap: 0.75rem; }
+.rede-reihe { display: grid; gap: 0.5rem; }
+.rede-absatz-feld { resize: vertical; overflow: hidden; min-height: 48px; }
+.rede-kommentar-spalte {
+  border-left: 3px solid var(--rand);
+  padding-left: 0.75rem;
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
 }
-.rede-absatz-mit { border-left-color: #e0a030; }
-.rede-absatz-text { margin: 0 0 0.25rem; }
-.rede-absatz-aktion { display: flex; justify-content: flex-end; }
-.rede-absatz-knopf { min-height: 44px; }
-.rede-absatz .kommentar-liste { margin: 0.25rem 0; }
-.rede-absatz-form .kommentar-form { margin-top: 0.25rem; }
+.rede-reihe-mit .rede-kommentar-spalte { border-left-color: #e0a030; }
+.rede-reihe-mit .rede-absatz-feld { border-color: #e0a030; }
+.rede-kommentar-spalte .kommentar-liste { margin: 0; }
+.rede-absatz-knopf { min-height: 44px; justify-self: start; }
+.rede-schreibplatz:empty { display: none; }
+.rede-schreibplatz { display: grid; gap: 0.25rem; }
 .rede-zitat { font-style: italic; }
-.rede-verschoben { margin: 1rem 0 0.25rem; }
+.rede-verschoben { margin: 0.5rem 0 0.25rem; }
+@media (min-width: 960px) {
+  /* PC: Absatz links, Kommentare rechts daneben */
+  .rede-text-mit .rede-reihe { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: start; }
+}

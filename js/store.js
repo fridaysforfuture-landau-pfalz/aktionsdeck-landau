@@ -79,13 +79,41 @@ export function loescheEntwurf(gruppeId) {
   try { localStorage.removeItem(ENTWURF_KEY + gruppeId); } catch (e) { /* ignorieren */ }
 }
 
-// Gibt es auf diesem Gerät Protokoll-Entwürfe (egal welche Gruppe)?
+// Nicht gespeicherte Rede im Formular (8.8): eine je Gruppe, nur auf diesem Gerät, damit ein Reiterwechsel
+// nichts verliert. { zeit, id ('' = neu), bekannt (geaendert_am beim Öffnen), felder: {...} } oder null
+const REDE_KEY = 'aktionsdeck_entwurf_rede_';
+
+export function getRedeEntwurf(gruppeId) {
+  try {
+    const e = JSON.parse(localStorage.getItem(REDE_KEY + gruppeId));
+    return e && e.felder && typeof e.felder === 'object' ? e : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+export function setRedeEntwurf(gruppeId, id, bekannt, felder) {
+  try {
+    localStorage.setItem(REDE_KEY + gruppeId, JSON.stringify({
+      zeit: new Date().toISOString(), id: String(id || ''), bekannt: bekannt || '', felder: felder
+    }));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+export function loescheRedeEntwurf(gruppeId) {
+  try { localStorage.removeItem(REDE_KEY + gruppeId); } catch (e) { /* ignorieren */ }
+}
+
+// Gibt es auf diesem Gerät Entwürfe von Protokollen oder Reden (egal welche Gruppe)?
 function entwurfSchluessel() {
   const l = [];
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && k.indexOf(ENTWURF_KEY) === 0) l.push(k);
+      if (k && (k.indexOf(ENTWURF_KEY) === 0 || k.indexOf(REDE_KEY) === 0)) l.push(k);
     }
   } catch (e) { /* ignorieren */ }
   return l;

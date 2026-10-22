@@ -579,15 +579,16 @@ export async function render(container, ctx) {
   }
 
   // Unterpunkt der Adresse (8.7): #/g/<kurz>/protokoll/<unter>
-  //   reden · rede:<id> · rede-neu:p:<projekt-id> · protokoll:<id> · protokoll-neu:v:<veranstaltung-id>
+  //   reden · rede:<id> · rede-bearbeiten:<id> (8.8) · rede-neu:p:<projekt-id> · protokoll:<id> · protokoll-neu:v:<veranstaltung-id>
   async function unterAusfuehren(unter) {
     const u = txt(unter);
     if (!u) return false;
     // Adresse zurücksetzen, damit ein Neuaufbau das nicht noch einmal macht
     try { history.replaceState(history.state, '', '#/g/' + encodeURIComponent(s.kurzname) + '/protokoll'); } catch (e) { /* ignorieren */ }
-    if (u === 'reden' || u.indexOf('rede:') === 0 || u.indexOf('rede-neu:') === 0) {
+    if (u === 'reden' || u.indexOf('rede:') === 0 || u.indexOf('rede-neu:') === 0 || u.indexOf('rede-bearbeiten:') === 0) {
       await ansichtSetzen('reden');
       if (u.indexOf('rede:') === 0) reden.oeffne(u.slice(5));
+      if (u.indexOf('rede-bearbeiten:') === 0) reden.bearbeite(u.slice(16));
       if (u.indexOf('rede-neu:p:') === 0) reden.neu({ projekt_id: u.slice(11) });
       if (u.indexOf('rede-neu:v:') === 0) reden.neu({ veranstaltung_id: u.slice(11) });
       return true;
