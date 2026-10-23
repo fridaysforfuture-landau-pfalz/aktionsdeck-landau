@@ -5,7 +5,8 @@ Regeln für die Arbeit stehen in `CLAUDE.md`.
 
 **Status: Fassung 2.** Die Person hat die 31 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 3). „Plan ist gut.“
 Fassung 2 (eigentlich Schritt 10.0a) kommt im selben Pull Request wie Schritt 10.1, damit Plan und Skript zusammenpassen.
-**Erledigt:** 10.0 (Version 0.31.10, Fassung 1, Pull Request #37, gemergt).
+**Erledigt:** 10.0 (Version 0.31.10, Fassung 1, Pull Request #37, gemergt). 10.1 (Version 0.32.0, Pull Request #38, gemergt). 10.2 (Version 0.32.1, in Arbeit).
+Die kleinen Fragen A bis D (Abschnitt 4) sind am 23.10.2026 beantwortet.
 
 ## 1. Ziel
 
@@ -57,8 +58,8 @@ Was es schon gibt und wiederverwendet wird:
 2. **„Gruppe intern“** gibt es, und zwar **unter „Anleitung“**. Sie ist **gruppenspezifisch** (eigene Seite der Gruppe im Sheet) und **allgemein** (feste Seite
    „Zuständig für die App“: wer Adminzugriff auf Sheet und Skript hat, wer die App entwickelt hat; mit Platzhaltern, siehe 20).
 3. **Themen fest** (feste Liste in der App, nicht frei). Was sie tun: Sie ordnen die Seiten in der Liste in Aufklapper und helfen beim Suchen.
-4. Themen **nach Alphabet**. Vorschlag des Agenten (die Person hat eigene Ideen und kann die Liste jederzeit ändern lassen, das braucht keine Änderung am Sheet):
-   Aktionen und Demos · Anmeldung und Recht · Finanzen und Förderung · Gruppe und Treffen · Material und Technik · Mobi und Social Media · Presse · Sonstiges (immer zuletzt).
+4. Themen **nach Alphabet**. Liste der Person (Antwort A): Aktionen und Demos · Anmeldung · Finanzen und Förderung · Gruppe und Treffen · Material · Mobi · Presse · Recht · Social Media · Technik · Sonstiges (immer zuletzt).
+   Die Liste ist in der App **nicht** bearbeitbar. Eine Änderung macht der Agent in `js/views/wiki-rechnen.js` (das Sheet bleibt gleich).
 5. Suche wie vorgeschlagen (Titel, Thema, Text; Ausschnitt mit dem Suchwort).
 6. **Aufbau des Reiters:** drei Knöpfe in einer Reihe, die zusammen die ganze Breite füllen: **Skillshare, Anleitung, Entwicklung App**.
    Leicht unterschiedliche, ruhige Farben (keine grellen). Die Knöpfe zeigen keine weiteren Angaben. Der gewählte Knopf bleibt markiert.
@@ -81,7 +82,8 @@ Was es schon gibt und wiederverwendet wird:
     Darum steht dort nie etwas Internes. **Bearbeitbar in der App** sind die eigenen Anleitungsseiten der Gruppe (zum Beispiel „Gruppe intern“), die liegen im Sheet und sind nur mit PIN sichtbar.
 20. Impressum mit **Platzhaltern** (`[Name]`, `[Anschrift]`, `[E-Mail]`), die die Person auf GitHub selbst ausfüllt. **Gleich freischalten** (kein Sperr-Hinweis).
     Das Ausfüllen kommt als ToDo für die Person in `docs/STAND.md` (Abschnitt „Offen“). Dasselbe gilt für die Seite „Zuständig für die App“.
-21. Datenschutz: Entwurf nach der echten Technik. Vorlage: Die Webseite von FFF Landau hat ein Impressum unter https://fridaysforfuture-landau.de/kontakt/impressum (der Agent schaut sie in 10.2 an und übernimmt nur den Aufbau, keine Personendaten).
+21. Datenschutz: Entwurf nach der echten Technik. Vorlage: Die Webseite von FFF Landau hat ein Impressum unter https://fridaysforfuture-landau.de/kontakt/impressum.
+    (10.2: Der Agent konnte die Seite nicht öffnen, seine Umgebung sperrt diese Adresse. Das Impressum der App verlinkt sie nur.)
 22. Info-Seite wie vorgeschlagen, mit „Wiki“ statt „Wissen“, **ohne Veranstaltungen** (kein Link auf die Termine).
 23. Team-Hilfe wird Anleitungsseite, `js/views/hilfe.js` wird gelöscht.
 24. Anleitung: „Erste Schritte“, je Reiter eine Seite, „Häufige Fragen“. Neue Funktionen ergänzen die passende Anleitungsseite im selben Pull Request.
@@ -103,7 +105,13 @@ Was es schon gibt und wiederverwendet wird:
 
 ## 4. Kleine Fragen der zweiten Runde
 
-Der Agent baut nach den Vorschlägen. Die Person kann jederzeit etwas ändern (Antwort im Chat genügt).
+**Antworten der Person (23.10.2026):**
+- A: Themen wie in Abschnitt 3, Punkt 4 (Anmeldung und Recht getrennt, Material und Technik getrennt, Mobi und Social Media getrennt). Frage der Person: „Ist die Liste in der App nicht zu bearbeiten?“ Antwort: Ja, so ist „fest“ gemeint. Wer ein neues Thema braucht, sagt es dem Agenten. Wenn die Gruppe Themen später selbst pflegen will, geht das wie bei den Gruppen-Rollen (eigener Tab, neue Bereitstellung).
+- B: „Entwicklung App“ fasst **bis zum Ende von Etappe 10 alles je Etappe** zusammen. Eine Zeile je Version kommt erst **nach Version 1.0** (dann automatisch in jedem Pull Request).
+- C: wie Vorschlag.
+- D: wie Vorschlag. Frage der Person: „Kann ich Bilder im Sheet weich wiederherstellen?“ Antwort: Die Bilder liegen nicht im Sheet, sondern im Drive-Ordner der Gruppe und bleiben dort. Eine gelöschte Seite holt man im Sheet zurück (Spalte `geloescht` auf FALSE), dann sind auch ihre Bilder wieder da. Wurde nur die Bild-Zeile aus dem Text genommen: Die Nummer des Bildes steht im Tab `Log` (Aktion `upload`, Tabelle `Wiki`, Spalte `datensatz_id`). Mit `![Beschreibung](bild:<Nummer>)` kommt es zurück.
+
+Die Tabelle zeigt die Fragen mit den ursprünglichen Vorschlägen.
 
 | Nr | Frage | Vorschlag |
 |---|---|---|
@@ -254,7 +262,7 @@ Version: 0.32.5. Sheet und Skript bleiben unverändert.
 
 1. Neue Dateien `texte/anleitung/<seite>.txt`: Erste Schritte, Start, Projekte, ToDos und Hüte, Material, Mobi, Kalender, Dokumentation, Team (schon da), Wiki (mit Format-Hilfe), Häufige Fragen.
    Texte nach dem Stand im Code, keine erfundenen Abläufe der Gruppen. Alle in `HUELLE`, `liste.txt` ergänzt.
-2. `texte/entwicklung.txt` vervollständigt. `CLAUDE.md`: Regel „neue Funktion → Anleitungsseite ergänzen“ und (Frage B) „neue Version → Zeile in `texte/entwicklung.txt`“.
+2. `texte/entwicklung.txt` vervollständigt (je Etappe zusammengefasst, Antwort B). `CLAUDE.md`: Regel „neue Funktion → Anleitungsseite ergänzen“. Die Regel „neue Version → Zeile in `texte/entwicklung.txt`“ gilt erst nach Version 1.0 (Antwort B).
 
 **Prüfen:** Jede Anleitungsseite öffnet sich, Links zwischen den Seiten gehen. Inhalt lesen und Anmerkungen sammeln.
 
@@ -333,7 +341,8 @@ Die Versionen in dieser Tabelle sind die geplanten. Nachbesserungen zählen die 
 | Schritt | Inhalt | Version | Pull Request |
 |---|---|---|---|
 | 10.0 | Plan Fassung 1 | 0.31.10 | #37 |
-| 10.1 | Plan Fassung 2, Sheet und Skript | 0.32.0 | – |
+| 10.1 | Plan Fassung 2, Sheet und Skript | 0.32.0 | #38 |
+| 10.2 | Textformat, Impressum, Info, Datenschutz; Antworten A bis D im Plan | 0.32.1 | – |
 
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt. Die Anmerkungen kommen in den nächsten Pull Request, vor dem nächsten Schritt.
 

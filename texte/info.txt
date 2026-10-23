@@ -1,0 +1,24 @@
+## Was ist AktionsDeck Landau?
+
+AktionsDeck Landau ist eine Web-App für Klima-Gruppen in Landau. Die Gruppen planen damit an einem Ort:
+
+- Projekte und Aktionen
+- ToDos und wer sich kümmert
+- Material und Ausleihe
+- Mobi und Social Media
+- Kalender, Protokolle und Reden
+- das Team und ein Wiki mit Wissen zum Weitergeben
+
+## So funktioniert es
+
+- Die App läuft im Browser. Am Handy kannst du sie auf den Startbildschirm legen.
+- Jede Gruppe hat einen eigenen PIN. Nur die Gruppe sieht ihre Daten.
+- Es gibt keine Werbung, keine Tracker und keine Cookies.
+
+## Mitmachen
+
+Du möchtest bei einer Gruppe mitmachen? Melde dich bei ihr. Die Links findest du unten.
+
+## Quellcode
+
+Die App ist frei (MIT-Lizenz). Den Quellcode findest du hier: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
