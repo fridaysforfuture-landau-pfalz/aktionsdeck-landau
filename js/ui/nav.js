@@ -38,12 +38,13 @@ export function tabLabel(id) {
   return t ? t.label : id;
 }
 
-// Kleine Links zu den öffentlichen Seiten
+// Kleine Links zu den öffentlichen Seiten (seit 0.32.6 auch das öffentliche Wiki)
 export function oeffentlicheLinks() {
   return el('div', { class: 'oeff-links' },
     ...OEFFENTLICH.map(function (o) {
       return el('a', { href: '#/info/' + o.id, text: o.label });
-    })
+    }),
+    el('a', { href: '#/wiki', text: 'Wiki' })
   );
 }
 

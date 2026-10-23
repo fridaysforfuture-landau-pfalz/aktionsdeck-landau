@@ -27,7 +27,8 @@ function infoKnoepfe() {
   return el('nav', { class: 'start-knoepfe', 'aria-label': 'Rechtliches und Info' },
     ...OEFFENTLICH.map(function (o) {
       return el('a', { class: 'knopf knopf-hell', href: '#/info/' + o.id, text: o.label });
-    })
+    }),
+    el('a', { class: 'knopf knopf-hell', href: '#/wiki', text: 'Wiki' })   // seit 0.32.6
   );
 }
 
