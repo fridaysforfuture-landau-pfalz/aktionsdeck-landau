@@ -197,10 +197,13 @@ async function route() {
 
     ctx.session = s;
     const erlaubt = sichtbareTabs().map(function (t) { return t.id; }).concat('mehr');
+    // Seit 0.32.2 ersetzt das Wiki den Reiter Hilfe: alte Adressen …/hilfe öffnen das Wiki
+    if (teile[2] === 'hilfe') teile[2] = 'wiki';
     ctx.tab = erlaubt.indexOf(teile[2]) >= 0 ? teile[2] : 'start';
     ctx.tabLabel = tabLabel(ctx.tab);
-    // Unterpunkt, z. B. #/g/fff/projekte/<projekt-id>, #/g/fff/protokoll/rede:<id> oder #/g/fff/team/<person-id> bzw. team/ich
-    ctx.unter = ctx.tab === 'projekte' || ctx.tab === 'protokoll' || ctx.tab === 'team' ? (teile[3] || '') : '';
+    // Unterpunkt, z. B. #/g/fff/projekte/<projekt-id>, #/g/fff/protokoll/rede:<id>, #/g/fff/team/<person-id> bzw. team/ich
+    // oder #/g/fff/wiki/<seiten-id> bzw. wiki/anleitung:<datei>
+    ctx.unter = ['projekte', 'protokoll', 'team', 'wiki'].indexOf(ctx.tab) >= 0 ? (teile[3] || '') : '';
 
     const geruest = baueGeruest(container, ctx);
     ctx.detail = geruest.detail;
