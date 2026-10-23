@@ -300,6 +300,7 @@ Die Versionen in dieser Tabelle sind die geplanten. Nachbesserungen zählen die 
 | 9.5a + 9.6 | Anmerkungen (freie Hüte 5, Detail am Handy) und Berg | 0.31.5 | #32 |
 | 9.6a + 9.7 | Anmerkungen (Hüte-Balken in zwei Teilen, „eng“ nur mit Verantwortlichen, freie Hüte 3) und Verknüpfungen | 0.31.6 | #33 |
 | 9.8 | Hilfe zum Team | 0.31.7 | #34 |
-| Abschluss | Doku (STAND, Plan, CLAUDE.md) | 0.31.8 | – |
+| Abschluss | Doku (STAND, Plan, CLAUDE.md) | 0.31.8 | #35 |
+| 9.8a | Nachbesserung nach dem Abschluss: „Wer hat die Rolle?“ im Rollen-Fenster, Zahl der offenen Rollen | 0.31.9 | – |
 
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt. Die Anmerkungen kommen in den nächsten Pull Request, vor dem nächsten Schritt.

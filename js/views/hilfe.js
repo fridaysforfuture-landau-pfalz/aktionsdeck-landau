@@ -14,7 +14,8 @@ const TEAM_HILFE = [
   ['Gruppen-Rollen', [
     'Eine Gruppen-Rolle ist eine dauerhafte Zuständigkeit, zum Beispiel Presse, Finanzen oder Schlüssel.',
     'Eine Gruppen-Rolle heißt nicht, dass du dich allein kümmern musst. Du kannst jederzeit Unterstützung bekommen.',
-    'Die Liste der Rollen steht unten im Reiter („Gruppen-Rollen“). Alle in der Gruppe dürfen Rollen anlegen, ändern und löschen.',
+    'Die Liste der Rollen steht unten im Reiter („Gruppen-Rollen“). Die Überschrift zeigt, wie viele Rollen noch offen sind (niemand hat sie). Alle in der Gruppe dürfen Rollen anlegen, ändern und löschen.',
+    'Beim Anlegen oder Bearbeiten einer Rolle wählst du unter „Wer hat die Rolle?“ gleich aus, wer sie übernimmt. Deine eigenen Rollen wählst du auch auf deiner Karte.',
     'Eine fest gewählte Rolle (zum Beispiel Bundes-Deli 1) hat höchstens eine Person.'
   ]],
   ['Hüte', [
