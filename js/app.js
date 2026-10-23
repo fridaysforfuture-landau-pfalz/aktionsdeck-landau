@@ -151,6 +151,20 @@ async function route() {
     return;
   }
 
+  // Öffentliches Wiki: ohne Login (seit 0.32.6, wird erst bei Bedarf geladen)
+  if (teile[0] === 'wiki') {
+    setzeFarbe('');
+    ctx.wikiTeile = teile.slice(1);
+    try {
+      const wk = await import('./views/wiki-oeffentlich.js');
+      if (nummer !== laufNummer) return;
+      await wk.render(container, ctx);
+    } catch (e) {
+      container.textContent = 'Das Wiki konnte nicht geladen werden.';
+    }
+    return;
+  }
+
   // Öffentliche Termine: ohne Login (wird erst bei Bedarf geladen)
   if (teile[0] === 'termine') {
     setzeFarbe('');

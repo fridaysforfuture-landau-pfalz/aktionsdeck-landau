@@ -2,6 +2,7 @@
 // Impressum, Info, Datenschutz: drei Seiten, ohne Login erreichbar.
 // Seit 0.32.1 (Schritt 10.2): Die Texte liegen in texte/<seite>.txt (Format wie im Wiki, js/wiki-format.js).
 // „Info“ zeigt dazu die Gruppen mit ihren Links (öffentliche Aktion "wiki", Liste der Gruppen) und die Version.
+// Seit 0.32.6 auch einen Link auf das öffentliche Wiki (#/wiki).
 
 import { el, leeren } from '../ui/dom.js';
 import { balken } from '../ui/kopf.js';
@@ -71,6 +72,7 @@ export function render(container, ctx) {
   const karte = el('section', { class: 'karte info-karte' },
     el('h1', { text: aktiv.label }),
     textBox,
+    aktiv.id === 'info' ? el('p', { class: 'info-wiki' }, el('a', { class: 'knopf knopf-hell', href: '#/wiki', text: '📖 Öffentliches Wiki' })) : null,
     aktiv.id === 'info' ? gruppenBox : null,
     aktiv.id === 'info'
       ? el('p', { class: 'leise info-version', text: 'AktionsDeck Landau · Version ' + ctx.version })

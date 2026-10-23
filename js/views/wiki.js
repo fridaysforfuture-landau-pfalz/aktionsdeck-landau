@@ -211,6 +211,7 @@ export async function render(container, ctx) {
       if (!fehlerText) {
         listeBox.append(el('p', { class: 'leise', text: 'Noch keine Seiten. Hier sammelt eure Gruppe Wissen zum Weitergeben, zum Beispiel „Demo anmelden“ oder „Banner malen“.' }));
       }
+      andereGruppen();
       return;
     }
     nachThema(seiten).forEach(function (g) {
@@ -221,6 +222,13 @@ export async function render(container, ctx) {
         }))
       ));
     });
+    andereGruppen();
+  }
+
+  // Seit 0.32.6: Wissen anderer Gruppen steht im öffentlichen Wiki
+  function andereGruppen() {
+    listeBox.append(el('p', { class: 'wiki-andere' },
+      el('a', { href: '#/wiki', text: '🌐 Öffentliche Seiten aller Gruppen →' })));
   }
 
   function anleitungZeichnen(suche) {

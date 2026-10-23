@@ -14,6 +14,7 @@
 //
 // zeichneText(text, opt) -> <div class="wiki-text">
 //   opt.seiteFinden(titel) -> Adresse ('#/…') oder '' (fehlt). Ohne seiteFinden bleibt [[Titel]] einfacher Text.
+//   opt.fehltAlsText: true = eine fehlende Seite steht als einfacher Text da, ohne „(fehlt)“ (öffentliches Wiki, seit 0.32.6).
 //   opt.bildUrl(id) -> Adresse des Bildes (Standard: Vorschaubild von Google Drive).
 //   opt.inhaltsverzeichnis: true = ab 3 Überschriften oben ein Inhaltsverzeichnis.
 // ueberschriften(text) -> [{ ebene: 2|3, text }]
@@ -132,6 +133,7 @@ function knotenInline(zeile, opt, ohneFett) {
     if (!opt.seiteFinden) return document.createTextNode(t.titel);
     const ziel = opt.seiteFinden(t.titel);
     if (ziel && /^#\//.test(ziel)) return el('a', { href: ziel, class: 'wiki-link', text: t.titel });
+    if (opt.fehltAlsText) return document.createTextNode(t.titel);
     return el('span', { class: 'wiki-fehlt', text: t.titel + ' (fehlt)' });
   });
 }
