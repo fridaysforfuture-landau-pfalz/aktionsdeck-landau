@@ -258,6 +258,19 @@ export const SCHEMA = {
       { name: 'gueltig_bis', label: 'Gilt bis', typ: 'datum', pflicht: true },
       { name: 'notiz', label: 'Notiz (freiwillig, kurz)', typ: 'text' }
     ]
+  },
+  // Wiki (seit 0.32.0). bereich = skillshare | anleitung. thema aus der festen Liste der App (nur Skillshare).
+  // adresse = Teil des öffentlichen Links (a-z, 0-9, Bindestrich), macht die App aus dem Titel. Das Wiki-Formular baut der Reiter selbst.
+  Wiki: {
+    titel: 'Wiki',
+    felder: [
+      { name: 'bereich', label: 'Bereich', typ: 'auswahl', optionen: ['skillshare', 'anleitung'], pflicht: true },
+      { name: 'thema', label: 'Thema', typ: 'text' },
+      { name: 'titel', label: 'Titel', typ: 'text', pflicht: true },
+      { name: 'adresse', label: 'Adresse (für den Link)', typ: 'text', pflicht: true },
+      { name: 'text', label: 'Text', typ: 'langtext', max: 20000 },
+      { name: 'oeffentlich', label: 'Öffentlich (für alle im Internet lesbar)', typ: 'bool' }
+    ]
   }
 };
 
