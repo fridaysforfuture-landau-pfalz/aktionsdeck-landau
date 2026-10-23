@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.31.3 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.4 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 0.31.0). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
@@ -186,7 +186,14 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Formular im Detailbereich: Kapazität mit zehn Knöpfen (zwei Reihen, mindestens 44 px), Satz ("7 = gut Zeit"), Gilt ab (heute), Gilt bis (Vorschlag 4 Wochen; Knöpfe 2 Wochen, 4 Wochen, 3 Monate), Notiz bis 120 Zeichen mit Zähler und Datenschutzsatz. "Kapazität speichern" legt eine neue Zeile an. Bisherige Angaben mit "Löschen". Gruppen-Rollen als Knöpfe zum An- und Abwählen (gewählte Rolle einer anderen Person gesperrt mit "hat Name"), "+ Rolle" legt eine neue Rolle an und wählt sie. Name, Notiz, Haken "Dabei" (ohne = Pause). "Speichern" mit Konfliktprüfung; bei neuem Namen Rückfrage, die Meldung nennt, was das Skript mitgeändert hat ("Auch geändert: 2 ToDos, 1 Mobi-Beitrag"). Bei der eigenen Karte wird der Anzeigename im Gerät umgestellt. "Mich austragen" bzw. "Aus dem Team austragen" mit Rückfrage.
   - Name auf dem Gerät geändert ("Name ändern"): store.js merkt sich den vorigen Namen (getNameVorher, loescheNameVorher). Gibt es zum neuen Namen keine Karte, aber zum vorigen, fragt der Reiter "Deine Team-Karte heißt noch … Umbenennen?" (oder "Nein, das bin nicht ich").
   - Beim Bearbeiten baut das automatische Neuladen das Formular nicht neu auf (Eingaben bleiben).
-- Nächster Schritt: 9.5 Hüte je Person und freie Hüte (0.31.4).
+- 9.4 geprüft (23.10.2026): alles okay. Rückfrage beantwortet: ja, "für jemanden eingetragen" abfangen (in 9.5 umgesetzt).
+- 9.5 (0.31.4): Hüte je Person und freie Hüte. Der Reiter Team lädt dafür auch ToDos, Meilensteine, Mobi_Plan, Projekte (7 Tabellen).
+  - Hut je Person (team-rechnen.js: alleHuete, hueteVon, projekteAus, sortiereHuete): offenes ToDo, offener Meilenstein, nicht veröffentlichter Mobi-Beitrag mit dem Namen in verantwortlich (genauer Vergleich, "Ben" passt nicht auf "Bente"). Nur aus offenen Projekten (nicht erledigt/archiviert); ToDos ohne Projekt und Beiträge zu Veranstaltungen zählen.
+  - Karte: "🎩 3 Hüte · 1 Projekt" bzw. "Keine Hüte". Detail: Liste "Hüte (n)" mit Symbol (✅ ToDo, 🏁 Meilenstein, 📣 Mobi), Projekt, Frist (überfällig rot, heute orange). Klick: ToDo ohne Projekt → Reiter ToDos, sonst das Projekt; Mobi-Beitrag → Reiter Mobi (Liste, gefiltert auf das Projekt).
+  - Abschnitt "🎩 Freie Hüte (n)" oben (nur wenn es welche gibt): offene ToDos ohne Verantwortliche, nächste Frist zuerst, höchstens 10, Knopf "Hut übernehmen" aus todos-hut.js, "Alle im Reiter ToDos →".
+  - Unten "Namen in Hüten ohne Team-Karte: Name (Zahl)" (namenOhneKarte), damit Tippfehler auffallen.
+  - "Für jemanden eingetragen" (fuerJemandenEingetragen): nur noch, wenn erstellt_von nicht der Name ist UND die eintragende Person selbst eine andere Karte hat. Nach dem Umbenennen der eigenen Karte ist sie damit nicht mehr für alle bearbeitbar.
+- Nächster Schritt: 9.6 Diagramm "Berg" (0.31.5).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
