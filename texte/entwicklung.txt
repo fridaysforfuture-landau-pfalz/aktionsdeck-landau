@@ -1,0 +1,50 @@
+> Hier steht, wie die App gewachsen ist. Bis zur Version 1.0 ist alles je Etappe zusammengefasst.
+
+## Wer hat die App entwickelt?
+
+[Name oder Gruppe]
+
+AktionsDeck Landau ist freie Software (MIT-Lizenz). Den Quellcode findest du hier: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
+
+## Etappe 10: Wiki und öffentliche Seiten (ab 0.32)
+
+- Neuer Reiter Wiki mit Skillshare, Anleitung und Entwicklung App. Er ersetzt den Reiter Hilfe.
+- Impressum, Info und Datenschutz mit echten Texten.
+
+## Etappe 9: Team (0.31)
+
+- Reiter Team: wer mitmacht, Gruppen-Rollen, Kapazität von 1 bis 10 mit Datum.
+- Hüte je Person und freie Hüte.
+- Diagramm „Berg“: wie viel Kraft die Gruppe in den nächsten Wochen hat.
+
+## Etappe 8: Protokoll, Reden, Learnings (0.30)
+
+- Reiter Dokumentation mit Protokollen und einem Archiv der Reden.
+- Markierungen im Protokoll werden zu Vorschlägen zum Abhaken (zum Beispiel ToDos).
+- Reden zum Probelesen mit Kommentaren zu einzelnen Absätzen.
+
+## Etappe 7: Mobi (0.29)
+
+- Reiter Mobi: Beiträge für Instagram und andere Kanäle planen, mit Status und Zeitstrahl.
+- Mobi-Beiträge im Kalender.
+
+## Etappe 6: Veranstaltungen und Kalender (0.27 und 0.28)
+
+- Reiter Kalender mit Liste, Monat und Aktionskalender.
+- Öffentliche Termine ohne Anmeldung und als Kalender-Abo.
+
+## Etappe 5: Start als Zentrale (0.26)
+
+- Umfragen, Schwarzes Brett, Pinnwand, Kommentare und Aktionsideen auf dem Start.
+- „Was ist neu?“ zeigt, was andere geändert haben.
+
+## Etappe 4: Projekte (0.18 bis 0.25)
+
+- Projekte mit ToDos, Meilensteinen, Material, Finanzen und Learnings.
+- Hüte: Aufgaben, die noch Verantwortliche suchen.
+
+## Etappe 0 bis 3: Grundlagen
+
+- Anmeldung mit Gruppen-PIN, App aufs Handy legen.
+- Material und Ausleihe.
+- ToDos.

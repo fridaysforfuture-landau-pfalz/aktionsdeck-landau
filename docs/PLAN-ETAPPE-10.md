@@ -5,7 +5,7 @@ Regeln für die Arbeit stehen in `CLAUDE.md`.
 
 **Status: Fassung 2.** Die Person hat die 31 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 3). „Plan ist gut.“
 Fassung 2 (eigentlich Schritt 10.0a) kommt im selben Pull Request wie Schritt 10.1, damit Plan und Skript zusammenpassen.
-**Erledigt:** 10.0 (Version 0.31.10, Fassung 1, Pull Request #37, gemergt). 10.1 (Version 0.32.0, Pull Request #38, gemergt). 10.2 (Version 0.32.1, in Arbeit).
+**Erledigt:** 10.0 (Version 0.31.10, Fassung 1, Pull Request #37, gemergt). 10.1 (Version 0.32.0, Pull Request #38, gemergt). 10.2 (Version 0.32.1, Pull Request #39, gemergt). 10.3 bis 10.9 baut der Agent am 23.10.2026 nacheinander, je Schritt ein Pull Request (Auftrag der Person).
 Die kleinen Fragen A bis D (Abschnitt 4) sind am 23.10.2026 beantwortet.
 
 ## 1. Ziel
@@ -218,7 +218,7 @@ Version: 0.32.2. Sheet und Skript bleiben unverändert.
    Der gewählte Bereich bleibt beim Reiterwechsel (Merker im Speicher). Lädt `Wiki` (Zwischenspeicher `gruppe_id:wiki`, `ladeMitCache`).
    - Skillshare: Themen A–Z als Aufklapper, Seiten A–Z. Leer: freundlicher Satz.
    - Anleitung: feste Seiten (Reihenfolge aus `texte/anleitung/liste.txt`), darunter „Von unserer Gruppe“ (Frage C).
-   - Entwicklung App: `texte/entwicklung.txt` und die Seite „Zuständig für die App“.
+   - Entwicklung App: `texte/entwicklung.txt` (mit „Wer hat die App entwickelt?“). Die Seite „Zuständig für die App“ steht unter Anleitung (Entscheidung 2).
    - Seite: Titel, Stand, Marke „🌐 öffentlich“, Inhaltsverzeichnis, Text. Oben „← Wiki“. Adressen `#/g/<kurz>/wiki/<seiten-id>` und `#/g/<kurz>/wiki/anleitung:<name>`.
    - Suche (Entscheidung 5) im gewählten Bereich, mit Ausschnitt.
 3. Neue Datei `js/views/wiki-rechnen.js`: `THEMEN`, `sortiereSeiten`, `nachThema`, `findeSeite(titel)`, `adresseAus(titel)`, `passtSuche`, `ausschnitt`. Mit `node` geprüft.
@@ -342,7 +342,8 @@ Die Versionen in dieser Tabelle sind die geplanten. Nachbesserungen zählen die 
 |---|---|---|---|
 | 10.0 | Plan Fassung 1 | 0.31.10 | #37 |
 | 10.1 | Plan Fassung 2, Sheet und Skript | 0.32.0 | #38 |
-| 10.2 | Textformat, Impressum, Info, Datenschutz; Antworten A bis D im Plan | 0.32.1 | – |
+| 10.2 | Textformat, Impressum, Info, Datenschutz; Antworten A bis D im Plan | 0.32.1 | #39 |
+| 10.3 | Reiter Wiki lesen und suchen, Anleitung Team, Hilfe entfällt | 0.32.2 | – |
 
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt. Die Anmerkungen kommen in den nächsten Pull Request, vor dem nächsten Schritt.
 

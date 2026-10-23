@@ -1,0 +1,21 @@
+> Diese Seite ist für alle Gruppen gleich. Was nur eure Gruppe betrifft, steht auf eurer eigenen Seite „Gruppe intern“ (unten bei „Von unserer Gruppe“).
+
+## Wer hat Adminzugriff?
+
+Adminzugriff heißt: Zugang zum Google Sheet, zum Google-Skript und zum Repo auf GitHub. Nur diese Personen können zum Beispiel einen PIN ändern, das Skript neu bereitstellen oder gelöschte Einträge zurückholen.
+
+- Google Sheet und Google-Skript: [Name oder Gruppe]
+- GitHub (Repo und Seite): [Name oder Gruppe]
+
+> Diese Seite liegt als Datei im Repo und ist für alle lesbar, die die Adresse kennen. Schreib hier nur Namen, die öffentlich sein dürfen, oder nur die Gruppe und eine Kontakt-Adresse.
+
+## Wer hat die App entwickelt?
+
+[Name oder Gruppe]
+
+Mehr zur Entwicklung steht unter „Entwicklung App“.
+
+## Wen frage ich bei Problemen?
+
+- PIN vergessen oder neuer PIN: [Kontakt]
+- Fehler in der App: [Kontakt]

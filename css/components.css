@@ -3038,3 +3038,31 @@ p.notiz.erledigt {
 .info-gruppe-links { display: flex; flex-wrap: wrap; gap: 0 16px; }
 .info-gruppe-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--gruen); }
 .info-version { margin-top: 16px; }
+
+/* ---- 0.32.2: Reiter Wiki (drei Bereiche, Liste, Seite) ---- */
+.wiki-bereiche { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 12px; }
+.wiki-bereich {
+  min-height: 48px; padding: 6px 8px; border: 1px solid var(--rand); border-radius: var(--radius);
+  font: inherit; font-weight: 600; color: var(--text); cursor: pointer; line-height: 1.2;
+}
+.wiki-bereich-skillshare { background: #e6f1ed; }
+.wiki-bereich-anleitung { background: #e8eef6; }
+.wiki-bereich-entwicklung { background: #f3eee5; }
+.wiki-bereich.aktiv { border: 2px solid var(--text); }
+.wiki-bereich:focus-visible { outline: 2px solid var(--gruppe); outline-offset: 2px; }
+.wiki-filter { grid-template-columns: 1fr; }
+.wiki-thema { margin: 0 0 8px; }
+.wiki-thema > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+.wiki-thema-liste { display: grid; gap: 8px; margin: 0 0 8px; }
+.wiki-eintrag { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; }
+.wiki-eintrag-titel { font-weight: 600; }
+.wiki-eintrag-zusatz { font-size: 14px; }
+.wiki-eigene h2 { margin: 20px 0 8px; font-size: 18px; }
+.wiki-zurueck { margin: 0 0 8px; }
+.wiki-zurueck a { display: inline-flex; align-items: center; min-height: 44px; }
+.wiki-artikel { max-width: 800px; }
+.wiki-titel { margin: 0 0 4px; font-size: 24px; }
+.wiki-stand { margin: 0 0 16px; font-size: 14px; }
+@media (max-width: 420px) {
+  .wiki-bereich { font-size: 14px; padding: 6px 4px; }
+}

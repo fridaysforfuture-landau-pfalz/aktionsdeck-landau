@@ -1,0 +1,4 @@
+# Anleitungsseiten der App, in dieser Reihenfolge.
+# Je Zeile: Dateiname (ohne .txt) | Titel | oeffentlich (nur wenn die Seite ohne Login lesbar sein soll)
+team | Team
+zustaendig | Zuständig für die App
