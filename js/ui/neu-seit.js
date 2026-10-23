@@ -4,6 +4,7 @@
 // Projekte (mit Meilensteinen, ToDos und Mobi-Beiträgen) und ToDos ohne Projekt.
 // Seit 8.7 auch Protokolle und Reden (Abschnitt „Dokumentation“, mit Projekt beim Projekt).
 // Seit 9.7 neue Personen im Team (Abschnitt „Team“, nur „neu im Team“).
+// Seit 0.32.4 führen Kommentare zu Wiki-Seiten zur Seite (kein eigener Abschnitt „Wiki“).
 // Der Zeitpunkt des letzten Besuchs liegt im Gerät (store.js), pro Gruppe.
 
 import { el } from './dom.js';
@@ -149,11 +150,12 @@ export async function holeNeu(token, gruppeId, kurzname) {
     if (!neu) return null;
     const art = txt(z.bezug_art);
     return {
-      art: art === 'rede' ? 'Kommentar zu einer Rede' : 'Kommentar',
+      art: art === 'rede' ? 'Kommentar zu einer Rede' : (art === 'wiki' ? 'Kommentar zu einer Wiki-Seite' : 'Kommentar'),
       was: 'neu',
       titel: kurz(z.text, 80),
       link: art === 'todo' ? basis + 'todos' : (art === 'mobi' ? basis + 'mobi'
-        : (art === 'rede' ? basis + 'protokoll/rede:' + encodeURIComponent(txt(z.bezug_id)) : basis + 'start'))
+        : (art === 'rede' ? basis + 'protokoll/rede:' + encodeURIComponent(txt(z.bezug_id))
+          : (art === 'wiki' ? basis + 'wiki/' + encodeURIComponent(txt(z.bezug_id)) : basis + 'start')))
     };
   });
   // Protokolle (auch gemeinsame Entwürfe) und Reden: Abschnitt Dokumentation, mit Projekt beim Projekt
