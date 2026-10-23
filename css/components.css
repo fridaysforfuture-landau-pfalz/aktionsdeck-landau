@@ -2972,3 +2972,28 @@ p.notiz.erledigt {
 .team-berg-tabelle td, .team-berg-tabelle th { padding: 4px 8px; text-align: left; vertical-align: top; }
 .berg-zeile-heute td { font-weight: 600; }
 .berg-punkt-eng { background: #c77c00; }
+
+/* ---- 0.31.6: Anpassungen 9.6a (offene Aufgaben im Hüte-Balken) ---- */
+.berg-hut, .berg-frei { stroke: var(--flaeche); stroke-width: 2; }
+/* Farben geprüft (Farbsehschwächen, Kontrast): Grau mit Verantwortlichen, Blau offen, Orange eng */
+.berg-hut { fill: #4f5a56; }
+.berg-hut.berg-eng { fill: #c77c00; }
+.berg-frei { fill: #5a96df; }
+.berg-punkt-hut { background: #4f5a56; }
+.berg-punkt-frei { background: #5a96df; }
+
+/* ---- 0.31.6: Verknüpfungen Team (Start-Zeile) ---- */
+.start-team-zeile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 4px 4px 4px 12px;
+  border-radius: var(--radius);
+  background: var(--gruen-hell);
+  border: 1px solid var(--rand);
+}
+.start-team-zeile a { color: inherit; font-weight: 600; text-decoration: none; min-height: 44px; display: flex; align-items: center; }
+.start-team-zeile a:hover { text-decoration: underline; }
+.start-team-weg { min-width: 44px; min-height: 44px; border: 0; background: none; font: inherit; cursor: pointer; color: var(--text-leise); }

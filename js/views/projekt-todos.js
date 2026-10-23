@@ -27,6 +27,7 @@ import {
 } from './projekt-rechnen.js';
 import { huetKnoepfe, istOffenerHut } from './todos-hut.js';
 import { sammelTodos, istSammel, sammelInfo, oeffneSammel } from './mobi-todo.js';
+import { namenMitRollen } from './team-namen.js';
 
 // Aufgeklappte Hut-Listen je Projekt (bleibt beim Neuzeichnen erhalten)
 const hutOffen = {};
@@ -184,7 +185,7 @@ export function baueTodoTeil(opt) {
     }
     const form = baueFormular(felder, t || { prioritaet: 'normal', meilenstein_id: mid || '' }, {
       speichernText: t ? 'Speichern' : 'Anlegen',
-      vorschlaege: { verantwortlich: personen() },
+      vorschlaege: { verantwortlich: namenMitRollen(personen()) },
       onSpeichern: function (d) { return todoSpeichern(t, d, fenster); },
       onAbbrechen: function () { fenster.schliessen(); }
     });
@@ -259,7 +260,7 @@ export function baueTodoTeil(opt) {
     }
     const form = baueFormular(felder, m || {}, {
       speichernText: m ? 'Speichern' : 'Anlegen',
-      vorschlaege: { verantwortlich: personen() },
+      vorschlaege: { verantwortlich: namenMitRollen(personen()) },
       onSpeichern: function (d) {
         const schritte = zeilen.filter(function (z) { return z.cb.checked; })
           .map(function (z) {

@@ -21,7 +21,10 @@ import {
   zeichneBrett, neueMitteilung, mitteilungAus, zeichneBrettArchiv,
   findeMitteilung, anzahlNichtAngeheftet
 } from './start-brett.js';
-import { getName, setLetzterBesuch } from '../store.js';
+import { getName, setLetzterBesuch, teamHinweisAus, setTeamHinweisAus } from '../store.js';
+import { ladeTeamKlein } from './team-namen.js';
+import { istIch, angabeJetzt } from './team-rechnen.js';
+import { heuteIso as teamHeute, datumText as teamDatum } from './todos-rechnen.js';
 import { holeNeu, zeigeNeu } from '../ui/neu-seit.js';
 import { istWahr } from '../schema.js';
 import { zeitText } from './material-rechnen.js';
@@ -275,12 +278,34 @@ export async function render(container, ctx) {
     el('section', { class: 'karte start-pinnwand' }, pinnwand.el)
   );
 
+  // Zeile für die eigene Person, wenn ihre Kapazität fehlt oder abgelaufen ist (9.7). Nur mit Team-Karte.
+  // „✕“ blendet sie auf diesem Gerät für 7 Tage aus.
+  const teamZeile = el('div');
+  ladeTeamKlein(s).then(function (team) {
+    if (teamHinweisAus(s.gruppe_id)) return;
+    const ich = team.personen.find(function (p) { return istIch(p, getName()); });
+    if (!ich) return;
+    const stand = angabeJetzt(ich.id, team.kapazitaet, teamHeute());
+    if (stand.zustand === 'gilt') return;
+    const text = stand.zustand === 'abgelaufen'
+      ? 'Deine Kapazität ist seit ' + teamDatum(stand.angabe.gueltig_bis) + ' abgelaufen. Kurz aktualisieren?'
+      : 'Trag kurz ein, wie viel Zeit du gerade hast.';
+    teamZeile.append(el('div', { class: 'start-team-zeile' },
+      el('a', { href: '#/g/' + encodeURIComponent(s.kurzname) + '/team/ich', text: '⛰️ ' + text }),
+      el('button', {
+        class: 'start-team-weg', type: 'button', 'aria-label': 'Für 7 Tage ausblenden', title: 'Für 7 Tage ausblenden', text: '✕',
+        onclick: function () { setTeamHinweisAus(s.gruppe_id); leeren(teamZeile); }
+      })
+    ));
+  });
+
   container.append(el('div', { class: 'seite' },
     el('div', { class: 'dash-kopf' },
       gruppenLogo(s.kurzname, 'dash-logo'),
       el('h1', { text: 'Hallo ' + (getName() || '') }),
       kopfKnoepfe
     ),
+    teamZeile,
     fuss,
     archivBox,
     dashBox

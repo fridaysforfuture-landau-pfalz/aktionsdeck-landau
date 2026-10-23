@@ -14,6 +14,7 @@ import { kanaeleFuer, kanalInfo, FORMAT_TEXT, FORMAT_HINWEIS } from '../kanaele.
 import { statusText, statiFuer } from './mobi-rechnen.js';
 import { normDatum } from './todos-rechnen.js';
 import { zeitNorm, sichereUrl } from './kalender-rechnen.js';
+import { namenMitRollen } from './team-namen.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -114,7 +115,7 @@ export function zeigeBeitragFormular(opt, b, vorgabe) {
 
   const form = baueFormular(felder, start, {
     speichernText: b ? 'Speichern' : 'Anlegen',
-    vorschlaege: { verantwortlich: opt.personen ? opt.personen() : [] },
+    vorschlaege: { verantwortlich: namenMitRollen(opt.personen ? opt.personen() : []) },
     onSpeichern: function (d) { return speichern(opt, b, d, fenster); },
     onAbbrechen: function () { fenster.schliessen(); }
   });

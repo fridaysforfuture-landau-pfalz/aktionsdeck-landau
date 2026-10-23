@@ -128,8 +128,14 @@ function eingabe(f, wert, vorschlaege, fotoFn) {
       const id = 'vorschlag-' + f.name;
       feld.setAttribute('list', id);
       extra = el('datalist', { id: id });
+      // Ein Vorschlag ist Text oder { wert, label } (seit 0.31.6: Team-Namen mit Gruppen-Rollen in der Beschriftung,
+      // ins Feld kommt nur der Wert)
       vorschlaege.slice(0, 30).forEach(function (v) {
-        extra.append(el('option', { value: String(v).slice(0, 40) }));
+        if (v && typeof v === 'object') {
+          extra.append(el('option', { value: String(v.wert).slice(0, 60), label: String(v.label || v.wert).slice(0, 80) }));
+        } else {
+          extra.append(el('option', { value: String(v).slice(0, 40) }));
+        }
       });
     }
   }

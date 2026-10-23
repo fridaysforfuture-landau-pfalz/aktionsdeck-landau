@@ -46,6 +46,18 @@ export function loescheNameVorher() {
   try { localStorage.removeItem(NAME_VORHER_KEY); } catch (e) { /* ignorieren */ }
 }
 
+// Start: Zeile „Kapazität eintragen“ für 7 Tage ausgeblendet (9.7). Zeitpunkt des Wegklickens je Gruppe.
+export function teamHinweisAus(gruppeId) {
+  try {
+    const t = Number(localStorage.getItem('aktionsdeck_teamhinweis_' + gruppeId)) || 0;
+    return Date.now() - t < 7 * 86400000;
+  } catch (e) { return false; }
+}
+
+export function setTeamHinweisAus(gruppeId) {
+  try { localStorage.setItem('aktionsdeck_teamhinweis_' + gruppeId, String(Date.now())); } catch (e) { /* ignorieren */ }
+}
+
 // Gruppenliste (öffentlich): damit die Startseite sofort da ist
 export function getGruppenCache() {
   try {

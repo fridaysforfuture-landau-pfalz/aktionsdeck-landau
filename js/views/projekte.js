@@ -24,6 +24,8 @@ import { baueMaterialTeil } from './projekt-material.js';
 import { baueFinanzTeil } from './projekt-finanzen.js';
 import { baueLearningTeil, baueLearningUebersicht } from './projekt-learnings.js';
 import { baueRedenTeil } from './projekt-reden.js';
+import { baueTeamTeil } from './projekt-team.js';
+import { ladeTeamKlein, teamKlein } from './team-namen.js';
 import { baueIdeenTeil } from './ideen.js';
 import { baueMobiTeil } from './mobi-plan.js';
 import { STANDARD_TODOS, faelligAus } from '../vorlagen.js';
@@ -67,6 +69,7 @@ function istPlanung(p) {
 
 export async function render(container, ctx) {
   const s = ctx.session;
+  ladeTeamKlein(s);   // Team-Namen für den Teil „Team“ und die Vorschläge bei „Verantwortlich“ (9.7)
   leeren(container);
 
   if (merk.token !== s.token) merk = { token: s.token, offen: {}, teile: {} };
@@ -372,6 +375,18 @@ export async function render(container, ctx) {
         else delete merk.teile[redenKey];
       }
     });
+    const teamKey = id + ':team';
+    const teamTeil = baueTeamTeil({
+      kurzname: s.kurzname,
+      projekt: p,
+      holeDaten: function () { return daten; },
+      team: teamKlein,
+      offen: !!merk.teile[teamKey],
+      beiToggle: function (o) {
+        if (o) merk.teile[teamKey] = true;
+        else delete merk.teile[teamKey];
+      }
+    });
     const termine = terminText(p);
     d.append(
       el('summary', null,
@@ -421,7 +436,8 @@ export async function render(container, ctx) {
         mobiTeil,
         finanzTeil,
         learnTeil,
-        redenTeil
+        redenTeil,
+        teamTeil
       )
     );
     bloecke[id] = d;
