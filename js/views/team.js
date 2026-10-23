@@ -144,7 +144,8 @@ export async function render(container, ctx) {
     boxPause,
     boxOhne,
     fuerAndere,
-    rollenTeil.el
+    rollenTeil.el,
+    el('p', { class: 'team-hilfe-link' }, el('a', { href: basis + 'hilfe', text: 'Wie funktioniert der Reiter Team? → Hilfe' }))
   ));
 
   function findePerson(id) {
