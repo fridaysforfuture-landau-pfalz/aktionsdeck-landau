@@ -2997,3 +2997,13 @@ p.notiz.erledigt {
 .start-team-zeile a { color: inherit; font-weight: 600; text-decoration: none; min-height: 44px; display: flex; align-items: center; }
 .start-team-zeile a:hover { text-decoration: underline; }
 .start-team-weg { min-width: 44px; min-height: 44px; border: 0; background: none; font: inherit; cursor: pointer; color: var(--text-leise); }
+
+/* ---- 0.31.7: Hilfe zum Team ---- */
+.hilfe-abschnitt h2 { margin: 0 0 8px; font-size: 20px; }
+.hilfe-teil { border-top: 1px solid var(--rand); }
+.hilfe-teil > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+.hilfe-text { padding: 0 0 12px; }
+.hilfe-text p { margin: 0 0 8px; }
+.hilfe-text ul { margin: 0 0 8px; padding-left: 1.2rem; }
+.team-hilfe-link { margin-top: 16px; }
+.team-hilfe-link a { display: inline-flex; align-items: center; min-height: 44px; }

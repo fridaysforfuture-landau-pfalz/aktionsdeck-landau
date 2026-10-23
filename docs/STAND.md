@@ -1,9 +1,9 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.31.6 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.7 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 0.31.0). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
+Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 0.31.0; mit 9.8 fertig gebaut, Abschluss nach der Prüfung). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
 
 ## Erledigt
 - Etappe 0 und 1 (Fundament), Etappe 2 Material und Ausleihe, Zwischenplan Z1 bis Z8, Etappe 3 ToDos.
@@ -158,7 +158,7 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - Hinweis aus 8.8: Ein Pull Request wurde angenommen, bevor eine Nachbesserung im selben Zweig ankam. Regel ab jetzt: Jede Nachbesserung zählt die Version hoch, auch in einem noch offenen Pull Request. So zeigt die App sicher, welcher Stand da ist.
 - 9.0 (0.30.15): docs/PLAN-ETAPPE-9.md, Fassung 1 mit 20 Rückfragen (Abschnitt 4). Nur Doku und Versionssprung, Sheet und Skript unverändert.
 
-## Etappe 9 (Team), läuft
+## Etappe 9 (Team), fertig gebaut (0.31.7), Prüfung von 9.6a bis 9.8 offen
 - 9.0 (0.30.15): Plan Fassung 1 mit 20 Rückfragen (#26). Die Person hat am 23.10.2026 geantwortet.
 - 9.1 (0.31.0): Plan Fassung 2 (docs/PLAN-ETAPPE-9.md) und Sheet und Skript. **Von Hand bereitzustellen** (Liste im Pull Request).
   - Begriffe: Hüte bleiben Aufgaben mit Verantwortlichen oder offene Aufgaben ("Hut frei"). Dauerhafte Zuständigkeiten heißen "Gruppen-Rollen" (eine Rolle heißt nicht, dass man sich allein kümmern muss).
@@ -207,7 +207,10 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Adressen: #/g/<kurz>/team/<person-id> öffnet eine Karte, team/ich die eigene Karte zum Bearbeiten (app.js gibt ctx.unter jetzt auch für team weiter). Danach steht wieder #/g/<kurz>/team da.
   - Start: Zeile unter "Hallo …" für die eigene Person mit Team-Karte, wenn die Kapazität fehlt oder abgelaufen ist ("⛰️ Deine Kapazität ist seit … abgelaufen. Kurz aktualisieren?" bzw. "Trag kurz ein, wie viel Zeit du gerade hast."), Link auf team/ich, "✕" blendet sie auf dem Gerät 7 Tage aus (store.js: teamHinweisAus, setTeamHinweisAus). Ohne Team-Karte keine Zeile.
   - "Was ist neu?": Abschnitt "Team" mit "👥 Name · neu im Team" (nur neue Personen von anderen, keine Änderungen an Kapazität oder Rollen).
-- Nächster Schritt: 9.8 Hilfe, Feinschliff, Abschluss (0.31.7).
+- 9.6a und 9.7: Pull Request #33 angenommen. Rückfrage beantwortet: Das Team bleibt freiwillig, die Start-Zeile erscheint nur mit Team-Karte. Die Prüfung von 9.6a und 9.7 hat die Person noch nicht gemeldet.
+- 9.8 (0.31.7): Hilfe zum Team. js/views/hilfe.js hat einen Abschnitt "👥 Team" mit Aufklappern (Was ist der Reiter Team, Gruppen-Rollen mit dem Hinweis zur Unterstützung, Hüte, Kapazität mit den Bereichen, Der Berg, Wer sieht was / wer darf was, Namen ändern, Austragen und Datenschutz). Im Reiter Team unten der Link "Wie funktioniert der Reiter Team? → Hilfe". Der Platzhalter-Satz für das spätere Wiki bleibt.
+- Damit ist Etappe 9 fertig gebaut. Abschluss (Etappe 9 als "geprüft" eintragen) nach der Prüfung von 9.6a, 9.7 und 9.8 durch die Person.
+- Nächster Schritt: Prüfung von 9.6a, 9.7 und 9.8. Danach Etappe 10 (Wiki und öffentliche Seiten): erste Aufgabe docs/PLAN-ETAPPE-10.md schreiben (Fassung 1 mit Rückfragen). Für Etappe 10 vormerken: Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -234,7 +237,7 @@ Reiter (Stand 0.30.13): Start, Projekte, ToDos, Material, Mobi, Kalender, Dokume
 Geplant: Etappe 9 bringt den Reiter Team. Später Wiki statt Hilfe (Etappe 10). (Etappe 8 brachte den Reiter "Dokumentation", 📝, Kennung protokoll.)
 - Etappe 7 Mobi: abgeschlossen (siehe oben und docs/PLAN-ETAPPE-7.md).
 - Etappe 8 Protokoll, Reden, Learnings: abgeschlossen. Plan und Schritte in **docs/PLAN-ETAPPE-8.md** (Dauerprotokoll mit Google-Dokument für FFF, Etherpad bei GP von Hand, Markierungen im Text mit Vorschlägen zum Abhaken, Reden-Archiv mit Probelesen über Kommentare, Learnings aus dem Protokoll).
-- Etappe 9 Team (läuft, Plan in docs/PLAN-ETAPPE-9.md, Fassung 2): Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
+- Etappe 9 Team (fertig gebaut mit 0.31.7, Plan in docs/PLAN-ETAPPE-9.md, Fassung 2): Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
 - Etappe 10 Wiki und öffentliche Seiten: Wiki mit Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlichem Bereich. Impressum, Info, Datenschutz (Texte aus 6.1). Die Seite #/termine gibt es schon.
 - Etappe 11 Komfort: OpenCollective-Kontostand (nur Klimastreik Landau, https://opencollective.com/klimastreik-landau, einmal pro Woche per Skript; erst testen, noch keine Zusage). Erinnerungen und Push so planen, dass sie später auf Push oder E-Mail aufsetzen können (Umfragen, überfällige ToDos, Pinnwand-Kommentare). Sicherung, Übersicht und Export, Dunkelmodus, Feinschliff, GitHub-Actions-Versionen anheben.
 - Neue Sheet-Tabs für spätere Etappen: Wiki (Mobi_Plan seit 0.29.0, Reden seit 0.30.0, Gruppen_Rollen und Kapazitaet seit 0.31.0). Jede Etappe nennt vorher, was im Sheet und Skript zu ergänzen ist und wann neu bereitgestellt wird.
@@ -291,6 +294,7 @@ Geplant: Etappe 9 bringt den Reiter Team. Später Wiki statt Hilfe (Etappe 10). 
 ## Offen (mit Zeitpunkt)
 Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - **Etappe 11 (Komfort)**, früher nur, wenn die Actions rot werden: GitHub Actions zeigen Warnungen (Node 20 veraltet), ubuntu-latest ist seit 19.10.2026 Ubuntu 26. Läuft. Action-Versionen in .github/workflows anheben (steht schon im Plan für Etappe 11). Zeitpunkt ist ein Vorschlag.
+- **Etappe 10 (Datenschutz)**: Absatz zum Reiter Team im Datenschutztext (siehe Etappe 9, nächster Schritt). Zeitpunkt: mit den Texten aus 6.1.
 - **Etappe 10 (öffentliche Seiten)**: Das Kalender-Abo (Skript-Adresse mit Weiterleitung) in Google und Apple Kalender testen. Die Person kann das jederzeit vorher testen und das Ergebnis melden. Notfalls feste ICS-Datei auf GitHub Pages. Zeitpunkt ist ein Vorschlag.
 - **Aufräumen vor dem Update auf 1.0**: Alte, nicht mehr genutzte CSS-Regeln (.kal-pfeil, .kal-nav, .kal-datum, .kal-monat-kopf, .modal-vollbild, .dash-rechts-teil) und die ungenutzte Funktion topEinfuegen in protokoll-rechnen.js entfernen. Stören bis dahin nicht.
 - **Vor 1.0**: Test-ToDos und Test-Einträge im Sheet löscht die Person.
@@ -302,7 +306,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
 - js/views/: team, team-rechnen (seit 0.31.1), team-rollen (seit 0.31.2), team-eintrag (seit 0.31.3), team-berg (seit 0.31.5), team-namen und projekt-team (seit 0.31.6), gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
-- Noch nicht vorhanden: Wiki. Reiter Team seit 0.31.1 (nur lesen). Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
+- Noch nicht vorhanden: Wiki. Reiter Team seit 0.31.1 (Eintragen seit 0.31.3, Berg seit 0.31.5, Hilfe dazu seit 0.31.7). Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
 
 ## Hinweise
 - config.js enthält die echte API_URL: nie ersetzen, nur VERSION ändern.
