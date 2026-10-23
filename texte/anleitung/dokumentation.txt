@@ -1,0 +1,28 @@
+> Im Reiter Dokumentation stehen Protokolle und Reden.
+
+## Protokolle
+
+- „+ Protokoll“ öffnet das Formular: Titel, Datum, Art (Plenum, AG, Aktion, Sonstiges), Anwesende, Rollen, Projekt oder Veranstaltung, Protokolltext.
+- Beim Plenum ist der Text mit Tagesordnungspunkten vorbereitet. Offene TOPs aus der Sammlung tippst du an.
+- „Zwischenspeichern“ legt einen gemeinsamen Entwurf an, den alle in der Gruppe weiterschreiben können.
+- Beim Speichern kommt das Protokoll ins Google-Dokument der Gruppe (wenn eingerichtet).
+
+## Markierungen im Text
+
+Mit den Knöpfen über dem Text (oder einem Wort mit Doppelpunkt am Zeilenanfang) markierst du Dinge, die die App anlegen soll:
+
+- `ToDo:` zum Beispiel `ToDo: @Name Banner holen (bis 12.11.)`
+- `Learning:`, `Termin:`, `Mitteilung:`, `Umfrage:`, `Beschluss:`
+
+Nach dem Speichern zeigt „Vorschläge aus dem Protokoll“ alles zum Ankreuzen und Anlegen.
+
+## TOPs
+
+Themen fürs nächste Plenum sammelt ihr in der Kachel „TOPs“ (im Reiter und auf dem Start).
+
+## Reden
+
+- Im Umschalter „Reden“ steht das Archiv der Reden mit Status (Entwurf, Probelesen, Fertig, Gehalten).
+- Den Redetext kannst du in der App schreiben. Beim Probelesen kommentieren andere einzelne Absätze.
+
+> Schreib in Protokolle nur, was nötig ist. Keine Angaben zur Gesundheit oder zu privaten Dingen.

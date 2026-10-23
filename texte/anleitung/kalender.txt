@@ -1,0 +1,25 @@
+> Im Kalender stehen Veranstaltungen, Projekte, Deadlines, Meilensteine, ToDos und Mobi-Beiträge.
+
+## Ansichten
+
+- Liste: kommende Termine nach Monaten.
+- Monat: ein Monat auf einen Blick. Ein Tipp auf einen Tag zeigt alle Termine.
+- Woche: Montag bis Sonntag.
+- Aktionskalender: die öffentlichen Termine aller Gruppen.
+
+Mit den Filtern blendest du Arten von Terminen ein und aus.
+
+## Veranstaltungen
+
+- „+ Veranstaltung“: Titel, intern oder extern, Datum (auch mehrere Tage), Uhrzeit, Ort, Beschreibung, Link, Farbe.
+- „Veröffentlichen“ geht nur bei externen Veranstaltungen. Dann steht sie öffentlich unter „Öffentliche Termine“ und im Kalender-Abo.
+- „Vorlagen“ füllt das Formular für wiederkehrende Termine (zum Beispiel das Plenum).
+- Bei einer Veranstaltung gibt es „In Mobi einplanen“ und „Protokoll schreiben“.
+
+## Kalender abonnieren
+
+Die öffentlichen Termine kannst du in deinem eigenen Kalender abonnieren. Die Adresse steht im Aktionskalender unter „Im eigenen Kalender abonnieren“.
+
+- Google Kalender: am PC links bei „Weitere Kalender“ auf „+“, dann „Per URL“ und die Adresse einfügen. Neue Termine erscheinen bei Google oft erst nach einigen Stunden.
+- iPhone: Einstellungen → Kalender → Accounts → Account hinzufügen → Andere → Kalenderabo hinzufügen, Adresse einfügen.
+- Mac: im Programm Kalender „Ablage“ → „Neues Kalenderabonnement“.

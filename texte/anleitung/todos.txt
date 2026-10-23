@@ -1,0 +1,28 @@
+> ToDos sind Aufgaben. Ein Hut ist eine Aufgabe mit Verantwortlichen oder eine, die noch jemanden sucht.
+
+## ToDos anlegen
+
+- „+ Neu“ im Reiter ToDos legt ein allgemeines ToDo an. ToDos zu einem Projekt legst du im Projekt an.
+- Titel, weitere Informationen, Verantwortlich (mehrere mit Komma), fällig am, Priorität.
+- Leer bei „Verantwortlich“ heißt: Der Hut ist noch frei.
+
+## Liste und Filter
+
+- Oben die offenen ToDos, darunter „Erledigt, letzte 2 Wochen“. Älteres steht im Archiv.
+- Überfällig ist rot, heute fällig orange.
+- Filter: Suche, Verantwortlich, Fälligkeit, Priorität und „Nur meine“.
+- Abhaken geht mit einem Tipp auf das Kästchen.
+
+## Hüte
+
+- „Noch offen“ zeigt Aufgaben ohne Verantwortliche. Mit „Hut übernehmen“ trägst du dich ein.
+- „Weitergeben“ gibt einen Hut an eine andere Person.
+- Im Reiter Team siehst du, wer wie viele Hüte hat. Mehr dazu: [[Team]].
+
+## Kommentare
+
+Zu jedem ToDo gibt es Kommentare. Die Zahl steht als „💬 n“ hinter dem Titel.
+
+## Sammel-ToDos aus Mobi
+
+Einträge wie „📣 Social Media“ fassen die Mobi-Beiträge eines Projekts zusammen. Ein Klick öffnet sie im Reiter Mobi. Mehr dazu: [[Mobi]].

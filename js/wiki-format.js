@@ -9,6 +9,7 @@
 //   [[Titel]] = Link auf eine andere Wiki-Seite (fehlt sie: grau mit „(fehlt)“)
 //   > Hinweis = grauer Hinweiskasten
 //   ![Beschreibung](bild:<id>) in einer eigenen Zeile = Bild aus dem Drive-Ordner der Gruppe
+//   `Text` zwischen Backticks bleibt genau so stehen (für Beispiele in der Format-Hilfe, seit 0.32.5)
 // Nur http(s)-Adressen werden Links (sichereUrl). Alles andere bleibt Text, auch "<script>" oder "javascript:".
 //
 // zeichneText(text, opt) -> <div class="wiki-text">
@@ -81,7 +82,7 @@ function ohneSterne(s) {
 }
 
 // Eine Zeile -> Liste aus Text und Teilen { art: 'fett'|'link'|'wiki', ... }
-const INLINE = /\*\*(.+?)\*\*|\[\[([^\]\n]{1,80})\]\]|\[([^\]\n]+)\]\(([^)\s]+)\)|(https?:\/\/[^\s<>"]+)/gi;
+const INLINE = /\*\*(.+?)\*\*|\[\[([^\]\n]{1,80})\]\]|\[([^\]\n]+)\]\(([^)\s]+)\)|(https?:\/\/[^\s<>"]+)|`([^`\n]+)`/gi;
 
 export function teileInline(zeile, ohneFett) {
   const s = txt(zeile);
@@ -93,7 +94,9 @@ export function teileInline(zeile, ohneFett) {
     let ganz = m[0];
     let teil = null;
     let rest = '';
-    if (m[1] !== undefined) {
+    if (m[6] !== undefined) {
+      teil = { art: 'code', text: m[6] };
+    } else if (m[1] !== undefined) {
       teil = ohneFett ? null : { art: 'fett', text: m[1] };
     } else if (m[2] !== undefined) {
       teil = { art: 'wiki', titel: m[2].trim() };
@@ -121,6 +124,7 @@ function knotenInline(zeile, opt, ohneFett) {
   return teileInline(zeile, ohneFett).map(function (t) {
     if (typeof t === 'string') return document.createTextNode(t);
     if (t.art === 'fett') return el('strong', null, ...knotenInline(t.text, opt, true));
+    if (t.art === 'code') return el('code', { class: 'wiki-code', text: t.text });
     if (t.art === 'link') {
       return el('a', { href: t.url, target: '_blank', rel: 'noopener noreferrer', text: t.text });
     }

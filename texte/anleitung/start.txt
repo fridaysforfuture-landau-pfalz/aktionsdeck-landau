@@ -1,0 +1,25 @@
+> Der Start ist die Zentrale deiner Gruppe.
+
+## Was steht auf dem Start?
+
+- Oben „Hallo Name“ mit den Knöpfen „+ Umfrage“, „+ Mitteilung“, „Archiv“ und der Glocke 🔔 „Was ist neu?“.
+- Laufende Umfragen und das Schwarze Brett (angeheftete Mitteilungen).
+- Die Kachel Projekte mit den laufenden Projekten, ihren ToDos und Mobi-Beiträgen.
+- Die Kacheln ToDos (allgemeine ToDos ohne Projekt) und TOPs fürs nächste Plenum.
+- Ganz unten die Pinnwand für kurze Nachrichten an alle.
+
+## Umfragen
+
+- Mit „+ Umfrage“ legst du eine Frage mit Antworten an. Anonym ist Standard, „namentlich“ zeigt die Namen.
+- Jede Person (Anzeigename) hat eine Stimme. Mit „mehrere“ darf man mehrere Antworten wählen.
+- Die Frist färbt die Umfrage (heute orange, vorbei rot). Beendet wird sie nur von Hand. Danach steht sie im Archiv, mit „Ergebnis kopieren“ und „Wieder öffnen“.
+
+## Schwarzes Brett und Pinnwand
+
+- Eine Mitteilung ist angeheftet und steht oben. Nicht angeheftete stehen im Archiv.
+- Die Pinnwand ist für kurze Kommentare. Ein Pinnwand-Eintrag lässt sich „Als Mitteilung anheften“.
+- Veranstaltungen aus dem Kalender kann man anheften. Sie stehen dann in ihrer Farbe da.
+
+## Erinnerung zur Kapazität
+
+Bist du im Team eingetragen und deine Kapazität fehlt oder ist abgelaufen, steht oben eine Zeile. Mit „✕“ blendest du sie für 7 Tage aus. Mehr dazu: [[Team]].

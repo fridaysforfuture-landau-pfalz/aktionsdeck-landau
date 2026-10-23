@@ -1,0 +1,44 @@
+> Im Wiki sammelt die Gruppe Wissen zum Weitergeben. Es ersetzt die frühere Hilfe.
+
+## Drei Bereiche
+
+- Skillshare: Wissen eurer Gruppe nach Themen, zum Beispiel „Demo anmelden“ oder „Banner malen“.
+- Anleitung: So funktioniert die App. Dazu eure eigenen Seiten, zum Beispiel „Gruppe intern“.
+- Entwicklung App: wie die App gewachsen ist.
+
+## Seite anlegen und bearbeiten
+
+- „+ Seite“ legt eine Seite an. Im Skillshare wählst du ein Thema.
+- „Bearbeiten“ und „Löschen“ stehen unter jeder eigenen Seite. Die Seiten der App-Anleitung sind nur lesbar.
+- Alle in der Gruppe dürfen schreiben. Es gibt keinen Verlauf alter Fassungen. Schreiben zwei Personen gleichzeitig, kommt ein Hinweis, und nichts wird überschrieben.
+- Beim Tippen merkt sich dein Gerät einen Entwurf.
+
+## So geht das Format
+
+Die Knöpfe über dem Textfeld fügen das an der Cursorstelle ein:
+
+- Leerzeile = neuer Absatz
+- `## Überschrift` = große Überschrift (Knopf Ü1)
+- `### Unterüberschrift` = kleine Überschrift (Knopf Ü2)
+- `- Punkt` = Liste, `1. Schritt` = nummerierte Liste
+- `**fett**` = **fett** (Knopf F)
+- Eine Adresse wie `https://beispiel.de` wird von selbst ein Link. `[Text](https://…)` ist ein Link mit eigenem Text (Knopf Link).
+- `[[Titel einer Seite]]` = Link auf eine andere Wiki-Seite (Knopf Wiki-Link)
+- `> Hinweis` = grauer Kasten (Knopf Hinweis)
+- Knopf „Bild“: Bild hochladen und einfügen.
+
+Am PC steht die Vorschau neben dem Text, am Handy schaltest du mit „Schreiben | Vorschau“ um.
+
+## Öffentlich
+
+> Mit dem Haken „Öffentlich“ kann jede Person im Internet die Seite lesen. Schreib dann keine Namen, Telefonnummern, Adressen oder Fotos von Personen hinein.
+
+Öffentliche Seiten stehen unter „Wiki“ bei den öffentlichen Links. „Link kopieren“ gibt dir die Adresse zum Teilen. Kommentare und Namen sind nie öffentlich.
+
+## Bilder
+
+Bilder liegen im Drive-Ordner der Gruppe und sind für alle lesbar, die den Link kennen. Auf Bildern sind keine Personen und keine persönlichen Daten.
+
+## Kommentare
+
+Unter jeder eigenen Seite gibt es Kommentare, zum Beispiel „Das ist veraltet“. Sie sind nur für eure Gruppe sichtbar.
