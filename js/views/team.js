@@ -6,20 +6,27 @@
 // Klick öffnet die Person im Detailbereich (PC rechts, Handy Vollbild): Rollen mit Beschreibung,
 // Kapazität, Verlauf der letzten 6 Monate.
 // Seit 9.3: Aufklapper „Gruppen-Rollen“ unten zum Bearbeiten der Rollen-Liste (js/views/team-rollen.js).
-// Eintragen und Bearbeiten der eigenen Karte kommen mit 9.4.
+// Seit 9.4: „Mich eintragen“, „Für jemanden eintragen“ (klein unten), „Bearbeiten“ im Detail
+// (js/views/team-eintrag.js). Hat jemand den Anzeigenamen geändert und gibt es eine Karte mit dem vorigen
+// Namen, fragt der Reiter, ob die Karte mit umbenannt werden soll.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { zeigeDetail, schliesseDetail } from '../ui/detail.js';
-import { getName } from '../store.js';
+import { getName, setName, getNameVorher, loescheNameVorher } from '../store.js';
+import { frageName } from '../ui/modal.js';
+import { zeigeFenster } from '../ui/fenster.js';
+import { baueFormular } from '../ui/form.js';
+import { toast } from '../ui/toast.js';
 import { istWahr } from '../schema.js';
 import { zeitText } from './material-rechnen.js';
 import { datumText, heuteIso } from './todos-rechnen.js';
 import {
   txt, istAktiv, rollenVon, sortiereRollen, kapazitaetText, angabeJetzt, angabeZustand, verlauf,
-  sortierePersonen, passtSuche, passtRolle
+  sortierePersonen, passtSuche, passtRolle, istIch, darfBearbeiten
 } from './team-rechnen.js';
+import { zeigeEintrag, umbenennen } from './team-eintrag.js';
 import { baueRollen, HINWEIS_ROLLEN } from './team-rollen.js';
 
 // Datum kurz: "20.11." (mit Jahr, wenn es nicht dieses Jahr ist)
@@ -86,6 +93,7 @@ export async function render(container, ctx) {
   let meta = null;
   let offline = false;
   let offeneId = '';   // Person, die gerade im Detail steht
+  let offenModus = '';  // 'lesen' oder 'bearbeiten' (beim Bearbeiten baut das Neuladen das Detail nicht neu auf)
 
   const status = el('p', { class: 'leise', text: 'Lade Team …' });
   const suche = el('input', {
@@ -95,6 +103,13 @@ export async function render(container, ctx) {
   const boxIch = el('div', { class: 'team-ich' });
   const boxListe = el('div', { class: 'team-raster' });
   const boxPause = el('div');
+  const fuerAndere = el('div', { class: 'team-fuer-andere' },
+    el('button', {
+      class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Für jemanden eintragen',
+      onclick: fuerJemanden
+    }),
+    el('span', { class: 'leise', text: 'Zum Beispiel für eine Person ohne Handy. Die Karte dürfen dann alle bearbeiten.' })
+  );
   const rollenTeil = baueRollen({
     ctx: ctx, token: s.token, kurzname: s.kurzname,
     daten: function () { return daten; },
@@ -108,6 +123,7 @@ export async function render(container, ctx) {
     boxIch,
     boxListe,
     boxPause,
+    fuerAndere,
     rollenTeil.el
   ));
 
@@ -176,17 +192,13 @@ export async function render(container, ctx) {
     if (!daten.personen.length) {
       boxIch.append(el('div', { class: 'karte leer-karte' },
         el('p', { text: 'Noch niemand im Team.' }),
-        el('p', { class: 'leise', text: 'Mit dem nächsten Update kann sich jede Person selbst eintragen, ihre Gruppen-Rollen wählen und sagen, wie viel Zeit sie gerade hat.' })
+        el('p', { class: 'leise', text: 'Trag dich ein, wähle deine Gruppen-Rollen und sag, wie viel Zeit du gerade hast. Alle in der Gruppe sehen die Angaben.' }),
+        el('div', { class: 'form-knoepfe' }, el('button', { class: 'knopf', type: 'button', text: 'Mich eintragen', onclick: michEintragen }))
       ));
       return;
     }
 
-    if (!sortiert.ich) {
-      boxIch.append(el('div', { class: 'karte team-hinweis' },
-        el('p', { text: name ? 'Du (' + name + ') bist noch nicht im Team.' : 'Du bist noch nicht im Team.' }),
-        el('p', { class: 'leise', text: 'Eintragen geht mit dem nächsten Update.' })
-      ));
-    }
+    if (!sortiert.ich) boxIch.append(hinweisOhneKarte(name));
 
     const liste = (sortiert.ich && istAktiv(sortiert.ich) ? [sortiert.ich] : []).concat(sortiert.aktive).filter(passt);
     liste.forEach(function (p) { boxListe.append(karte(p, heute, p === sortiert.ich)); });
@@ -211,6 +223,7 @@ export async function render(container, ctx) {
   // aktualisieren = true: nach dem Neuladen, Scrollstand im Detail bleibt
   function oeffne(p, aktualisieren) {
     offeneId = String(p.id);
+    offenModus = 'lesen';
     const heute = heuteIso();
     const stand = angabeJetzt(p.id, daten.kapazitaet, heute);
     const rollen = rollenVon(p, daten.rollen);
@@ -221,7 +234,18 @@ export async function render(container, ctx) {
       marken.append(el('span', { class: 'team-marke team-marke-du', text: 'Du' }));
     }
     marken.append(el('span', { class: 'team-marke', text: istAktiv(p) ? 'Dabei' : 'Pause' }));
+    if (!istIch(p, txt(p.erstellt_von)) && txt(p.erstellt_von)) {
+      marken.append(el('span', { class: 'team-marke', text: 'eingetragen von ' + txt(p.erstellt_von) }));
+    }
     inhalt.append(marken);
+    if (darfBearbeiten(p, getName())) {
+      inhalt.append(el('div', { class: 'form-knoepfe' },
+        el('button', {
+          class: 'knopf', type: 'button',
+          text: istIch(p, getName()) ? 'Bearbeiten und Kapazität eintragen' : 'Bearbeiten',
+          onclick: function () { bearbeite(p); }
+        })));
+    }
 
     inhalt.append(el('h3', { text: 'Gruppen-Rollen' }));
     if (rollen.length) {
@@ -259,8 +283,111 @@ export async function render(container, ctx) {
     const seit = datumText(txt(p.erstellt_am).slice(0, 10));
     inhalt.append(el('p', { class: 'leise', text: 'Im Team seit ' + seit + (txt(p.erstellt_von) ? ', eingetragen von ' + txt(p.erstellt_von) : '') + '.' }));
 
-    zeigeDetail(ctx.detail, txt(p.name) || 'Person', inhalt, function () { offeneId = ''; zeichne(); }, !aktualisieren);
+    zeigeDetail(ctx.detail, txt(p.name) || 'Person', inhalt, function () { offeneId = ''; offenModus = ''; zeichne(); }, !aktualisieren);
     if (!aktualisieren) zeichne();
+  }
+
+  // ---- Bearbeiten (9.4) ----
+
+  function bearbeite(p) {
+    offeneId = String(p.id);
+    offenModus = 'bearbeiten';
+    zeigeEintrag({
+      ctx: ctx, token: s.token, person: p,
+      daten: function () { return daten; },
+      beiZu: function () { offeneId = ''; offenModus = ''; zeichne(); },
+      fertig: async function (id, modus) {
+        await laden(false);
+        const neu = findePerson(id);
+        if (!neu || modus === 'weg') { offeneId = ''; offenModus = ''; schliesseDetail(ctx.detail); zeichne(); return; }
+        if (modus === 'bearbeiten') bearbeite(neu); else oeffne(neu);
+      }
+    });
+    zeichne();
+  }
+
+  // Neue Karte anlegen und gleich zum Bearbeiten öffnen
+  async function karteAnlegen(n) {
+    try {
+      const neu = await api('create', { tabelle: 'Personen', daten: { name: n, aktiv: true, rollen: '', notiz: '' } }, s.token);
+      toast('„' + n + '“ ist jetzt im Team.');
+      await laden(false);
+      const p = findePerson(neu && neu.id);
+      if (p) bearbeite(p);
+    } catch (e) {
+      if (ctx.behandleFehler(e)) return;
+      toast(e.code === 'netz' ? 'Keine Verbindung. Eintragen geht nur mit Verbindung.' : e.message);
+    }
+  }
+
+  async function michEintragen() {
+    let n = getName();
+    if (!n) {
+      n = await frageName('', true);
+      if (!n) return;
+      setName(n);
+    }
+    await karteAnlegen(n);
+  }
+
+  function fuerJemanden() {
+    let fenster = null;
+    const form = baueFormular(
+      [{ name: 'name', label: 'Name der Person', typ: 'text', pflicht: true }],
+      {},
+      {
+        speichernText: 'Eintragen',
+        onSpeichern: async function (d) {
+          const n = txt(d.name);
+          if (n.length < 2 || n.length > 60) throw new Error('Bitte einen Namen mit 2 bis 60 Zeichen.');
+          fenster.schliessen();
+          await karteAnlegen(n);
+        },
+        onAbbrechen: function () { fenster.schliessen(); }
+      }
+    );
+    fenster = zeigeFenster('Für jemanden eintragen', el('div', null,
+      el('p', { class: 'leise', text: 'Nimm den Namen, den die Person in der App benutzt (zum Beispiel in ToDos). Die Karte dürfen alle bearbeiten.' }),
+      form));
+    const f = form.querySelector('[name="name"]');
+    if (f) f.focus();
+  }
+
+  // Kasten oben, wenn es zum Anzeigenamen keine Karte gibt. Gibt es eine Karte mit dem vorigen Namen
+  // (Name auf diesem Gerät geändert), wird Umbenennen angeboten.
+  function hinweisOhneKarte(name) {
+    const vorher = getNameVorher();
+    const alt = vorher && name ? daten.personen.find(function (p) { return istIch(p, vorher); }) : null;
+    if (alt) {
+      return el('div', { class: 'karte team-hinweis' },
+        el('p', { text: 'Deine Team-Karte heißt noch „' + txt(alt.name) + '“. Auf „' + name + '“ umbenennen?' }),
+        el('p', { class: 'leise', text: 'Der Name wird auch in ToDos, Meilensteinen, Mobi-Beiträgen und Umfrage-Antworten geändert.' }),
+        el('div', { class: 'form-knoepfe' },
+          el('button', {
+            class: 'knopf', type: 'button', text: 'Umbenennen',
+            onclick: async function (ev) {
+              ev.target.disabled = true;
+              try {
+                toast(await umbenennen({ ctx: ctx, token: s.token }, alt, name));
+                loescheNameVorher();
+                await laden(false);
+              } catch (e) {
+                if (ctx.behandleFehler(e)) return;
+                toast(e.message);
+                ev.target.disabled = false;
+              }
+            }
+          }),
+          el('button', {
+            class: 'knopf knopf-hell', type: 'button', text: 'Nein, das bin nicht ich',
+            onclick: function () { loescheNameVorher(); zeichne(); }
+          })
+        ));
+    }
+    return el('div', { class: 'karte team-hinweis' },
+      el('p', { text: name ? 'Du (' + name + ') bist noch nicht im Team.' : 'Du bist noch nicht im Team.' }),
+      el('div', { class: 'form-knoepfe' }, el('button', { class: 'knopf', type: 'button', text: 'Mich eintragen', onclick: michEintragen }))
+    );
   }
 
   // ---- Laden ----
@@ -274,10 +401,11 @@ export async function render(container, ctx) {
     zeichne();
     rollenTeil.zeichne();
     // Offenes Detail mit dem neuen Stand zeigen (oder schließen, wenn die Person weg ist)
+    // Beim Bearbeiten bleibt das Formular stehen (Eingaben gehen nicht verloren)
     if (offeneId) {
       const p = findePerson(offeneId);
-      if (p) oeffne(p, true);
-      else { offeneId = ''; schliesseDetail(ctx.detail); }
+      if (!p) { offeneId = ''; offenModus = ''; schliesseDetail(ctx.detail); }
+      else if (offenModus !== 'bearbeiten') oeffne(p, true);
     }
   }
 
