@@ -1,9 +1,9 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.31.9 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.10 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-Plan der laufenden Etappe: docs/PLAN-ETAPPE-10.md (Etappe 10 Wiki und öffentliche Seiten; die Datei wird als erste Aufgabe von Etappe 10 geschrieben, Schritt 10.0). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
+Plan der laufenden Etappe: docs/PLAN-ETAPPE-10.md (Etappe 10 Wiki und öffentliche Seiten; Fassung 1 mit 31 Rückfragen seit 0.31.10, Schritt 10.0; Fassung 2 folgt nach den Antworten). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
 
 ## Erledigt
 - Etappe 0 und 1 (Fundament), Etappe 2 Material und Ausleihe, Zwischenplan Z1 bis Z8, Etappe 3 ToDos.
@@ -216,7 +216,8 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Damit trägt man auch andere in eine Rolle ein. Die Absprache "jede Person pflegt ihre eigene Karte" gilt weiter für Kapazität, Name und Notiz.
   - Überschrift "Gruppen-Rollen (n · m offen)", offene Rollen (niemand hat sie) mit oranger Marke "offen".
   - Hilfe (js/views/hilfe.js, Gruppen-Rollen) ergänzt.
-- Nächster Schritt: Etappe 10 (Wiki und öffentliche Seiten), Schritt 10.0: docs/PLAN-ETAPPE-10.md schreiben (Fassung 1 mit Rückfragen, aufgebaut wie die Pläne für Etappe 7 bis 9). Noch kein Code. Für Etappe 10 vormerken: Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
+- Etappe 10 begonnen: 10.0 (0.31.10) docs/PLAN-ETAPPE-10.md, Fassung 1 mit 31 Rückfragen. Nur Doku, Sheet und Skript unverändert. Fund: Die "Texte aus 6.1" für Impressum, Info und Datenschutz gibt es im Repo nicht (js/views/info.js zeigt nur einen Platzhalter); sie werden in Etappe 10 neu geschrieben.
+- Nächster Schritt: Die Person beantwortet die Rückfragen in docs/PLAN-ETAPPE-10.md (Abschnitt 4). Danach 10.1 (0.32.0): Fassung 2 des Plans mit Sheet und Skript (Tabs Wiki und Wiki_Verlauf, Wiki.gs, öffentliche Aktion wiki), einmal von Hand bereitstellen. Für Etappe 10 vorgemerkt (steht im Plan): Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -244,7 +245,7 @@ Geplant: Wiki statt Hilfe (Etappe 10). (Etappe 8 brachte den Reiter "Dokumentati
 - Etappe 7 Mobi: abgeschlossen (siehe oben und docs/PLAN-ETAPPE-7.md).
 - Etappe 8 Protokoll, Reden, Learnings: abgeschlossen. Plan und Schritte in **docs/PLAN-ETAPPE-8.md** (Dauerprotokoll mit Google-Dokument für FFF, Etherpad bei GP von Hand, Markierungen im Text mit Vorschlägen zum Abhaken, Reden-Archiv mit Probelesen über Kommentare, Learnings aus dem Protokoll).
 - Etappe 9 Team: abgeschlossen (0.31.7, Plan und Schritte in docs/PLAN-ETAPPE-9.md): Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
-- Etappe 10 Wiki und öffentliche Seiten (als Nächstes, Plan folgt in docs/PLAN-ETAPPE-10.md): Wiki mit Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlichem Bereich. Impressum, Info, Datenschutz (Texte aus 6.1, dazu ein Absatz zum Team). Die Hilfe zum Team (js/views/hilfe.js) kommt ins Wiki. Die Seite #/termine gibt es schon.
+- Etappe 10 Wiki und öffentliche Seiten (läuft, Plan Fassung 1 in docs/PLAN-ETAPPE-10.md): Wiki mit Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlichem Bereich. Impressum, Info, Datenschutz (die Texte aus 6.1 gibt es nicht, sie werden neu geschrieben; dazu ein Absatz zum Team). Die Hilfe zum Team (js/views/hilfe.js) kommt ins Wiki. Die Seite #/termine gibt es schon.
 - Etappe 11 Komfort: OpenCollective-Kontostand (nur Klimastreik Landau, https://opencollective.com/klimastreik-landau, einmal pro Woche per Skript; erst testen, noch keine Zusage). Erinnerungen und Push so planen, dass sie später auf Push oder E-Mail aufsetzen können (Umfragen, überfällige ToDos, Pinnwand-Kommentare). Sicherung, Übersicht und Export, Dunkelmodus, Feinschliff, GitHub-Actions-Versionen anheben.
 - Neue Sheet-Tabs für spätere Etappen: Wiki (Mobi_Plan seit 0.29.0, Reden seit 0.30.0, Gruppen_Rollen und Kapazitaet seit 0.31.0). Jede Etappe nennt vorher, was im Sheet und Skript zu ergänzen ist und wann neu bereitgestellt wird.
 
@@ -306,7 +307,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - **Vor 1.0**: Test-ToDos und Test-Einträge im Sheet löscht die Person.
 
 ## Dateiübersicht
-- docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (abgeschlossen), PLAN-ETAPPE-10.md (folgt), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
+- docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (abgeschlossen), PLAN-ETAPPE-10.md (Fassung 1, seit 0.31.10), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
 - index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.31.7 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
