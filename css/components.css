@@ -3007,3 +3007,7 @@ p.notiz.erledigt {
 .hilfe-text ul { margin: 0 0 8px; padding-left: 1.2rem; }
 .team-hilfe-link { margin-top: 16px; }
 .team-hilfe-link a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* ---- 0.31.9: Anpassungen 9.8a (Gruppen-Rollen: wer hat sie, offene Rollen) ---- */
+.team-marke-offen { background: #fff3dc; color: #8a5200; }
+.team-rollen-wer .team-rollen-wahl { margin-top: 4px; }

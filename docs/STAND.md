@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.31.8 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.9 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-10.md (Etappe 10 Wiki und öffentliche Seiten; die Datei wird als erste Aufgabe von Etappe 10 geschrieben, Schritt 10.0). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
@@ -12,7 +12,7 @@ Plan der laufenden Etappe: docs/PLAN-ETAPPE-10.md (Etappe 10 Wiki und öffentlic
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
 - Etappe 7 Mobi komplett (0.29.0 bis 0.29.12), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7, 7.8. 0.29.11 geprüft (22.10.2026), Anpassungen in 0.29.12.
 - Etappe 8 Protokoll, Reden, Learnings komplett und geprüft (0.29.12 bis 0.30.13, Abschluss der Doku 0.30.14), siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4), 8.4 Markierungen (0.30.5), 8.4a Anpassungen (0.30.6), 8.4b angelegte Einträge beim Verwerfen löschen (0.30.7), 8.5 Vorschläge aus dem Protokoll (0.30.8), 8.5a Anpassungen (0.30.9), 8.6 Reden-Archiv (0.30.10), 8.7 Verknüpfungen (0.30.11), 8.8 Löschen von Hand, Redetext und Kommentare je Absatz (0.30.12, Sheet und Skript von Hand), 8.8a Anpassungen zu 8.8 (0.30.13). Alles geprüft: 8.5a bis 8.8a am 22.10.2026 bestätigt.
-- Etappe 9 Team komplett und geprüft (0.30.15 bis 0.31.7, Abschluss der Doku 0.31.8), siehe `docs/PLAN-ETAPPE-9.md` und unten. Erledigt: 9.0 Plan Fassung 1 (0.30.15), 9.1 Plan Fassung 2, Sheet und Skript (0.31.0, von Hand bereitgestellt am 23.10.2026), 9.2 Reiter Team lesen (0.31.1), 9.3 Gruppen-Rollen bearbeiten (0.31.2), 9.4 Mein Eintrag (0.31.3), 9.5 Hüte je Person und freie Hüte (0.31.4), 9.5a Anmerkungen und 9.6 Berg (0.31.5), 9.6a Anmerkungen und 9.7 Verknüpfungen (0.31.6), 9.8 Hilfe zum Team (0.31.7). Alles geprüft am 23.10.2026.
+- Etappe 9 Team komplett und geprüft (0.30.15 bis 0.31.7, Abschluss der Doku 0.31.8, Nachbesserung 9.8a 0.31.9), siehe `docs/PLAN-ETAPPE-9.md` und unten. Erledigt: 9.0 Plan Fassung 1 (0.30.15), 9.1 Plan Fassung 2, Sheet und Skript (0.31.0, von Hand bereitgestellt am 23.10.2026), 9.2 Reiter Team lesen (0.31.1), 9.3 Gruppen-Rollen bearbeiten (0.31.2), 9.4 Mein Eintrag (0.31.3), 9.5 Hüte je Person und freie Hüte (0.31.4), 9.5a Anmerkungen und 9.6 Berg (0.31.5), 9.6a Anmerkungen und 9.7 Verknüpfungen (0.31.6), 9.8 Hilfe zum Team (0.31.7). Alles geprüft am 23.10.2026. Nach dem Abschluss: 9.8a Gruppen-Rollen (0.31.9, Wünsche der Person).
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
 ## Etappe 7 (Mobi), abgeschlossen mit 0.29.12
@@ -211,6 +211,11 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - 9.6a und 9.7: Pull Request #33 angenommen. Rückfrage beantwortet: Das Team bleibt freiwillig, die Start-Zeile erscheint nur mit Team-Karte. 9.6a und 9.7 geprüft (23.10.2026): alles da und gut.
 - 9.8 (0.31.7): Hilfe zum Team. js/views/hilfe.js hat einen Abschnitt "👥 Team" mit Aufklappern (Was ist der Reiter Team, Gruppen-Rollen mit dem Hinweis zur Unterstützung, Hüte, Kapazität mit den Bereichen, Der Berg, Wer sieht was / wer darf was, Namen ändern, Austragen und Datenschutz). Im Reiter Team unten der Link "Wie funktioniert der Reiter Team? → Hilfe". Der Platzhalter-Satz für das spätere Wiki bleibt.
 - 9.8 geprüft (23.10.2026): alles da und gut. Etappe 9 ist abgeschlossen (Entscheidung der Person, 23.10.2026). 0.31.8 schließt nur die Doku ab (STAND, Plan, CLAUDE.md).
+- 9.8a (0.31.9), Wünsche der Person nach dem Abschluss (Gruppen-Rollen, js/views/team-rollen.js):
+  - Im Fenster "+ Rolle" und "Rolle bearbeiten" steht "Wer hat die Rolle? (antippen, freiwillig)" mit allen Team-Karten (A–Z, Pausierte mit "(Pause)"); beim Bearbeiten sind die bisherigen vorgewählt. Beim Speichern ändert die App Personen.rollen der betroffenen Karten (mit Konfliktprüfung), in dieser Reihenfolge: austragen, Rolle speichern, eintragen. Bei "Fest gewählt" höchstens eine Person (Meldung im Fenster; das Skript prüft es auch). Klappt es bei einer Karte nicht, nennt die Meldung den Namen.
+  - Damit trägt man auch andere in eine Rolle ein. Die Absprache "jede Person pflegt ihre eigene Karte" gilt weiter für Kapazität, Name und Notiz.
+  - Überschrift "Gruppen-Rollen (n · m offen)", offene Rollen (niemand hat sie) mit oranger Marke "offen".
+  - Hilfe (js/views/hilfe.js, Gruppen-Rollen) ergänzt.
 - Nächster Schritt: Etappe 10 (Wiki und öffentliche Seiten), Schritt 10.0: docs/PLAN-ETAPPE-10.md schreiben (Fassung 1 mit Rückfragen, aufgebaut wie die Pläne für Etappe 7 bis 9). Noch kein Code. Für Etappe 10 vormerken: Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
