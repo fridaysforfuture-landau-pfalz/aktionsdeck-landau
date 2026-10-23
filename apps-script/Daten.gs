@@ -198,6 +198,7 @@ function aktionCreate(ctx, p) {
     mobiBezugPruefen(ctx, tab, p.daten.projekt_id, p.daten.veranstaltung_id, p.daten.mobi_id, bezugCache);
     protokollBezugPruefen(ctx, tab, p.daten.veranstaltung_id, bezugCache);
     var o = neuerEintrag(tab, ctx, p.daten, anzeige, jetzt());
+    teamPruefen(ctx, tab, o, o.id, bezugCache, null);
     anhaengen(sh, [zeilenArray(kopf, o)]);
     protokoll(ctx, 'create', tab, [o.id], anzeige);
     return o;
@@ -222,7 +223,9 @@ function aktionBatchCreate(ctx, p) {
       bezugPruefen(ctx, tab, d.projekt_id, d.meilenstein_id, cache);
       mobiBezugPruefen(ctx, tab, d.projekt_id, d.veranstaltung_id, d.mobi_id, cache);
       protokollBezugPruefen(ctx, tab, d.veranstaltung_id, cache);
-      return neuerEintrag(tab, ctx, d, anzeige, zeit);
+      var o = neuerEintrag(tab, ctx, d, anzeige, zeit);
+      teamPruefen(ctx, tab, o, o.id, cache, null);
+      return o;
     });
     anhaengen(sh, eintraege.map(function (o) { return zeilenArray(kopf, o); }));
     protokoll(ctx, 'batchCreate', tab, eintraege.map(function (o) { return o.id; }), anzeige);
@@ -269,6 +272,11 @@ function aktionUpdate(ctx, p) {
     if (neu.hasOwnProperty('veranstaltung_id')) {
       protokollBezugPruefen(ctx, tab, neu.veranstaltung_id, {});
     }
+    // Team: Personen, Gruppen_Rollen, Kapazitaet prüfen (alter Stand mit den Änderungen)
+    var ganz = {};
+    TABELLEN[tab].forEach(function (sp) { ganz[sp] = vor(sp); });
+    teamPruefen(ctx, tab, ganz, z.id, {}, Object.keys(neu));
+    var altName = z.name;
     var zeit = jetzt();
     neu.geaendert_am = zeit;
     neu.geaendert_von = anzeige;
@@ -277,6 +285,10 @@ function aktionUpdate(ctx, p) {
       z[sp] = neu[sp];
     });
     protokoll(ctx, 'update', tab, [z.id], anzeige);
+    // Name einer Person geändert: auch in ToDos, Meilensteinen, Mobi-Beiträgen und Umfrage-Antworten ersetzen
+    if (tab === 'Personen' && neu.hasOwnProperty('name')) {
+      return { eintrag: sauber(z), geaendert: true, umbenannt: teamUmbenennen(ctx, altName, neu.name, zeit, anzeige) };
+    }
     return { eintrag: sauber(z), geaendert: true };
   });
 }
@@ -307,6 +319,9 @@ function aktionDelete(ctx, p) {
 
     // Mobi: Beitrag oder Veranstaltung gelöscht, dann gehen die verknüpften Teile mit
     mobiKaskade(ctx, tab, z, zeit, anzeige);
+
+    // Team: Person gelöscht = ihre Kapazität geht mit, Rolle gelöscht = bei allen Personen austragen
+    teamKaskade(ctx, tab, z, zeit, anzeige);
 
     // Meilenstein gelöscht: seine ToDos bleiben, verlieren nur den Verweis
     if (tab === 'Meilensteine') {

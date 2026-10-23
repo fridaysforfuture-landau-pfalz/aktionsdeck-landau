@@ -1,9 +1,9 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.30.15 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.0 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 1 mit Rückfragen seit 0.30.15). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
+Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 0.31.0). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
 
 ## Erledigt
 - Etappe 0 und 1 (Fundament), Etappe 2 Material und Ausleihe, Zwischenplan Z1 bis Z8, Etappe 3 ToDos.
@@ -157,7 +157,18 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - Etappe 8 ist abgeschlossen (0.30.13). 0.30.14 schließt nur die Doku ab.
 - Hinweis aus 8.8: Ein Pull Request wurde angenommen, bevor eine Nachbesserung im selben Zweig ankam. Regel ab jetzt: Jede Nachbesserung zählt die Version hoch, auch in einem noch offenen Pull Request. So zeigt die App sicher, welcher Stand da ist.
 - 9.0 (0.30.15): docs/PLAN-ETAPPE-9.md, Fassung 1 mit 20 Rückfragen (Abschnitt 4). Nur Doku und Versionssprung, Sheet und Skript unverändert.
-- Nächster Schritt: Die Person beantwortet die Rückfragen in docs/PLAN-ETAPPE-9.md (Abschnitt 4). Danach Fassung 2 (9.0a), erst dann wird gebaut (ab 9.1, Sheet und Skript).
+
+## Etappe 9 (Team), läuft
+- 9.0 (0.30.15): Plan Fassung 1 mit 20 Rückfragen (#26). Die Person hat am 23.10.2026 geantwortet.
+- 9.1 (0.31.0): Plan Fassung 2 (docs/PLAN-ETAPPE-9.md) und Sheet und Skript. **Von Hand bereitzustellen** (Liste im Pull Request).
+  - Begriffe: Hüte bleiben Aufgaben mit Verantwortlichen oder offene Aufgaben ("Hut frei"). Dauerhafte Zuständigkeiten heißen "Gruppen-Rollen" (eine Rolle heißt nicht, dass man sich allein kümmern muss).
+  - Tab Personen zusätzlich rollen (IDs aus Gruppen_Rollen, eine je Zeile, höchstens 12), notiz (120 Zeichen). Name in der Gruppe nur einmal (60 Zeichen). aktiv FALSE = Pause; die App schickt beim Anlegen TRUE.
+  - Neuer Tab Gruppen_Rollen (name, beschreibung, gewaehlt, sortierung). gewaehlt = höchstens eine Person. Die Liste bearbeitet die Gruppe in der App (ab 9.3, mit "Standard-Rollen übernehmen" für FFF und GP).
+  - Neuer Tab Kapazitaet (person_id, kapazitaet, gueltig_ab, gueltig_bis, notiz). kapazitaet ganze Zahl 1 bis 10, höchstens 183 Tage gültig, wird nicht geändert (nur anlegen und löschen). Die Spalte heißt kapazitaet, weil es "wert" schon im System-Tab Einstellungen gibt.
+  - Neu apps-script/Team.gs: teamPruefen (in create, batchCreate, update), teamKaskade (Person gelöscht = Kapazität mit; Rolle gelöscht = bei allen ausgetragen), teamUmbenennen (neuer Name einer Person wird auch in ToDos, Meilensteinen, Mobi_Plan (verantwortlich) und Umfrage_Antworten (person) ersetzt; Antwort von update enthält umbenannt), Editor-Test testenTeam (schreibt nichts).
+  - Daten.gs ruft die Team-Prüfungen auf. Aufraeumen.gs entfernt Kapazitäts-Angaben, deren gueltig_bis mehr als 183 Tage vorbei ist. js/schema.js kennt Personen, Gruppen_Rollen, Kapazitaet.
+  - In der App ändert sich noch nichts Sichtbares. Der Reiter Team kommt in 9.2.
+- Nächster Schritt: Die Person stellt 9.1 von Hand bereit und prüft. Danach 9.2 (Reiter Team, nur lesen).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -184,10 +195,10 @@ Reiter (Stand 0.30.13): Start, Projekte, ToDos, Material, Mobi, Kalender, Dokume
 Geplant: Etappe 9 bringt den Reiter Team. Später Wiki statt Hilfe (Etappe 10). (Etappe 8 brachte den Reiter "Dokumentation", 📝, Kennung protokoll.)
 - Etappe 7 Mobi: abgeschlossen (siehe oben und docs/PLAN-ETAPPE-7.md).
 - Etappe 8 Protokoll, Reden, Learnings: abgeschlossen. Plan und Schritte in **docs/PLAN-ETAPPE-8.md** (Dauerprotokoll mit Google-Dokument für FFF, Etherpad bei GP von Hand, Markierungen im Text mit Vorschlägen zum Abhaken, Reden-Archiv mit Probelesen über Kommentare, Learnings aus dem Protokoll).
-- Etappe 9 Team (läuft, Plan in docs/PLAN-ETAPPE-9.md, Fassung 1): Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
+- Etappe 9 Team (läuft, Plan in docs/PLAN-ETAPPE-9.md, Fassung 2): Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
 - Etappe 10 Wiki und öffentliche Seiten: Wiki mit Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlichem Bereich. Impressum, Info, Datenschutz (Texte aus 6.1). Die Seite #/termine gibt es schon.
 - Etappe 11 Komfort: OpenCollective-Kontostand (nur Klimastreik Landau, https://opencollective.com/klimastreik-landau, einmal pro Woche per Skript; erst testen, noch keine Zusage). Erinnerungen und Push so planen, dass sie später auf Push oder E-Mail aufsetzen können (Umfragen, überfällige ToDos, Pinnwand-Kommentare). Sicherung, Übersicht und Export, Dunkelmodus, Feinschliff, GitHub-Actions-Versionen anheben.
-- Neue Sheet-Tabs für spätere Etappen: Kapazitaet, Wiki (Mobi_Plan seit 0.29.0, Reden seit 0.30.0). Jede Etappe nennt vorher, was im Sheet und Skript zu ergänzen ist und wann neu bereitgestellt wird.
+- Neue Sheet-Tabs für spätere Etappen: Wiki (Mobi_Plan seit 0.29.0, Reden seit 0.30.0, Gruppen_Rollen und Kapazitaet seit 0.31.0). Jede Etappe nennt vorher, was im Sheet und Skript zu ergänzen ist und wann neu bereitgestellt wird.
 
 ## Festlegungen Start als Zentrale (Etappe 5)
 - Tabs und Spalten (Schema.gs und js/schema.js): Umfragen (frage, optionen, ablauf_am, mehrfach, beendet, namentlich), Umfrage_Antworten (umfrage_id, person, auswahl), Mitteilungen (titel, text, angeheftet, farbe), Ideen (titel, beschreibung, aktionsart, projekt_id), Kommentare (projekt_id, bezug_art, bezug_id, text, angeheftet, farbe), Projekte zusätzlich aktionsart. Kommentare gehören nicht zu PROJEKT_PFLICHT (Pinnwand ohne Projekt). BOOL_SPALTEN enthält mehrfach, angeheftet, beendet, namentlich, oeffentlich.
@@ -246,9 +257,9 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - **Vor 1.0**: Test-ToDos und Test-Einträge im Sheet löscht die Person.
 
 ## Dateiübersicht
-- docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (Etappe 9, Fassung 1), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
+- docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (Etappe 9, Fassung 2), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
 - index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.30.12 am Ende)
-- apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs (Setup.gs nur im Editor)
+- apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
 - js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
