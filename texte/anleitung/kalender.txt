@@ -18,8 +18,16 @@ Mit den Filtern blendest du Arten von Terminen ein und aus.
 
 ## Kalender abonnieren
 
-Die öffentlichen Termine kannst du in deinem eigenen Kalender abonnieren. Die Adresse steht im Aktionskalender unter „Im eigenen Kalender abonnieren“.
+Die öffentlichen Termine kannst du in deinem eigenen Kalender abonnieren. Im Aktionskalender (und unter „Öffentliche Termine“) steht unten „Im eigenen Kalender abonnieren“. Wähle zuerst, ob du alle Gruppen oder nur eine willst.
 
-- Google Kalender: am PC links bei „Weitere Kalender“ auf „+“, dann „Per URL“ und die Adresse einfügen. Neue Termine erscheinen bei Google oft erst nach einigen Stunden.
+- „In Google Kalender öffnen“: öffnet Google Kalender mit der Frage „Kalender hinzufügen?“. Am besten am PC. Das Abo erscheint danach auch in Google Kalender am Handy.
+- „In Apple Kalender öffnen“: öffnet am iPhone oder Mac direkt die Frage „Abonnieren?“.
+- „Adresse kopieren“: für andere Kalender (zum Beispiel Outlook) oder wenn die Knöpfe nicht gehen.
+
+Von Hand geht es so:
+
+- Google Kalender am PC: links bei „Weitere Kalender“ auf „+“, dann „Per URL“, Adresse einfügen.
 - iPhone: Einstellungen → Kalender → Accounts → Account hinzufügen → Andere → Kalenderabo hinzufügen, Adresse einfügen.
 - Mac: im Programm Kalender „Ablage“ → „Neues Kalenderabonnement“.
+
+> Neue oder geänderte Termine erscheinen bei Google oft erst nach einigen Stunden. Das ist kein Fehler.

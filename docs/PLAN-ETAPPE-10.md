@@ -347,7 +347,8 @@ Die Versionen in dieser Tabelle sind die geplanten. Nachbesserungen zählen die 
 | 10.4 | Seiten schreiben, Bilder, Entwurf, Konflikt, Löschen | 0.32.3 | #41 |
 | 10.5 | Kommentare, Marke 💬, Link kopieren | 0.32.4 | #42 |
 | 10.6 | App-Anleitung für alle Reiter, Häufige Fragen, Regel in CLAUDE.md | 0.32.5 | #43 |
-| 10.7 | Öffentliches Wiki #/wiki, Links Wiki auf Gruppenwahl, Info und in der App | 0.32.6 | – |
+| 10.7 | Öffentliches Wiki #/wiki, Links Wiki auf Gruppenwahl, Info und in der App | 0.32.6 | #44 |
+| 10.8 | Kalender-Abo: Knöpfe Google, Apple, Adresse kopieren; Test-Anleitung | 0.32.7 | – |
 
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt. Die Anmerkungen kommen in den nächsten Pull Request, vor dem nächsten Schritt.
 
