@@ -2,7 +2,8 @@
 
 Diese Datei liest du (der Agent) zuerst. Sie gilt für jede Aufgabe in diesem Repo.
 Der aktuelle Projektstand steht in `docs/STAND.md`, der Plan für die laufende Etappe in `docs/PLAN-ETAPPE-<Nummer>.md`
-(zurzeit Etappe 10: `docs/PLAN-ETAPPE-10.md`; diese Datei wird als erste Aufgabe von Etappe 10 geschrieben).
+(zurzeit Etappe 10: `docs/PLAN-ETAPPE-10.md`, fertig gebaut, die Prüfung durch die Person steht aus;
+der Plan für Etappe 11 wird als erste Aufgabe von Etappe 11 geschrieben).
 
 ## 1. Worum es geht
 
@@ -62,14 +63,17 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
 
 - **Oberfläche:** statische PWA auf GitHub Pages. Repo-Bereiche: `index.html`, `manifest.webmanifest`, `sw.js`, `docs/`,
   `icons/`, `css/` (base, layout, components), `apps-script/` (Kopie des Google-Skripts),
-  `js/` (app, config, api, store, cache, schema, vorlagen, kanaele, ui/, views/).
+  `js/` (app, config, api, store, cache, schema, vorlagen, kanaele, wiki-format, ui/, views/),
+  `texte/` (feste Texte im Wiki-Format: Impressum, Info, Datenschutz, Entwicklung App, `anleitung/` mit der App-Anleitung;
+  öffentlich abrufbar, darum nichts Internes).
 - **PC (ab 960 px):** Seitenleiste links, Inhalt in der Mitte, Details rechts.
   **Handy:** untere Leiste (Start, Projekte, ToDos, Mobi, Mehr), Details als Vollbild.
-- **Reiter:** Start, Projekte, ToDos, Mobi, Material (am Handy unter „Mehr"), Kalender, Info/Hilfe.
+- **Reiter:** Start, Projekte, ToDos, Mobi, Material, Kalender, Dokumentation, Team, Wiki (am Handy die letzten fünf unter „Mehr").
+  Öffentlich ohne Login: `#/info/<seite>` (Impressum, Info, Datenschutz), `#/termine`, `#/wiki`.
 - **Schnittstelle:** Google Apps Script als Web-App, an das Google Sheet gebunden. Aufruf per POST mit JSON als
   `text/plain`. Das Feld für die Aktion heißt `aktion`. Antwort: `{ok, data, error, code}`.
   Aktionen: `gruppen` (ohne Login), `login`, `bootstrap`, `list` (mit `seit`), `listMehrere`, `create`, `update`,
-  `delete` (weich), `batchCreate`.
+  `delete` (weich), `batchCreate`. Ohne Login außerdem `termine` und `wiki` (nur öffentliche Daten, keine Namen).
 - **Zugang:** Ein PIN pro Gruppe, kein Admin-PIN, keine Einzelkonten. Das Skript prüft den PIN und gibt ein signiertes
   Token (14 Tage) mit `gruppe_id`. Jeder Aufruf prüft Token und Gruppe. Ein Token sieht nur Daten seiner Gruppe.
 - **Anzeigename:** „Wer bist du?" wird nur im Gerät gespeichert und landet im Log.
@@ -79,7 +83,8 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
 - **Hilfsmodule, die du vor dem Neubauen suchst und wiederverwendest:** `js/ui/dom.js` (`el`, `leeren`), `js/ui/fenster.js`
   (`zeigeFenster`), `js/ui/form.js` (`baueFormular`), `js/ui/table.js` (`zeigeListe`), `js/ui/toast.js`,
   `js/ui/kommentare.js` (`baueKommentare`), `js/views/todos-rechnen.js`, `js/views/kalender-rechnen.js`,
-  `js/views/mobi-rechnen.js`. Lies die Datei, bevor du sie benutzt. Rate keine Signaturen.
+  `js/views/mobi-rechnen.js`, `js/wiki-format.js` (`zeichneText`, Textformat für Wiki und `texte/`), `js/views/wiki-rechnen.js`.
+  Lies die Datei, bevor du sie benutzt. Rate keine Signaturen.
 
 ## 6. Google Sheet (Tabs)
 
