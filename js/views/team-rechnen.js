@@ -13,7 +13,7 @@
 
 import { istWahr } from '../schema.js';
 import { normDatum } from './todos-rechnen.js';
-import { addTage } from './kalender-rechnen.js';
+import { addTage, wochentagNr } from './kalender-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
 import { istVeroeffentlicht } from './mobi-rechnen.js';
 
@@ -228,7 +228,8 @@ function zaehlt(e, offen) {
 }
 
 // Alle offenen Hüte mit Verantwortlichen: [{ art: 'todo'|'meilenstein'|'mobi', titel, datum, projekt_id, namen, eintrag }]
-export function alleHuete(daten) {
+// auchFreie = true: auch die ohne Verantwortliche (für die fälligen Hüte im Berg, 9.6)
+export function alleHuete(daten, auchFreie) {
   const offen = offeneProjekte(daten.projekte);
   const liste = [];
   (daten.todos || []).forEach(function (t) {
@@ -243,7 +244,7 @@ export function alleHuete(daten) {
     if (istVeroeffentlicht(b) || !zaehlt(b, offen)) return;
     liste.push({ art: 'mobi', titel: txt(b.kanal) + ': ' + txt(b.titel), datum: normDatum(b.datum), projekt_id: txt(b.projekt_id), namen: namenAus(b.verantwortlich), eintrag: b });
   });
-  return liste.filter(function (h) { return h.namen.length > 0; });
+  return auchFreie ? liste : liste.filter(function (h) { return h.namen.length > 0; });
 }
 
 // Nächstes Datum zuerst, ohne Datum zuletzt
@@ -315,4 +316,72 @@ export function freieHuete(todos, projekte) {
     }
     return txt(a.erstellt_am).localeCompare(txt(b.erstellt_am));
   });
+}
+
+// ---- Berg (9.6) ----
+// Feste Farbreihe (8 Farben, geprüft auf Farbsehschwächen; Reihenfolge nie ändern). Vergeben nach Namen A–Z
+// unter den aktiven Personen. Ab der 9. Person wiederholen sich die Farben, die Legende nennt die Namen.
+export const ENG_MIN_HUETE = 3;
+export const ENG_PUNKTE_JE_HUT = 4;
+export const BERG_FARBEN = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#008300', '#6250d6', '#e34948'];
+
+export function montagVon(tag) {
+  return addTage(tag, -wochentagNr(tag));
+}
+
+// Wochen von "vorher" Wochen vor der aktuellen bis "nachher" Wochen danach.
+// Je Woche: Kapazität jeder aktiven Person am Mittwoch, Summe, Zahl der Personen mit Wert,
+// fällige offene Hüte (Datum in der Woche, mit und ohne Verantwortliche), Aktionen.
+// d: { personen, kapazitaet, huete (alleHuete(daten, true)), projekte, veranstaltungen }
+// Ergebnis: { wochen: [...], personen: [{ id, name, farbe, hatWert }], mitWert, aktive }
+export function bergDaten(d, heute, vorher, nachher) {
+  const aktive = (d.personen || []).filter(istAktiv).slice().sort(function (a, b) {
+    return txt(a.name).localeCompare(txt(b.name), 'de');
+  });
+  const personen = aktive.map(function (p, i) {
+    return { id: String(p.id), name: txt(p.name), farbe: BERG_FARBEN[i % BERG_FARBEN.length], hatWert: false };
+  });
+  const aktionen = [];
+  (d.projekte || []).forEach(function (pr) {
+    const t = normDatum(pr.aktionsdatum);
+    if (t && !istAbgeschlossen(pr) && txt(pr.status) !== 'planung') aktionen.push({ titel: txt(pr.titel), datum: t });
+  });
+  (d.veranstaltungen || []).forEach(function (v) {
+    const t = normDatum(v.datum);
+    if (t && txt(v.art) === 'extern') aktionen.push({ titel: '📅 ' + txt(v.titel), datum: t });
+  });
+
+  const start = addTage(montagVon(heute), -7 * vorher);
+  const wochen = [];
+  for (let w = 0; w < vorher + 1 + nachher; w++) {
+    const montag = addTage(start, 7 * w);
+    const sonntag = addTage(montag, 6);
+    const mittwoch = addTage(montag, 2);
+    const werte = personen.map(function (p) {
+      const k = kapazitaetAm(p.id, d.kapazitaet, mittwoch);
+      const wert = k ? Number(k.kapazitaet) || 0 : 0;
+      if (wert) p.hatWert = true;
+      return wert;
+    });
+    const summe = werte.reduce(function (a, b) { return a + b; }, 0);
+    wochen.push({
+      montag: montag, sonntag: sonntag, werte: werte, summe: summe,
+      personen: werte.filter(function (x) { return x > 0; }).length,
+      huete: (d.huete || []).filter(function (h) { return h.datum && h.datum >= montag && h.datum <= sonntag; }).length,
+      aktionen: aktionen.filter(function (a) { return a.datum >= montag && a.datum <= sonntag; }),
+      eng: false,
+      aktuell: heute >= montag && heute <= sonntag
+    });
+  }
+  // "Hier wird es eng": mindestens ENG_MIN_HUETE fällige Hüte und mehr als ein Hut je ENG_PUNKTE_JE_HUT
+  // Punkte Kraft (zum Beispiel Kraft 14 trägt 3 Hüte, ab 4 Hüten ist es eng). Leicht änderbar.
+  wochen.forEach(function (w) {
+    w.eng = w.huete >= ENG_MIN_HUETE && w.huete * ENG_PUNKTE_JE_HUT > w.summe;
+  });
+  return {
+    wochen: wochen,
+    personen: personen,
+    mitWert: personen.filter(function (p) { return p.hatWert; }).length,
+    aktive: personen.length
+  };
 }

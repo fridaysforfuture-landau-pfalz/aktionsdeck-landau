@@ -6,7 +6,7 @@ Regeln für die Arbeit stehen in `CLAUDE.md`.
 **Status: Fassung 2.** Die Person hat die 20 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 4).
 Fassung 2 (eigentlich Schritt 9.0a) kommt im selben Pull Request wie Schritt 9.1, damit Plan und Skript zusammenpassen.
 Die kleinen Fragen A bis F (Abschnitt 4) sind am 23.10.2026 beantwortet.
-**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26), 9.1 (Version 0.31.0, Pull Request #27, von Hand bereitgestellt am 23.10.2026). 9.2 (Version 0.31.1, Pull Request #28, geprüft am 23.10.2026). 9.3 (Version 0.31.2, Pull Request #29, geprüft am 23.10.2026). 9.4 (Version 0.31.3, Pull Request #30, geprüft am 23.10.2026). 9.5 läuft mit Version 0.31.4.
+**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26), 9.1 (Version 0.31.0, Pull Request #27, von Hand bereitgestellt am 23.10.2026). 9.2 (Version 0.31.1, Pull Request #28, geprüft am 23.10.2026). 9.3 (Version 0.31.2, Pull Request #29, geprüft am 23.10.2026). 9.4 (Version 0.31.3, Pull Request #30, geprüft am 23.10.2026). 9.5 (Version 0.31.4, Pull Request #31, geprüft am 23.10.2026). 9.5a (Anmerkungen) und 9.6 laufen zusammen mit Version 0.31.5, die Versionen danach verschieben sich nicht.
 
 ## 1. Ziel
 
@@ -221,6 +221,9 @@ Version: 0.31.5. Sheet und Skript bleiben unverändert.
 2. Rechnen in `team-rechnen.js` (mit `node` geprüft): je Woche (Montag bis Sonntag) die Kapazität jeder aktiven Person am Mittwoch (`kapazitaetAm`),
    die Zahl der fälligen offenen Hüte (Datum in der Woche) und die Aktionen (Aktionsdatum offener Projekte, externe Veranstaltungen). Hinweis „eng“, wenn die Hüte je Kapazitätspunkt
    deutlich über dem Mittel der gezeigten Wochen liegen (Regel im Pull Request nennen, leicht änderbar).
+   **Gebaut (0.31.5):** feste Regel statt Mittelwert (der Mittelwert schlug zu früh an, weil viele Wochen keine Hüte haben):
+   eng = mindestens 3 fällige Hüte und mehr als ein Hut je 4 Punkte Kraft. Fällige Hüte zählen mit und ohne Verantwortliche.
+   Die Hüte stehen in einem eigenen kleinen Bild unter dem Berg (eigene Skala, keine zwei Maßstäbe in einem Bild).
 3. Anzeige: **gestapelte Flächen, eine Schicht je Person** (Dicke = Kapazität, Frage D; Farben nach Frage F), Reihenfolge A–Z, Legende mit Namen.
    PC: 2 Wochen zurück, 10 voraus; Handy: 1 zurück, 6 voraus, ohne Seitwärts-Scrollen. Balken für fällige Hüte darunter, Linien für Aktionen (grün) und Heute (gestrichelt), Datum je Montag.
    Antippen einer Woche: Zeile darunter mit Woche, Summe, Personen mit Wert, Hüte, Aktionen. Für Bildschirmleser `role="img"` mit Beschreibung und „Zahlen zeigen“ (Liste).
