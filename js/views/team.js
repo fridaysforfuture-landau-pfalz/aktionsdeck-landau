@@ -11,6 +11,7 @@
 // Namen, fragt der Reiter, ob die Karte mit umbenannt werden soll.
 // Seit 9.5: Hüte je Person (offene ToDos, Meilensteine, Mobi-Beiträge mit dem Namen; Karte „5 Hüte · 2 Projekte“,
 // Liste im Detail), Abschnitt „Freie Hüte“ oben mit „Hut übernehmen“ (todos-hut.js), „Namen ohne Team-Karte“ unten.
+// Seit 9.6: Diagramm „Berg“ oben (js/views/team-berg.js), dafür werden auch die Veranstaltungen geladen.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -29,8 +30,9 @@ import { oeffneMobiAnsicht } from './mobi-todo.js';
 import {
   txt, istAktiv, rollenVon, sortiereRollen, kapazitaetText, angabeJetzt, angabeZustand, verlauf,
   sortierePersonen, passtSuche, passtRolle, istIch, darfBearbeiten, fuerJemandenEingetragen,
-  alleHuete, hueteVon, projekteAus, faelligKlasse, namenOhneKarte, freieHuete
+  alleHuete, hueteVon, projekteAus, faelligKlasse, namenOhneKarte, freieHuete, bergDaten
 } from './team-rechnen.js';
+import { baueBerg } from './team-berg.js';
 import { zeigeEintrag, umbenennen } from './team-eintrag.js';
 import { baueRollen, HINWEIS_ROLLEN } from './team-rollen.js';
 
@@ -94,8 +96,10 @@ export async function render(container, ctx) {
   if (ctx.detail) schliesseDetail(ctx.detail);
 
   const cacheKey = s.gruppe_id + ':team';
-  let daten = { personen: [], rollen: [], kapazitaet: [], todos: [], meilensteine: [], mobi: [], projekte: [] };
+  let daten = { personen: [], rollen: [], kapazitaet: [], todos: [], meilensteine: [], mobi: [], projekte: [], veranstaltungen: [] };
+  let bergWoche = -1;   // im Berg gewählte Woche (bleibt beim Neuladen)
   let huete = [];       // alle offenen Hüte mit Verantwortlichen (alleHuete), nach jedem Laden neu
+  let freiAlle = false; // Freie Hüte ganz zeigen (9.5a: sonst nur die ersten 5)
   let meta = null;
   let offline = false;
   let offeneId = '';   // Person, die gerade im Detail steht
@@ -107,6 +111,7 @@ export async function render(container, ctx) {
   });
   const rolleWahl = el('select', { class: 'feld', 'aria-label': 'Gruppen-Rolle' });
   const boxIch = el('div', { class: 'team-ich' });
+  const boxBerg = el('div');
   const boxFrei = el('div');
   const boxOhne = el('div');
   const basis = '#/g/' + encodeURIComponent(s.kurzname) + '/';
@@ -130,6 +135,7 @@ export async function render(container, ctx) {
     el('div', { class: 'filterzeile team-filter' }, suche, rolleWahl),
     status,
     boxIch,
+    boxBerg,
     boxFrei,
     boxListe,
     boxPause,
@@ -204,6 +210,7 @@ export async function render(container, ctx) {
 
   // Ein Hut als Zeile mit Link (ToDo ohne Projekt: Reiter ToDos; mit Projekt und Meilenstein: das Projekt;
   // Mobi-Beitrag: Reiter Mobi, gefiltert auf das Projekt)
+  const FREI_ANFANG = 5;
   const ART_SYMBOL = { todo: '✅', meilenstein: '🏁', mobi: '📣' };
   function hutZeile(h, heute) {
     const fk = faelligKlasse(h.datum, heute);
@@ -221,7 +228,8 @@ export async function render(container, ctx) {
     return el('li', null, a);
   }
 
-  // Abschnitt "Freie Hüte" oben: offene ToDos ohne Verantwortliche, höchstens 10
+  // Abschnitt "Freie Hüte" oben: offene ToDos ohne Verantwortliche. Die ersten 5, der Rest über
+  // „▸ Alle anzeigen“ (9.5a, Wunsch der Person)
   function zeichneFrei(heute) {
     leeren(boxFrei);
     const frei = freieHuete(daten.todos, daten.projekte);
@@ -234,7 +242,7 @@ export async function render(container, ctx) {
     boxFrei.append(el('section', { class: 'karte team-frei' },
       el('h2', { text: '🎩 Freie Hüte (' + frei.length + ')' }),
       el('p', { class: 'leise', text: 'Aufgaben, für die noch jemand gesucht wird.' }),
-      el('ul', { class: 'team-hut-liste' }, ...frei.slice(0, 10).map(function (t) {
+      el('ul', { class: 'team-hut-liste' }, ...frei.slice(0, freiAlle ? frei.length : FREI_ANFANG).map(function (t) {
         const li = hutZeile({ art: 'todo', titel: txt(t.text), datum: normDatum(t.faellig_am), projekt_id: txt(t.projekt_id) }, heute);
         li.append(huetKnoepfe({
           ctx: ctx, token: s.token, t: t, personen: namen,
@@ -242,9 +250,35 @@ export async function render(container, ctx) {
         }));
         return li;
       })),
-      frei.length > 10 ? el('p', { class: 'leise', text: '… und ' + (frei.length - 10) + ' weitere.' }) : null,
+      frei.length > FREI_ANFANG ? el('button', {
+        class: 'dash-schalter', type: 'button', 'aria-expanded': String(freiAlle),
+        onclick: function () { freiAlle = !freiAlle; zeichneFrei(heuteIso()); }
+      },
+        el('span', { class: 'teil-pfeil' + (freiAlle ? ' auf' : ''), 'aria-hidden': 'true', text: '▸' }),
+        el('span', { text: freiAlle ? 'Weniger anzeigen' : 'Alle anzeigen (' + frei.length + ')' })
+      ) : null,
       el('a', { class: 'knopf knopf-hell', href: basis + 'todos', text: 'Alle im Reiter ToDos →' })
     ));
+  }
+
+  // Berg (9.6): am PC 2 Wochen zurück und 10 voraus, am Handy 1 zurück und 6 voraus
+  function zeichneBerg(heute) {
+    leeren(boxBerg);
+    if (!daten.personen.length) return;
+    const handy = window.matchMedia('(max-width: 599px)').matches;
+    const berg = bergDaten(Object.assign({}, daten, { huete: alleHuete(daten, true) }), heute, handy ? 1 : 2, handy ? 6 : 10);
+    const box = el('section', { class: 'karte team-berg-karte' }, el('h2', { text: '⛰️ Berg: Kraft der Gruppe' }));
+    if (berg.mitWert < 2) {
+      box.append(el('p', { class: 'leise', text: 'Der Berg erscheint, sobald mindestens zwei Personen ihre Kapazität eingetragen haben.' }));
+    } else {
+      box.append(
+        el('p', { class: 'leise', text: 'Jede Schicht ist eine Person, so dick wie ihre Kapazität. Die Höhe ist die Kraft der ganzen Gruppe. Tippe auf eine Woche für die Zahlen.' }),
+        baueBerg(berg, { handy: handy, heute: heute, gewaehlt: bergWoche, beiWahl: function (i) { bergWoche = i; } }),
+        el('p', { class: 'leise', text: 'Berg aus ' + berg.mitWert + ' von ' + berg.aktive + (berg.aktive === 1 ? ' Person' : ' Personen') +
+          '. Abgelaufene Angaben und Pausierte zählen nicht.' })
+      );
+    }
+    boxBerg.append(box);
   }
 
   // Unten: Namen, die in Hüten stehen, aber keine Team-Karte haben (zum Beispiel Tippfehler)
@@ -270,6 +304,7 @@ export async function render(container, ctx) {
     leeren(boxIch);
     leeren(boxListe);
     leeren(boxPause);
+    zeichneBerg(heute);
     zeichneFrei(heute);
     zeichneOhne();
 
@@ -323,7 +358,7 @@ export async function render(container, ctx) {
     }
     inhalt.append(marken);
     if (darfBearbeiten(p, getName(), daten.personen)) {
-      inhalt.append(el('div', { class: 'form-knoepfe' },
+      inhalt.append(el('div', { class: 'form-knoepfe team-detail-knoepfe' },
         el('button', {
           class: 'knopf', type: 'button',
           text: istIch(p, getName()) ? 'Bearbeiten und Kapazität eintragen' : 'Bearbeiten',
@@ -482,7 +517,7 @@ export async function render(container, ctx) {
   // ---- Laden ----
 
   function zeigen(neu, m) {
-    ['personen', 'rollen', 'kapazitaet', 'todos', 'meilensteine', 'mobi', 'projekte'].forEach(function (k) { if (!neu[k]) neu[k] = []; });
+    ['personen', 'rollen', 'kapazitaet', 'todos', 'meilensteine', 'mobi', 'projekte', 'veranstaltungen'].forEach(function (k) { if (!neu[k]) neu[k] = []; });
     daten = neu;
     huete = alleHuete(daten);
     meta = m;
@@ -505,12 +540,13 @@ export async function render(container, ctx) {
         cacheKey,
         async function () {
           const r = await api('listMehrere', {
-            tabellen: ['Personen', 'Gruppen_Rollen', 'Kapazitaet', 'ToDos', 'Meilensteine', 'Mobi_Plan', 'Projekte']
+            tabellen: ['Personen', 'Gruppen_Rollen', 'Kapazitaet', 'ToDos', 'Meilensteine', 'Mobi_Plan', 'Projekte', 'Veranstaltungen']
           }, s.token);
           const t = (r && r.tabellen) || {};
           return {
             personen: t.Personen || [], rollen: t.Gruppen_Rollen || [], kapazitaet: t.Kapazitaet || [],
-            todos: t.ToDos || [], meilensteine: t.Meilensteine || [], mobi: t.Mobi_Plan || [], projekte: t.Projekte || []
+            todos: t.ToDos || [], meilensteine: t.Meilensteine || [], mobi: t.Mobi_Plan || [], projekte: t.Projekte || [],
+            veranstaltungen: t.Veranstaltungen || []
           };
         },
         zeigen,

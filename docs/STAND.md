@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.31.4 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.5 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 0.31.0). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
@@ -193,7 +193,13 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Abschnitt "🎩 Freie Hüte (n)" oben (nur wenn es welche gibt): offene ToDos ohne Verantwortliche, nächste Frist zuerst, höchstens 10, Knopf "Hut übernehmen" aus todos-hut.js, "Alle im Reiter ToDos →".
   - Unten "Namen in Hüten ohne Team-Karte: Name (Zahl)" (namenOhneKarte), damit Tippfehler auffallen.
   - "Für jemanden eingetragen" (fuerJemandenEingetragen): nur noch, wenn erstellt_von nicht der Name ist UND die eintragende Person selbst eine andere Karte hat. Nach dem Umbenennen der eigenen Karte ist sie damit nicht mehr für alle bearbeitbar.
-- Nächster Schritt: 9.6 Diagramm "Berg" (0.31.5).
+- 9.5 geprüft (23.10.2026): alles da. Zwei Anmerkungen, umgesetzt in 0.31.5 (9.5a): Freie Hüte zeigen die ersten 5, der Rest über "▸ Alle anzeigen (n)"; im Detail am Handy überlappten die Marken "Du"/"Dabei", der Knopf "Bearbeiten …" und "Kapazität" (jetzt Abstände, Knopftext bricht um, geprüft bis 320 px).
+- 9.6 (0.31.5, zusammen mit 9.5a): Diagramm "Berg" oben im Reiter Team. Neue Datei js/views/team-berg.js (baueBerg), Rechnung bergDaten in team-rechnen.js. Der Reiter lädt dafür auch Veranstaltungen (8 Tabellen).
+  - Gestapelte Flächen, eine Schicht je aktiver Person mit Angabe (Dicke = Kapazität am Mittwoch der Woche), Farben fest nach Namen A–Z (BERG_FARBEN, 8 Farben, geprüft auf Farbsehschwächen; ab der 9. Person wiederholen sie sich). Höhe = Kraft der Gruppe. Pausierte und abgelaufene Angaben zählen nicht.
+  - Darunter eigenes kleines Bild "Fällige Hüte je Woche" (mit und ohne Verantwortliche; eigene Skala, keine zwei Maßstäbe in einem Bild). Orange = eng: mindestens 3 Hüte und mehr als ein Hut je 4 Punkte Kraft (ENG_MIN_HUETE, ENG_PUNKTE_JE_HUT).
+  - Linien: Aktion (grün; Aktionsdatum aktiver Projekte, externe Veranstaltungen), Heute (gestrichelt). PC: 2 Wochen zurück, 10 voraus; Handy (unter 600 px): 1 zurück, 6 voraus, Datum jede zweite Woche.
+  - Antippen/Zeigen einer Woche: Zeile darunter (Woche, Kraft mit Werten je Person, Hüte, Aktionen, "⚠ Hier wird es eng"). Legende mit Namen, "Zahlen zeigen" als Tabelle. Unter 2 Personen mit Angabe: Satz statt Bild.
+- Nächster Schritt: 9.7 Verknüpfungen (Namensvorschläge, Projekt-Teil Team, Start-Zeile, Was ist neu), 0.31.6.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -287,7 +293,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
-- js/views/: team, team-rechnen (seit 0.31.1), team-rollen (seit 0.31.2), team-eintrag (seit 0.31.3), gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
+- js/views/: team, team-rechnen (seit 0.31.1), team-rollen (seit 0.31.2), team-eintrag (seit 0.31.3), team-berg (seit 0.31.5), gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
 - Noch nicht vorhanden: Wiki. Reiter Team seit 0.31.1 (nur lesen). Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
 
 ## Hinweise
