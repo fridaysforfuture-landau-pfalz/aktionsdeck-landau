@@ -331,7 +331,7 @@ export function montagVon(tag) {
 
 // Wochen von "vorher" Wochen vor der aktuellen bis "nachher" Wochen danach.
 // Je Woche: Kapazität jeder aktiven Person am Mittwoch, Summe, Zahl der Personen mit Wert,
-// fällige offene Hüte (Datum in der Woche, mit und ohne Verantwortliche), Aktionen.
+// fällige Hüte mit Verantwortlichen (huete) und fällige offene Aufgaben ohne (frei), Aktionen. „Eng“ zählt nur die Hüte (9.6a).
 // d: { personen, kapazitaet, huete (alleHuete(daten, true)), projekte, veranstaltungen }
 // Ergebnis: { wochen: [...], personen: [{ id, name, farbe, hatWert }], mitWert, aktive }
 export function bergDaten(d, heute, vorher, nachher) {
@@ -367,7 +367,9 @@ export function bergDaten(d, heute, vorher, nachher) {
     wochen.push({
       montag: montag, sonntag: sonntag, werte: werte, summe: summe,
       personen: werte.filter(function (x) { return x > 0; }).length,
-      huete: (d.huete || []).filter(function (h) { return h.datum && h.datum >= montag && h.datum <= sonntag; }).length,
+      // huete = fällige Hüte mit Verantwortlichen (zählen für „eng“), frei = fällige offene Aufgaben ohne (9.6a)
+      huete: (d.huete || []).filter(function (h) { return h.namen.length > 0 && h.datum >= montag && h.datum <= sonntag; }).length,
+      frei: (d.huete || []).filter(function (h) { return !h.namen.length && h.datum && h.datum >= montag && h.datum <= sonntag; }).length,
       aktionen: aktionen.filter(function (a) { return a.datum >= montag && a.datum <= sonntag; }),
       eng: false,
       aktuell: heute >= montag && heute <= sonntag

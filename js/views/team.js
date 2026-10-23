@@ -12,6 +12,8 @@
 // Seit 9.5: Hüte je Person (offene ToDos, Meilensteine, Mobi-Beiträge mit dem Namen; Karte „5 Hüte · 2 Projekte“,
 // Liste im Detail), Abschnitt „Freie Hüte“ oben mit „Hut übernehmen“ (todos-hut.js), „Namen ohne Team-Karte“ unten.
 // Seit 9.6: Diagramm „Berg“ oben (js/views/team-berg.js), dafür werden auch die Veranstaltungen geladen.
+// Seit 9.7: Adressen #/g/<kurz>/team/<person-id> (öffnet die Karte) und team/ich (eigene Karte zum Bearbeiten,
+// vom Start). Die geladenen Personen, Rollen und Kapazitäten gehen an team-namen.js (Vorschläge in anderen Reitern).
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -33,6 +35,7 @@ import {
   alleHuete, hueteVon, projekteAus, faelligKlasse, namenOhneKarte, freieHuete, bergDaten
 } from './team-rechnen.js';
 import { baueBerg } from './team-berg.js';
+import { setzeTeamKlein } from './team-namen.js';
 import { zeigeEintrag, umbenennen } from './team-eintrag.js';
 import { baueRollen, HINWEIS_ROLLEN } from './team-rollen.js';
 
@@ -210,7 +213,7 @@ export async function render(container, ctx) {
 
   // Ein Hut als Zeile mit Link (ToDo ohne Projekt: Reiter ToDos; mit Projekt und Meilenstein: das Projekt;
   // Mobi-Beitrag: Reiter Mobi, gefiltert auf das Projekt)
-  const FREI_ANFANG = 5;
+  const FREI_ANFANG = 3;   // 9.6a: Wunsch der Person (vorher 5)
   const ART_SYMBOL = { todo: '✅', meilenstein: '🏁', mobi: '📣' };
   function hutZeile(h, heute) {
     const fk = faelligKlasse(h.datum, heute);
@@ -228,8 +231,8 @@ export async function render(container, ctx) {
     return el('li', null, a);
   }
 
-  // Abschnitt "Freie Hüte" oben: offene ToDos ohne Verantwortliche. Die ersten 5, der Rest über
-  // „▸ Alle anzeigen“ (9.5a, Wunsch der Person)
+  // Abschnitt "Freie Hüte" oben: offene ToDos ohne Verantwortliche. Die ersten 3, der Rest über
+  // „▸ Alle anzeigen“ (9.5a, Wunsch der Person; seit 9.6a die ersten 3)
   function zeichneFrei(heute) {
     leeren(boxFrei);
     const frei = freieHuete(daten.todos, daten.projekte);
@@ -520,6 +523,7 @@ export async function render(container, ctx) {
     ['personen', 'rollen', 'kapazitaet', 'todos', 'meilensteine', 'mobi', 'projekte', 'veranstaltungen'].forEach(function (k) { if (!neu[k]) neu[k] = []; });
     daten = neu;
     huete = alleHuete(daten);
+    setzeTeamKlein(s.gruppe_id, daten);
     meta = m;
     offline = false;
     rollenAufbauen();
@@ -564,4 +568,16 @@ export async function render(container, ctx) {
   rolleWahl.addEventListener('change', zeichne);
   ctx.setzeRefresh(function () { return laden(false); });
   await laden(true);
+
+  // Unterpunkt aus der Adresse (9.7): team/ich = eigene Karte bearbeiten, team/<id> = Karte öffnen.
+  // Danach steht wieder #/g/<kurz>/team in der Adresszeile.
+  if (ctx.unter) {
+    const ziel = ctx.unter === 'ich'
+      ? daten.personen.find(function (p) { return istIch(p, getName()); })
+      : findePerson(ctx.unter);
+    try { history.replaceState(history.state, '', '#/g/' + encodeURIComponent(s.kurzname) + '/team'); } catch (e) { /* ignorieren */ }
+    if (ziel && ctx.unter === 'ich') bearbeite(ziel);
+    else if (ziel) oeffne(ziel);
+    else if (ctx.unter !== 'ich') toast('Diese Person ist nicht mehr im Team.');
+  }
 }

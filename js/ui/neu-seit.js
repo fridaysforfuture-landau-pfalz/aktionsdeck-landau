@@ -3,6 +3,7 @@
 // gegliedert in Umfragen, Mitteilungen, Veranstaltungen, Kommentare, Mobi (Beiträge zu Veranstaltungen),
 // Projekte (mit Meilensteinen, ToDos und Mobi-Beiträgen) und ToDos ohne Projekt.
 // Seit 8.7 auch Protokolle und Reden (Abschnitt „Dokumentation“, mit Projekt beim Projekt).
+// Seit 9.7 neue Personen im Team (Abschnitt „Team“, nur „neu im Team“).
 // Der Zeitpunkt des letzten Besuchs liegt im Gerät (store.js), pro Gruppe.
 
 import { el } from './dom.js';
@@ -30,7 +31,7 @@ export async function holeNeu(token, gruppeId, kurzname) {
   const seit = alt || new Date().toISOString();
   const r = await api('listMehrere', {
     tabellen: ['ToDos', 'Meilensteine', 'Mitteilungen', 'Umfragen', 'Kommentare', 'Projekte', 'Veranstaltungen', 'Mobi_Plan',
-      'Protokolle', 'Reden'],
+      'Protokolle', 'Reden', 'Personen'],
     seit: seit
   }, token);
   const stand = (r && r.serverzeit) || new Date().toISOString();
@@ -176,6 +177,12 @@ export async function holeNeu(token, gruppeId, kurzname) {
     };
   });
 
+  // Team (9.7): nur „Neu im Team“, keine Änderungen an Kapazität oder Rollen
+  sammeln(t.Personen, 'team', function (z, neu) {
+    if (!neu) return null;
+    return { art: 'Team', was: 'neu im Team', titel: '👥 ' + kurz(z.name, 60), link: basis + 'team/' + encodeURIComponent(z.id) };
+  });
+
   items.sort(function (a, b) { return String(b.zeit).localeCompare(String(a.zeit)); });
   return { items: items.slice(0, 100), stand: stand };
 }
@@ -228,6 +235,7 @@ export function zeigeNeu(items, beiZu) {
     abschnitt(titelText('Kommentare'), von('kommentar'));
     abschnitt(titelText('Mobi'), von('mobi'));
     abschnitt(titelText('Dokumentation'), von('doku'));
+    abschnitt(titelText('Team'), von('team'));
 
     // Projekte: je Projekt eine Überschrift, darunter Projekt, Meilensteine und ToDos
     const gruppen = [];

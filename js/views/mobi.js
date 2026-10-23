@@ -29,6 +29,7 @@ import { baueSpalten, baueKachelFlaeche } from './mobi-kachel.js';
 import { zeigeSammlung } from './mobi-sammlung.js';
 import { nimmMobiVorgabe } from './mobi-todo.js';
 import { baueZeitstrahl } from './mobi-zeitstrahl.js';
+import { namenMitRollen, ladeTeamKlein } from './team-namen.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = { token: '', ansicht: 'liste' };
@@ -39,6 +40,7 @@ function txt(v) {
 
 export async function render(container, ctx) {
   const s = ctx.session;
+  ladeTeamKlein(s);   // Team-Namen für die Vorschläge bei „Verantwortlich“ (9.7)
   leeren(container);
 
   if (merk.token !== s.token) merk = { token: s.token, ansicht: 'liste' };
@@ -433,7 +435,7 @@ export async function render(container, ctx) {
       { name: 'verantwortlich', label: 'Verantwortliche setzen (leer = nicht ändern)', typ: 'text' }
     ], {}, {
       speichernText: ids.length === 1 ? '1 Beitrag ändern' : ids.length + ' Beiträge ändern',
-      vorschlaege: { verantwortlich: personen() },
+      vorschlaege: { verantwortlich: namenMitRollen(personen()) },
       onSpeichern: async function (d) {
         const neu = {};
         if (d.status) neu.status = d.status;

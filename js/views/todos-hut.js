@@ -12,6 +12,7 @@ import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { getName } from '../store.js';
 import { istWahr } from '../schema.js';
+import { namenMitRollen } from './team-namen.js';
 
 export function istOffenerHut(t) {
   return !istWahr(t.erledigt) && !String(t.verantwortlich || '').trim();
@@ -45,7 +46,7 @@ function weitergeben(o) {
     { person: '' },
     {
       speichernText: 'Weitergeben',
-      vorschlaege: { person: o.personen ? o.personen() : [] },
+      vorschlaege: { person: namenMitRollen(o.personen ? o.personen() : []) },
       onSpeichern: function (d) {
         fenster.schliessen();
         setzen(o, d.person, d.person ? 'Hut an ' + d.person + ' gegeben.' : 'Hut ist jetzt frei.');

@@ -2,7 +2,8 @@
 // Diagramm „Berg“ im Reiter Team (Etappe 9, Schritt 9.6). SVG, ohne Bibliothek, Texte nur mit textContent.
 // Oben: gestapelte Flächen, eine Schicht je aktiver Person (Dicke = Kapazität, Farben nach Namen A–Z),
 // die Höhe ist die Summe der Gruppe. Darunter ein eigenes kleines Bild mit eigener Skala: fällige Hüte je Woche
-// (keine zwei Maßstäbe in einem Bild). Linien für Aktionen (grün) und Heute (gestrichelt).
+// (keine zwei Maßstäbe in einem Bild). Seit 9.6a ein Balken aus zwei Teilen: unten offene Aufgaben ohne
+// Verantwortliche (blau), oben Hüte mit Verantwortlichen (grau, orange wenn eng). Linien für Aktionen (grün) und Heute (gestrichelt).
 // Antippen oder Zeigen auf eine Woche: Zeile darunter mit Woche, Summe, Werten je Person, Hüten, Aktionen.
 // Für Bildschirmleser role="img" mit Beschreibung und „Zahlen zeigen“ (Tabelle).
 //
@@ -39,7 +40,8 @@ function infoText(berg, w) {
   const teile = ['Woche ' + wochenText(w) + ': Kraft ' + w.summe];
   const namen = berg.personen.map(function (p, i) { return w.werte[i] ? p.name + ' ' + w.werte[i] : ''; }).filter(Boolean);
   teile.push(namen.length ? '(' + namen.join(', ') + ')' : '(keine Angaben)');
-  const rest = [w.huete + (w.huete === 1 ? ' Hut fällig' : ' Hüte fällig')];
+  const rest = [w.huete + (w.huete === 1 ? ' Hut fällig' : ' Hüte fällig') +
+    (w.frei ? ' (+ ' + w.frei + ' offene ' + (w.frei === 1 ? 'Aufgabe' : 'Aufgaben') + ' ohne Verantwortliche)' : '')];
   if (w.aktionen.length) rest.push('Aktion: ' + w.aktionen.map(function (a) { return a.titel + ' (' + kurz(a.datum) + ')'; }).join(', '));
   if (w.eng) rest.push('⚠ Hier wird es eng');
   return teile.join(' ') + ' · ' + rest.join(' · ');
@@ -68,7 +70,7 @@ export function baueBerg(berg, opt) {
   const maxSumme = Math.max(10, ...wochen.map(function (w) { return w.summe; }));
   const yMax = Math.ceil(maxSumme / 10) * 10;   // glatte Skala: 0, Hälfte, Höchstwert
   const y1 = function (v) { return y1u - v / yMax * H1; };
-  const maxHuete = Math.max(1, ...wochen.map(function (w) { return w.huete; }));
+  const maxHuete = Math.max(1, ...wochen.map(function (w) { return w.huete + w.frei; }));
   const y2 = function (v) { return y2u - v / maxHuete * H2; };
 
   const bild = svg('svg', {
@@ -112,13 +114,24 @@ export function baueBerg(berg, opt) {
   // Zweites Bild: fällige Hüte je Woche
   bild.append(svg('text', { x: L, y: y2o - 6, class: 'berg-titel', text: 'Fällige Hüte je Woche' }));
   wochen.forEach(function (w, i) {
-    if (!w.huete) return;
+    const ganz = w.huete + w.frei;
+    if (!ganz) return;
     const x = xMitte(i) - breit * 0.3;
-    bild.append(svg('rect', {
-      x: x, y: y2(w.huete), width: breit * 0.6, height: y2u - y2(w.huete), rx: 2,
-      class: 'berg-hut' + (w.eng ? ' berg-eng' : '')
+    // unten: offene Aufgaben ohne Verantwortliche
+    if (w.frei) {
+      bild.append(svg('rect', { x: x, y: y2(w.frei), width: breit * 0.6, height: y2u - y2(w.frei), rx: 2, class: 'berg-frei' }));
+    }
+    // darüber: Hüte mit Verantwortlichen (weiße Kante trennt die beiden Teile)
+    if (w.huete) {
+      bild.append(svg('rect', {
+        x: x, y: y2(ganz), width: breit * 0.6, height: y2(w.frei) - y2(ganz), rx: 2,
+        class: 'berg-hut' + (w.eng ? ' berg-eng' : '')
+      }));
+    }
+    bild.append(svg('text', {
+      x: xMitte(i), y: y2(ganz) - 3, class: 'berg-skala', 'text-anchor': 'middle',
+      text: String(w.huete) + (w.frei ? '+' + w.frei : '')
     }));
-    bild.append(svg('text', { x: xMitte(i), y: y2(w.huete) - 3, class: 'berg-skala', 'text-anchor': 'middle', text: String(w.huete) }));
   });
   bild.append(svg('line', { x1: L, x2: B - R, y1: y2u, y2: y2u, class: 'berg-achse' }));
 
@@ -161,6 +174,8 @@ export function baueBerg(berg, opt) {
     }),
     el('span', { class: 'berg-eintrag' }, el('span', { class: 'berg-strich-aktion', 'aria-hidden': 'true' }), el('span', { text: 'Aktion' })),
     el('span', { class: 'berg-eintrag' }, el('span', { class: 'berg-strich-heute', 'aria-hidden': 'true' }), el('span', { text: 'Heute' })),
+    el('span', { class: 'berg-eintrag' }, el('span', { class: 'berg-punkt berg-punkt-hut', 'aria-hidden': 'true' }), el('span', { text: 'Hüte mit Verantwortlichen' })),
+    el('span', { class: 'berg-eintrag' }, el('span', { class: 'berg-punkt berg-punkt-frei', 'aria-hidden': 'true' }), el('span', { text: 'offene Aufgaben (+)' })),
     el('span', { class: 'berg-eintrag' }, el('span', { class: 'berg-punkt berg-punkt-eng', 'aria-hidden': 'true' }), el('span', { text: '⚠ eng: viele Hüte für wenig Kraft' }))
   );
 
@@ -174,7 +189,7 @@ export function baueBerg(berg, opt) {
         el('td', { text: wochenText(w) + (w.aktuell ? ' (jetzt)' : '') }),
         el('td', { text: String(w.summe) + (w.summe ? ' · ' + kapazitaetText(Math.round(w.summe / Math.max(1, w.personen))) + ' je Person' : '') }),
         el('td', { text: berg.personen.map(function (p, i) { return w.werte[i] ? p.name + ' ' + w.werte[i] : ''; }).filter(Boolean).join(', ') || '–' }),
-        el('td', { text: String(w.huete) + (w.eng ? ' ⚠ eng' : '') }),
+        el('td', { text: String(w.huete) + (w.frei ? ' (+' + w.frei + ' offen)' : '') + (w.eng ? ' ⚠ eng' : '') }),
         el('td', { text: w.aktionen.map(function (a) { return a.titel; }).join(', ') || '–' })
       );
     }))

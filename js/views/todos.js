@@ -24,6 +24,7 @@ import {
   zahlenText, istArchiv, sortiereErledigte, kommentarZahlen, kommentarMarke
 } from './todos-rechnen.js';
 import { sammelTodos, istSammel, sammelInfo, sammelPasstWer, oeffneSammel } from './mobi-todo.js';
+import { namenMitRollen, ladeTeamKlein } from './team-namen.js';
 
 // Projekt-Titel nach ID (wird beim Laden gefüllt)
 let projektTitel = {};
@@ -83,6 +84,7 @@ function paare(liste) {
 
 export async function render(container, ctx) {
   const s = ctx.session;
+  ladeTeamKlein(s);   // Team-Namen für die Vorschläge bei „Verantwortlich“ (9.7)
   leeren(container);
 
   let daten = { todos: [], projekte: [], kommentare: [], mobi: [] };
@@ -318,7 +320,7 @@ export async function render(container, ctx) {
     const neuAnlegen = !t;
     const form = baueFormular(SCHEMA.ToDos.felder, t || { prioritaet: 'normal' }, {
       speichernText: neuAnlegen ? 'Anlegen' : 'Speichern',
-      vorschlaege: { verantwortlich: verantwortlicheVorschlaege() },
+      vorschlaege: { verantwortlich: namenMitRollen(verantwortlicheVorschlaege()) },
       onSpeichern: function (d) { return speichern(formTodo, d); },
       onAbbrechen: function () { formSchliessen(t); }
     });
