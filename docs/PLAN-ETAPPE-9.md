@@ -3,11 +3,12 @@
 Diese Datei ergänzt `docs/STAND.md`. Bei Widerspruch gilt `docs/STAND.md`, und du meldest den Widerspruch im Pull Request.
 Regeln für die Arbeit stehen in `CLAUDE.md`.
 
-**Status: fertig gebaut mit 9.8 (Version 0.31.7).** Abschluss nach der Prüfung von 9.6a, 9.7 und 9.8 durch die Person.
+**Status: abgeschlossen (23.10.2026).** Alle Schritte von 9.0 bis 9.8 sind gebaut und von der Person geprüft. Die echten Versionen stehen unten unter „Erledigt“ und in Abschnitt 8. Bei Widerspruch gilt `docs/STAND.md`.
+Frühere Status-Zeile: fertig gebaut mit 9.8 (Version 0.31.7), Abschluss nach der Prüfung.
 Frühere Status-Zeile: **Fassung 2.** Die Person hat die 20 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 4).
 Fassung 2 (eigentlich Schritt 9.0a) kommt im selben Pull Request wie Schritt 9.1, damit Plan und Skript zusammenpassen.
 Die kleinen Fragen A bis F (Abschnitt 4) sind am 23.10.2026 beantwortet.
-**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26), 9.1 (Version 0.31.0, Pull Request #27, von Hand bereitgestellt am 23.10.2026). 9.2 (Version 0.31.1, Pull Request #28, geprüft am 23.10.2026). 9.3 (Version 0.31.2, Pull Request #29, geprüft am 23.10.2026). 9.4 (Version 0.31.3, Pull Request #30, geprüft am 23.10.2026). 9.5 (Version 0.31.4, Pull Request #31, geprüft am 23.10.2026). 9.5a (Anmerkungen) und 9.6 (Version 0.31.5, Pull Request #32, geprüft am 23.10.2026). 9.6a (Anmerkungen) und 9.7 (Version 0.31.6, Pull Request #33, angenommen; Rückfrage beantwortet: das Team bleibt freiwillig). 9.8 (Version 0.31.7): Hilfe zum Team.
+**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26), 9.1 (Version 0.31.0, Pull Request #27, von Hand bereitgestellt am 23.10.2026). 9.2 (Version 0.31.1, Pull Request #28, geprüft am 23.10.2026). 9.3 (Version 0.31.2, Pull Request #29, geprüft am 23.10.2026). 9.4 (Version 0.31.3, Pull Request #30, geprüft am 23.10.2026). 9.5 (Version 0.31.4, Pull Request #31, geprüft am 23.10.2026). 9.5a (Anmerkungen) und 9.6 (Version 0.31.5, Pull Request #32, geprüft am 23.10.2026). 9.6a (Anmerkungen) und 9.7 (Version 0.31.6, Pull Request #33, angenommen; Rückfrage beantwortet: das Team bleibt freiwillig). 9.8 (Version 0.31.7, Pull Request #34, geprüft am 23.10.2026): Hilfe zum Team. 9.6a und 9.7 geprüft am 23.10.2026. Abschluss der Doku: Version 0.31.8.
 
 ## 1. Ziel
 
@@ -285,6 +286,20 @@ Version: 0.31.7. Sheet und Skript bleiben unverändert.
 | 9.8 | Hilfe, Feinschliff, Abschluss | 0.31.7 | nein |
 
 Die Versionen in dieser Tabelle sind die geplanten. Nachbesserungen zählen die Version hoch (auch in einem offenen Pull Request), dann verschieben sich die folgenden Nummern.
-Die echten Versionen stehen oben unter „Erledigt“.
+
+**Echte Versionen und Pull Requests:**
+
+| Schritt | Inhalt | Version | Pull Request |
+|---|---|---|---|
+| 9.0 | Plan Fassung 1 | 0.30.15 | #26 |
+| 9.1 | Plan Fassung 2, Sheet und Skript (von Hand bereitgestellt) | 0.31.0 | #27 |
+| 9.2 | Reiter Team lesen | 0.31.1 | #28 |
+| 9.3 | Gruppen-Rollen bearbeiten (Vorschläge statt Knopf „Standard-Rollen übernehmen“) | 0.31.2 | #29 |
+| 9.4 | Mein Eintrag | 0.31.3 | #30 |
+| 9.5 | Hüte je Person, freie Hüte | 0.31.4 | #31 |
+| 9.5a + 9.6 | Anmerkungen (freie Hüte 5, Detail am Handy) und Berg | 0.31.5 | #32 |
+| 9.6a + 9.7 | Anmerkungen (Hüte-Balken in zwei Teilen, „eng“ nur mit Verantwortlichen, freie Hüte 3) und Verknüpfungen | 0.31.6 | #33 |
+| 9.8 | Hilfe zum Team | 0.31.7 | #34 |
+| Abschluss | Doku (STAND, Plan, CLAUDE.md) | 0.31.8 | – |
 
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt. Die Anmerkungen kommen in den nächsten Pull Request, vor dem nächsten Schritt.
