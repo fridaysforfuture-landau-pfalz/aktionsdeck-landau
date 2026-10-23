@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.31.1 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.2 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 0.31.0). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
@@ -173,7 +173,12 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - js/views/team.js: lädt Personen, Gruppen_Rollen, Kapazitaet (Zwischenspeicher gruppe_id:team, Aktualisierung wie die anderen Reiter). Karten: Name (Marke "Du"), Gruppen-Rollen als Chips (gewählte fett mit "gewählt"), Kapazität als 10 Kästchen mit Zahl und Satz ("gilt bis", grau "Abgelaufen seit … (war n)", "Ab TT.MM.: n" für spätere Angaben), Notiz. Eigene Karte zuerst (grüner Rand links), dann A–Z, Pausierte im Aufklapper unten. Suche (Name, Rolle, Notiz), Filter Rolle (nur benutzte Rollen; ohne Rollen ausgeblendet). Ohne eigene Karte: Hinweis "Du bist noch nicht im Team" (Eintragen kommt in 9.4). Leeres Team: freundlicher Text.
   - Detail (PC rechts, Handy Vollbild): Marken Du/Dabei/Pause, Rollen mit Beschreibung und dem Hinweis "Eine Gruppen-Rolle heißt nicht …", Kapazität, Verlauf der letzten 6 Monate (gilt jetzt, kommt noch, von neuerer Angabe ersetzt, abgelaufen; mit Notiz), Notiz, "Im Team seit …, eingetragen von …".
   - js/views/team-rechnen.js: rollenVon, sortiereRollen, istIch, istAktiv, namenAus, kapazitaetAm (die zuletzt angelegte Angabe, die den Tag abdeckt), angabeJetzt, angabeZustand, verlauf, kapazitaetText, sortierePersonen, passtSuche, passtRolle.
-- Nächster Schritt: 9.3 Gruppen-Rollen bearbeiten (0.31.2).
+- 9.2 geprüft (23.10.2026): alles da. Rückfrage beantwortet: Rollennamen als Vorschläge im Formular "+ Rolle" sind in Ordnung.
+- 9.3 (0.31.2): Gruppen-Rollen bearbeiten. Neue Datei js/views/team-rollen.js (baueRollen, STANDARD_ROLLEN, vorschlaegeFuer, HINWEIS_ROLLEN).
+  - Aufklapper "Gruppen-Rollen (n)" unten im Reiter Team (offen, solange es keine Rollen gibt). Je Rolle: Name, Marke "gewählt", Beschreibung, "Haben: Namen" bzw. "Noch niemand", Knopf "Bearbeiten". Darüber der Hinweis "Eine Gruppen-Rolle heißt nicht …". Knopf "+ Rolle".
+  - Fenster "Neue Gruppen-Rolle" / "Rolle bearbeiten" (Name höchstens 40 Zeichen, Beschreibung, Fest gewählt, Reihenfolge; Konfliktprüfung). Beim Anlegen stehen die Standard-Rollen der Gruppe, die es noch nicht gibt, als Vorschläge zum Antippen darüber (FFF 12, GP 4 mit Beschreibung, KB keine). Bundes-Deli 1 und 2 setzen "gewählt".
+  - "Löschen" im Fenster mit Rückfrage, die die Personen mit der Rolle nennt. Das Skript trägt die Rolle bei ihnen aus.
+- Nächster Schritt: 9.4 Mein Eintrag (eintragen, Rollen wählen, Kapazität, Pause, Austragen, Umbenennen), 0.31.3.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -267,7 +272,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
-- js/views/: team, team-rechnen (seit 0.31.1), gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
+- js/views/: team, team-rechnen (seit 0.31.1), team-rollen (seit 0.31.2), gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
 - Noch nicht vorhanden: Wiki. Reiter Team seit 0.31.1 (nur lesen). Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
 
 ## Hinweise

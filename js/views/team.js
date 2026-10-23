@@ -5,7 +5,8 @@
 // Pausierte als Aufklapper unten. Suche (Name, Rolle, Notiz) und Filter Rolle.
 // Klick öffnet die Person im Detailbereich (PC rechts, Handy Vollbild): Rollen mit Beschreibung,
 // Kapazität, Verlauf der letzten 6 Monate.
-// Eintragen und Bearbeiten kommen mit 9.4, die Rollen-Liste bearbeiten mit 9.3.
+// Seit 9.3: Aufklapper „Gruppen-Rollen“ unten zum Bearbeiten der Rollen-Liste (js/views/team-rollen.js).
+// Eintragen und Bearbeiten der eigenen Karte kommen mit 9.4.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -19,8 +20,7 @@ import {
   txt, istAktiv, rollenVon, sortiereRollen, kapazitaetText, angabeJetzt, angabeZustand, verlauf,
   sortierePersonen, passtSuche, passtRolle
 } from './team-rechnen.js';
-
-const HINWEIS_ROLLEN = 'Eine Gruppen-Rolle heißt nicht, dass du dich allein kümmern musst. Du kannst jederzeit Unterstützung bekommen.';
+import { baueRollen, HINWEIS_ROLLEN } from './team-rollen.js';
 
 // Datum kurz: "20.11." (mit Jahr, wenn es nicht dieses Jahr ist)
 function kurzDatum(iso, heute) {
@@ -95,6 +95,11 @@ export async function render(container, ctx) {
   const boxIch = el('div', { class: 'team-ich' });
   const boxListe = el('div', { class: 'team-raster' });
   const boxPause = el('div');
+  const rollenTeil = baueRollen({
+    ctx: ctx, token: s.token, kurzname: s.kurzname,
+    daten: function () { return daten; },
+    neuLaden: function () { return laden(false); }
+  });
 
   container.append(el('div', { class: 'seite' },
     el('div', { class: 'kopfzeile' }, el('h1', { text: 'Team' })),
@@ -102,7 +107,8 @@ export async function render(container, ctx) {
     status,
     boxIch,
     boxListe,
-    boxPause
+    boxPause,
+    rollenTeil.el
   ));
 
   function findePerson(id) {
@@ -266,6 +272,7 @@ export async function render(container, ctx) {
     offline = false;
     rollenAufbauen();
     zeichne();
+    rollenTeil.zeichne();
     // Offenes Detail mit dem neuen Stand zeigen (oder schließen, wenn die Person weg ist)
     if (offeneId) {
       const p = findePerson(offeneId);

@@ -2869,3 +2869,21 @@ p.notiz.erledigt {
   .team-filter { grid-template-columns: 2fr 1fr; }
   .team-raster { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 }
+
+/* ---- 0.31.2: Gruppen-Rollen bearbeiten ---- */
+.team-rollen-teil { margin-top: 16px; }
+.team-rollen-teil > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+.team-rollen-inhalt { display: grid; gap: 8px; margin-top: 8px; }
+.team-rollen-verwalten { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.team-rollen-verwalten li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--rand);
+}
+.team-rolle-info { display: grid; gap: 2px; min-width: 0; }
+.team-rollen-verwalten .knopf-klein { min-height: 44px; flex-shrink: 0; }
+.team-vorschlaege { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.team-vorschlaege .knopf-klein { min-height: 44px; }
