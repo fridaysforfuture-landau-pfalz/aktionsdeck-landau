@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.32.6 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.32.7 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-10.md (Etappe 10 Wiki und öffentliche Seiten; Fassung 2 seit 0.32.0, Rückfragen am 23.10.2026 beantwortet). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
@@ -231,7 +231,9 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - 10.6 (0.32.5): App-Anleitung in texte/anleitung/: Erste Schritte (öffentlich, ab 10.7), Start, Projekte, ToDos und Hüte, Material, Mobi, Kalender (mit Kalender-Abo), Dokumentation, Team, Wiki (mit Format-Hilfe), Häufige Fragen, Zuständig für die App. Reihenfolge in liste.txt. Neu im Textformat: Text zwischen Backticks bleibt genau so stehen (für Beispiele, Klasse wiki-code). CLAUDE.md Abschnitt 3, Punkt 7: Ändert ein Schritt einen Reiter, wird die Anleitungsseite im selben Pull Request angepasst; Zeile je Version in texte/entwicklung.txt erst nach 1.0.
 - 10.6: Pull Request #43.
 - 10.7 (0.32.6): Öffentliches Wiki ohne Login (neue Datei js/views/wiki-oeffentlich.js, Weg in app.js vor dem Login-Teil). #/wiki: "Zur App" (Entwicklung App, öffentliche Anleitungsseiten aus liste.txt, zurzeit Erste Schritte) und die öffentlichen Seiten der Gruppen nach Gruppe und Thema (Auswahl ab zwei Gruppen). #/wiki/app/entwicklung, #/wiki/app/<datei> (nur mit oeffentlich in liste.txt), #/wiki/<gruppe>/<adresse> (Aktion wiki mit gruppe und adresse). Zwischenspeicher oeffentlich:wiki und oeffentlich:wiki:<gruppe>:<adresse>; ist eine Seite nicht mehr öffentlich, gilt auch die gemerkte Kopie nicht mehr. Keine Namen, keine Kommentare; [[Titel]] nur auf andere öffentliche Seiten derselben Gruppe, sonst einfacher Text (wiki-format: fehltAlsText). Link "Wiki" in oeffentlicheLinks (Seitenleiste, Mehr), auf der Gruppenwahl (Knopf neben Impressum, Info, Datenschutz) und auf Info ("📖 Öffentliches Wiki"). Im Reiter Wiki unten im Skillshare "🌐 Öffentliche Seiten aller Gruppen →".
-- Nächster Schritt: 10.8 (0.32.7) Kalender-Abo. Für Etappe 10 vorgemerkt (steht im Plan): Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
+- 10.7: Pull Request #44.
+- 10.8 (0.32.7): Kalender-Abo im Aktionskalender und auf #/termine: Knöpfe "In Google Kalender öffnen" (calendar.google.com/calendar/render?cid=<webcal-Adresse>), "In Apple Kalender öffnen" (webcal://), "Adresse kopieren", dazu wie bisher "Kalender-Datei öffnen" (appleAboLink, googleAboLink in termine-liste.js). Anleitung Kalender ergänzt. Ob Google und Apple der Weiterleitung des Skripts folgen, testet die Person (Ergebnis hier eintragen). Kein Ausweg über GitHub Actions (Entscheidung 30).
+- Nächster Schritt: 10.9 (0.32.8) Feinschliff und Abschluss. Für Etappe 10 vorgemerkt (steht im Plan): Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -323,7 +325,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 
 ## Dateiübersicht
 - docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (abgeschlossen), PLAN-ETAPPE-10.md (Fassung 2, seit 0.32.0), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.32.6 am Ende)
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.32.7 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs, Wiki.gs (seit 0.32.0) (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js, wiki-format.js (seit 0.32.1)
 - texte/ (seit 0.32.1): impressum.txt, info.txt, datenschutz.txt, entwicklung.txt (seit 0.32.2), anleitung/ (liste.txt, team.txt, zustaendig.txt seit 0.32.2; erste-schritte, start, projekte, todos, material, mobi, kalender, dokumentation, wiki, fragen seit 0.32.5). Format wie im Wiki, auf GitHub direkt änderbar.

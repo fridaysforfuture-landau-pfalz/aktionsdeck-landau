@@ -95,6 +95,15 @@ export function abonnierLink(kurz) {
   return API_URL + '?aktion=termine&format=ics' + (kurz ? '&gruppe=' + encodeURIComponent(kurz) : '');
 }
 
+// Seit 0.32.7: dieselbe Adresse für Apple (webcal://, öffnet das Abo direkt) und Google Kalender (Seite „Kalender hinzufügen“)
+export function appleAboLink(url) {
+  return String(url).replace(/^https?:\/\//i, 'webcal://');
+}
+
+export function googleAboLink(url) {
+  return 'https://calendar.google.com/calendar/render?cid=' + encodeURIComponent(appleAboLink(url));
+}
+
 // ---- Kacheln ----
 
 // Kleine Karte (Seitenleiste auf der Gruppenwahl)
@@ -307,6 +316,17 @@ export function baueAktionskalender(session, ctx) {
     text: 'Kalender-Datei öffnen'
   });
   const aboUrl = el('span', { class: 'leise oeff-url' });
+  const aboGoogle = el('a', { class: 'knopf knopf-hell', target: '_blank', rel: 'noopener noreferrer', text: 'In Google Kalender öffnen' });
+  const aboApple = el('a', { class: 'knopf knopf-hell', text: 'In Apple Kalender öffnen' });
+  const aboKopieren = el('button', {
+    class: 'knopf knopf-hell', type: 'button', text: 'Adresse kopieren',
+    onclick: function () {
+      const url = abonnierLink(wahl.value);
+      const fertig = function (ok) { toast(ok ? 'Adresse kopiert.' : 'Kopieren ging nicht. Bitte die Adresse oben markieren.'); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function () { fertig(true); }, function () { fertig(false); });
+      else fertig(false);
+    }
+  });
 
   const box = el('div', null,
     wahl,
@@ -320,7 +340,9 @@ export function baueAktionskalender(session, ctx) {
           '(„Kalender per URL hinzufügen“). Neue Termine erscheinen dann von selbst.'
       }),
       aboUrl,
-      el('p', null, aboLink)
+      el('div', { class: 'abo-knoepfe' }, aboGoogle, aboApple, aboKopieren, aboLink),
+      el('p', { class: 'leise', text: 'Google Kalender: am besten am PC öffnen, das Abo erscheint dann auch am Handy. ' +
+        'Neue Termine kommen bei Google oft erst nach einigen Stunden an. Apple: am iPhone oder Mac öffnen.' })
     )
   );
 
@@ -328,6 +350,8 @@ export function baueAktionskalender(session, ctx) {
     const url = abonnierLink(wahl.value);
     aboLink.href = url;
     aboUrl.textContent = url;
+    aboGoogle.href = googleAboLink(url);
+    aboApple.href = appleAboLink(url);
   }
 
   function wahlAufbauen() {

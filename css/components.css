@@ -3113,3 +3113,7 @@ p.notiz.erledigt {
 .wiki-oeff-thema { margin: 12px 0 6px; font-size: 16px; }
 .info-wiki { margin: 16px 0 0; }
 .wiki-andere a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* ---- 0.32.7: Kalender-Abo (Google, Apple, kopieren) ---- */
+.abo-knoepfe { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.abo-knoepfe .knopf { min-height: 44px; }
