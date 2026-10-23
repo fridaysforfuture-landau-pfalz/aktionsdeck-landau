@@ -14,6 +14,7 @@ export const TABS = [
   { id: 'mobi', label: 'Mobi', icon: '📣' },
   { id: 'kalender', label: 'Kalender', icon: '📅' },
   { id: 'protokoll', label: 'Dokumentation', icon: '📝' },   // Protokolle und (ab 8.6) Reden
+  { id: 'team', label: 'Team', icon: '👥' },                  // Etappe 9
   { id: 'hilfe', label: 'Hilfe', icon: '❓' }
 ];
 
