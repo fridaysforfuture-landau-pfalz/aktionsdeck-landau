@@ -1,350 +1,260 @@
-# Plan Etappe 10: Wiki und öffentliche Seiten (Fassung 1, 23.10.2026)
+# Plan Etappe 10: Wiki und öffentliche Seiten (Fassung 2, 23.10.2026)
 
 Diese Datei ergänzt `docs/STAND.md`. Bei Widerspruch gilt `docs/STAND.md`, und du meldest den Widerspruch im Pull Request.
 Regeln für die Arbeit stehen in `CLAUDE.md`.
 
-**Status: Fassung 1 mit Rückfragen (Schritt 10.0, Version 0.31.10).** Die Person beantwortet die Rückfragen in Abschnitt 4.
-Danach kommt Fassung 2 (zusammen mit Schritt 10.1, wie in Etappe 9). Erst dann wird gebaut.
-Alles in den Abschnitten 5 bis 9 ist ein **Vorschlag** und kann sich mit den Antworten ändern.
+**Status: Fassung 2.** Die Person hat die 31 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 3). „Plan ist gut.“
+Fassung 2 (eigentlich Schritt 10.0a) kommt im selben Pull Request wie Schritt 10.1, damit Plan und Skript zusammenpassen.
+**Erledigt:** 10.0 (Version 0.31.10, Fassung 1, Pull Request #37, gemergt).
 
 ## 1. Ziel
 
-- **Wiki statt Hilfe:** Ein neuer Reiter **„Wiki“** ersetzt den Reiter „Hilfe“. Er hat zwei Bereiche:
-  - **Anleitung:** So funktioniert die App. Für alle Gruppen gleich. Die Texte kommen mit der App (der Agent pflegt sie mit jeder Etappe).
-    Die bisherige Hilfe zum Team (`js/views/hilfe.js`, Abschnitt „Team“) wird die erste Anleitungsseite.
-  - **Skillshare:** Wissen der Gruppe, zum Beispiel „Demo anmelden“, „Pressemitteilung schreiben“, „Banner malen“.
-    Alle in der Gruppe schreiben und ändern die Seiten in der App. Gespeichert im neuen Sheet-Tab `Wiki`.
-- **Öffentlicher Bereich:** Eine Skillshare-Seite kann die Gruppe **öffentlich** machen. Dann ist sie ohne Login lesbar (Seite `#/wiki`).
-  Die Auslieferung läuft wie bei den Terminen über eine eigene Aktion ohne Login, die nur erlaubte Felder herausgibt.
+- **Wiki statt Hilfe:** Ein neuer Reiter **„Wiki“** (📖, Adresse `#/g/<kurz>/wiki`) ersetzt den Reiter „Hilfe“. Oben stehen drei Knöpfe nebeneinander:
+  - **Skillshare:** Wissen der Gruppe, zum Beispiel „Demo anmelden“, „Pressemitteilung schreiben“. Nach festen **Themen** geordnet. Alle in der Gruppe schreiben und ändern.
+  - **Anleitung:** So funktioniert die App (für alle Gruppen gleich, kommt mit der App). Dazu eigene Seiten der Gruppe, zum Beispiel **„Gruppe intern“** (mit „+“ und „Bearbeiten“).
+    Die bisherige Hilfe zum Team wird eine Anleitungsseite.
+  - **Entwicklung App:** Verlauf der Updates der App (was in welcher Version neu ist) und wer die App entwickelt hat. Öffentlich.
+- **Öffentlicher Bereich:** Eine Seite aus Skillshare oder Anleitung kann die Gruppe **öffentlich** machen. Dann ist sie ohne Login lesbar (Seite `#/wiki`).
+  „Entwicklung App“ und die Anleitungsseite „Erste Schritte“ sind immer öffentlich. Die Auslieferung läuft wie bei den Terminen über eine Aktion ohne Login.
+- **Bilder** in Wiki-Seiten (hochladen wie beim Material), mit Hinweis: keine Personen, keine persönlichen Daten.
 - **Rechtliches und Info:** Die öffentlichen Seiten **Impressum, Info, Datenschutz** (`#/info/<seite>`) bekommen echte Texte.
   Der Datenschutztext bekommt einen Absatz zum Reiter Team.
-- **Kalender-Abo:** Das Abo der öffentlichen Termine (Skript-Adresse) wird in Google Kalender und Apple Kalender getestet.
-  Klappt es nicht, gibt es einen Ausweg (Abschnitt 4, Frage 30).
-- Die Seite `#/termine` gibt es schon. Sie bleibt, wie sie ist, und wird nur verlinkt.
+- **Kalender-Abo:** Das Abo der öffentlichen Termine bekommt Knöpfe für Google und Apple. Die Person testet es.
 
-## 2. Ausgangslage (im Repo geprüft am 23.10.2026, Version 0.31.9)
+## 2. Ausgangslage (im Repo geprüft am 23.10.2026, Version 0.31.9 bzw. 0.31.10)
 
-`js/config.js` und `sw.js` haben beide `0.31.9`, wie `docs/STAND.md`. Mit 10.0 wird es 0.31.10.
+`js/config.js` und `sw.js` hatten beide `0.31.9`, wie `docs/STAND.md`. Mit 10.0 wurde es 0.31.10, mit 10.1 wird es 0.32.0.
 
-**Wichtiger Fund (Widerspruch zum Stand):** `docs/STAND.md` spricht von „Texten aus 6.1“ für Impressum, Info und Datenschutz.
-**Diese Texte gibt es im Repo nicht.** `js/views/info.js` zeigt nur den Platzhalter „Dieser Text kommt in Schritt 6.1.“
-Auch in `docs/` und in der Git-Geschichte gibt es keinen Text dazu. Die Texte müssen in Etappe 10 neu geschrieben werden (Fragen 19 bis 22).
+**Wichtiger Fund (Widerspruch zum Stand):** `docs/STAND.md` sprach von „Texten aus 6.1“ für Impressum, Info und Datenschutz.
+**Diese Texte gibt es im Repo nicht** (auch nicht in der Git-Geschichte). `js/views/info.js` zeigt nur den Platzhalter „Dieser Text kommt in Schritt 6.1.“
+Die Texte werden in 10.2 neu geschrieben.
 
 Was es schon gibt und wiederverwendet wird:
 
-- **`js/views/info.js`** (`#/info/<seite>`, ohne Login): Menü aus `OEFFENTLICH` (`js/ui/nav.js`: impressum, info, datenschutz), Karte mit Überschrift,
-  „← Zurück zur App“ bzw. „← Zur Gruppenwahl“. Bei „Info“ steht die Version. **Wiederverwendung:** Aufbau bleibt, nur der Text kommt dazu.
-- **`js/views/hilfe.js`** (Reiter „Hilfe“): fester Text als Liste `TEAM_HILFE` mit `[Überschrift, Absätze]`. Ein Absatz mit „- “ wird ein Listenpunkt
-  (Funktion `teil`, Aufklapper `details`). Darüber der Satz „Hier kommen später Hilfe und Skillshare.“ **Wird ins Wiki übernommen** (Anleitung „Team“), danach gelöscht.
-- **`js/views/termine.js` und `js/views/termine-liste.js`:** Vorbild für eine öffentliche Seite ohne Login. `ladeOeffentlich` nutzt
-  `ladeMitCache('oeffentlich:termine', …, zuerstCache = true)` und ruft `api('termine', {})` **ohne Token**. `abonnierLink(kurz)` baut die Abo-Adresse
-  `API_URL + '?aktion=termine&format=ics[&gruppe=…]'`. `sichereUrl` kommt aus `js/views/kalender-rechnen.js`.
-- **`apps-script/Termine.gs`:** Vorbild für eine Aktion ohne Login. Nur erlaubte Felder (keine IDs, Bearbeiter, Zeitstempel), nur aktive Gruppen,
-  Gruppenfilter nur `[a-z0-9_-]` und höchstens 30 Zeichen, **ein** Zwischenspeicher-Eintrag für alle (2 Minuten, Schutz vor Überlastung),
-  Editor-Tests `testenTermine` und `testenTermineSicher`. Weg über POST (`verteile` in `Code.gs`, vor `tokenPruefen`) und GET (`doGet`).
-- **`js/ui/nav.js`:** `TABS` (Reiter `hilfe` mit ❓ am Ende), `OEFFENTLICH`, `oeffentlicheLinks()` (kleine Links in der Seitenleiste, in „Mehr“ und auf der Gruppenwahl).
-  `js/views/mehr.js` zeigt am Handy `material, kalender, protokoll, team, hilfe`. `js/config.js` hat `features.hilfe = true`.
-- **`js/app.js`:** öffentliche Wege `#/info/…` und `#/termine` stehen vor dem Login-Teil. Unbekannte Reiter fallen auf `start` zurück.
-  `ctx.unter` (Unterpunkt in der Adresse) gibt es nur für `projekte`, `protokoll`, `team`.
-- **Tab `Gruppen`** (System-Tab): `webseite, instagram, weitere_links` sind öffentlich gedacht. Die Aktion `gruppen` (`apps-script/Auth.gs`, `gruppeOeffentlich`)
-  gibt aber nur `gruppe_id, name, kurzname, farbe` heraus. Die Links kommen heute nur über `Termine.gs` (`tLink`, `tInstagram`, `tLinks`) in die App.
-- **Kommentare** (`js/ui/kommentare.js`, `baueKommentare`): `art` ist frei (`todo`, `pinnwand`, …). Das Skript prüft `bezug_art` nicht. Für Wiki-Seiten geht `art: 'wiki'`.
-  „Was ist neu?“ zeigt Kommentare schon (`js/ui/neu-seit.js`, Abschnitt „Kommentare“); eine neue `art` muss dort einen Text bekommen.
-- **Formulare** (`js/ui/form.js`, `baueFormular`): Feldtypen `text, zahl, datum, zeit, farbe, langtext, auswahl, bool, foto`, Vorschläge auch als `{ wert, label }`.
-  **Keine Vorschau** und kein Zeichenzähler für `langtext`. Für den Wiki-Text braucht es ein eigenes Eingabefeld mit Vorschau (wie beim Redetext, `js/views/rede-text.js`).
-- **Entwürfe im Gerät** (`js/store.js`): Muster für Protokoll und Rede (`aktionsdeck_entwurf_…_<gruppe_id>`, Abmelden löscht sie über `loescheAlleEntwuerfe`).
-- **„Was ist neu?“** (`js/ui/neu-seit.js`): `listMehrere` mit **11 Tabellen**. Die Grenze im Skript ist **12** (`aktionListMehrere`). Mit `Wiki` ist die Grenze erreicht.
-- **Skript allgemein:** Textfelder höchstens 5000 Zeichen (`MAX_TEXT`), Ausnahmen in `MAX_TEXT_AUSNAHMEN`. `NIE_LOESCHEN`, `NUR_ANHAENGEN`, `nurPerBuchen` als Muster für
-  gesperrte Tabs. `CacheService` speichert **höchstens 100 KB je Eintrag** (wichtig für das öffentliche Wiki).
-- **`js/api.js` schickt den Anzeigenamen immer mit**, auch ohne Token (also auch bei `termine`). `Termine.gs` liest und speichert ihn nicht.
-  Die neue öffentliche Aktion darf ihn auch nicht speichern. Das gehört in den Datenschutztext.
-- **GitHub Pages** baut mit Jekyll (`.github/workflows/jekyll-gh-pages.yml`). `.txt`-Dateien werden unverändert ausgeliefert. Dateien und Ordner, die mit `_` beginnen, werden weggelassen.
-- **Kalender-Abo:** Die Abo-Adresse ist die Skript-Adresse (`…/exec?aktion=termine&format=ics`). Google leitet sie auf eine andere Adresse weiter (`script.googleusercontent.com`).
-  Ob Google Kalender und Apple Kalender dieser Weiterleitung folgen, ist **nicht geprüft**. Google Kalender lädt Abos außerdem nur alle paar Stunden neu.
+- **`js/views/info.js`** (`#/info/<seite>`, ohne Login): Menü aus `OEFFENTLICH` (`js/ui/nav.js`), Karte, „← Zurück zur App“ bzw. „← Zur Gruppenwahl“, Version bei „Info“. Aufbau bleibt.
+- **`js/views/hilfe.js`**: fester Text `TEAM_HILFE` (`[Überschrift, Absätze]`, „- “ = Listenpunkt). Wird Anleitungsseite „Team“, danach gelöscht (10.3).
+- **`js/views/termine.js`, `js/views/termine-liste.js`:** Vorbild für eine öffentliche Seite ohne Login (`ladeOeffentlich` mit `ladeMitCache('oeffentlich:termine', …, true)`,
+  `api('termine', {})` ohne Token, `abonnierLink(kurz)`). `sichereUrl` aus `js/views/kalender-rechnen.js`.
+- **`apps-script/Termine.gs`:** Vorbild für eine Aktion ohne Login (feste Felder, nur aktive Gruppen, strenger Gruppenfilter, ein Zwischenspeicher-Eintrag, Editor-Tests).
+  Die Helfer `tLink`, `tInstagram`, `tLinks`, `tFarbe`, `tPad` sind im ganzen Skript sichtbar und werden in `Wiki.gs` **wiederverwendet**.
+- **`js/ui/nav.js`:** `TABS` (Reiter `hilfe`), `OEFFENTLICH`, `oeffentlicheLinks()`. `js/views/mehr.js` zeigt `hilfe` am Handy. `js/config.js`: `features.hilfe`.
+- **`js/app.js`:** öffentliche Wege `#/info/…` und `#/termine` vor dem Login-Teil. `ctx.unter` nur für `projekte`, `protokoll`, `team`.
+- **Tab `Gruppen`:** `webseite, instagram, weitere_links` sind öffentlich gedacht, kommen aber nur über `Termine.gs` heraus (`gruppen` gibt nur Name, Kurzname, Farbe).
+- **Fotos** (`apps-script/Upload.gs`, `aktionUploadImage`): JPEG wird im Drive-Ordner der Gruppe (`FOTO_ORDNER_<gruppe_id>`) gespeichert und **für alle mit Link lesbar** gemacht.
+  Die App zeigt es über `https://drive.google.com/thumbnail?id=<id>&sz=w800` (`js/views/material-detail.js`). Verkleinern im Browser: `verkleinern` in `js/ui/bild.js`.
+  Der Dateiname beginnt heute immer mit `material_`, das Log schreibt `Material`. **Wiederverwendung** für Wiki-Bilder (mit `zweck: 'wiki'`).
+- **Kommentare** (`js/ui/kommentare.js`, `baueKommentare`): `art` ist frei, das Skript prüft `bezug_art` nicht. Für Wiki-Seiten `art: 'wiki'`.
+- **Formulare** (`js/ui/form.js`): `langtext` ohne Vorschau. Für den Wiki-Text braucht es ein eigenes Eingabefeld (wie `js/views/rede-text.js`).
+- **Entwürfe im Gerät** (`js/store.js`): Muster für Protokoll und Rede, `gibtEntwurf`, `loescheAlleEntwuerfe`.
+- **Skript:** Textfelder höchstens 5000 Zeichen (`MAX_TEXT`), Ausnahmen in `MAX_TEXT_AUSNAHMEN`. `oeffentlich` steht schon in `BOOL_SPALTEN`.
+  `CacheService` speichert höchstens 100 KB je Eintrag. Aufräumen (`apps-script/Aufraeumen.gs`) läuft über alle Tabs in `TABELLEN`, also auch über `Wiki`.
+- **`js/api.js` schickt den Anzeigenamen immer mit**, auch ohne Token. Öffentliche Aktionen lesen und speichern ihn nicht.
+- **GitHub Pages** baut mit Jekyll. `.txt`-Dateien werden unverändert ausgeliefert. **Alle Dateien der App sind öffentlich abrufbar**, wenn man die Adresse kennt (auch die Anleitung).
 
-## 3. Entscheidungen
+## 3. Entscheidungen der Person (23.10.2026)
 
-Noch keine. Die Person beantwortet zuerst die Rückfragen in Abschnitt 4. Die Antworten kommen in Fassung 2 hierher (wie in Plan 9, Abschnitt 3).
+1. Reiter **„Wiki“** statt „Hilfe“, kurze Adresse mit `wiki` (`#/g/<kurz>/wiki`). Alte Adressen `…/hilfe` führen zum Wiki.
+2. **„Gruppe intern“** gibt es, und zwar **unter „Anleitung“**. Sie ist **gruppenspezifisch** (eigene Seite der Gruppe im Sheet) und **allgemein** (feste Seite
+   „Zuständig für die App“: wer Adminzugriff auf Sheet und Skript hat, wer die App entwickelt hat; mit Platzhaltern, siehe 20).
+3. **Themen fest** (feste Liste in der App, nicht frei). Was sie tun: Sie ordnen die Seiten in der Liste in Aufklapper und helfen beim Suchen.
+4. Themen **nach Alphabet**. Vorschlag des Agenten (die Person hat eigene Ideen und kann die Liste jederzeit ändern lassen, das braucht keine Änderung am Sheet):
+   Aktionen und Demos · Anmeldung und Recht · Finanzen und Förderung · Gruppe und Treffen · Material und Technik · Mobi und Social Media · Presse · Sonstiges (immer zuletzt).
+5. Suche wie vorgeschlagen (Titel, Thema, Text; Ausschnitt mit dem Suchwort).
+6. **Aufbau des Reiters:** drei Knöpfe in einer Reihe, die zusammen die ganze Breite füllen: **Skillshare, Anleitung, Entwicklung App**.
+   Leicht unterschiedliche, ruhige Farben (keine grellen). Die Knöpfe zeigen keine weiteren Angaben. Der gewählte Knopf bleibt markiert.
+   Darunter stehen die **Suche** und der **Inhalt** des Bereichs. In Skillshare und Anleitung gibt es „+ Seite“ und „Bearbeiten“.
+7. Alle mit dem Gruppen-PIN schreiben, ändern und löschen. Lange Texte im Sheet: siehe Antwort unten.
+8. **Kein Verlauf** (kein Archiv alter Fassungen). Löschen ist weich.
+9. Gleichzeitiges Bearbeiten wie vorgeschlagen (Konflikt-Hinweis, eigener Text bleibt, Entwurf im Gerät).
+10. Text höchstens 20 000 Zeichen, Titel höchstens 80. Links: Adresse einfach einfügen, sie wird von selbst ein Link.
+11. Textformat wie vorgeschlagen. Dazu **Knöpfe über dem Textfeld**, die die Auszeichnung an der Cursorstelle einfügen
+    (zum Beispiel „Ü1“ fügt `## Überschrift 1` ein). Im Textfeld bleibt es einfacher Text, in der Vorschau und auf der Seite ist die Überschrift groß und fett.
+12. Vorschau am PC daneben, am Handy mit Umschalter. Sie aktualisiert sich **beim Tippen** (kurz nach jedem Tastendruck).
+13. **Bilder jetzt.** Beim Einfügen ein Hinweis: keine Personen, keine persönlichen Daten.
+14. Inhaltsverzeichnis ab 3 Überschriften.
+15. Haken „Öffentlich“ je Seite, Standard aus, mit Warnsatz. 15a: Von der Anleitung ist „Erste Schritte“ öffentlich.
+16. Seiten gehören einer Gruppe. Teilen mit anderen Gruppen = öffentlich machen.
+17. Öffentliche Adresse `#/wiki/<gruppe>/<adresse>`, Adresse bleibt beim Umbenennen, „Link kopieren“.
+18. Link heißt **„Wiki“** (nicht „Wissen“). **„Entwicklung App“ (Verlauf der Updates) ist immer öffentlich.**
+19. Frage der Person: „Anleitung öffentlich und in GitHub? Dann nicht bearbeitbar per App?“ **Antwort:** Ja. Die App-Anleitung liegt als Textdateien im Repo.
+    Sie ist in der App nur lesbar; ändern geht auf GitHub oder über den Agenten. Technisch kann jede Person die Dateien lesen, die die Adresse kennt (wie alle Dateien der App).
+    Darum steht dort nie etwas Internes. **Bearbeitbar in der App** sind die eigenen Anleitungsseiten der Gruppe (zum Beispiel „Gruppe intern“), die liegen im Sheet und sind nur mit PIN sichtbar.
+20. Impressum mit **Platzhaltern** (`[Name]`, `[Anschrift]`, `[E-Mail]`), die die Person auf GitHub selbst ausfüllt. **Gleich freischalten** (kein Sperr-Hinweis).
+    Das Ausfüllen kommt als ToDo für die Person in `docs/STAND.md` (Abschnitt „Offen“). Dasselbe gilt für die Seite „Zuständig für die App“.
+21. Datenschutz: Entwurf nach der echten Technik. Vorlage: Die Webseite von FFF Landau hat ein Impressum unter https://fridaysforfuture-landau.de/kontakt/impressum (der Agent schaut sie in 10.2 an und übernimmt nur den Aufbau, keine Personendaten).
+22. Info-Seite wie vorgeschlagen, mit „Wiki“ statt „Wissen“, **ohne Veranstaltungen** (kein Link auf die Termine).
+23. Team-Hilfe wird Anleitungsseite, `js/views/hilfe.js` wird gelöscht.
+24. Anleitung: „Erste Schritte“, je Reiter eine Seite, „Häufige Fragen“. Neue Funktionen ergänzen die passende Anleitungsseite im selben Pull Request.
+25. Skillshare am Anfang **leer**, „+ Seite“. **Keine Vorlagen.**
+26. Kommentare unter Wiki-Seiten (nur intern).
+27. **Kein** Abschnitt „Wiki“ in „Was ist neu?“.
+28. Keine Verknüpfungen mit Learnings oder Projekten.
+29. Knöpfe „In Google Kalender öffnen“ und „In Apple Kalender öffnen“, die Person testet.
+30. **Kein** Ausweg über GitHub Actions (erstmal nicht).
+31. Alles im Inhalt, **kein Detailbereich rechts** (keine Seitenleiste für das Wiki).
 
-Fest steht schon (aus `docs/STAND.md` und dem Auftrag):
-1. Das Wiki ersetzt den Reiter Hilfe.
-2. Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlicher Bereich.
-3. Öffentliche Seiten Impressum, Info, Datenschutz. Datenschutz mit Absatz zum Team: Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz;
-   nur für die eigene Gruppe sichtbar; Austragen löscht; alte Kapazitäten werden 6 Monate nach ihrem Ende gelöscht.
-4. Die Hilfe zum Team kommt ins Wiki.
-5. Kalender-Abo testen, notfalls feste ICS-Datei auf GitHub Pages.
-6. Neuer Sheet-Tab `Wiki`.
+**Antworten auf die Fragen der Person:**
+- *„Machen lange Texte in einem Sheet Sinn?“* Ja, für ein kleines Wiki schon. Eine Zelle fasst 50 000 Zeichen, wir erlauben 20 000 (etwa 8 Seiten A4).
+  Protokolle und Reden machen es schon so. Im Sheet sieht eine Seite wie eine lange Zelle aus, gelesen und geschrieben wird in der App.
+  Grenze: Bei sehr vielen langen Seiten lädt der Reiter langsamer. Bei einigen Dutzend Seiten ist das kein Problem.
+- *„Links kann ich dann normal einfügen?“* Ja. Adresse einfügen genügt. Mit dem Knopf „Link“ geht auch ein Link mit eigenem Text.
+- *„Ist die Überschrift dann automatisch fett?“* Im Textfeld steht `## Überschrift 1` als einfacher Text. In der Vorschau und auf der Seite ist sie groß und fett.
+- *„Wie oft aktualisiert die Vorschau?“* Live beim Tippen.
 
-## 4. Rückfragen (Fassung 1)
+## 4. Kleine Fragen der zweiten Runde
 
-Jede Frage hat einen Vorschlag. Antworte gern nur mit „wie Vorschlag“ oder mit der Nummer und deiner Änderung.
+Der Agent baut nach den Vorschlägen. Die Person kann jederzeit etwas ändern (Antwort im Chat genügt).
 
-### Aufbau des Wikis
+| Nr | Frage | Vorschlag |
+|---|---|---|
+| A | **Themen:** Passt die Liste aus Abschnitt 3, Punkt 4? Die Person hat eigene Ideen. | Liste aus Punkt 4. Eigene Themen bitte schicken, sie stehen nur in der App (`js/views/wiki-rechnen.js`), das Sheet bleibt gleich. |
+| B | **„Entwicklung App“ pflegen:** Soll jeder Pull Request mit neuer Version eine Zeile in `texte/entwicklung.txt` ergänzen? | Ja, ab 10.6 als Regel in `CLAUDE.md` (kurzer Satz je Version, neueste oben). Ältere Versionen nur je Etappe zusammengefasst. |
+| C | **Eigene Anleitungsseiten der Gruppe:** Wo stehen sie in der Liste? | Unter den festen Anleitungsseiten in einem eigenen Block „Von unserer Gruppe“, A–Z. Fehlt „Gruppe intern“, steht dort der Knopf „+ Gruppe intern anlegen“. |
+| D | **Bilder löschen:** Wird ein Bild im Drive gelöscht, wenn man es aus dem Text nimmt? | Nein. Das Bild bleibt im Drive-Ordner der Gruppe (wie beim Material). Aufräumen von Hand im Drive. |
 
-1. **Name und Zeichen des Reiters:** „Wiki“ mit 📖, Kennung `wiki`?
-   *Vorschlag:* Ja. Der Reiter steht an der Stelle von „Hilfe“ (am PC unten in der Seitenleiste, am Handy unter „Mehr“).
-   Alte Adressen `#/g/<kurz>/hilfe` führen automatisch zum Wiki.
-2. **Bereiche:** Reichen „Anleitung“ (App) und „Skillshare“ (Gruppe)? Oder braucht es einen dritten Bereich, zum Beispiel „Gruppe intern“ (Abläufe, wer hat welchen Schlüssel, wo liegt was)?
-   *Vorschlag:* Zwei Bereiche. „Gruppe intern“ wird eine **Kategorie** im Skillshare. So bleibt das Wiki einfach.
-3. **Kategorien im Skillshare:** fest oder frei?
-   *Vorschlag:* Frei mit Vorschlägen zum Antippen (wie die Aktionsart): Aktionen, Demo und Anmeldung, Presse, Social Media, Material und Technik, Finanzen, Gruppe und Treffen, Sonstiges.
-   Jede Seite hat genau eine Kategorie. Ohne Kategorie steht sie unter „Sonstiges“.
-4. **Reihenfolge:** Wie sind die Seiten sortiert?
-   *Vorschlag:* Kategorien A–Z („Sonstiges“ immer zuletzt). In der Kategorie zuerst nach der Zahl „Reihenfolge“ (freiwillig, kleine Zahl = weiter oben), dann A–Z.
-   Kein Ziehen mit der Maus. Die Anleitung hat eine feste Reihenfolge (wie die Reiter).
-5. **Suche:** Wo wird gesucht?
-   *Vorschlag:* Ein Suchfeld oben sucht in Titel, Kategorie und Text, in Anleitung und Skillshare zusammen. Groß- und Kleinschreibung egal.
-   Treffer zeigen einen kurzen Ausschnitt mit dem Suchwort. Alles läuft im Gerät (die Seiten sind schon geladen).
-6. **Startseite des Wikis:** Was sieht man zuerst?
-   *Vorschlag:* Oben Suche. Darunter zwei Karten: „Anleitung“ (Liste der Anleitungsseiten) und „Skillshare“ (Kategorien als Aufklapper mit ihren Seiten, „+ Seite“).
-   Dazu klein: „Zuletzt geändert“ (die 5 neuesten Skillshare-Seiten).
+## 5. Datenmodell (gebaut in 10.1)
 
-### Schreiben, Verlauf, gleichzeitiges Arbeiten
+Die Person tippt den Tab **von Hand** ins Sheet (siehe CLAUDE.md Abschnitt 7). `gruppe_id` heißt wirklich so.
 
-7. **Wer darf schreiben?**
-   *Vorschlag:* Alle mit dem Gruppen-PIN dürfen Skillshare-Seiten anlegen, ändern und löschen (wie Mitteilungen). Löschen ist weich und fragt nach.
-   Die Anleitung ist in der App nur lesbar. Änderungen daran macht der Agent über das Repo (oder die Person auf GitHub, siehe Frage 19).
-8. **Verlauf von Änderungen:** Soll man alte Fassungen einer Seite sehen und zurückholen können?
-   *Vorschlag:* Ja. Neuer Tab `Wiki_Verlauf`. Bei jeder Änderung des Textes legt das **Skript** die vorige Fassung dort ab (Titel, Text, wer, wann).
-   Es bleiben die **letzten 10 Fassungen** je Seite. In der App: „Verlauf (n)“ zeigt die Fassungen mit Datum und Namen, „Ansehen“ und „Diese Fassung wiederherstellen“
-   (das ist eine normale Änderung, die alte Fassung kommt wieder in den Verlauf).
-   *Andere Möglichkeit:* kein Verlauf, nur das Log (wer wann geändert hat). Dann ist ein überschriebener Text weg.
-9. **Gleichzeitiges Bearbeiten:**
-   *Vorschlag:* Wie überall mit `bekannt` (`geaendert_am`). Hat jemand anderes inzwischen gespeichert, kommt ein Hinweis mit Name und Uhrzeit.
-   Der eigene Text bleibt im Feld, mit den Knöpfen „Text kopieren“ und „Neue Fassung laden“ (die eigene bleibt dann im Gerät als Entwurf).
-   Kein Sperren einer Seite. Zusätzlich sichert die App beim Tippen **einen Entwurf im Gerät** (wie beim Protokoll). „Abmelden“ löscht ihn.
-10. **Länge einer Seite:**
-   *Vorschlag:* Text höchstens 20 000 Zeichen (wie Protokoll und Rede), Titel höchstens 80 Zeichen. Zähler unter dem Feld.
+**Neuer Tab `Wiki`:** Basis-Spalten `id, gruppe_id, erstellt_am, erstellt_von, geaendert_am, geaendert_von, geloescht`, dahinter `bereich, thema, titel, adresse, text, oeffentlich`
+- `bereich`: `skillshare` oder `anleitung` (eigene Anleitungsseite der Gruppe, zum Beispiel „Gruppe intern“). Pflicht.
+- `thema`: Thema im Skillshare (feste Liste in der App, Abschnitt 3, Punkt 4). Bei `anleitung` leer. Höchstens 40 Zeichen. Das Skript prüft nur die Länge, damit die Liste ohne neue Bereitstellung änderbar bleibt.
+  Ein unbekanntes Thema zeigt die App unter „Sonstiges“.
+- `titel`: Pflicht, höchstens 80 Zeichen, in der Gruppe nur einmal (Groß- und Kleinschreibung egal). So finden Links `[[Titel]]` immer genau eine Seite.
+- `adresse`: Pflicht, nur `a-z`, `0-9` und Bindestriche (nicht am Anfang oder Ende, keine zwei hintereinander), höchstens 60 Zeichen, in der Gruppe nur einmal. Die App macht sie beim Anlegen aus dem Titel.
+- `text`: höchstens 20 000 Zeichen, Format aus Abschnitt 6.
+- `oeffentlich`: TRUE = ohne Login lesbar.
 
-### Textformat (ohne Bibliotheken)
-
-11. **Welche Auszeichnungen?** Die App baut den Text selbst in Absätze, Überschriften und Listen um, ohne Bibliothek und nur mit `textContent`.
-   *Vorschlag:* Nur diese Regeln (eine Format-Hilfe steht aufklappbar unter dem Feld):
-   - Leerzeile = neuer Absatz.
-   - `## Überschrift` und `### Unterüberschrift` (eine `#` ist der Seitentitel und wird nicht gebraucht).
-   - `- Punkt` = Liste, `1. Schritt` = nummerierte Liste.
-   - `**fett**`.
-   - Links: `[Text](https://…)` oder die Adresse einfach hinschreiben. Nur `https://` und `http://` werden zu Links (`sichereUrl`), alles andere bleibt Text.
-   - Link auf eine andere Wiki-Seite: `[[Titel der Seite]]`. Gibt es die Seite nicht, steht der Titel grau mit „(fehlt)“.
-   - `> Hinweis` = grauer Hinweiskasten.
-   Nicht dabei: Tabellen, Farben, HTML, kursiv.
-12. **Vorschau beim Schreiben:**
-   *Vorschlag:* Am PC Text links und Vorschau rechts nebeneinander. Am Handy Umschalter „Schreiben | Vorschau“.
-13. **Bilder:**
-   *Vorschlag:* **Keine Bilder** in Etappe 10, nur Links (zum Beispiel auf einen Google-Drive-Ordner oder Canva).
-   Grund: Bilder auf öffentlichen Seiten müssten öffentlich im Drive liegen, und Fotos zeigen oft Personen. Idee für später.
-14. **Inhaltsverzeichnis:**
-   *Vorschlag:* Hat eine Seite mindestens 3 Überschriften, steht oben ein kleines Inhaltsverzeichnis zum Antippen.
-
-### Öffentlich und nur mit PIN
-
-15. **Was ist öffentlich?**
-   *Vorschlag:* Jede Skillshare-Seite hat den Haken „Öffentlich (für alle im Internet lesbar)“, Standard aus. Beim Anhaken kommt ein Hinweis:
-   „Schreib keine Namen, Telefonnummern, Adressen oder Fotos von Personen in öffentliche Seiten.“ Öffentliche Seiten haben in der Liste die Marke „🌐 öffentlich“.
-   Öffentlich sind nur **Titel, Kategorie, Text, Stand (nur das Datum) und die Gruppe**. Nie öffentlich: wer geschrieben hat, Verlauf, Kommentare, IDs.
-   Die Anleitung ist **nicht** öffentlich (sie erklärt nur die App für Angemeldete). Wenn du das anders möchtest: Frage 15a.
-   - 15a. Soll die Anleitung auch öffentlich lesbar sein (zum Beispiel für neue Leute vor dem ersten Login)? *Vorschlag:* Nein, nur „Erste Schritte“ (eine Seite) öffentlich.
-16. **Je Gruppe oder gemeinsam für alle Gruppen?**
-   *Vorschlag:* Skillshare-Seiten gehören **einer Gruppe**. Andere Gruppen sehen sie nur, wenn sie öffentlich sind.
-   Seiten „nur für angemeldete Gruppen, aber nicht öffentlich“ gibt es nicht: Jedes Token sieht nur seine Gruppe, und das soll so bleiben.
-   Wer Wissen mit den anderen Gruppen teilen will, macht die Seite öffentlich. Im Wiki gibt es dazu den Aufklapper „Öffentliche Seiten anderer Gruppen“ (aus der öffentlichen Aktion).
-17. **Öffentliche Adresse:** Wie sieht der Link aus?
-   *Vorschlag:* Übersicht `#/wiki` (alle öffentlichen Seiten, nach Gruppe und Kategorie, Gruppen-Auswahl wie bei den Terminen),
-   eine Seite `#/wiki/<gruppe>/<adresse>`, zum Beispiel `#/wiki/fff/demo-anmelden`.
-   Die `adresse` macht die App beim Anlegen aus dem Titel (klein, ohne Umlaute, Bindestriche). Sie **bleibt**, wenn der Titel sich ändert (damit geteilte Links gültig bleiben),
-   und ist im Formular unter „Mehr“ änderbar. Das Skript prüft: nur `a-z0-9-`, höchstens 60 Zeichen, in der Gruppe nur einmal.
-   Knopf „Link kopieren“ bei öffentlichen Seiten.
-18. **Wo wird das öffentliche Wiki verlinkt?**
-   *Vorschlag:* In `oeffentlicheLinks()` (Seitenleiste, „Mehr“, Gruppenwahl) als „Wissen“ neben Impressum, Info, Datenschutz, und auf der Seite „Info“.
-   Auf der Gruppenwahl kein eigener Kasten (wie bei den Terminen), damit sie nicht voll wird.
-
-### Impressum, Info, Datenschutz
-
-19. **Wo stehen die festen Texte?**
-   *Vorschlag:* Als einfache Textdateien im Repo im selben Format wie das Wiki: `texte/impressum.txt`, `texte/info.txt`, `texte/datenschutz.txt`,
-   und die Anleitung in `texte/anleitung/<seite>.txt`. Vorteile: Sie laden auch ohne Netz (in `sw.js` eingetragen), hängen nicht am Skript,
-   und du kannst sie auf GitHub direkt ändern (Datei öffnen → Stift → „Commit changes“), ohne JavaScript anzufassen.
-   *Andere Möglichkeit:* Texte im Sheet. Nachteil: Ohne Skript kein Impressum.
-20. **Impressum: Wer ist verantwortlich?** Ich darf keine Namen oder Adressen erfinden oder abfragen.
-   *Vorschlag (eine der beiden):*
-   - a) Die App liegt unter `fridaysforfuture-landau.de`. Gibt es dort schon ein Impressum, verlinkt die Seite „Impressum“ darauf, mit einem Satz dazu. Am einfachsten.
-   - b) Ich schreibe `texte/impressum.txt` mit Platzhaltern in eckigen Klammern (`[Name]`, `[Anschrift]`, `[E-Mail]`). Du füllst sie auf GitHub selbst aus.
-     Solange ein Platzhalter drin ist, zeigt die Seite oben „Dieser Text ist noch nicht fertig.“
-   Bitte sag, welche Gruppe oder Person verantwortlich ist (nur als „a“ oder „b“, keine Daten in den Chat).
-21. **Datenschutz: Wie entsteht der Text?**
-   *Vorschlag:* Ich schreibe einen Entwurf, der genau beschreibt, was die App wirklich tut (keine Rechtsberatung). Die Gruppe sollte ihn prüfen lassen.
-   Inhalt: wer verantwortlich ist (wie Impressum); Seite liegt auf GitHub Pages (GitHub sieht die IP-Adresse); Daten im Google Sheet über ein Google-Skript (Google sieht die IP-Adresse);
-   keine Cookies, keine Tracker, keine fremden Schriften; im Gerät gespeichert: Anmeldung (14 Tage), Anzeigename, Zwischenspeicher, Entwürfe; Gruppen-PIN statt Konten;
-   Anzeigename steht bei Einträgen und im Log (Log 180 Tage); Gelöschtes wird nach 90 Tagen endgültig entfernt; Fotos von Material im Google Drive;
-   öffentlich sind nur veröffentlichte Termine und öffentliche Wiki-Seiten; öffentliche Abrufe speichern keinen Namen;
-   **Absatz Team** (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht; alte Kapazitäten nach 6 Monaten weg);
-   Rechte (Auskunft, Löschen) und Kontakt (wie Impressum).
-   Gibt es für FFF oder GP schon eine Datenschutzerklärung, auf die sich der Text stützen soll? Dann sag mir, wo sie steht (Link).
-22. **Info-Seite:** Was soll drinstehen?
-   *Vorschlag:* Kurz, was AktionsDeck ist und für wen. Die Gruppen mit Webseite, Instagram und weiteren Links (aus dem Tab `Gruppen`).
-   Links zu „Öffentliche Termine“ und „Wissen“ (öffentliches Wiki). „Mitmachen? Melde dich bei einer Gruppe.“ Version der App.
-   Dafür gibt die neue öffentliche Aktion auch die Links der Gruppen heraus (das sind dieselben Felder, die `Termine.gs` schon zeigt).
-   Ein Link auf den Quellcode (GitHub)? *Vorschlag:* ja, klein unten.
-
-### Hilfe, Anleitung, Skillshare
-
-23. **Wie kommt die Hilfe ins Wiki?**
-   *Vorschlag:* Der Team-Text aus `js/views/hilfe.js` wird `texte/anleitung/team.txt` (gleicher Inhalt, neues Format). `js/views/hilfe.js` wird danach **gelöscht**
-   und aus `sw.js` ausgetragen. Der Link unten im Reiter Team („→ Hilfe“) zeigt auf die Anleitungsseite Team (`#/g/<kurz>/wiki/anleitung:team`).
-24. **Umfang der Anleitung:** Welche Seiten?
-   *Vorschlag:* „Erste Schritte“ (anmelden, Name, App aufs Handy legen, Was ist neu), dann je Reiter eine Seite: Start, Projekte, ToDos und Hüte, Material, Mobi, Kalender,
-   Dokumentation (Protokolle und Reden), Team, Wiki (mit der Format-Hilfe). Kurz und mit Listen. Dazu „Häufige Fragen“ (Konflikt-Hinweis, offline, PIN vergessen).
-   Ich schreibe die Texte nach dem Stand im Code. Du prüfst sie und meldest Anmerkungen gesammelt.
-   Bei einer neuen Funktion in späteren Etappen ergänzt der Agent die passende Anleitungsseite im selben Pull Request.
-25. **Skillshare am Anfang:** leer lassen oder mit Vorlagen?
-   *Vorschlag:* Leer. Beim „+ Seite“ gibt es drei **Vorlagen nur mit Überschriften** (keine erfundenen Inhalte): „Schritt für Schritt“ (Worum geht es, Was brauchst du, Schritte, Tipps),
-   „Checkliste“, „Erfahrungen“ (Was lief gut, Was nicht, Was beim nächsten Mal).
-26. **Kommentare an Wiki-Seiten:**
-   *Vorschlag:* Ja, unter jeder Skillshare-Seite mit `baueKommentare` (`art: 'wiki'`), zum Beispiel „Das ist veraltet“. Nur intern, nie öffentlich. Nicht bei der Anleitung.
-27. **„Was ist neu?“:**
-   *Vorschlag:* Neuer Abschnitt „Wiki“: „📖 Titel · neue Seite“ bzw. „· geändert“ (nur von anderen). Kommentare an Wiki-Seiten unter „Kommentare“ mit dem Seitentitel.
-   Damit fragt „Was ist neu?“ 12 Tabellen ab (die Grenze des Skripts). Spätere Quellen brauchen dann eine zweite Anfrage.
-28. **Verknüpfungen mit anderen Reitern** (Learnings, Protokoll, Projekte):
-   *Vorschlag:* In Etappe 10 nichts davon. Ideen für später: „Learning ins Wiki übernehmen“, Wiki-Link im Projekt. Willst du davon etwas schon jetzt?
-
-### Kalender-Abo
-
-29. **Test des Abos:** Ich kann Google Kalender und Apple Kalender nicht selbst testen.
-   *Vorschlag:* In Schritt 10.8 steht eine genaue Test-Anleitung (Google am PC: „Weitere Kalender → Per URL“; iPhone: Einstellungen → Kalender → Accounts → Kalenderabo hinzufügen).
-   Die App zeigt dazu zwei neue Knöpfe: „In Google Kalender öffnen“ und „In Apple Kalender öffnen“ (`webcal://`-Adresse). Du testest und meldest das Ergebnis.
-30. **Wenn das Abo nicht klappt:** Ausweg feste Datei `termine.ics` auf GitHub Pages.
-   *Vorschlag:* Die Datei wird **nicht von Hand** gepflegt. Eine GitHub Action holt sie regelmäßig (zum Beispiel stündlich) von der Skript-Adresse und legt sie beim Bauen der Seite dazu.
-   Das ist kein Build der App, ändert aber `.github/workflows/`. Darf ich das im Notfall tun? (Hinweis: GitHub hält geplante Actions in Repos ohne Änderungen nach 60 Tagen an.)
-
-### Handy und PC
-
-31. **Aufteilung am Bildschirm:**
-   *Vorschlag:* **PC:** Liste der Seiten im Inhalt, die geöffnete Seite **im Inhalt** (nicht im schmalen Detailbereich rechts), Zeilen höchstens etwa 70 Zeichen breit, damit sich lange Texte gut lesen.
-   Oben „← Wiki“ und die Knöpfe „Bearbeiten“, „Verlauf“, „Link kopieren“. Bearbeiten mit Vorschau daneben (Frage 12).
-   **Handy:** Liste, Seite als ganze Ansicht mit „← Zurück“, Knöpfe unten in einer Zeile (mindestens 44 px). Adresse `#/g/<kurz>/wiki/<seiten-id>`, damit „Zurück“ im Browser geht.
-   Öffentliche Seiten: gleicher Aufbau wie `#/termine` (Balken oben, schmale Spalte).
-
-## 5. Datenmodell (Vorschlag, wird in 10.1 gebaut)
-
-Die Person tippt Tabs **von Hand** ins Sheet (siehe CLAUDE.md Abschnitt 7). `gruppe_id` heißt wirklich so.
-Beide neuen Tabs haben vorne die Basis-Spalten `id, gruppe_id, erstellt_am, erstellt_von, geaendert_am, geaendert_von, geloescht`.
-
-**Neuer Tab `Wiki`:** `titel, adresse, kategorie, text, oeffentlich, sortierung`
-- `titel`: Pflicht, höchstens 80 Zeichen.
-- `adresse`: `a-z0-9-`, höchstens 60 Zeichen, in der Gruppe nur einmal unter den nicht gelöschten Seiten (das Skript prüft es; Frage 17).
-- `kategorie`: freiwillig, höchstens 40 Zeichen (Frage 3).
-- `text`: höchstens 20 000 Zeichen (Frage 10), Format aus Frage 11.
-- `oeffentlich`: TRUE = ohne Login lesbar (Frage 15). Schon in `BOOL_SPALTEN`.
-- `sortierung`: Zahl, freiwillig (Frage 4). Schon in `ZAHL_SPALTEN`.
-
-**Neuer Tab `Wiki_Verlauf`** (nur bei Frage 8 = ja): `seite_id, titel, text`
-- Eine Zeile je **frühere** Fassung. `erstellt_am` und `erstellt_von` sagen, wann und von wem diese Fassung **gespeichert worden war** (also die Werte `geaendert_am` und `geaendert_von` der Seite vor der Änderung).
-- Schreibt nur das Skript. `create`, `update`, `delete` über die API sind gesperrt (wie `Ausleihe`). Gelesen wird mit `list` (nur eigene Gruppe).
-- Höchstens 10 Zeilen je Seite. Die elfte entfernt das Skript gleich (weich löschen).
+**Kein** Tab `Wiki_Verlauf` (Entscheidung 8). Die App-Anleitung, „Entwicklung App“, Impressum, Info und Datenschutz liegen als Dateien im Repo (Ordner `texte/`), nicht im Sheet.
 
 **Was das Skript dazu macht** (neue Datei `apps-script/Wiki.gs`, Hilfsfunktionen beginnen mit `wiki`):
-- `wikiPruefen` in `create`, `batchCreate` und `update`: Titel da, Längen, `adresse` gültig und eindeutig.
-- `wikiVerlauf` in `update`: ändert sich `titel` oder `text`, kommt die vorige Fassung in `Wiki_Verlauf`.
-- `wikiKaskade` in `delete`: Seite gelöscht → ihr Verlauf und ihre Kommentare (`bezug_art = wiki`) werden mitgelöscht (weich).
-- **Öffentliche Aktion `wiki`** (ohne Login, in `verteile` vor `tokenPruefen`):
-  - `{ aktion: 'wiki' }` → Liste aller öffentlichen Seiten aller aktiven Gruppen **ohne Text**: `titel, adresse, kategorie, stand (JJJJ-MM-TT), kurzname, gruppe_name, farbe`,
-    dazu `gruppen: [{ name, kurzname, farbe, webseite, instagram, links }]` für die Info-Seite.
-  - `{ aktion: 'wiki', gruppe: 'fff', adresse: 'demo-anmelden' }` → eine Seite **mit Text**. Gruppe und Adresse werden streng geprüft (`[a-z0-9_-]`, `[a-z0-9-]`, Längen).
-  - Keine IDs, keine Namen, keine Zeitstempel mit Uhrzeit. Den mitgeschickten Anzeigenamen liest die Aktion nicht.
-  - Zwischenspeicher: **ein** Eintrag für die Liste (`wiki_alle`, 2 Minuten). Seiten einzeln (`wiki_<gruppe>_<adresse>`, 2 Minuten), aber **nur für Seiten, die es in der Liste gibt**
-    (so kann niemand mit erfundenen Adressen den Speicher füllen). Grund für die Teilung: Ein Eintrag darf höchstens 100 KB groß sein.
-  - Nur POST (die App). Ein GET-Weg wie bei den Terminen ist nicht nötig.
-- Editor-Tests: `testenWiki` (Regeln mit Werten im Speicher, Spaltenköpfe, schreibt nichts) und `testenWikiSicher` (nur erlaubte Felder, nur öffentliche, ungültige Gruppen und Adressen abgelehnt).
-- `apps-script/Aufraeumen.gs`: Verlauf gelöschter Seiten wird mit den anderen gelöschten Zeilen nach 90 Tagen entfernt (läuft schon allgemein; nur prüfen und in `aufraeumenTesten` zählen).
+- `wikiPruefen` in `create`, `batchCreate` und `update`: Bereich gültig, Titel da und eindeutig, Adresse gültig und eindeutig.
+- `wikiKaskade` in `delete`: Seite gelöscht → ihre Kommentare (`bezug_art = wiki`, `bezug_id` = ID der Seite) werden mitgelöscht (weich).
+- **Öffentliche Aktion `wiki`** (ohne Login, in `verteile` vor `tokenPruefen`, nur POST):
+  - `{ aktion: 'wiki' }` → `{ seiten, gruppen }`. `seiten`: alle öffentlichen Seiten aller aktiven Gruppen **ohne Text**:
+    `bereich, thema, titel, adresse, stand (JJJJ-MM-TT), kurzname, gruppe_name, farbe`. `gruppen`: alle aktiven Gruppen mit `name, kurzname, farbe, webseite, instagram, links` (für die Info-Seite).
+  - `{ aktion: 'wiki', gruppe: 'fff', adresse: 'demo-anmelden' }` → `{ seite }` mit denselben Feldern und `text`. Gruppe (`[a-z0-9_-]`, höchstens 30) und Adresse werden streng geprüft.
+    Nicht öffentliche, gelöschte oder unbekannte Seiten: Fehler `nicht_gefunden` („Seite nicht gefunden.“).
+  - Keine IDs, keine Namen, keine Uhrzeiten. Der mitgeschickte Anzeigename wird nicht gelesen.
+  - Zwischenspeicher: **ein** Eintrag für die Liste (`wiki_alle`, 2 Minuten). Seiten einzeln (`wiki_s_<gruppe>_<adresse>`, 2 Minuten),
+    aber **nur für Seiten aus der Liste** (so kann niemand mit erfundenen Adressen den Speicher füllen). Grund für die Teilung: höchstens 100 KB je Eintrag.
+- `apps-script/Upload.gs`: `uploadImage` nimmt `zweck: 'wiki'` an. Dann beginnt der Dateiname mit `wiki_` und das Log schreibt `Wiki`. Ohne `zweck` bleibt alles wie bisher (Material).
+- Editor-Tests: `testenWiki` (Regeln mit Werten im Speicher, Spaltenköpfe `Wiki` und `Kommentare`, schreibt nichts) und
+  `testenWikiSicher` (nur erlaubte Felder, nicht mehr Seiten als öffentlich im Sheet, ungültige Gruppen und Adressen abgelehnt, nicht öffentliche Seite wird nicht ausgeliefert).
 
-Keine neuen Spalten in bestehenden Tabs. Die Anleitung und die Texte für Impressum, Info, Datenschutz liegen als Dateien im Repo (Frage 19), nicht im Sheet.
+Keine neuen Spalten in bestehenden Tabs.
 
-## 6. Schritte (Vorschlag)
+## 6. Textformat (gebaut in 10.2, `js/wiki-format.js`)
 
-### 10.0 – Plan schreiben (nur Doku)
+Die App baut den Text selbst in Absätze, Überschriften, Listen und Links um. Ohne Bibliothek, nur mit `el()` und `textContent`.
 
-Version: 0.31.10. Diese Datei als Fassung 1 mit Rückfragen. `docs/STAND.md` zeigt auf den Plan. Sheet und Skript bleiben unverändert.
+| Schreibweise | Ergebnis | Knopf über dem Textfeld |
+|---|---|---|
+| Leerzeile | neuer Absatz | – |
+| `## Überschrift` | große Überschrift (fett) | „Ü1“ |
+| `### Unterüberschrift` | kleinere Überschrift (fett) | „Ü2“ |
+| `- Punkt` | Liste | „• Liste“ |
+| `1. Schritt` | nummerierte Liste | „1. Liste“ |
+| `**fett**` | **fett** | „F“ |
+| `https://…` | Link | – (einfach einfügen) |
+| `[Text](https://…)` | Link mit eigenem Text | „Link“ |
+| `[[Titel einer Seite]]` | Link auf eine andere Wiki-Seite (fehlt sie: grau mit „(fehlt)“) | „Wiki-Link“ |
+| `> Hinweis` | grauer Hinweiskasten | „Hinweis“ |
+| `![Beschreibung](bild:<id>)` (eigene Zeile) | Bild aus dem Drive-Ordner der Gruppe | „Bild“ (Datei wählen, Hinweis, hochladen) |
 
-**Prüfen:** App läuft wie vorher (nur neue Version, „Info“ zeigt 0.31.10).
+Nur `https://` und `http://` werden Links (`sichereUrl`). Alles andere bleibt Text, auch `<script>` oder `javascript:`. Keine Tabellen, Farben, HTML.
+Ab 3 Überschriften steht oben ein Inhaltsverzeichnis.
+
+## 7. Schritte
+
+### 10.0 – Plan schreiben (nur Doku) – erledigt
+
+Version: 0.31.10. Fassung 1 mit 31 Rückfragen, Pull Request #37.
 
 ### 10.1 – Plan Fassung 2, Sheet und Skript (einmal von Hand bereitstellen)
 
-Version: 0.32.0. Hier steckt die ganze Handarbeit der Etappe. Danach braucht kein weiterer Schritt eine neue Bereitstellung (außer Frage 30 wird nötig).
+Version: 0.32.0. Hier steckt die ganze Handarbeit der Etappe. Danach braucht kein weiterer Schritt eine neue Bereitstellung.
 
-1. Diese Datei als Fassung 2 (Antworten in Abschnitt 3, Abschnitte 5 bis 9 angepasst).
-2. `apps-script/Schema.gs`: neue Tabs `Wiki` und `Wiki_Verlauf`, Höchstlängen in `MAX_TEXT_AUSNAHMEN` (`Wiki.text` 20000, `Wiki_Verlauf.text` 20000, `Wiki.titel` 80, `Wiki.adresse` 60, `Wiki.kategorie` 40), Kommentare zu den Tabs.
-3. `js/schema.js`: Einträge `Wiki` und `Wiki_Verlauf`.
+1. Diese Datei als Fassung 2 (Abschnitte 3 bis 9).
+2. `apps-script/Schema.gs`: neuer Tab `Wiki`, Höchstlängen in `MAX_TEXT_AUSNAHMEN` (`Wiki.bereich` 20, `Wiki.thema` 40, `Wiki.titel` 80, `Wiki.adresse` 60, `Wiki.text` 20000), Kommentar zum Tab.
+3. `js/schema.js`: Eintrag `Wiki`.
 4. Neue Datei `apps-script/Wiki.gs` (Abschnitt 5).
-5. `apps-script/Daten.gs`: `wikiPruefen` in `create`, `batchCreate`, `update`; `wikiVerlauf` in `update`; `wikiKaskade` in `delete`; `Wiki_Verlauf` für Schreiben sperren.
-6. `apps-script/Code.gs`: `if (p.aktion === 'wiki') return aktionWiki(p);` bei „Ohne Login“.
-7. `apps-script/Aufraeumen.gs`: Verlauf in `aufraeumenTesten` zählen.
-8. **Pull-Request-Abschnitt „Von Hand zu erledigen“** (genaue Liste: Tabs `Wiki` und `Wiki_Verlauf` mit Zeile 1 zum Abtippen, geänderte `.gs`-Dateien ganz kopieren,
-   `formatieren` ausführen, `testenWiki` und `testenWikiSicher` ausführen, neue Version bereitstellen).
+5. `apps-script/Daten.gs`: `wikiPruefen` in `create`, `batchCreate`, `update`; `wikiKaskade` in `delete`.
+6. `apps-script/Code.gs`: Aktion `wiki` bei „Ohne Login“.
+7. `apps-script/Upload.gs`: `zweck: 'wiki'`.
+8. **Pull-Request-Abschnitt „Von Hand zu erledigen“** (genaue Liste im Pull Request).
 
-**Prüfen:** App läuft wie vorher. `testenWiki` zeigt „Alles ok.“, `testenWikiSicher` zeigt „ALLES GUT“. Öffentliche Termine laden weiter.
+**Prüfen:** App läuft wie vorher. `testenWiki` zeigt „Alles ok.“, `testenWikiSicher` zeigt „ALLES GUT“. Öffentliche Termine laden weiter. Foto beim Material hochladen geht weiter.
 
 ### 10.2 – Textformat und Rechtliches (Impressum, Info, Datenschutz)
 
 Version: 0.32.1. Sheet und Skript bleiben unverändert.
 
-1. Neue Datei `js/wiki-format.js`: `zeichneText(text, opt)` baut aus dem Text (Frage 11) DOM-Knoten (nur `el()` und `textContent`, Links nur mit `sichereUrl`),
-   `ueberschriften(text)` (für das Inhaltsverzeichnis), `platzhalterDa(text)` (für Frage 20b). Kleine Beispiele als Kommentar, mit `node` geprüft
-   (auch: `<script>` bleibt Text, `javascript:`-Link wird kein Link).
-2. Neue Dateien `texte/impressum.txt`, `texte/info.txt`, `texte/datenschutz.txt` (Inhalt nach den Fragen 19 bis 22, mit Absatz zum Team). Alle in `sw.js` (`HUELLE`).
-3. `js/views/info.js`: lädt die passende Datei (`fetch`, relativ) und zeigt sie mit `zeichneText`. Ohne Netz kommt sie aus dem Zwischenspeicher der App-Hülle.
-   Info-Seite: Gruppen mit Links (aus der Aktion `wiki`, Liste), Links zu Termine und Wissen, Version.
-4. CSS ans Ende von `css/components.css` (`/* ---- 0.32.1: Wiki-Text ---- */`).
+1. Neue Datei `js/wiki-format.js`: `zeichneText(text, opt)` (Abschnitt 6; `opt.seiteFinden(titel)` für `[[…]]`, `opt.bildUrl(id)`), `ueberschriften(text)`.
+   Kleine Beispiele als Kommentar, mit `node` geprüft (auch: `<script>` bleibt Text, `javascript:`-Link wird kein Link).
+2. Neue Dateien `texte/impressum.txt` (Platzhalter, Entscheidung 20), `texte/info.txt`, `texte/datenschutz.txt` (Inhalt nach Entscheidung 21, mit Absatz zum Team). Alle in `sw.js` (`HUELLE`).
+   Datenschutz nennt auch: Bilder im Wiki kommen von Google Drive (beim Ansehen sieht Google die IP-Adresse).
+3. `js/views/info.js`: lädt die passende Datei und zeigt sie mit `zeichneText`. Info-Seite: Gruppen mit Links (aus der Aktion `wiki`), Link „Wiki“ (ab 10.7), Version. Keine Termine.
+4. `docs/STAND.md`, Abschnitt „Offen“: ToDo für die Person „Platzhalter im Impressum ausfüllen“.
+5. CSS ans Ende von `css/components.css` (`/* ---- 0.32.1: Wiki-Text ---- */`).
 
-**Prüfen:** `#/info/impressum`, `#/info/info`, `#/info/datenschutz` ohne Login, am Handy und am PC. Datenschutz enthält den Absatz zum Team.
-Seite einmal laden, dann ohne Netz (Flugmodus) neu öffnen: Text ist da.
+**Prüfen:** `#/info/impressum`, `#/info/info`, `#/info/datenschutz` ohne Login, am Handy und am PC. Datenschutz enthält den Absatz zum Team. Info zeigt die Gruppen mit Links.
 
-### 10.3 – Reiter Wiki (lesen) und Anleitung „Team“
+### 10.3 – Reiter Wiki (lesen, suchen)
 
 Version: 0.32.2. Sheet und Skript bleiben unverändert.
 
-1. `js/ui/nav.js`: in `TABS` `{ id: 'wiki', label: 'Wiki', icon: '📖' }` statt `hilfe`. `js/config.js`: `features.wiki = true` statt `features.hilfe`.
-   `js/views/mehr.js`: `wiki` statt `hilfe`. `js/app.js`: `#/g/<kurz>/hilfe` → `wiki`; `ctx.unter` auch für `wiki`.
-2. Neue Datei `js/views/wiki.js` (`render(container, ctx)`): lädt `Wiki` (Zwischenspeicher `gruppe_id:wiki`, `ladeMitCache`) und die Liste der Anleitungsseiten.
-   Startseite nach Frage 6, Seitenansicht nach Frage 31, Inhaltsverzeichnis (Frage 14), interne Links `[[…]]`.
-3. Neue Datei `js/views/wiki-rechnen.js`: `sortiereSeiten`, `nachKategorie`, `findeSeite(titel)`, `adresseAus(titel)`, `passtSuche`, `ausschnitt`. Mit `node` geprüft.
-4. Neue Datei `texte/anleitung/team.txt` (Inhalt von `TEAM_HILFE`) und `texte/anleitung/liste.txt` (Reihenfolge und Titel der Anleitungsseiten), beide in `HUELLE`.
-5. `js/views/team.js`: Link unten auf `wiki/anleitung:team`. **`js/views/hilfe.js` löschen** und aus `HUELLE` austragen (Frage 23).
-6. Neue Dateien in `sw.js` (`HUELLE`), CSS ans Ende.
+1. `js/ui/nav.js`: in `TABS` `{ id: 'wiki', label: 'Wiki', icon: '📖' }` statt `hilfe`. `js/config.js`: `features.wiki` statt `features.hilfe`.
+   `js/views/mehr.js`: `wiki` statt `hilfe`. `js/app.js`: `…/hilfe` → `wiki`; `ctx.unter` auch für `wiki`.
+2. Neue Datei `js/views/wiki.js` (`render(container, ctx)`): drei Knöpfe (Entscheidung 6), darunter Suche und Inhalt. Alles im Inhalt, kein Detailbereich (Entscheidung 31).
+   Der gewählte Bereich bleibt beim Reiterwechsel (Merker im Speicher). Lädt `Wiki` (Zwischenspeicher `gruppe_id:wiki`, `ladeMitCache`).
+   - Skillshare: Themen A–Z als Aufklapper, Seiten A–Z. Leer: freundlicher Satz.
+   - Anleitung: feste Seiten (Reihenfolge aus `texte/anleitung/liste.txt`), darunter „Von unserer Gruppe“ (Frage C).
+   - Entwicklung App: `texte/entwicklung.txt` und die Seite „Zuständig für die App“.
+   - Seite: Titel, Stand, Marke „🌐 öffentlich“, Inhaltsverzeichnis, Text. Oben „← Wiki“. Adressen `#/g/<kurz>/wiki/<seiten-id>` und `#/g/<kurz>/wiki/anleitung:<name>`.
+   - Suche (Entscheidung 5) im gewählten Bereich, mit Ausschnitt.
+3. Neue Datei `js/views/wiki-rechnen.js`: `THEMEN`, `sortiereSeiten`, `nachThema`, `findeSeite(titel)`, `adresseAus(titel)`, `passtSuche`, `ausschnitt`. Mit `node` geprüft.
+4. Neue Dateien `texte/anleitung/liste.txt`, `texte/anleitung/team.txt` (Inhalt von `TEAM_HILFE`), `texte/entwicklung.txt` (erste Fassung: Etappen zusammengefasst),
+   `texte/anleitung/zustaendig.txt` (Platzhalter, Entscheidung 2 und 20). Alle in `HUELLE`.
+5. `js/views/team.js`: Link unten auf `wiki/anleitung:team`. **`js/views/hilfe.js` löschen** und aus `HUELLE` austragen.
+6. CSS ans Ende.
 
-**Prüfen:** Reiter „Wiki“ am PC in der Seitenleiste, am Handy unter „Mehr“. Alte Adresse `…/hilfe` öffnet das Wiki. Anleitung „Team“ zeigt den bisherigen Hilfetext.
-Link im Reiter Team führt dorthin. Skillshare leer mit freundlichem Satz.
+**Prüfen:** Reiter „Wiki“ am PC in der Seitenleiste, am Handy unter „Mehr“. Drei Knöpfe füllen die Breite, der gewählte bleibt markiert. Alte Adresse `…/hilfe` öffnet das Wiki.
+Anleitung „Team“ zeigt den bisherigen Hilfetext. Link im Reiter Team führt dorthin. Skillshare leer mit freundlichem Satz. Suche findet ein Wort aus der Anleitung.
 
-### 10.4 – Skillshare-Seiten schreiben, Verlauf
+### 10.4 – Seiten schreiben, Bilder
 
 Version: 0.32.3. Sheet und Skript bleiben unverändert.
 
-1. Neue Datei `js/views/wiki-eintrag.js`: Formular „+ Seite“ und „Bearbeiten“: Titel, Kategorie (Vorschläge), Text mit Zähler, Format-Hilfe und Vorschau (Frage 12),
-   „Öffentlich“ mit Warnung (Frage 15), unter „Mehr“: Reihenfolge und Adresse. Vorlagen (Frage 25) beim Anlegen.
-2. Speichern mit Konfliktprüfung (Frage 9), Entwurf im Gerät (`js/store.js`, Schlüssel `aktionsdeck_entwurf_wiki_<gruppe_id>`, in `gibtEntwurf` und `loescheAlleEntwuerfe` aufnehmen).
-   Keine Offline-Schreibzugriffe.
-3. Löschen mit Rückfrage (nennt „auch öffentlich“, wenn die Seite öffentlich ist).
-4. „Verlauf (n)“: Fassungen mit Datum und Name, „Ansehen“, „Diese Fassung wiederherstellen“ (Frage 8).
+1. Neue Datei `js/views/wiki-eintrag.js`: „+ Seite“ und „Bearbeiten“ (Skillshare und eigene Anleitungsseiten), im Inhalt:
+   Titel, Thema (Auswahl aus der festen Liste, nur Skillshare), Knöpfe aus Abschnitt 6, Textfeld mit Zähler, Vorschau live (PC daneben, Handy „Schreiben | Vorschau“),
+   „Öffentlich“ mit Warnsatz, unter „Mehr“: Adresse. „+ Gruppe intern anlegen“ (Frage C).
+2. **Bild:** Datei wählen, Hinweis „Auf dem Bild sind keine Personen und keine persönlichen Daten.“ (Haken zum Bestätigen), Bildbeschreibung (Pflicht),
+   verkleinern (`verkleinern`, 1000 px), `uploadImage` mit `zweck: 'wiki'`, fügt `![Beschreibung](bild:<id>)` an der Cursorstelle ein.
+3. Speichern mit Konfliktprüfung (Entscheidung 9). Entwurf im Gerät (`js/store.js`, `aktionsdeck_entwurf_wiki_<gruppe_id>`, in `gibtEntwurf` und `loescheAlleEntwuerfe`).
+   Keine Offline-Schreibzugriffe. Löschen mit Rückfrage (nennt „auch öffentlich“).
+4. Meldungen vom Skript (Titel oder Adresse doppelt) stehen im Formular.
 
-**Prüfen:** Seite anlegen, Text mit Überschrift, Liste und Link, Vorschau stimmt. Zweites Gerät ändert dieselbe Seite: Konflikt-Hinweis, eigener Text bleibt.
-Verlauf zeigt die alte Fassung, Wiederherstellen klappt. Adresse doppelt: Meldung vom Skript.
+**Prüfen:** Seite anlegen mit Ü1, Liste, Link, Bild. Vorschau ändert sich beim Tippen. Zweites Gerät ändert dieselbe Seite: Konflikt-Hinweis, eigener Text bleibt.
+Gleicher Titel zweimal: Meldung. Seite löschen.
 
-### 10.5 – Suche, Kommentare, Was ist neu
+### 10.5 – Kommentare und „Link kopieren“
 
 Version: 0.32.4. Sheet und Skript bleiben unverändert.
 
-1. Suche über Anleitung und Skillshare mit Ausschnitt (Frage 5).
-2. Kommentare unter Skillshare-Seiten (`baueKommentare`, `art: 'wiki'`, Frage 26). Marke „💬 n“ in der Liste.
-3. `js/ui/neu-seit.js`: `Wiki` in `listMehrere` (dann 12 Tabellen), Abschnitt „Wiki“, Kommentare mit `art: 'wiki'` mit Seitentitel (Frage 27).
-4. „Zuletzt geändert“ auf der Wiki-Startseite.
+1. Kommentare unter Seiten aus dem Sheet (`baueKommentare`, `art: 'wiki'`, Entscheidung 26). Marke „💬 n“ in der Liste. Nicht in „Was ist neu?“ (Entscheidung 27).
+   `js/ui/neu-seit.js` zeigt Kommentare mit `art: 'wiki'` schon an; dort nur den Text „zu Wiki-Seite“ ergänzen, falls nötig.
+2. „Link kopieren“ bei öffentlichen Seiten (öffentliche Adresse).
 
-**Prüfen:** Suche nach einem Wort aus dem Text findet die Seite. Kommentar an einer Seite erscheint auf dem anderen Gerät unter „Was ist neu?“.
+**Prüfen:** Kommentar an einer Seite, auf dem anderen Gerät sichtbar. Seite löschen: Kommentar ist weg.
 
-### 10.6 – App-Anleitung schreiben
+### 10.6 – App-Anleitung und Entwicklung App schreiben
 
 Version: 0.32.5. Sheet und Skript bleiben unverändert.
 
-1. Neue Dateien `texte/anleitung/<seite>.txt` nach Frage 24 (Texte nach dem Stand im Code, keine erfundenen Abläufe der Gruppen). Alle in `HUELLE`, `liste.txt` ergänzt.
-2. Abschnitt in `CLAUDE.md`: Neue Funktionen ergänzen die passende Anleitungsseite im selben Pull Request (nur wenn die Person zustimmt, Frage 24).
+1. Neue Dateien `texte/anleitung/<seite>.txt`: Erste Schritte, Start, Projekte, ToDos und Hüte, Material, Mobi, Kalender, Dokumentation, Team (schon da), Wiki (mit Format-Hilfe), Häufige Fragen.
+   Texte nach dem Stand im Code, keine erfundenen Abläufe der Gruppen. Alle in `HUELLE`, `liste.txt` ergänzt.
+2. `texte/entwicklung.txt` vervollständigt. `CLAUDE.md`: Regel „neue Funktion → Anleitungsseite ergänzen“ und (Frage B) „neue Version → Zeile in `texte/entwicklung.txt`“.
 
 **Prüfen:** Jede Anleitungsseite öffnet sich, Links zwischen den Seiten gehen. Inhalt lesen und Anmerkungen sammeln.
 
@@ -352,80 +262,85 @@ Version: 0.32.5. Sheet und Skript bleiben unverändert.
 
 Version: 0.32.6. Sheet und Skript bleiben unverändert.
 
-1. Neue Datei `js/views/wiki-oeffentlich.js` (`render(container, ctx)`): Übersicht und Seite nach Frage 17, Aufbau wie `js/views/termine.js` (Balken, „← Zur Gruppenwahl“ bzw. „← Zurück zur App“).
-   Laden mit `ladeMitCache('oeffentlich:wiki', …, true)` und `api('wiki', …)` ohne Token. Seiten einzeln mit `oeffentlich:wiki:<gruppe>:<adresse>`.
-2. `js/app.js`: Weg `#/wiki[/<gruppe>/<adresse>]` vor dem Login-Teil (wie `termine`). `js/ui/nav.js`: „Wissen“ in `oeffentlicheLinks()` (Frage 18).
-3. Im Reiter Wiki: Marke „🌐 öffentlich“, „Link kopieren“, Aufklapper „Öffentliche Seiten anderer Gruppen“ (Frage 16).
-4. Interne Links `[[…]]` auf öffentlichen Seiten führen nur auf andere **öffentliche** Seiten derselben Gruppe, sonst nur Text.
+1. Neue Datei `js/views/wiki-oeffentlich.js` (`render(container, ctx)`): Aufbau wie `js/views/termine.js` (Balken, Zurück-Link).
+   Übersicht: „Entwicklung App“, „Erste Schritte“, dann öffentliche Seiten nach Gruppe (Auswahl ab zwei Gruppen) und Thema. Seite `#/wiki/<gruppe>/<adresse>`.
+   Laden mit `ladeMitCache('oeffentlich:wiki', …, true)` und `api('wiki', …)` ohne Token, Seiten einzeln `oeffentlich:wiki:<gruppe>:<adresse>`.
+   Feste Seiten: `#/wiki/app/entwicklung` und `#/wiki/app/erste-schritte`.
+2. `js/app.js`: Weg `#/wiki…` vor dem Login-Teil (wie `termine`). `js/ui/nav.js`: „Wiki“ in `oeffentlicheLinks()`. Info-Seite verlinkt das Wiki.
+3. Links `[[…]]` auf öffentlichen Seiten führen nur auf andere öffentliche Seiten derselben Gruppe, sonst nur Text. Keine Kommentare, keine Namen.
 
-**Prüfen:** Seite öffentlich machen. Im privaten Fenster (ohne Login) unter `#/wiki` erscheint sie nach höchstens 2 Minuten, ohne Namen.
-Haken wieder weg: Sie verschwindet nach höchstens 2 Minuten. Kommentare sind öffentlich nicht zu sehen. Erfundene Adresse: „Seite nicht gefunden“.
+**Prüfen:** Seite öffentlich machen. Im privaten Fenster (ohne Login) unter `#/wiki` erscheint sie nach höchstens 2 Minuten, ohne Namen und Kommentare. Bild ist sichtbar.
+Haken wieder weg: Sie verschwindet nach höchstens 2 Minuten. Erfundene Adresse: „Seite nicht gefunden“. „Entwicklung App“ und „Erste Schritte“ sind ohne Login da.
 
-### 10.8 – Kalender-Abo testen
+### 10.8 – Kalender-Abo
 
-Version: 0.32.7. Sheet und Skript bleiben unverändert (außer der Ausweg aus Frage 30 wird gebraucht, dann eigener Schritt 10.8a).
+Version: 0.32.7. Sheet und Skript bleiben unverändert.
 
-1. `js/views/termine-liste.js`: neben der Abo-Adresse die Knöpfe „In Google Kalender öffnen“ und „In Apple Kalender öffnen“ (`webcal://`) (Frage 29).
-2. Test-Anleitung für die Person im Pull Request (Google am PC, Google am Android-Handy über den PC, iPhone, Mac).
-3. Anleitung in `texte/anleitung/kalender.txt` ergänzt.
-4. Ergebnis kommt in `docs/STAND.md`. Klappt es nicht: Schritt 10.8a nach Frage 30.
+1. `js/views/termine-liste.js`: neben der Abo-Adresse „In Google Kalender öffnen“ und „In Apple Kalender öffnen“ (`webcal://`).
+2. Test-Anleitung für die Person im Pull Request (Google am PC, iPhone, Mac). Anleitung in `texte/anleitung/kalender.txt` ergänzt.
+3. Ergebnis kommt in `docs/STAND.md`. Kein Ausweg über GitHub Actions (Entscheidung 30); klappt es nicht, wird neu entschieden.
 
-**Prüfen:** Abo in Google Kalender und Apple Kalender anlegen. Eine neue öffentliche Veranstaltung erscheint (bei Google nach einigen Stunden). Ergebnis melden.
+**Prüfen:** Abo in Google Kalender und Apple Kalender anlegen. Eine neue öffentliche Veranstaltung erscheint (bei Google erst nach einigen Stunden). Ergebnis melden.
 
 ### 10.9 – Feinschliff und Abschluss
 
 Version: 0.32.8. Sheet und Skript bleiben unverändert.
 
 1. Anmerkungen aus den Prüfungen, soweit klein.
-2. `docs/STAND.md`: Etappe 10 abschließen, Dateiübersicht, offene Punkte. Punkte „Etappe 10 (Datenschutz)“ und „Etappe 10 (öffentliche Seiten)“ in „Offen“ erledigen.
-3. `CLAUDE.md`: Reiter „Wiki“ statt „Info/Hilfe“ in Abschnitt 1 und 5, Hinweis auf `texte/`.
+2. `docs/STAND.md`: Etappe 10 abschließen, Dateiübersicht, offene Punkte.
+3. `CLAUDE.md`: Reiter „Wiki“ statt „Info/Hilfe“ in Abschnitt 1 und 5, Ordner `texte/`.
 
 **Prüfen:** Alles aus 10.2 bis 10.8 läuft noch.
 
-## 7. Regeln und Risiken für Etappe 10
+## 8. Regeln und Risiken für Etappe 10
 
-- **Öffentlich heißt öffentlich:** Was auf einer öffentlichen Seite steht, kann jede Person lesen, kopieren und speichern. Auch wenn der Haken später weg ist.
-  Darum Standard „nicht öffentlich“, Warnsatz beim Anhaken, Marke in der Liste. Kein Name, kein Verlauf, keine Kommentare nach außen.
-- **Auslieferung ohne Login wie `Termine.gs`:** feste Liste erlaubter Felder, nur aktive Gruppen, strenge Prüfung von Gruppe und Adresse, kurzer Zwischenspeicher nur für vorhandene Seiten,
-  Editor-Test `testenWikiSicher`. Die Aktion schreibt nichts und speichert keinen Anzeigenamen.
-- **Texte nur mit `textContent`:** Das Textformat baut DOM-Knoten selbst. Kein `innerHTML`, auch nicht für fett oder Listen. Links nur mit `http(s)://` (`sichereUrl`).
-  Das Skript schützt Werte mit `=`, `+`, `-`, `@` wie immer (beginnt ein Text mit „- “, bekommt er im Sheet ein Hochkomma; `aus` in `apps-script/Util.gs` nimmt es beim Lesen wieder weg).
-- **Größe:** Eine Seite bis 20 000 Zeichen, eine Sheet-Zelle fasst 50 000. `CacheService` höchstens 100 KB je Eintrag: darum die Liste ohne Texte und Seiten einzeln.
-- **Anleitung als Dateien:** Sie laden ohne Skript und offline. Jede Datei muss in `HUELLE` stehen. Eine fehlende Datei zeigt „Diese Seite fehlt“ statt eines Fehlers.
-- **Rechtliches:** Der Agent schreibt Entwürfe nach der echten Technik, aber keine Rechtsberatung. Keine erfundenen Namen oder Adressen, keine Abfrage von Daten.
-  Platzhalter bleiben sichtbar, bis die Person sie ersetzt.
-- **Löschen von `js/views/hilfe.js`:** steht ausdrücklich in diesem Plan (10.3). Alte Adressen `…/hilfe` führen zum Wiki.
-- **„Was ist neu?“ an der Grenze:** Mit `Wiki` fragt es 12 Tabellen ab. Spätere Quellen brauchen eine zweite Anfrage.
-- **Kalender-Abo:** Ob Google und Apple der Weiterleitung des Skripts folgen, kann nur die Person testen. Google lädt Abos nur alle paar Stunden neu, das ist kein Fehler.
-- **Strenge Spaltenköpfe:** Beim Schreiben in `Wiki` und beim Verlauf prüft das Skript die Köpfe streng. Fehlt ein Tab, kann der Reiter Wiki keine Skillshare-Seiten laden (die Anleitung geht trotzdem).
+- **Öffentlich heißt öffentlich:** Was auf einer öffentlichen Seite steht, kann jede Person lesen und speichern, auch wenn der Haken später weg ist.
+  Standard „nicht öffentlich“, Warnsatz, Marke in der Liste. Keine Namen, keine Kommentare nach außen.
+- **Dateien der App sind immer öffentlich abrufbar** (GitHub Pages). In `texte/` steht nie etwas Internes. Internes gehört in Seiten im Sheet.
+- **Bilder:** Hochgeladene Bilder sind im Drive „für alle mit Link“ lesbar (wie beim Material), auch wenn die Seite nicht öffentlich ist.
+  Darum der Hinweis „keine Personen, keine persönlichen Daten“. Ein Bild aus dem Text zu nehmen löscht es nicht im Drive.
+- **Auslieferung ohne Login wie `Termine.gs`:** feste Felder, nur aktive Gruppen, strenge Prüfung von Gruppe und Adresse, Zwischenspeicher nur für vorhandene Seiten,
+  Editor-Test `testenWikiSicher`. Die Aktion schreibt nichts und liest keinen Anzeigenamen.
+- **Texte nur mit `textContent`:** Das Textformat baut DOM-Knoten selbst, kein `innerHTML`. Links nur mit `http(s)://`. Bild-IDs nur `[A-Za-z0-9_-]`.
+  Das Skript schützt Werte mit `=`, `+`, `-`, `@` (ein Text, der mit „- “ beginnt, bekommt im Sheet ein Hochkomma; `aus` in `Util.gs` nimmt es beim Lesen weg).
+- **Kein Verlauf:** Wer speichert, überschreibt. Schutz: Konfliktprüfung und Entwurf im Gerät. Das Log sagt, wer wann geändert hat.
+- **Größe:** 20 000 Zeichen je Seite. `CacheService` höchstens 100 KB je Eintrag: darum Liste ohne Texte, Seiten einzeln.
+- **Rechtliches:** Entwürfe nach der echten Technik, keine Rechtsberatung. Keine erfundenen Namen oder Adressen. Platzhalter bleiben sichtbar, bis die Person sie ersetzt.
+- **Strenge Spaltenköpfe:** Beim Schreiben in `Wiki` und bei der öffentlichen Aktion prüft das Skript die Köpfe. Fehlt der Tab, lädt der Reiter Wiki keine Seiten aus dem Sheet (die Anleitung geht trotzdem).
   Wie immer: zuerst das Sheet, dann das Skript.
-- **Nicht vom Agenten prüfbar:** Aussehen am Handy, echte Bereitstellung, Editor-Tests im echten Sheet, Kalender-Abo in Google und Apple.
-  Der Agent prüft das Textformat und die Rechenfunktionen mit `node`, das Skript mit einem nachgebauten Sheet, und die Seiten im Browser mit erfundenen Daten.
+- **Nicht vom Agenten prüfbar:** Aussehen am Handy, echte Bereitstellung, Editor-Tests im echten Sheet, Kalender-Abo. Der Agent prüft Textformat und Rechenfunktionen mit `node`,
+  das Skript mit einem nachgebauten Sheet, die Seiten im Browser mit erfundenen Daten.
 
-## 8. Reihenfolge und Versionen
+## 9. Reihenfolge und Versionen
 
 | Schritt | Inhalt | Version | Sheet/Skript |
 |---|---|---|---|
 | 10.0 | Plan Fassung 1 mit Rückfragen | 0.31.10 | nein |
-| 10.1 | Plan Fassung 2; Tabs `Wiki` und `Wiki_Verlauf`, `Wiki.gs`, öffentliche Aktion `wiki` | 0.32.0 | **ja, von Hand** |
+| 10.1 | Plan Fassung 2; Tab `Wiki`, `Wiki.gs`, öffentliche Aktion `wiki`, Bilder | 0.32.0 | **ja, von Hand** |
 | 10.2 | Textformat; Impressum, Info, Datenschutz (mit Absatz Team) | 0.32.1 | nein |
-| 10.3 | Reiter Wiki (lesen), Anleitung „Team“, Hilfe entfällt | 0.32.2 | nein |
-| 10.4 | Skillshare-Seiten schreiben, Verlauf | 0.32.3 | nein |
-| 10.5 | Suche, Kommentare, Was ist neu | 0.32.4 | nein |
-| 10.6 | App-Anleitung für alle Reiter | 0.32.5 | nein |
+| 10.3 | Reiter Wiki (lesen, suchen), Anleitung „Team“, Hilfe entfällt | 0.32.2 | nein |
+| 10.4 | Seiten schreiben, Bilder | 0.32.3 | nein |
+| 10.5 | Kommentare, Link kopieren | 0.32.4 | nein |
+| 10.6 | App-Anleitung und Entwicklung App | 0.32.5 | nein |
 | 10.7 | Öffentliches Wiki `#/wiki` | 0.32.6 | nein |
-| 10.8 | Kalender-Abo testen (Knöpfe Google und Apple) | 0.32.7 | nein (10.8a nur im Notfall) |
+| 10.8 | Kalender-Abo (Knöpfe Google und Apple, Test) | 0.32.7 | nein |
 | 10.9 | Feinschliff, Abschluss | 0.32.8 | nein |
 
 Die Versionen in dieser Tabelle sind die geplanten. Nachbesserungen zählen die Version hoch (auch in einem offenen Pull Request), dann verschieben sich die folgenden Nummern.
 
+**Echte Versionen und Pull Requests:**
+
+| Schritt | Inhalt | Version | Pull Request |
+|---|---|---|---|
+| 10.0 | Plan Fassung 1 | 0.31.10 | #37 |
+| 10.1 | Plan Fassung 2, Sheet und Skript | 0.32.0 | – |
+
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt. Die Anmerkungen kommen in den nächsten Pull Request, vor dem nächsten Schritt.
 
-## 9. Dateien der Etappe (Vorschlag)
+## 10. Dateien der Etappe
 
-- Neu: `js/wiki-format.js`, `js/views/wiki.js`, `js/views/wiki-rechnen.js`, `js/views/wiki-eintrag.js`, `js/views/wiki-oeffentlich.js`,
-  `texte/impressum.txt`, `texte/info.txt`, `texte/datenschutz.txt`, `texte/anleitung/*.txt`, `apps-script/Wiki.gs`.
-- Geändert: `js/ui/nav.js`, `js/config.js` (VERSION, `features`), `js/app.js`, `js/views/mehr.js`, `js/views/info.js`, `js/views/team.js`, `js/views/termine-liste.js`,
-  `js/ui/neu-seit.js`, `js/store.js`, `js/schema.js`, `sw.js`, `css/components.css`, `apps-script/Schema.gs`, `apps-script/Daten.gs`, `apps-script/Code.gs`, `apps-script/Aufraeumen.gs`,
-  `docs/STAND.md`, `CLAUDE.md` (10.9).
+- Neu: `apps-script/Wiki.gs`, `js/wiki-format.js`, `js/views/wiki.js`, `js/views/wiki-rechnen.js`, `js/views/wiki-eintrag.js`, `js/views/wiki-oeffentlich.js`,
+  `texte/impressum.txt`, `texte/info.txt`, `texte/datenschutz.txt`, `texte/entwicklung.txt`, `texte/anleitung/*.txt`.
+- Geändert: `apps-script/Schema.gs`, `apps-script/Daten.gs`, `apps-script/Code.gs`, `apps-script/Upload.gs`, `js/schema.js`, `js/ui/nav.js`, `js/config.js` (VERSION, `features`),
+  `js/app.js`, `js/views/mehr.js`, `js/views/info.js`, `js/views/team.js`, `js/views/termine-liste.js`, `js/store.js`, `sw.js`, `css/components.css`, `docs/STAND.md`, `CLAUDE.md`.
 - Gelöscht: `js/views/hilfe.js` (10.3).

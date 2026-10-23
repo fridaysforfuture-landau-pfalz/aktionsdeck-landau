@@ -199,6 +199,7 @@ function aktionCreate(ctx, p) {
     protokollBezugPruefen(ctx, tab, p.daten.veranstaltung_id, bezugCache);
     var o = neuerEintrag(tab, ctx, p.daten, anzeige, jetzt());
     teamPruefen(ctx, tab, o, o.id, bezugCache, null);
+    wikiPruefen(ctx, tab, o, o.id, bezugCache, null);
     anhaengen(sh, [zeilenArray(kopf, o)]);
     protokoll(ctx, 'create', tab, [o.id], anzeige);
     return o;
@@ -225,6 +226,7 @@ function aktionBatchCreate(ctx, p) {
       protokollBezugPruefen(ctx, tab, d.veranstaltung_id, cache);
       var o = neuerEintrag(tab, ctx, d, anzeige, zeit);
       teamPruefen(ctx, tab, o, o.id, cache, null);
+      wikiPruefen(ctx, tab, o, o.id, cache, null);
       return o;
     });
     anhaengen(sh, eintraege.map(function (o) { return zeilenArray(kopf, o); }));
@@ -276,6 +278,8 @@ function aktionUpdate(ctx, p) {
     var ganz = {};
     TABELLEN[tab].forEach(function (sp) { ganz[sp] = vor(sp); });
     teamPruefen(ctx, tab, ganz, z.id, {}, Object.keys(neu));
+    // Wiki: Bereich, Titel und Adresse prüfen
+    wikiPruefen(ctx, tab, ganz, z.id, {}, Object.keys(neu));
     var altName = z.name;
     var zeit = jetzt();
     neu.geaendert_am = zeit;
@@ -322,6 +326,9 @@ function aktionDelete(ctx, p) {
 
     // Team: Person gelöscht = ihre Kapazität geht mit, Rolle gelöscht = bei allen Personen austragen
     teamKaskade(ctx, tab, z, zeit, anzeige);
+
+    // Wiki: Seite gelöscht = ihre Kommentare gehen mit
+    wikiKaskade(ctx, tab, z, zeit, anzeige);
 
     // Meilenstein gelöscht: seine ToDos bleiben, verlieren nur den Verweis
     if (tab === 'Meilensteine') {

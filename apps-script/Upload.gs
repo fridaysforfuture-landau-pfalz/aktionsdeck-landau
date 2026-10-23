@@ -1,6 +1,7 @@
 // Upload.gs – Aktion "uploadImage": speichert ein verkleinertes JPEG im Drive-Ordner der Gruppe.
 // Ordner-IDs stehen nur in den Skripteigenschaften: FOTO_ORDNER_<gruppe_id>, z. B. FOTO_ORDNER_g1.
-// Aufruf: { aktion:'uploadImage', token, bild:'<base64 ohne Präfix>', mime:'image/jpeg' }
+// Aufruf: { aktion:'uploadImage', token, bild:'<base64 ohne Präfix>', mime:'image/jpeg', zweck:'wiki' (freiwillig) }
+// zweck 'wiki' (seit 0.32.0): Bild für eine Wiki-Seite (Dateiname wiki_…, Log „Wiki“). Ohne zweck: Material.
 // Antwort: { foto_id }
 
 function fotoOrdnerFuer(gid) {
@@ -26,7 +27,8 @@ function aktionUploadImage(ctx, p) {
   }
 
   var anzeige = anzeigename(p);
-  var name = 'material_' + jetzt().replace(/[^0-9]/g, '') + '_' + Utilities.getUuid().slice(0, 6) + '.jpg';
+  var zweck = p.zweck === 'wiki' ? 'wiki' : 'material';
+  var name = zweck + '_' + jetzt().replace(/[^0-9]/g, '') + '_' + Utilities.getUuid().slice(0, 6) + '.jpg';
   var blob = Utilities.newBlob(bytes, 'image/jpeg', name);
   var datei;
   try {
@@ -38,7 +40,7 @@ function aktionUploadImage(ctx, p) {
   try { datei.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); }
   catch (e3) { /* Der Ordner gibt die Freigabe meist schon weiter */ }
 
-  protokoll(ctx, 'upload', 'Material', [datei.getId()], anzeige);
+  protokoll(ctx, 'upload', zweck === 'wiki' ? 'Wiki' : 'Material', [datei.getId()], anzeige);
   return { foto_id: datei.getId() };
 }
 

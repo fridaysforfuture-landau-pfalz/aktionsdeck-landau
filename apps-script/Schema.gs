@@ -24,6 +24,9 @@ var BASIS = ['id', 'gruppe_id', 'erstellt_am', 'erstellt_von',
 //   gewaehlt = fest gewählte Rolle (höchstens eine Person). sortierung = Reihenfolge in der Liste.
 // Kapazitaet: eine Zeile je Angabe (seit 0.31.0). person_id = Zeile in Personen. kapazitaet = ganze Zahl 1 bis 10.
 //   gueltig_ab, gueltig_bis = JJJJ-MM-TT (höchstens 183 Tage). Wird nur angelegt oder gelöscht.
+// Wiki: eine Zeile je Seite (seit 0.32.0). bereich = skillshare | anleitung (eigene Anleitungsseite der Gruppe).
+//   thema = Thema im Skillshare (feste Liste in der App). titel und adresse in der Gruppe nur einmal.
+//   adresse = Teil des öffentlichen Links (a-z, 0-9, Bindestrich). oeffentlich = ohne Login lesbar. Prüfungen in Wiki.gs.
 // Kommentare: freie Kommentare zu einem Projekt.
 //   stelle = Absatz im Redetext, zu dem der Kommentar gehört ("Nummer|Anfang des Absatzes", seit 0.30.12).
 var TABELLEN = {
@@ -57,7 +60,8 @@ var TABELLEN = {
   Mobi_Plan: ['projekt_id', 'veranstaltung_id', 'kanal', 'format', 'titel', 'text', 'kanal_text', 'hashtags',
               'datum', 'uhrzeit', 'status', 'verantwortlich', 'canva_link', 'ergebnis', 'notiz'],
   Gruppen_Rollen: ['name', 'beschreibung', 'gewaehlt', 'sortierung'],
-  Kapazitaet: ['person_id', 'kapazitaet', 'gueltig_ab', 'gueltig_bis', 'notiz']
+  Kapazitaet: ['person_id', 'kapazitaet', 'gueltig_ab', 'gueltig_bis', 'notiz'],
+  Wiki: ['bereich', 'thema', 'titel', 'adresse', 'text', 'oeffentlich']
 };
 
 // System-Tabs (über die API nicht direkt änderbar)
@@ -80,7 +84,8 @@ var MAX_TEXT = 5000;
 var MAX_TEXT_AUSNAHMEN = {
   'Protokolle.text': 20000, 'Reden.text': 20000,
   'Personen.name': 60, 'Personen.rollen': 400, 'Personen.notiz': 120,
-  'Gruppen_Rollen.name': 40, 'Gruppen_Rollen.beschreibung': 300, 'Kapazitaet.notiz': 120
+  'Gruppen_Rollen.name': 40, 'Gruppen_Rollen.beschreibung': 300, 'Kapazitaet.notiz': 120,
+  'Wiki.bereich': 20, 'Wiki.thema': 40, 'Wiki.titel': 80, 'Wiki.adresse': 60, 'Wiki.text': 20000
 };
 
 function maxLaenge(tab, sp) {
