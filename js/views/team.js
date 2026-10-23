@@ -9,6 +9,8 @@
 // Seit 9.4: „Mich eintragen“, „Für jemanden eintragen“ (klein unten), „Bearbeiten“ im Detail
 // (js/views/team-eintrag.js). Hat jemand den Anzeigenamen geändert und gibt es eine Karte mit dem vorigen
 // Namen, fragt der Reiter, ob die Karte mit umbenannt werden soll.
+// Seit 9.5: Hüte je Person (offene ToDos, Meilensteine, Mobi-Beiträge mit dem Namen; Karte „5 Hüte · 2 Projekte“,
+// Liste im Detail), Abschnitt „Freie Hüte“ oben mit „Hut übernehmen“ (todos-hut.js), „Namen ohne Team-Karte“ unten.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -21,10 +23,13 @@ import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { istWahr } from '../schema.js';
 import { zeitText } from './material-rechnen.js';
-import { datumText, heuteIso } from './todos-rechnen.js';
+import { datumText, heuteIso, kurz, normDatum } from './todos-rechnen.js';
+import { huetKnoepfe } from './todos-hut.js';
+import { oeffneMobiAnsicht } from './mobi-todo.js';
 import {
   txt, istAktiv, rollenVon, sortiereRollen, kapazitaetText, angabeJetzt, angabeZustand, verlauf,
-  sortierePersonen, passtSuche, passtRolle, istIch, darfBearbeiten
+  sortierePersonen, passtSuche, passtRolle, istIch, darfBearbeiten, fuerJemandenEingetragen,
+  alleHuete, hueteVon, projekteAus, faelligKlasse, namenOhneKarte, freieHuete
 } from './team-rechnen.js';
 import { zeigeEintrag, umbenennen } from './team-eintrag.js';
 import { baueRollen, HINWEIS_ROLLEN } from './team-rollen.js';
@@ -89,7 +94,8 @@ export async function render(container, ctx) {
   if (ctx.detail) schliesseDetail(ctx.detail);
 
   const cacheKey = s.gruppe_id + ':team';
-  let daten = { personen: [], rollen: [], kapazitaet: [] };
+  let daten = { personen: [], rollen: [], kapazitaet: [], todos: [], meilensteine: [], mobi: [], projekte: [] };
+  let huete = [];       // alle offenen Hüte mit Verantwortlichen (alleHuete), nach jedem Laden neu
   let meta = null;
   let offline = false;
   let offeneId = '';   // Person, die gerade im Detail steht
@@ -101,6 +107,9 @@ export async function render(container, ctx) {
   });
   const rolleWahl = el('select', { class: 'feld', 'aria-label': 'Gruppen-Rolle' });
   const boxIch = el('div', { class: 'team-ich' });
+  const boxFrei = el('div');
+  const boxOhne = el('div');
+  const basis = '#/g/' + encodeURIComponent(s.kurzname) + '/';
   const boxListe = el('div', { class: 'team-raster' });
   const boxPause = el('div');
   const fuerAndere = el('div', { class: 'team-fuer-andere' },
@@ -108,7 +117,7 @@ export async function render(container, ctx) {
       class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Für jemanden eintragen',
       onclick: fuerJemanden
     }),
-    el('span', { class: 'leise', text: 'Zum Beispiel für eine Person ohne Handy. Die Karte dürfen dann alle bearbeiten.' })
+    el('span', { class: 'leise', text: 'Zum Beispiel für eine Person ohne Handy. Bist du selbst im Team, dürfen alle die Karte bearbeiten.' })
   );
   const rollenTeil = baueRollen({
     ctx: ctx, token: s.token, kurzname: s.kurzname,
@@ -121,8 +130,10 @@ export async function render(container, ctx) {
     el('div', { class: 'filterzeile team-filter' }, suche, rolleWahl),
     status,
     boxIch,
+    boxFrei,
     boxListe,
     boxPause,
+    boxOhne,
     fuerAndere,
     rollenTeil.el
   ));
@@ -172,8 +183,79 @@ export async function render(container, ctx) {
       kopf,
       rollenChips(rollenVon(p, daten.rollen)),
       kapazitaetZeigen(stand, heute),
+      hueteZeile(p),
       txt(p.notiz) ? el('span', { class: 'leise team-notiz', text: txt(p.notiz) }) : null
     );
+  }
+
+  // "5 Hüte · 2 Projekte"
+  function hueteZeile(p) {
+    const h = hueteVon(p.name, huete);
+    if (!h.length) return el('span', { class: 'leise team-huete-zahl', text: 'Keine Hüte' });
+    const n = projekteAus(h).length;
+    return el('span', { class: 'team-huete-zahl', text: '🎩 ' + h.length + (h.length === 1 ? ' Hut' : ' Hüte') +
+      (n ? ' · ' + n + (n === 1 ? ' Projekt' : ' Projekte') : '') });
+  }
+
+  function projektTitel(id) {
+    const pr = daten.projekte.find(function (x) { return String(x.id) === String(id); });
+    return pr ? txt(pr.titel) : '';
+  }
+
+  // Ein Hut als Zeile mit Link (ToDo ohne Projekt: Reiter ToDos; mit Projekt und Meilenstein: das Projekt;
+  // Mobi-Beitrag: Reiter Mobi, gefiltert auf das Projekt)
+  const ART_SYMBOL = { todo: '✅', meilenstein: '🏁', mobi: '📣' };
+  function hutZeile(h, heute) {
+    const fk = faelligKlasse(h.datum, heute);
+    const info = [h.projekt_id ? projektTitel(h.projekt_id) : (h.art === 'mobi' ? 'Veranstaltung' : 'Allgemein'),
+      h.datum ? 'Fällig ' + datumText(h.datum) + (fk === 'ueberfaellig' ? ' (überfällig)' : fk === 'heute' ? ' (heute)' : '') : '']
+      .filter(Boolean).join(' · ');
+    const a = el('a', { class: 'team-hut' + (fk ? ' ' + fk : ''), href: h.art === 'todo' && !h.projekt_id ? basis + 'todos' : basis + 'projekte/' + encodeURIComponent(h.projekt_id) },
+      el('span', { class: 'team-hut-titel', text: ART_SYMBOL[h.art] + ' ' + kurz(h.titel, 80) }),
+      el('span', { class: 'leise', text: info })
+    );
+    if (h.art === 'mobi') {
+      a.setAttribute('href', basis + 'mobi');
+      a.addEventListener('click', function (ev) { ev.preventDefault(); oeffneMobiAnsicht(ctx, h.projekt_id, 'liste'); });
+    }
+    return el('li', null, a);
+  }
+
+  // Abschnitt "Freie Hüte" oben: offene ToDos ohne Verantwortliche, höchstens 10
+  function zeichneFrei(heute) {
+    leeren(boxFrei);
+    const frei = freieHuete(daten.todos, daten.projekte);
+    if (!frei.length) return;
+    const namen = function () {
+      const l = daten.personen.filter(istAktiv).map(function (p) { return txt(p.name); });
+      if (getName() && l.indexOf(getName()) < 0) l.push(getName());
+      return l.sort(function (a, b) { return a.localeCompare(b, 'de'); });
+    };
+    boxFrei.append(el('section', { class: 'karte team-frei' },
+      el('h2', { text: '🎩 Freie Hüte (' + frei.length + ')' }),
+      el('p', { class: 'leise', text: 'Aufgaben, für die noch jemand gesucht wird.' }),
+      el('ul', { class: 'team-hut-liste' }, ...frei.slice(0, 10).map(function (t) {
+        const li = hutZeile({ art: 'todo', titel: txt(t.text), datum: normDatum(t.faellig_am), projekt_id: txt(t.projekt_id) }, heute);
+        li.append(huetKnoepfe({
+          ctx: ctx, token: s.token, t: t, personen: namen,
+          fertig: function () { huete = alleHuete(daten); zeichne(); if (offeneId && offenModus === 'lesen') { const p = findePerson(offeneId); if (p) oeffne(p, true); } }
+        }));
+        return li;
+      })),
+      frei.length > 10 ? el('p', { class: 'leise', text: '… und ' + (frei.length - 10) + ' weitere.' }) : null,
+      el('a', { class: 'knopf knopf-hell', href: basis + 'todos', text: 'Alle im Reiter ToDos →' })
+    ));
+  }
+
+  // Unten: Namen, die in Hüten stehen, aber keine Team-Karte haben (zum Beispiel Tippfehler)
+  function zeichneOhne() {
+    leeren(boxOhne);
+    const ohne = namenOhneKarte(daten.personen, huete);
+    if (!ohne.length) return;
+    boxOhne.append(el('p', { class: 'leise team-ohne' },
+      el('strong', { text: 'Namen in Hüten ohne Team-Karte: ' }),
+      el('span', { text: ohne.map(function (o) { return o.name + ' (' + o.zahl + ')'; }).join(', ') })
+    ));
   }
 
   function zeichne() {
@@ -188,6 +270,8 @@ export async function render(container, ctx) {
     leeren(boxIch);
     leeren(boxListe);
     leeren(boxPause);
+    zeichneFrei(heute);
+    zeichneOhne();
 
     if (!daten.personen.length) {
       boxIch.append(el('div', { class: 'karte leer-karte' },
@@ -234,11 +318,11 @@ export async function render(container, ctx) {
       marken.append(el('span', { class: 'team-marke team-marke-du', text: 'Du' }));
     }
     marken.append(el('span', { class: 'team-marke', text: istAktiv(p) ? 'Dabei' : 'Pause' }));
-    if (!istIch(p, txt(p.erstellt_von)) && txt(p.erstellt_von)) {
+    if (fuerJemandenEingetragen(p, daten.personen)) {
       marken.append(el('span', { class: 'team-marke', text: 'eingetragen von ' + txt(p.erstellt_von) }));
     }
     inhalt.append(marken);
-    if (darfBearbeiten(p, getName())) {
+    if (darfBearbeiten(p, getName(), daten.personen)) {
       inhalt.append(el('div', { class: 'form-knoepfe' },
         el('button', {
           class: 'knopf', type: 'button',
@@ -277,6 +361,11 @@ export async function render(container, ctx) {
           );
         })));
     }
+
+    const ph = hueteVon(p.name, huete);
+    inhalt.append(el('h3', { text: 'Hüte (' + ph.length + ')' }));
+    if (ph.length) inhalt.append(el('ul', { class: 'team-hut-liste' }, ...ph.map(function (h) { return hutZeile(h, heute); })));
+    else inhalt.append(el('p', { class: 'leise', text: 'Keine offenen Aufgaben mit diesem Namen.' }));
 
     if (txt(p.notiz)) inhalt.append(el('h3', { text: 'Notiz' }), el('p', { text: txt(p.notiz) }));
 
@@ -347,7 +436,7 @@ export async function render(container, ctx) {
       }
     );
     fenster = zeigeFenster('Für jemanden eintragen', el('div', null,
-      el('p', { class: 'leise', text: 'Nimm den Namen, den die Person in der App benutzt (zum Beispiel in ToDos). Die Karte dürfen alle bearbeiten.' }),
+      el('p', { class: 'leise', text: 'Nimm den Namen, den die Person in der App benutzt (zum Beispiel in ToDos). Bist du selbst im Team, dürfen alle die Karte bearbeiten.' }),
       form));
     const f = form.querySelector('[name="name"]');
     if (f) f.focus();
@@ -393,8 +482,9 @@ export async function render(container, ctx) {
   // ---- Laden ----
 
   function zeigen(neu, m) {
-    ['personen', 'rollen', 'kapazitaet'].forEach(function (k) { if (!neu[k]) neu[k] = []; });
+    ['personen', 'rollen', 'kapazitaet', 'todos', 'meilensteine', 'mobi', 'projekte'].forEach(function (k) { if (!neu[k]) neu[k] = []; });
     daten = neu;
+    huete = alleHuete(daten);
     meta = m;
     offline = false;
     rollenAufbauen();
@@ -414,9 +504,14 @@ export async function render(container, ctx) {
       const ok = await ladeMitCache(
         cacheKey,
         async function () {
-          const r = await api('listMehrere', { tabellen: ['Personen', 'Gruppen_Rollen', 'Kapazitaet'] }, s.token);
+          const r = await api('listMehrere', {
+            tabellen: ['Personen', 'Gruppen_Rollen', 'Kapazitaet', 'ToDos', 'Meilensteine', 'Mobi_Plan', 'Projekte']
+          }, s.token);
           const t = (r && r.tabellen) || {};
-          return { personen: t.Personen || [], rollen: t.Gruppen_Rollen || [], kapazitaet: t.Kapazitaet || [] };
+          return {
+            personen: t.Personen || [], rollen: t.Gruppen_Rollen || [], kapazitaet: t.Kapazitaet || [],
+            todos: t.ToDos || [], meilensteine: t.Meilensteine || [], mobi: t.Mobi_Plan || [], projekte: t.Projekte || []
+          };
         },
         zeigen,
         zuerstCache

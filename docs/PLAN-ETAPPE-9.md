@@ -6,7 +6,7 @@ Regeln für die Arbeit stehen in `CLAUDE.md`.
 **Status: Fassung 2.** Die Person hat die 20 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 4).
 Fassung 2 (eigentlich Schritt 9.0a) kommt im selben Pull Request wie Schritt 9.1, damit Plan und Skript zusammenpassen.
 Die kleinen Fragen A bis F (Abschnitt 4) sind am 23.10.2026 beantwortet.
-**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26), 9.1 (Version 0.31.0, Pull Request #27, von Hand bereitgestellt am 23.10.2026). 9.2 (Version 0.31.1, Pull Request #28, geprüft am 23.10.2026). 9.3 (Version 0.31.2, Pull Request #29, geprüft am 23.10.2026). 9.4 läuft mit Version 0.31.3.
+**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26), 9.1 (Version 0.31.0, Pull Request #27, von Hand bereitgestellt am 23.10.2026). 9.2 (Version 0.31.1, Pull Request #28, geprüft am 23.10.2026). 9.3 (Version 0.31.2, Pull Request #29, geprüft am 23.10.2026). 9.4 (Version 0.31.3, Pull Request #30, geprüft am 23.10.2026). 9.5 läuft mit Version 0.31.4.
 
 ## 1. Ziel
 

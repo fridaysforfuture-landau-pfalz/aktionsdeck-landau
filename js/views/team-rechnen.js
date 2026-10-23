@@ -14,6 +14,8 @@
 import { istWahr } from '../schema.js';
 import { normDatum } from './todos-rechnen.js';
 import { addTage } from './kalender-rechnen.js';
+import { istAbgeschlossen } from './projekt-rechnen.js';
+import { istVeroeffentlicht } from './mobi-rechnen.js';
 
 export function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -159,12 +161,21 @@ export function passtRolle(person, rolleId) {
 
 // ---- Bearbeiten (9.4) ----
 
-// Darf diese Person die Karte bearbeiten? Die eigene Karte immer. Eine Karte, die jemand für eine andere
-// Person angelegt hat („Für jemanden eintragen“: erstellt_von ist nicht der Name), dürfen alle bearbeiten.
+// Wurde die Karte für jemand anderen angelegt („Für jemanden eintragen“)? Ja, wenn erstellt_von nicht der Name
+// der Karte ist UND die eintragende Person selbst eine andere Karte im Team hat. (Seit 9.5: Nach dem Umbenennen
+// der eigenen Karte steht in erstellt_von noch der alte Name, dazu gibt es aber keine andere Karte.)
+export function fuerJemandenEingetragen(person, personen) {
+  const von = key(person.erstellt_von);
+  if (!von || von === key(person.name)) return false;
+  return (personen || []).some(function (p) {
+    return String(p.id) !== String(person.id) && key(p.name) === von;
+  });
+}
+
+// Darf diese Person die Karte bearbeiten? Die eigene Karte immer, eine für jemanden eingetragene alle.
 // Absprache, kein Schutz (Entscheidung 5).
-export function darfBearbeiten(person, name) {
-  if (istIch(person, name)) return true;
-  return !!txt(person.erstellt_von) && key(person.erstellt_von) !== key(person.name);
+export function darfBearbeiten(person, name, personen) {
+  return istIch(person, name) || fuerJemandenEingetragen(person, personen);
 }
 
 // Wer hat eine gewählte Rolle schon (außer der Person selbst)? Gibt die andere Person zurück oder null.
@@ -198,4 +209,110 @@ export function kapazitaetFehler(wert, ab, bis) {
   if (b < a) return '„Gilt bis“ liegt vor „gilt ab“.';
   if (b > addTage(a, 183)) return 'Eine Angabe gilt höchstens 6 Monate.';
   return '';
+}
+
+// ---- Hüte je Person (9.5) ----
+// Hut = Aufgabe mit Verantwortlichen: offenes ToDo, offener Meilenstein, nicht veröffentlichter Mobi-Beitrag.
+// Nur aus offenen Projekten (nicht erledigt oder archiviert); ToDos ohne Projekt und Beiträge zu Veranstaltungen zählen auch.
+// daten: { todos, meilensteine, mobi, projekte }
+
+function offeneProjekte(projekte) {
+  const offen = {};
+  (projekte || []).forEach(function (p) { if (!istAbgeschlossen(p)) offen[String(p.id)] = p; });
+  return offen;
+}
+
+function zaehlt(e, offen) {
+  const pid = txt(e.projekt_id);
+  return !pid || !!offen[pid];
+}
+
+// Alle offenen Hüte mit Verantwortlichen: [{ art: 'todo'|'meilenstein'|'mobi', titel, datum, projekt_id, namen, eintrag }]
+export function alleHuete(daten) {
+  const offen = offeneProjekte(daten.projekte);
+  const liste = [];
+  (daten.todos || []).forEach(function (t) {
+    if (istWahr(t.erledigt) || !zaehlt(t, offen)) return;
+    liste.push({ art: 'todo', titel: txt(t.text), datum: normDatum(t.faellig_am), projekt_id: txt(t.projekt_id), namen: namenAus(t.verantwortlich), eintrag: t });
+  });
+  (daten.meilensteine || []).forEach(function (m) {
+    if (istWahr(m.erledigt) || !txt(m.projekt_id) || !zaehlt(m, offen)) return;
+    liste.push({ art: 'meilenstein', titel: txt(m.titel), datum: normDatum(m.datum), projekt_id: txt(m.projekt_id), namen: namenAus(m.verantwortlich), eintrag: m });
+  });
+  (daten.mobi || []).forEach(function (b) {
+    if (istVeroeffentlicht(b) || !zaehlt(b, offen)) return;
+    liste.push({ art: 'mobi', titel: txt(b.kanal) + ': ' + txt(b.titel), datum: normDatum(b.datum), projekt_id: txt(b.projekt_id), namen: namenAus(b.verantwortlich), eintrag: b });
+  });
+  return liste.filter(function (h) { return h.namen.length > 0; });
+}
+
+// Nächstes Datum zuerst, ohne Datum zuletzt
+export function sortiereHuete(liste) {
+  return liste.slice().sort(function (a, b) {
+    if (a.datum !== b.datum) {
+      if (!a.datum) return 1;
+      if (!b.datum) return -1;
+      return a.datum < b.datum ? -1 : 1;
+    }
+    return a.titel.localeCompare(b.titel, 'de');
+  });
+}
+
+// Hüte einer Person (genauer Namensvergleich: „Ben“ passt nicht auf „Bente“)
+export function hueteVon(name, huete) {
+  const k = key(name);
+  if (!k) return [];
+  return sortiereHuete(huete.filter(function (h) {
+    return h.namen.some(function (n) { return key(n) === k; });
+  }));
+}
+
+// IDs der Projekte, in denen die Hüte liegen
+export function projekteAus(huete) {
+  const ids = [];
+  huete.forEach(function (h) { if (h.projekt_id && ids.indexOf(h.projekt_id) < 0) ids.push(h.projekt_id); });
+  return ids;
+}
+
+// '' | 'ueberfaellig' | 'heute'
+export function faelligKlasse(datum, heute) {
+  if (!datum) return '';
+  if (datum < heute) return 'ueberfaellig';
+  return datum === heute ? 'heute' : '';
+}
+
+// Namen in Hüten, zu denen es keine Team-Karte gibt: [{ name, zahl }], häufige zuerst
+export function namenOhneKarte(personen, huete) {
+  const da = {};
+  (personen || []).forEach(function (p) { da[key(p.name)] = true; });
+  const zahl = {};
+  const echt = {};
+  huete.forEach(function (h) {
+    h.namen.forEach(function (n) {
+      const k = key(n);
+      if (da[k]) return;
+      if (!echt[k]) echt[k] = n;
+      zahl[k] = (zahl[k] || 0) + 1;
+    });
+  });
+  return Object.keys(zahl).sort(function (a, b) {
+    return (zahl[b] - zahl[a]) || echt[a].localeCompare(echt[b], 'de');
+  }).map(function (k) { return { name: echt[k], zahl: zahl[k] }; });
+}
+
+// Freie Hüte: offene ToDos ohne Verantwortliche (aus offenen Projekten oder ohne Projekt), nächste Frist zuerst
+export function freieHuete(todos, projekte) {
+  const offen = offeneProjekte(projekte);
+  return (todos || []).filter(function (t) {
+    return !istWahr(t.erledigt) && !txt(t.verantwortlich) && zaehlt(t, offen);
+  }).sort(function (a, b) {
+    const da = normDatum(a.faellig_am);
+    const db = normDatum(b.faellig_am);
+    if (da !== db) {
+      if (!da) return 1;
+      if (!db) return -1;
+      return da < db ? -1 : 1;
+    }
+    return txt(a.erstellt_am).localeCompare(txt(b.erstellt_am));
+  });
 }
