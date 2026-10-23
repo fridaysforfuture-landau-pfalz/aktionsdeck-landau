@@ -9,6 +9,8 @@
 // Adressen: #/g/<kurz>/wiki (Übersicht), wiki/<seiten-id>, wiki/anleitung:<datei>, wiki/entwicklung.
 // Seit 0.32.3: „+ Seite“ (Skillshare und Anleitung), „+ Gruppe intern anlegen“, „Bearbeiten“ und „Löschen“ (js/views/wiki-eintrag.js).
 // Adressen dafür: wiki/neu:skillshare, wiki/neu:anleitung, wiki/neu:gruppe-intern, wiki/bearbeiten:<seiten-id>.
+// Seit 0.32.4: Kommentare unter Seiten aus dem Sheet (baueKommentare, art 'wiki'), Marke „💬 n“ in der Liste,
+// „Link kopieren“ bei öffentlichen Seiten (öffentliche Adresse #/wiki/<gruppe>/<adresse>).
 // Zwischenspeicher gruppe_id:wiki (ladeMitCache).
 
 import { el, leeren } from '../ui/dom.js';
@@ -19,6 +21,8 @@ import { schliesseDetail } from '../ui/detail.js';
 import { istWahr } from '../schema.js';
 import { zeichneText } from '../wiki-format.js';
 import { zeigeEintrag } from './wiki-eintrag.js';
+import { baueKommentare } from '../ui/kommentare.js';
+import { kommentarZahlen, kommentarMarke } from './todos-rechnen.js';
 import {
   txt, BEREICHE, themaVon, sortiereSeiten, seitenIn, nachThema, findeSeite, passtSuche, ausschnitt,
   anleitungListe, standText
@@ -71,6 +75,9 @@ export async function render(container, ctx) {
   if (unter === 'entwicklung') merker.bereich = 'entwicklung';
 
   let zeilen = [];
+  let kommentare = [];   // Kommentare zu Wiki-Seiten (für die Marke „💬 n“)
+  let kommentarTeil = null;   // Kommentare der offenen Seite (bleibt beim Neuladen, damit Getipptes bleibt)
+  let gezeigt = '';   // id und Stand der gezeigten Seite
   let fehlerText = '';
   let geladen = false;
   let formGebaut = false;
@@ -136,7 +143,19 @@ export async function render(container, ctx) {
   }
 
   function markeOeffentlich(z) {
-    return istWahr(z.oeffentlich) ? '🌐 öffentlich' : '';
+    const n = kommentarZahlen(kommentare, 'wiki')[String(z.id)] || 0;
+    return [istWahr(z.oeffentlich) ? '🌐 öffentlich' : '', kommentarMarke(n).trim()].filter(Boolean).join(' · ');
+  }
+
+  function oeffentlicheAdresse(z) {
+    return location.href.split('#')[0] + '#/wiki/' + encodeURIComponent(s.kurzname) + '/' + encodeURIComponent(txt(z.adresse));
+  }
+
+  function linkKopieren(z) {
+    const url = oeffentlicheAdresse(z);
+    const fertig = function (ok) { toast(ok ? 'Link kopiert.' : 'Kopieren ging nicht. Link: ' + url); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function () { fertig(true); }, function () { fertig(false); });
+    else fertig(false);
   }
 
   // ---- Übersicht ----
@@ -291,16 +310,27 @@ export async function render(container, ctx) {
   }
 
   function zeigeSheetSeite(id) {
+    const z = alleSeiten().find(function (x) { return String(x.id) === String(id); });
+    // Gleicher Stand wie schon gezeigt: nichts neu aufbauen (sonst springt die Seite beim Neuladen)
+    if (z && gezeigt === String(z.id) + '|' + txt(z.geaendert_am)) return;
     knoepfeZeichnen(true);
     leeren(inhalt);
-    const z = alleSeiten().find(function (x) { return String(x.id) === String(id); });
     if (!z) {
       inhalt.append(zurueckLink(), el('p', { class: 'leise', text: geladen ? 'Diese Seite gibt es nicht (mehr).' : 'Lädt …' }));
       if (fehlerText) inhalt.append(el('p', { class: 'fehler', text: fehlerText }));
       return;
     }
+    gezeigt = String(z.id) + '|' + txt(z.geaendert_am);
     merker.bereich = txt(z.bereich) === 'anleitung' ? 'anleitung' : 'skillshare';
     knoepfeZeichnen(true);
+    if (!kommentarTeil) {
+      kommentarTeil = baueKommentare({
+        ctx: ctx, token: s.token, art: 'wiki', bezugId: z.id, titel: 'Kommentare',
+        platzhalter: 'Hinweis oder Frage zur Seite, zum Beispiel „Das ist veraltet“ …',
+        leerText: 'Noch keine Kommentare. Kommentare sind nur für eure Gruppe sichtbar, nie öffentlich.',
+        beiAenderung: function () { laden(false); }
+      });
+    }
     const angaben = [
       txt(z.bereich) === 'skillshare' ? themaVon(z) : 'Von unserer Gruppe',
       standText(z.geaendert_am) ? 'Stand ' + standText(z.geaendert_am) + (txt(z.geaendert_von) ? ' von ' + txt(z.geaendert_von) : '') : '',
@@ -314,16 +344,18 @@ export async function render(container, ctx) {
         zeichneText(z.text, { seiteFinden: seiteFinden, inhaltsverzeichnis: true }),
         el('div', { class: 'hut-knoepfe wiki-seiten-knoepfe' },
           el('a', { class: 'knopf', href: basis + '/bearbeiten:' + encodeURIComponent(z.id), text: 'Bearbeiten' }),
+          istWahr(z.oeffentlich) ? el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Link kopieren', onclick: function () { linkKopieren(z); } }) : null,
           el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Löschen', onclick: function () { loeschen(z); } })
         )
-      )
+      ),
+      el('section', { class: 'karte wiki-artikel wiki-kommentare' }, kommentarTeil.el)
     );
   }
 
   // Neue oder geänderte Zeile in den Zwischenspeicher, damit die nächste Ansicht sie sofort kennt
   async function merken(eintrag) {
     zeilen = zeilen.filter(function (x) { return String(x.id) !== String(eintrag.id); }).concat([eintrag]);
-    await cacheSet(cacheKey, { daten: zeilen, stand: new Date().toISOString() });
+    await cacheSet(cacheKey, { daten: { wiki: zeilen, kommentare: kommentare }, stand: new Date().toISOString() });
   }
 
   async function loeschen(z) {
@@ -400,9 +432,14 @@ export async function render(container, ctx) {
   async function laden(zuerstCache) {
     try {
       const neuGeladen = await ladeMitCache(cacheKey, function () {
-        return api('list', { tabelle: 'Wiki' }, s.token).then(function (r) { return r.zeilen; });
+        return api('listMehrere', { tabellen: ['Wiki', 'Kommentare'] }, s.token).then(function (r) {
+          const t = (r && r.tabellen) || {};
+          return { wiki: t.Wiki || [], kommentare: (t.Kommentare || []).filter(function (k) { return txt(k.bezug_art) === 'wiki'; }) };
+        });
       }, function (daten, meta) {
-        zeilen = Array.isArray(daten) ? daten : [];
+        // Ältere Zwischenspeicher (0.32.2, 0.32.3) enthalten nur die Liste der Seiten
+        zeilen = Array.isArray(daten) ? daten : ((daten && daten.wiki) || []);
+        kommentare = Array.isArray(daten) ? kommentare : ((daten && daten.kommentare) || []);
         geladen = true;
         fehlerText = '';
         if (meta.aktuell) { frisch = true; status.textContent = ''; }

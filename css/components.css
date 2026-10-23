@@ -3097,3 +3097,7 @@ p.notiz.erledigt {
 }
 .wiki-formathilfe > summary::before, .wiki-mehr > summary::before, .wiki-thema > summary::before { content: '▸'; display: inline-block; width: 1.2em; }
 .wiki-formathilfe[open] > summary::before, .wiki-mehr[open] > summary::before, .wiki-thema[open] > summary::before { content: '▾'; }
+
+/* ---- 0.32.4: Kommentare im Wiki ---- */
+.wiki-kommentare { margin-top: 16px; }
+.wiki-kommentare h3 { margin-top: 0; }
