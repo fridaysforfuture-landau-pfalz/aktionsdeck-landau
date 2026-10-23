@@ -3,6 +3,7 @@
 
 var TAGE_GELOESCHT = 90;  // gelöschte Zeilen, die älter sind, werden entfernt
 var TAGE_LOG = 180;       // Log-Einträge, die älter sind, werden entfernt
+var TAGE_KAPAZITAET = 183; // Kapazitäts-Angaben, deren „gilt bis“ länger vorbei ist, werden entfernt (seit 0.31.0)
 
 function grenzeIso(tage) {
   return Utilities.formatDate(new Date(Date.now() - tage * 86400000), 'UTC', "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -42,6 +43,21 @@ function aufraeumenLauf(echt) {
     gesamt += nummern.length;
     if (echt) loescheZeilen(sh, nummern);
   });
+
+  // Kapazität (Etappe 9): Angaben, deren gueltig_bis mehr als 6 Monate vorbei ist (gelöschte zählt schon oben)
+  if (SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Kapazitaet')) {
+    var kGrenze = grenzeIso(TAGE_KAPAZITAET).slice(0, 10);
+    var kt = lies('Kapazitaet');
+    var kalt = kt.zeilen.filter(function (z) {
+      var bis = String(z.gueltig_bis || '').slice(0, 10);
+      return !truthy(z.geloescht) && bis !== '' && bis < kGrenze;
+    }).map(function (z) { return z._zeile; });
+    if (kalt.length) {
+      Logger.log('Kapazitaet: ' + kalt.length + ' Angaben, deren „gilt bis“ mehr als ' + TAGE_KAPAZITAET + ' Tage vorbei ist');
+      gesamt += kalt.length;
+      if (echt) loescheZeilen(kt.sh, kalt);
+    }
+  }
 
   var log = lies('Log');
   var alt = log.zeilen.filter(function (z) {

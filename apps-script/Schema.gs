@@ -17,10 +17,17 @@ var BASIS = ['id', 'gruppe_id', 'erstellt_am', 'erstellt_von',
 // Reden: Archiv der Reden. status = entwurf | probelesen | fertig | gehalten. Werden nur von Hand gelöscht.
 //   text = Redetext in der App (seit 0.30.12), link ist freiwillig (Rede woanders geschrieben).
 // TOPs: Sammlung der Tagesordnungspunkte fürs nächste Plenum (seit 0.30.3). protokoll_id = in diesem Protokoll besprochen.
+// Personen: eine Zeile je Person im Team (seit 0.31.0). name wie der Anzeigename, in der Gruppe nur einmal.
+//   aktiv = dabei (FALSE = Pause; die App schickt beim Anlegen TRUE). rollen = IDs aus Gruppen_Rollen, eine je Zeile.
+//   notiz = kurz und freiwillig. Prüfungen, Mitlöschen und Umbenennen in Team.gs.
+// Gruppen_Rollen: dauerhafte Rollen der Gruppe (seit 0.31.0, in der App bearbeitbar).
+//   gewaehlt = fest gewählte Rolle (höchstens eine Person). sortierung = Reihenfolge in der Liste.
+// Kapazitaet: eine Zeile je Angabe (seit 0.31.0). person_id = Zeile in Personen. kapazitaet = ganze Zahl 1 bis 10.
+//   gueltig_ab, gueltig_bis = JJJJ-MM-TT (höchstens 183 Tage). Wird nur angelegt oder gelöscht.
 // Kommentare: freie Kommentare zu einem Projekt.
 //   stelle = Absatz im Redetext, zu dem der Kommentar gehört ("Nummer|Anfang des Absatzes", seit 0.30.12).
 var TABELLEN = {
-  Personen: ['name', 'aktiv'],
+  Personen: ['name', 'aktiv', 'rollen', 'notiz'],
   Material: ['name', 'kategorie', 'unterkategorie', 'anzahl', 'einheit', 'ort', 'foto_id', 'notiz', 'aktiv', 'typ'],
   Ausleihe: ['material_id', 'projekt_id', 'person', 'art', 'anzahl', 'datum', 'notiz'],
   ToDos: ['projekt_id', 'post_id', 'text', 'verantwortlich', 'faellig_am', 'erledigt', 'erledigt_am', 'erledigt_von', 'prioritaet', 'sortierung', 'details', 'meilenstein_id', 'mobi_id'],
@@ -48,7 +55,9 @@ var TABELLEN = {
   // status = idee | entwurf | gedreht | geschnitten | review | anpassung | bereit | veroeffentlicht
   // (gedreht und geschnitten nur bei Instagram und TikTok, siehe js/kanaele.js). datum JJJJ-MM-TT, uhrzeit HH:MM (Text).
   Mobi_Plan: ['projekt_id', 'veranstaltung_id', 'kanal', 'format', 'titel', 'text', 'kanal_text', 'hashtags',
-              'datum', 'uhrzeit', 'status', 'verantwortlich', 'canva_link', 'ergebnis', 'notiz']
+              'datum', 'uhrzeit', 'status', 'verantwortlich', 'canva_link', 'ergebnis', 'notiz'],
+  Gruppen_Rollen: ['name', 'beschreibung', 'gewaehlt', 'sortierung'],
+  Kapazitaet: ['person_id', 'kapazitaet', 'gueltig_ab', 'gueltig_bis', 'notiz']
 };
 
 // System-Tabs (über die API nicht direkt änderbar)
@@ -68,7 +77,11 @@ var NIE_LOESCHEN = ['Protokolle', 'Reden'];
 // Höchstlänge für Textfelder: Standard 5000 Zeichen. Ausnahmen je "Tab.spalte".
 // Eine Sheet-Zelle fasst höchstens 50 000 Zeichen.
 var MAX_TEXT = 5000;
-var MAX_TEXT_AUSNAHMEN = { 'Protokolle.text': 20000, 'Reden.text': 20000 };
+var MAX_TEXT_AUSNAHMEN = {
+  'Protokolle.text': 20000, 'Reden.text': 20000,
+  'Personen.name': 60, 'Personen.rollen': 400, 'Personen.notiz': 120,
+  'Gruppen_Rollen.name': 40, 'Gruppen_Rollen.beschreibung': 300, 'Kapazitaet.notiz': 120
+};
 
 function maxLaenge(tab, sp) {
   var k = String(tab) + '.' + String(sp);
@@ -77,9 +90,9 @@ function maxLaenge(tab, sp) {
 
 // Spaltentypen: alles andere ist Text
 var ZAHL_SPALTEN = ['anzahl', 'menge', 'einzelpreis', 'betrag_geplant',
-                    'betrag_tatsaechlich', 'budget_geplant', 'sortierung', 'tage_vorher'];
+                    'betrag_tatsaechlich', 'budget_geplant', 'sortierung', 'tage_vorher', 'kapazitaet'];
 var BOOL_SPALTEN = ['aktiv', 'geloescht', 'erledigt', 'beschafft', 'bezahlt', 'mehrfach', 'angeheftet', 'beendet', 'namentlich', 'oeffentlich',
-                    'im_dokument', 'vorschlaege_erledigt', 'entwurf'];
+                    'im_dokument', 'vorschlaege_erledigt', 'entwurf', 'gewaehlt'];
 
 function spaltenTyp(sp) {
   if (ZAHL_SPALTEN.indexOf(sp) >= 0) return 'zahl';

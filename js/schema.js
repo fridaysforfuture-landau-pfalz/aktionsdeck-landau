@@ -230,6 +230,34 @@ export const SCHEMA = {
       { name: 'ergebnis', label: 'Ergebnis (z. B. Reichweite, freiwillig)', typ: 'text' },
       { name: 'notiz', label: 'Notiz', typ: 'langtext' }
     ]
+  },
+  // Team (seit 0.31.0). Die Rollen einer Person (Personen.rollen, IDs je Zeile) und die Kapazitäts-Knöpfe
+  // baut das Team-Formular selbst. Personen.aktiv: beim Anlegen TRUE schicken (leer wird FALSE = Pause).
+  Personen: {
+    titel: 'Team',
+    felder: [
+      { name: 'name', label: 'Name (wie dein Anzeigename)', typ: 'text', pflicht: true },
+      { name: 'aktiv', label: 'Dabei (aus = Pause)', typ: 'bool' },
+      { name: 'notiz', label: 'Notiz (freiwillig, kurz)', typ: 'text' }
+    ]
+  },
+  Gruppen_Rollen: {
+    titel: 'Gruppen-Rollen',
+    felder: [
+      { name: 'name', label: 'Name der Rolle', typ: 'text', pflicht: true },
+      { name: 'beschreibung', label: 'Beschreibung (freiwillig)', typ: 'langtext', max: 300 },
+      { name: 'gewaehlt', label: 'Fest gewählt (höchstens eine Person)', typ: 'bool' },
+      { name: 'sortierung', label: 'Reihenfolge', typ: 'zahl' }
+    ]
+  },
+  Kapazitaet: {
+    titel: 'Kapazität',
+    felder: [
+      { name: 'kapazitaet', label: 'Kapazität (1 bis 10)', typ: 'zahl', pflicht: true },
+      { name: 'gueltig_ab', label: 'Gilt ab', typ: 'datum', pflicht: true },
+      { name: 'gueltig_bis', label: 'Gilt bis', typ: 'datum', pflicht: true },
+      { name: 'notiz', label: 'Notiz (freiwillig, kurz)', typ: 'text' }
+    ]
   }
 };
 
