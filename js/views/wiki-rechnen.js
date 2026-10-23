@@ -107,6 +107,7 @@ export function ohneFormat(text) {
     .replace(/\[\[([^\]]+)\]\]/g, '$1')
     .replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g, '$1')
     .replace(/\*\*/g, '')
+    .replace(/`/g, '')
     .replace(/^\s*(#{1,3}|[-*•]|\d{1,3}[.)]|>)\s+/gm, '')
     .replace(/\s+/g, ' ')
     .trim();

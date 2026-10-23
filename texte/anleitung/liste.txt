@@ -1,4 +1,14 @@
 # Anleitungsseiten der App, in dieser Reihenfolge.
 # Je Zeile: Dateiname (ohne .txt) | Titel | oeffentlich (nur wenn die Seite ohne Login lesbar sein soll)
+erste-schritte | Erste Schritte | oeffentlich
+start | Start
+projekte | Projekte
+todos | ToDos und Hüte
+material | Material
+mobi | Mobi
+kalender | Kalender
+dokumentation | Dokumentation
 team | Team
+wiki | Wiki
+fragen | Häufige Fragen
 zustaendig | Zuständig für die App

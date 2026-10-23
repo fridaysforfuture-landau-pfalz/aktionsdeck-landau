@@ -1,0 +1,40 @@
+> AktionsDeck Landau ist eine Web-App für Klima-Gruppen in Landau. Hier steht, wie du anfängst.
+
+## Anmelden
+
+1. Öffne die App im Browser und wähle deine Gruppe.
+2. Gib den PIN deiner Gruppe ein. Den PIN bekommst du von deiner Gruppe.
+3. Die App fragt „Wer bist du?“. Schreib deinen Namen so, wie ihn die Gruppe kennt (zum Beispiel deinen Vornamen).
+
+Die Anmeldung gilt 14 Tage. Danach gibst du den PIN noch einmal ein.
+
+> Es gibt keine einzelnen Konten. Dein Name ist nur auf deinem Gerät gespeichert und steht bei allem, was du einträgst.
+
+## App aufs Handy legen
+
+- iPhone: In Safari auf „Teilen“ tippen, dann „Zum Home-Bildschirm“.
+- Android: Im Browser-Menü (drei Punkte) „Zum Startbildschirm hinzufügen“ oder „App installieren“.
+
+Danach öffnet sich die App wie eine normale App.
+
+## Was ist wo?
+
+- Am Handy unten: Start, Projekte, ToDos, Mobi und „Mehr“ (Material, Kalender, Dokumentation, Team, Wiki).
+- Am PC links in der Seitenleiste.
+- Unten stehen „Name ändern“, „Abmelden“ und die Seiten Impressum, Info und Datenschutz.
+
+## Was ist neu?
+
+Auf dem Start zeigt die Glocke 🔔, was andere seit deinem letzten Besuch geändert haben. Eigene Änderungen stehen dort nicht.
+
+## Gleichzeitig arbeiten
+
+Offene Seiten laden alle 45 Sekunden neu. Hat jemand anderes einen Eintrag geändert, während du ihn bearbeitest, zeigt die App einen Hinweis und überschreibt nichts.
+
+## Ohne Netz
+
+Ohne Verbindung kannst du lesen, was zuletzt geladen war. Schreiben geht nur mit Verbindung.
+
+## Mehr Hilfe
+
+Für jeden Reiter gibt es im Wiki unter „Anleitung“ eine eigene Seite, zum Beispiel [[Start]], [[Projekte]] oder [[Häufige Fragen]].

@@ -1,0 +1,28 @@
+> Ein Projekt ist eine Aktion oder Kampagne mit allem, was dazugehört.
+
+## Projekte anlegen
+
+- „+ Neu“ legt ein Projekt an: Titel, Beschreibung, Ort, Aktionsart, Start, Aktionsdatum, Deadline, Budget.
+- Beim Anlegen schlägt die App Standard-ToDos vor (mit Haken und Datum, gerechnet vom Aktionsdatum). Du wählst, welche du brauchst.
+- Status: Planung (steht unten unter „In Planung“), aktiv, erledigt (Archiv).
+
+## Teile eines Projekts
+
+Ein Projekt klappt auf und hat Teile:
+
+- ToDos und Meilensteine, mit „Offene Hüte“ (Aufgaben ohne Verantwortliche) und Vorlagen für Meilensteine.
+- Material: aus dem Bestand vormerken und ausleihen, eigene Positionen, Haken „beschafft“.
+- Finanzen: Posten, geplant und tatsächlich, Haken „bezahlt“.
+- Mobi: Beiträge für Social Media und Presse, mit Zeitbalken.
+- Learnings: Was habt ihr gelernt?
+- Reden und Team: Reden zum Projekt und wer welche Hüte hat.
+
+## Abschließen
+
+- Ein Projekt ist fertig mit Status „erledigt“. Es steht dann im Archiv.
+- Ist noch festes Material für das Projekt draußen, geht das nicht. Erst zurückgeben.
+- Offene ToDos und nicht beschafftes Material zeigt die App als Warnung.
+
+## Aktionsideen
+
+Ideen für spätere Aktionen sammelt ihr im Aufklapper „Aktionsideen“. „Als Projekt starten“ macht daraus ein Projekt in Planung.

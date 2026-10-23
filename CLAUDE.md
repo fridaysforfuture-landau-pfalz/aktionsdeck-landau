@@ -31,6 +31,9 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
 6. Bestehende Dateien bearbeitest du gezielt (Edit), du schreibst sie nicht komplett neu.
    Ganze Dateien nur, wenn sie neu sind oder mehr als etwa die Hälfte neu ist.
 7. Aktualisiere am Ende `docs/STAND.md` (Version, was erledigt ist, was als Nächstes kommt, Dateiübersicht).
+   Ändert der Schritt, wie ein Reiter funktioniert, passe im selben Pull Request die Seite in `texte/anleitung/` an
+   (Liste in `texte/anleitung/liste.txt`, Format wie im Wiki). Nach Version 1.0 bekommt `texte/entwicklung.txt` zusätzlich
+   je Version eine kurze Zeile (neueste oben). Dateien in `texte/` sind öffentlich abrufbar: nichts Internes hineinschreiben.
 8. Prüfe deine Arbeit (Abschnitt 8), dann öffne den Pull Request mit dem Text aus Abschnitt 9.
 
 ## 4. Harte Regeln

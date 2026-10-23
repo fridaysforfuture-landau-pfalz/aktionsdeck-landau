@@ -1,0 +1,25 @@
+> Mobi heißt Mobilisierung: Beiträge für Instagram, andere Kanäle, Presse und Print planen.
+
+## Beiträge planen
+
+- Ein Beitrag gehört zu einem Projekt oder einer Veranstaltung und hat einen Kanal (zum Beispiel Instagram, Pressemitteilung, Radio).
+- „+ Beiträge planen“ schlägt passende Beiträge für die gewählten Kanäle vor, mit Datum vor der Aktion.
+- „+ Einzelner Beitrag“ legt einen einzelnen Beitrag an.
+
+## Status
+
+Ein Beitrag geht Schritt für Schritt: Idee, Entwurf, (bei Instagram und TikTok: gedreht, geschnitten), Review, Anpassung, Bereit, Veröffentlicht.
+
+## Ansichten
+
+- Liste: Kacheln nach Kanalgruppen.
+- Kanban: Spalten nach Status, mit „‹ Zurück“ und „Weiter ›“.
+- Zeitstrahl: alle Beiträge eines Projekts auf einer Zeitleiste.
+- Kalender: öffnet den Kalender nur mit Mobi-Beiträgen.
+
+Filter: Projekt oder Veranstaltung, Kanal, Status, Verantwortlich, „Nur meine“. „Mehrere bearbeiten“ ändert viele Beiträge auf einmal.
+
+## Hinweise
+
+- Überfällige Beiträge sind rot, heute fällige orange.
+- Oben warnt die App bei „Projekt ohne Mobi“ (Aktion in den nächsten 3 Wochen, aber kein Beitrag) und bei Beiträgen ohne Datum.
