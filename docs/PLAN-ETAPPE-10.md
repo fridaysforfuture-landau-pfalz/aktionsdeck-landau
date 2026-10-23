@@ -3,7 +3,8 @@
 Diese Datei ergänzt `docs/STAND.md`. Bei Widerspruch gilt `docs/STAND.md`, und du meldest den Widerspruch im Pull Request.
 Regeln für die Arbeit stehen in `CLAUDE.md`.
 
-**Status: Fassung 2.** Die Person hat die 31 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 3). „Plan ist gut.“
+**Status: fertig gebaut mit 10.9 (Version 0.32.8).** Abschluss nach der Prüfung durch die Person (und der Bereitstellung von 10.1).
+Frühere Status-Zeile: **Fassung 2.** Die Person hat die 31 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 3). „Plan ist gut.“
 Fassung 2 (eigentlich Schritt 10.0a) kommt im selben Pull Request wie Schritt 10.1, damit Plan und Skript zusammenpassen.
 **Erledigt:** 10.0 (Version 0.31.10, Fassung 1, Pull Request #37, gemergt). 10.1 (Version 0.32.0, Pull Request #38, gemergt). 10.2 (Version 0.32.1, Pull Request #39, gemergt). 10.3 bis 10.9 baut der Agent am 23.10.2026 nacheinander, je Schritt ein Pull Request (Auftrag der Person).
 Die kleinen Fragen A bis D (Abschnitt 4) sind am 23.10.2026 beantwortet.
@@ -348,7 +349,8 @@ Die Versionen in dieser Tabelle sind die geplanten. Nachbesserungen zählen die 
 | 10.5 | Kommentare, Marke 💬, Link kopieren | 0.32.4 | #42 |
 | 10.6 | App-Anleitung für alle Reiter, Häufige Fragen, Regel in CLAUDE.md | 0.32.5 | #43 |
 | 10.7 | Öffentliches Wiki #/wiki, Links Wiki auf Gruppenwahl, Info und in der App | 0.32.6 | #44 |
-| 10.8 | Kalender-Abo: Knöpfe Google, Apple, Adresse kopieren; Test-Anleitung | 0.32.7 | – |
+| 10.8 | Kalender-Abo: Knöpfe Google, Apple, Adresse kopieren; Test-Anleitung | 0.32.7 | #45 |
+| 10.9 | Feinschliff und Abschluss der Doku (STAND, Plan, CLAUDE.md, Entwicklung App) | 0.32.8 | #46 |
 
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt. Die Anmerkungen kommen in den nächsten Pull Request, vor dem nächsten Schritt.
 

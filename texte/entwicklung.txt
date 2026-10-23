@@ -6,10 +6,14 @@
 
 AktionsDeck Landau ist freie Software (MIT-Lizenz). Den Quellcode findest du hier: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 
-## Etappe 10: Wiki und öffentliche Seiten (ab 0.32)
+## Etappe 10: Wiki und öffentliche Seiten (0.32)
 
 - Neuer Reiter Wiki mit Skillshare, Anleitung und Entwicklung App. Er ersetzt den Reiter Hilfe.
+- Seiten schreiben mit Knöpfen für Überschriften, Listen, Links und Bilder, mit Vorschau beim Tippen und Kommentaren.
+- Eine Anleitung für jeden Reiter und häufige Fragen.
+- Öffentliches Wiki ohne Anmeldung für Seiten, die eine Gruppe teilen möchte.
 - Impressum, Info und Datenschutz mit echten Texten.
+- Kalender-Abo mit einem Knopf für Google Kalender und Apple Kalender.
 
 ## Etappe 9: Team (0.31)
 
