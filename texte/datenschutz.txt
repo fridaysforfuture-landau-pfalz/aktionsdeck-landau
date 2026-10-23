@@ -1,0 +1,98 @@
+## Das Wichtigste in Kürze
+
+- Es gibt keine Cookies, keine Tracker, keine Werbung und keine fremden Schriften.
+- Es gibt keine einzelnen Konten. Jede Gruppe hat einen gemeinsamen PIN.
+- Die Daten der Gruppen liegen in einer Google-Tabelle. Nur die eigene Gruppe sieht ihre Daten.
+- Öffentlich sind nur veröffentlichte Termine, öffentliche Wiki-Seiten und die Links der Gruppen.
+
+## Wer ist verantwortlich?
+
+Verantwortlich ist, wer im Impressum steht.
+
+E-Mail: [E-Mail-Adresse]
+
+## Wo die App liegt (GitHub Pages)
+
+Die App liegt bei GitHub Pages. Anbieter ist GitHub Inc. in den USA (gehört zu Microsoft).
+Wenn du die App öffnest, schickt dein Browser technisch nötige Daten an GitHub, zum Beispiel deine IP-Adresse, die Uhrzeit und die aufgerufene Datei. GitHub speichert das in eigenen Protokollen. Wir haben darauf keinen Zugriff.
+Datenschutzerklärung von GitHub: https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement
+
+## Wo die Daten liegen (Google)
+
+Die App schickt Daten an ein Google-Skript (Google Apps Script). Es speichert sie in einer Google-Tabelle (Google Sheet). Anbieter ist Google Ireland Limited in Irland, die Daten können auch in den USA verarbeitet werden.
+Dabei erhält Google deine IP-Adresse. Das gilt auch für öffentliche Seiten wie die Termine.
+Fotos von Material und Bilder im Wiki liegen in Google Drive. Wer den Link kennt, kann sie ansehen. Beim Ansehen lädt dein Browser das Bild direkt von Google.
+Datenschutzerklärung von Google: https://policies.google.com/privacy
+
+GitHub und Google sind nach dem Datenschutzrahmen zwischen der EU und den USA (EU-U.S. Data Privacy Framework) zertifiziert.
+
+## Was in deinem Gerät gespeichert wird
+
+Die App speichert einige Dinge nur in deinem Browser (lokaler Speicher und IndexedDB, keine Cookies):
+
+- die Anmeldung deiner Gruppe (ein Schlüssel, gilt 14 Tage)
+- deinen Anzeigenamen („Wer bist du?“)
+- die Liste der Gruppen und eine Kopie der Daten, damit die App schnell lädt und ohne Netz lesbar ist
+- Entwürfe (zum Beispiel ein Protokoll), bis du speicherst oder dich abmeldest
+- wann du zuletzt da warst („Was ist neu?“) und welche Hinweise du ausgeblendet hast
+
+„Abmelden“ löscht die Anmeldung, die Kopie der Daten und die Entwürfe. Den Rest löschst du in den Einstellungen deines Browsers („Websitedaten löschen“).
+
+## Anmeldung mit PIN
+
+Jede Gruppe hat einen PIN. Es gibt keine E-Mail-Adressen und keine Passwörter von einzelnen Personen.
+Der PIN wird nicht im Klartext gespeichert, nur als Prüfwert. Nach vielen falschen Versuchen ist die Anmeldung kurz gesperrt.
+
+## Was die Gruppen eintragen
+
+Nur für die eigene Gruppe sichtbar sind zum Beispiel Projekte, ToDos, Material und Ausleihe, Mobi-Beiträge, Termine, Protokolle, Reden, Umfragen, Kommentare und Wiki-Seiten.
+Bei jedem Eintrag speichert die App den Anzeigenamen und die Zeit (wer hat angelegt, wer hat zuletzt geändert). Namen stehen auch dort, wo ihr sie selbst eintragt, zum Beispiel bei Verantwortlichen oder im Protokoll.
+
+> Tragt nur ein, was nötig ist. Keine Angaben zur Gesundheit, keine Telefonnummern oder Adressen von Personen ohne deren Zustimmung, keine Fotos von Personen im Wiki.
+
+## Protokoll der Änderungen (Log)
+
+Bei jeder Änderung schreibt das Skript eine Zeile ins Log: Zeit, Gruppe, Art der Änderung, Tabelle, Nummer des Eintrags und Anzeigename.
+Einträge im Log, die älter als 180 Tage sind, werden beim Aufräumen gelöscht (etwa zweimal im Jahr).
+
+## Löschen
+
+Löschen in der App blendet einen Eintrag zuerst nur aus. Beim Aufräumen werden ausgeblendete Einträge, die älter als 90 Tage sind, endgültig entfernt.
+Protokolle und Reden werden nur einzeln von Hand gelöscht.
+
+## Reiter Team
+
+Im Reiter Team trägt sich jede Person freiwillig ein. Gespeichert werden:
+
+- der Name (wie der Anzeigename)
+- die Gruppen-Rollen
+- die Kapazität (eine Zahl von 1 bis 10) mit dem Zeitraum, für den sie gilt
+- eine kurze Notiz, wenn du willst
+
+Diese Angaben sieht nur die eigene Gruppe. Sie sind nie öffentlich.
+„Mich austragen“ löscht die Karte und alle Angaben zur Kapazität (zuerst ausgeblendet, nach 90 Tagen endgültig). Namen in ToDos und Protokollen bleiben.
+Abgelaufene Angaben zur Kapazität werden 6 Monate nach ihrem Ende gelöscht.
+Schreib in die Notiz keine Gründe, die deine Gesundheit oder Familie betreffen.
+
+## Öffentliche Seiten
+
+Ohne Anmeldung sichtbar sind: öffentliche Termine (auch als Kalender-Abo), öffentliche Wiki-Seiten, Impressum, Info, Datenschutz und die Links der Gruppen (Webseite, Instagram).
+Was öffentlich ist, entscheidet die Gruppe mit dem Haken „Veröffentlichen“ bzw. „Öffentlich“. Öffentliche Seiten zeigen keine Namen von Personen, die etwas eingetragen haben.
+Bei öffentlichen Abrufen speichert das Skript keinen Namen.
+
+## Links zu anderen Seiten
+
+Klickst du auf einen Link zu einer anderen Seite (zum Beispiel Instagram, Canva oder Google Drive), gelten dort die Regeln dieser Seite.
+
+## Rechtsgrundlagen
+
+- Betrieb der App und Protokolle von GitHub und Google: berechtigtes Interesse an einer sicheren, funktionierenden App (Art. 6 Abs. 1 lit. f DSGVO).
+- Arbeit in der Gruppe: Durchführung der Zusammenarbeit in der Gruppe (Art. 6 Abs. 1 lit. b und f DSGVO).
+- Reiter Team und freiwillige Angaben: deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO). Du kannst sie jederzeit widerrufen, zum Beispiel mit „Mich austragen“.
+
+## Deine Rechte
+
+Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Widerspruch und Datenübertragbarkeit (Art. 15 bis 21 DSGVO). Schreib dazu an die E-Mail-Adresse oben.
+Du kannst dich auch bei der Aufsichtsbehörde beschweren. In Rheinland-Pfalz ist das der Landesbeauftragte für den Datenschutz und die Informationsfreiheit: https://www.datenschutz.rlp.de
+
+Stand: 23.10.2026

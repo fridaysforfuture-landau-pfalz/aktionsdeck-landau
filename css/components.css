@@ -3011,3 +3011,30 @@ p.notiz.erledigt {
 /* ---- 0.31.9: Anpassungen 9.8a (Gruppen-Rollen: wer hat sie, offene Rollen) ---- */
 .team-marke-offen { background: #fff3dc; color: #8a5200; }
 .team-rollen-wer .team-rollen-wahl { margin-top: 4px; }
+
+/* ---- 0.32.1: Wiki-Text (Textformat, Impressum, Info, Datenschutz) ---- */
+.wiki-text { max-width: 70ch; line-height: 1.55; overflow-wrap: anywhere; }
+.wiki-text h2 { margin: 20px 0 8px; font-size: 20px; }
+.wiki-text h3 { margin: 16px 0 6px; font-size: 17px; }
+.wiki-text > :first-child { margin-top: 0; }
+.wiki-text p { margin: 0 0 10px; }
+.wiki-text ul, .wiki-text ol { margin: 0 0 10px; padding-left: 1.4rem; }
+.wiki-text li { margin: 2px 0; }
+.wiki-text a { color: var(--gruen); }
+.wiki-hinweis { margin: 0 0 10px; padding: 10px 12px; border-left: 4px solid var(--rand); border-radius: var(--radius); background: var(--hintergrund); }
+.wiki-fehlt { color: var(--text-leise); }
+.wiki-bild { margin: 0 0 12px; }
+.wiki-bild img { display: block; max-width: 100%; height: auto; border-radius: var(--radius); }
+.wiki-bild figcaption { margin-top: 4px; font-size: 14px; color: var(--text-leise); }
+.wiki-iv { margin: 0 0 16px; padding: 8px 12px; border: 1px solid var(--rand); border-radius: var(--radius); }
+.wiki-iv-titel { margin: 0 0 4px; font-weight: 600; }
+.wiki-iv ul { list-style: none; margin: 0; padding: 0; }
+.wiki-iv-unter { padding-left: 16px; }
+.wiki-iv-knopf { min-height: 44px; padding: 0; border: 0; background: none; font: inherit; color: var(--gruen); text-align: left; cursor: pointer; }
+.wiki-iv-knopf:hover { text-decoration: underline; }
+.info-gruppen h2 { margin: 20px 0 8px; font-size: 20px; }
+.info-gruppe { padding: 8px 0; border-top: 1px solid var(--rand); }
+.info-gruppe h3 { margin: 0 0 4px; font-size: 17px; }
+.info-gruppe-links { display: flex; flex-wrap: wrap; gap: 0 16px; }
+.info-gruppe-links a { display: inline-flex; align-items: center; min-height: 44px; color: var(--gruen); }
+.info-version { margin-top: 16px; }
