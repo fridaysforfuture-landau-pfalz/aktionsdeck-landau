@@ -7,14 +7,18 @@
 //   (Tab Wiki, bereich anleitung, zum Beispiel „Gruppe intern“).
 // - Entwicklung App: texte/entwicklung.txt.
 // Adressen: #/g/<kurz>/wiki (Übersicht), wiki/<seiten-id>, wiki/anleitung:<datei>, wiki/entwicklung.
+// Seit 0.32.3: „+ Seite“ (Skillshare und Anleitung), „+ Gruppe intern anlegen“, „Bearbeiten“ und „Löschen“ (js/views/wiki-eintrag.js).
+// Adressen dafür: wiki/neu:skillshare, wiki/neu:anleitung, wiki/neu:gruppe-intern, wiki/bearbeiten:<seiten-id>.
 // Zwischenspeicher gruppe_id:wiki (ladeMitCache).
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
-import { ladeMitCache } from '../cache.js';
+import { ladeMitCache, cacheSet } from '../cache.js';
+import { toast } from '../ui/toast.js';
 import { schliesseDetail } from '../ui/detail.js';
 import { istWahr } from '../schema.js';
 import { zeichneText } from '../wiki-format.js';
+import { zeigeEintrag } from './wiki-eintrag.js';
 import {
   txt, BEREICHE, themaVon, sortiereSeiten, seitenIn, nachThema, findeSeite, passtSuche, ausschnitt,
   anleitungListe, standText
@@ -69,6 +73,11 @@ export async function render(container, ctx) {
   let zeilen = [];
   let fehlerText = '';
   let geladen = false;
+  let formGebaut = false;
+  let frisch = false;
+  let ohneNetz = false;
+  let standGemerkt = '';
+  const imFormular = unter.indexOf('neu:') === 0 || unter.indexOf('bearbeiten:') === 0;
 
   const status = el('p', { class: 'leise', role: 'status' });
   const inhalt = el('div', { class: 'wiki-inhalt' });
@@ -141,7 +150,12 @@ export async function render(container, ctx) {
     const platzhalter = b === 'skillshare' ? 'Skillshare durchsuchen …'
       : (b === 'anleitung' ? 'Anleitung durchsuchen …' : 'Entwicklung durchsuchen …');
     listeBox = el('div', { class: 'wiki-liste' });
-    inhalt.append(el('div', { class: 'filterzeile wiki-filter' }, sucheFeld(b, platzhalter)), status, listeBox);
+    const zeile = el('div', { class: 'filterzeile wiki-filter' }, sucheFeld(b, platzhalter));
+    if (b !== 'entwicklung') {
+      zeile.classList.add('mit-knopf');
+      zeile.append(el('a', { class: 'knopf', href: basis + '/neu:' + b, text: '+ Seite' }));
+    }
+    inhalt.append(zeile, status, listeBox);
     listeZeichnen();
   }
 
@@ -222,6 +236,9 @@ export async function render(container, ctx) {
     } else if (geladen && !fehlerText) {
       gruppe.append(el('p', { class: 'leise', text: 'Noch keine eigenen Seiten, zum Beispiel „Gruppe intern“ mit Abläufen und Absprachen eurer Gruppe.' }));
     }
+    if (geladen && !fehlerText && !findeSeite(alleSeiten(), 'Gruppe intern')) {
+      gruppe.append(el('p', null, el('a', { class: 'knopf knopf-hell', href: basis + '/neu:gruppe-intern', text: '+ Gruppe intern anlegen' })));
+    }
     listeBox.append(gruppe);
   }
 
@@ -294,12 +311,85 @@ export async function render(container, ctx) {
       el('article', { class: 'karte wiki-artikel' },
         el('h2', { class: 'wiki-titel', text: txt(z.titel) }),
         el('p', { class: 'leise wiki-stand', text: angaben }),
-        zeichneText(z.text, { seiteFinden: seiteFinden, inhaltsverzeichnis: true })
+        zeichneText(z.text, { seiteFinden: seiteFinden, inhaltsverzeichnis: true }),
+        el('div', { class: 'hut-knoepfe wiki-seiten-knoepfe' },
+          el('a', { class: 'knopf', href: basis + '/bearbeiten:' + encodeURIComponent(z.id), text: 'Bearbeiten' }),
+          el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Löschen', onclick: function () { loeschen(z); } })
+        )
       )
     );
   }
 
+  // Neue oder geänderte Zeile in den Zwischenspeicher, damit die nächste Ansicht sie sofort kennt
+  async function merken(eintrag) {
+    zeilen = zeilen.filter(function (x) { return String(x.id) !== String(eintrag.id); }).concat([eintrag]);
+    await cacheSet(cacheKey, { daten: zeilen, stand: new Date().toISOString() });
+  }
+
+  async function loeschen(z) {
+    const frage = 'Die Seite „' + txt(z.titel) + '“ wirklich löschen?' +
+      (istWahr(z.oeffentlich) ? '\n\nSie ist öffentlich und verschwindet dann auch aus dem öffentlichen Wiki.' : '') +
+      '\n\nKommentare zur Seite werden mitgelöscht.';
+    if (!window.confirm(frage)) return;
+    if (!navigator.onLine) { toast('Keine Verbindung. Löschen geht nur mit Verbindung.'); return; }
+    try {
+      const r = await api('delete', { tabelle: 'Wiki', id: z.id, bekannt: z.geaendert_am }, s.token);
+      await merken(r.eintrag);
+      toast('Seite gelöscht.');
+      location.hash = basis;
+    } catch (e) {
+      if (ctx.behandleFehler(e)) return;
+      toast(e.code === 'konflikt' ? 'Jemand anderes hat die Seite gerade geändert. Bitte neu laden und noch einmal versuchen.' : e.message);
+    }
+  }
+
+  // ---- Formular ----
+
+  function zeigeFormular() {
+    if (formGebaut) return;
+    let seiteZ = null;
+    let bereich = 'skillshare';
+    let vorschlag = '';
+    if (unter.indexOf('bearbeiten:') === 0) {
+      seiteZ = alleSeiten().find(function (x) { return String(x.id) === unter.slice(11); }) || null;
+      if (!seiteZ) {
+        knoepfeZeichnen(true);
+        leeren(inhalt);
+        inhalt.append(zurueckLink(), el('p', { class: 'leise', text: geladen ? 'Diese Seite gibt es nicht (mehr).' : 'Lädt …' }));
+        return;
+      }
+    } else {
+      const art = unter.slice(4);
+      bereich = art === 'skillshare' ? 'skillshare' : 'anleitung';
+      if (art === 'gruppe-intern') vorschlag = 'Gruppe intern';
+    }
+    formGebaut = true;
+    merker.bereich = seiteZ ? (txt(seiteZ.bereich) === 'anleitung' ? 'anleitung' : 'skillshare') : bereich;
+    knoepfeZeichnen(true);
+    leeren(inhalt);
+    const box = el('div', { class: 'karte wiki-artikel wiki-form-karte' });
+    inhalt.append(zurueckLink(), box);
+    zeigeEintrag(box, {
+      ctx: ctx, token: s.token, gruppeId: s.gruppe_id, seite: seiteZ, bereich: bereich, titel: vorschlag,
+      seiten: alleSeiten, seiteFinden: seiteFinden,
+      beiFertig: async function (eintrag) {
+        await merken(eintrag);
+        location.hash = basis + '/' + encodeURIComponent(eintrag.id);
+      },
+      beiAbbruch: function () {
+        location.hash = seiteZ ? basis + '/' + encodeURIComponent(seiteZ.id) : basis;
+      }
+    });
+  }
+
   function anzeigen() {
+    if (imFormular) {
+      // Neu anlegen geht sofort, Bearbeiten erst mit den geladenen Seiten. Danach nie neu aufbauen (Tippen geht sonst verloren).
+      // Bearbeiten mit frischem Stand (sonst gibt es beim Speichern unnötig einen Konflikt), ohne Verbindung mit dem gemerkten
+      if (unter.indexOf('neu:') === 0 || frisch || (geladen && ohneNetz)) zeigeFormular();
+      else { knoepfeZeichnen(true); leeren(inhalt); inhalt.append(zurueckLink(), el('p', { class: 'leise', text: 'Lädt …' })); }
+      return;
+    }
     if (!unter || unter === 'entwicklung') zeichne();
     else if (unter.indexOf('anleitung:') === 0) zeigeFesteSeite(unter.slice(10));
     else zeigeSheetSeite(unter);
@@ -309,20 +399,27 @@ export async function render(container, ctx) {
 
   async function laden(zuerstCache) {
     try {
-      await ladeMitCache(cacheKey, function () {
+      const neuGeladen = await ladeMitCache(cacheKey, function () {
         return api('list', { tabelle: 'Wiki' }, s.token).then(function (r) { return r.zeilen; });
       }, function (daten, meta) {
         zeilen = Array.isArray(daten) ? daten : [];
         geladen = true;
         fehlerText = '';
-        status.textContent = meta.aktuell ? '' : 'Ohne Verbindung: Stand vom ' + standText(meta.stand) + '.';
+        if (meta.aktuell) { frisch = true; status.textContent = ''; }
+        else standGemerkt = meta.stand;
         if (!container.contains(seite)) return;
         if (unter) anzeigen();
         else listeZeichnen();
       }, zuerstCache);
+      if (!neuGeladen) {
+        ohneNetz = true;
+        status.textContent = 'Ohne Verbindung: Stand vom ' + standText(standGemerkt) + '.';
+        if (unter && container.contains(seite)) anzeigen();
+      }
     } catch (e) {
       if (ctx.behandleFehler(e)) return;
       geladen = true;
+      ohneNetz = true;
       fehlerText = 'Die Seiten der Gruppe konnten nicht geladen werden: ' + e.message;
       status.textContent = fehlerText;
       status.className = 'fehler';
@@ -339,6 +436,7 @@ export async function render(container, ctx) {
     if (!unter || unter === 'entwicklung') listeZeichnen();
     else anzeigen();
   });
-  ctx.setzeRefresh(function () { return laden(false); });
+  // Beim Schreiben kein regelmäßiges Neuladen
+  if (!imFormular) ctx.setzeRefresh(function () { return laden(false); });
   await laden(true);
 }
