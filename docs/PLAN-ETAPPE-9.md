@@ -6,7 +6,7 @@ Regeln für die Arbeit stehen in `CLAUDE.md`.
 **Status: Fassung 2.** Die Person hat die 20 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 4).
 Fassung 2 (eigentlich Schritt 9.0a) kommt im selben Pull Request wie Schritt 9.1, damit Plan und Skript zusammenpassen.
 Die kleinen Fragen A bis F (Abschnitt 4) sind am 23.10.2026 beantwortet.
-**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26), 9.1 (Version 0.31.0, Pull Request #27, von Hand bereitgestellt am 23.10.2026). 9.2 (Version 0.31.1, Pull Request #28, geprüft am 23.10.2026). 9.3 läuft mit Version 0.31.2.
+**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26), 9.1 (Version 0.31.0, Pull Request #27, von Hand bereitgestellt am 23.10.2026). 9.2 (Version 0.31.1, Pull Request #28, geprüft am 23.10.2026). 9.3 (Version 0.31.2, Pull Request #29, geprüft am 23.10.2026). 9.4 läuft mit Version 0.31.3.
 
 ## 1. Ziel
 
@@ -185,7 +185,7 @@ Version: 0.31.3. Sheet und Skript bleiben unverändert.
    - **Ins Team eintragen:** legt die Zeile in `Personen` mit dem Anzeigenamen und `aktiv: true` an. Ohne Anzeigenamen erst „Wer bist du?“ (`frageName`).
    - **Gruppen-Rollen:** Chips zum Antippen (gewählte Rollen, die jemand anderes hat, sind gesperrt mit „hat Name“). Unten „+ Neue Rolle“ (legt sie in `Gruppen_Rollen` an und wählt sie).
      Hinweis aus Abschnitt 3, Punkt 1.
-   - **Kapazität:** zehn Knöpfe 1 bis 10 in zwei Reihen (mindestens 44 px hoch) mit Satz darunter. „Gilt ab“ (heute), „gilt bis“ mit Schnellknöpfen. Notiz mit Zähler und Satz
+   - **Kapazität:** zehn Knöpfe 1 bis 10 in zwei Reihen (mindestens 44 px hoch) mit Satz darunter. „Gilt ab“ (heute), „gilt bis“ mit Schnellknöpfen (2 Wochen, 4 Wochen, 3 Monate; Vorschlag 4 Wochen). Notiz mit Zähler und Satz
      „Schreib keine Gründe auf, die deine Gesundheit oder Familie betreffen.“ Speichern legt eine **neue** Zeile in `Kapazitaet` an.
    - **Pause** (Schalter), **Mich austragen** (Rückfrage, `delete` auf `Personen`; das Skript löscht die Kapazität mit).
    - Verlauf: einzelne Kapazitäts-Angaben löschen (Rückfrage).

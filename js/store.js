@@ -4,6 +4,7 @@
 const KEY = 'aktionsdeck_session';
 const NAME_KEY = 'aktionsdeck_name';
 const GRUPPEN_KEY = 'aktionsdeck_gruppen';
+const NAME_VORHER_KEY = 'aktionsdeck_name_vorher';
 
 export function getSession() {
   try {
@@ -28,7 +29,21 @@ export function getName() {
 }
 
 export function setName(n) {
-  try { localStorage.setItem(NAME_KEY, String(n).trim().slice(0, 60)); } catch (e) { /* ignorieren */ }
+  try {
+    const alt = (localStorage.getItem(NAME_KEY) || '').trim();
+    const neu = String(n).trim().slice(0, 60);
+    // Den vorigen Namen merken (Reiter Team fragt dann, ob die Team-Karte mit umbenannt werden soll, 9.4)
+    if (alt && alt !== neu) localStorage.setItem(NAME_VORHER_KEY, alt);
+    localStorage.setItem(NAME_KEY, neu);
+  } catch (e) { /* ignorieren */ }
+}
+
+export function getNameVorher() {
+  try { return (localStorage.getItem(NAME_VORHER_KEY) || '').trim(); } catch (e) { return ''; }
+}
+
+export function loescheNameVorher() {
+  try { localStorage.removeItem(NAME_VORHER_KEY); } catch (e) { /* ignorieren */ }
 }
 
 // Gruppenliste (öffentlich): damit die Startseite sofort da ist

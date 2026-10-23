@@ -156,3 +156,46 @@ export function passtSuche(person, rollen, q) {
 export function passtRolle(person, rolleId) {
   return !rolleId || rollenIds(person).indexOf(String(rolleId)) >= 0;
 }
+
+// ---- Bearbeiten (9.4) ----
+
+// Darf diese Person die Karte bearbeiten? Die eigene Karte immer. Eine Karte, die jemand für eine andere
+// Person angelegt hat („Für jemanden eintragen“: erstellt_von ist nicht der Name), dürfen alle bearbeiten.
+// Absprache, kein Schutz (Entscheidung 5).
+export function darfBearbeiten(person, name) {
+  if (istIch(person, name)) return true;
+  return !!txt(person.erstellt_von) && key(person.erstellt_von) !== key(person.name);
+}
+
+// Wer hat eine gewählte Rolle schon (außer der Person selbst)? Gibt die andere Person zurück oder null.
+export function gewaehltVon(rolle, personen, ohneId) {
+  if (!istWahr(rolle.gewaehlt)) return null;
+  return (personen || []).find(function (p) {
+    return String(p.id) !== String(ohneId) && rollenIds(p).indexOf(String(rolle.id)) >= 0;
+  }) || null;
+}
+
+// Antwort von update beim Umbenennen: { ToDos: 3, Mobi_Plan: 1, ... } -> "3 ToDos, 1 Mobi-Beitrag"
+const UMBENANNT_TEXT = {
+  ToDos: ['ToDo', 'ToDos'],
+  Meilensteine: ['Meilenstein', 'Meilensteine'],
+  Mobi_Plan: ['Mobi-Beitrag', 'Mobi-Beiträge'],
+  Umfrage_Antworten: ['Umfrage-Antwort', 'Umfrage-Antworten']
+};
+export function umbenanntText(u) {
+  return Object.keys(UMBENANNT_TEXT).filter(function (k) { return u && Number(u[k]) > 0; })
+    .map(function (k) { const n = Number(u[k]); return n + ' ' + UMBENANNT_TEXT[k][n === 1 ? 0 : 1]; })
+    .join(', ');
+}
+
+// Prüft eine neue Kapazitäts-Angabe wie das Skript. Gibt '' oder den Fehlertext zurück.
+export function kapazitaetFehler(wert, ab, bis) {
+  const n = Number(wert);
+  if (!(n >= 1 && n <= 10 && Math.floor(n) === n)) return 'Bitte eine Zahl von 1 bis 10 antippen.';
+  const a = normDatum(ab);
+  const b = normDatum(bis);
+  if (!a || !b) return 'Bitte „gilt ab“ und „gilt bis“ angeben.';
+  if (b < a) return '„Gilt bis“ liegt vor „gilt ab“.';
+  if (b > addTage(a, 183)) return 'Eine Angabe gilt höchstens 6 Monate.';
+  return '';
+}

@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.31.2 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.3 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 0.31.0). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
@@ -178,7 +178,15 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Aufklapper "Gruppen-Rollen (n)" unten im Reiter Team (offen, solange es keine Rollen gibt). Je Rolle: Name, Marke "gewählt", Beschreibung, "Haben: Namen" bzw. "Noch niemand", Knopf "Bearbeiten". Darüber der Hinweis "Eine Gruppen-Rolle heißt nicht …". Knopf "+ Rolle".
   - Fenster "Neue Gruppen-Rolle" / "Rolle bearbeiten" (Name höchstens 40 Zeichen, Beschreibung, Fest gewählt, Reihenfolge; Konfliktprüfung). Beim Anlegen stehen die Standard-Rollen der Gruppe, die es noch nicht gibt, als Vorschläge zum Antippen darüber (FFF 12, GP 4 mit Beschreibung, KB keine). Bundes-Deli 1 und 2 setzen "gewählt".
   - "Löschen" im Fenster mit Rückfrage, die die Personen mit der Rolle nennt. Das Skript trägt die Rolle bei ihnen aus.
-- Nächster Schritt: 9.4 Mein Eintrag (eintragen, Rollen wählen, Kapazität, Pause, Austragen, Umbenennen), 0.31.3.
+- 9.3 geprüft (23.10.2026): alles da.
+- 9.4 (0.31.3): Mein Eintrag. Neue Datei js/views/team-eintrag.js (zeigeEintrag, umbenennen).
+  - "Mich eintragen" (Kasten oben, auch bei leerem Team): legt die Karte mit dem Anzeigenamen an (aktiv TRUE) und öffnet das Formular. Ohne Anzeigenamen erst "Wer bist du?".
+  - "Für jemanden eintragen" (klein unter den Karten): Fenster mit Name. Solche Karten (erstellt_von ist nicht der Name) dürfen alle bearbeiten, Marke "eingetragen von …" im Detail (darfBearbeiten in team-rechnen.js). Absprache, kein Schutz.
+  - Detail: Knopf "Bearbeiten und Kapazität eintragen" (eigene Karte) bzw. "Bearbeiten". Fremde Karten haben keinen Knopf.
+  - Formular im Detailbereich: Kapazität mit zehn Knöpfen (zwei Reihen, mindestens 44 px), Satz ("7 = gut Zeit"), Gilt ab (heute), Gilt bis (Vorschlag 4 Wochen; Knöpfe 2 Wochen, 4 Wochen, 3 Monate), Notiz bis 120 Zeichen mit Zähler und Datenschutzsatz. "Kapazität speichern" legt eine neue Zeile an. Bisherige Angaben mit "Löschen". Gruppen-Rollen als Knöpfe zum An- und Abwählen (gewählte Rolle einer anderen Person gesperrt mit "hat Name"), "+ Rolle" legt eine neue Rolle an und wählt sie. Name, Notiz, Haken "Dabei" (ohne = Pause). "Speichern" mit Konfliktprüfung; bei neuem Namen Rückfrage, die Meldung nennt, was das Skript mitgeändert hat ("Auch geändert: 2 ToDos, 1 Mobi-Beitrag"). Bei der eigenen Karte wird der Anzeigename im Gerät umgestellt. "Mich austragen" bzw. "Aus dem Team austragen" mit Rückfrage.
+  - Name auf dem Gerät geändert ("Name ändern"): store.js merkt sich den vorigen Namen (getNameVorher, loescheNameVorher). Gibt es zum neuen Namen keine Karte, aber zum vorigen, fragt der Reiter "Deine Team-Karte heißt noch … Umbenennen?" (oder "Nein, das bin nicht ich").
+  - Beim Bearbeiten baut das automatische Neuladen das Formular nicht neu auf (Eingaben bleiben).
+- Nächster Schritt: 9.5 Hüte je Person und freie Hüte (0.31.4).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -272,7 +280,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
-- js/views/: team, team-rechnen (seit 0.31.1), team-rollen (seit 0.31.2), gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
+- js/views/: team, team-rechnen (seit 0.31.1), team-rollen (seit 0.31.2), team-eintrag (seit 0.31.3), gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
 - Noch nicht vorhanden: Wiki. Reiter Team seit 0.31.1 (nur lesen). Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
 
 ## Hinweise
@@ -283,6 +291,6 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - Nach jedem Commit: Actions grün abwarten, Seite zweimal neu laden.
 - Ein Syntaxfehler in einer Datei lässt den Reiter auf "Dieser Reiter ist noch in Arbeit" zurückfallen (app.js lädt jeden Reiter als Modul). Bei diesem Symptom zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern und übrig gebliebene Reste wie "..." prüfen, vor allem `});` und `}, s.token);`.
 - In Util.gs gibt es schon eine Funktion aus(): in neuen Skriptdateien keine Variable so nennen. Hilfsfunktionen in Termine.gs beginnen mit t oder ics.
-- Zwischenspeicher je Reiter: ladeMitCache(key, ladeFn, anzeigen, zuerstCache), Schlüssel gruppe_id:<name> (Start: :todos, :projekteliste, :startextra; Kalender: :kalender; Protokoll: :protokoll; Reden: :reden; Team: :team). Entwürfe nur auf dem Gerät (js/store.js): Protokoll aktionsdeck_entwurf_protokoll_<gruppe_id>, Rede aktionsdeck_entwurf_rede_<gruppe_id>; Abmelden löscht beide. Öffentliche Termine: Schlüssel oeffentlich:termine. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in zeigen() Fehlendes ergänzen.
+- Zwischenspeicher je Reiter: ladeMitCache(key, ladeFn, anzeigen, zuerstCache), Schlüssel gruppe_id:<name> (Start: :todos, :projekteliste, :startextra; Kalender: :kalender; Protokoll: :protokoll; Reden: :reden; Team: :team). Vorheriger Anzeigename (Team, seit 0.31.3): aktionsdeck_name_vorher. Entwürfe nur auf dem Gerät (js/store.js): Protokoll aktionsdeck_entwurf_protokoll_<gruppe_id>, Rede aktionsdeck_entwurf_rede_<gruppe_id>; Abmelden löscht beide. Öffentliche Termine: Schlüssel oeffentlich:termine. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in zeigen() Fehlendes ergänzen.
 - Formulare: js/ui/form.js (Feldtypen text, zahl, datum, zeit, farbe, langtext, auswahl, bool, foto). Listen: zeigeListe in js/ui/table.js.
 - Arbeitsweise im Chat: neue Dateien ganz, bei bestehenden Dateien nur die zitierten Änderungen (erste und letzte Zeile des Bereichs, vollständig mit Klammern und Semikolons), CSS ans Ende anhängen. Am Ende Prüfliste und Tabelle "Wenn etwas nicht klappt". Der Nutzer arbeitet nur im Browser, Konsole gesperrt, und sammelt Anmerkungen zur Anzeige.
