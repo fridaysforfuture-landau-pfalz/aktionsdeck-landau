@@ -134,13 +134,41 @@ export function loescheRedeEntwurf(gruppeId) {
   try { localStorage.removeItem(REDE_KEY + gruppeId); } catch (e) { /* ignorieren */ }
 }
 
-// Gibt es auf diesem Gerät Entwürfe von Protokollen oder Reden (egal welche Gruppe)?
+// Nicht gespeicherte Wiki-Seite (10.4): eine je Gruppe, nur auf diesem Gerät.
+// { zeit, id ('' = neu), bereich, felder: { titel, thema, text, adresse, oeffentlich } } oder null
+const WIKI_KEY = 'aktionsdeck_entwurf_wiki_';
+
+export function getWikiEntwurf(gruppeId) {
+  try {
+    const e = JSON.parse(localStorage.getItem(WIKI_KEY + gruppeId));
+    return e && e.felder && typeof e.felder === 'object' ? e : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+export function setWikiEntwurf(gruppeId, id, bereich, felder) {
+  try {
+    localStorage.setItem(WIKI_KEY + gruppeId, JSON.stringify({
+      zeit: new Date().toISOString(), id: String(id || ''), bereich: String(bereich || ''), felder: felder
+    }));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+export function loescheWikiEntwurf(gruppeId) {
+  try { localStorage.removeItem(WIKI_KEY + gruppeId); } catch (e) { /* ignorieren */ }
+}
+
+// Gibt es auf diesem Gerät Entwürfe von Protokollen, Reden oder Wiki-Seiten (egal welche Gruppe)?
 function entwurfSchluessel() {
   const l = [];
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && (k.indexOf(ENTWURF_KEY) === 0 || k.indexOf(REDE_KEY) === 0)) l.push(k);
+      if (k && (k.indexOf(ENTWURF_KEY) === 0 || k.indexOf(REDE_KEY) === 0 || k.indexOf(WIKI_KEY) === 0)) l.push(k);
     }
   } catch (e) { /* ignorieren */ }
   return l;

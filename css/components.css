@@ -3066,3 +3066,34 @@ p.notiz.erledigt {
 @media (max-width: 420px) {
   .wiki-bereich { font-size: 14px; padding: 6px 4px; }
 }
+
+/* ---- 0.32.3: Wiki-Seiten schreiben ---- */
+.wiki-filter.mit-knopf { grid-template-columns: 1fr auto; align-items: center; }
+.wiki-filter.mit-knopf .knopf { white-space: nowrap; }
+.wiki-seiten-knoepfe { margin-top: 16px; }
+.wiki-form-karte { max-width: none; }
+.wiki-werkzeuge { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 6px; }
+.wiki-werkzeuge .knopf { min-width: 44px; min-height: 44px; }
+.wiki-textfeld { width: 100%; min-height: 320px; font-family: inherit; line-height: 1.5; resize: vertical; }
+.wiki-zaehler { margin: 4px 0 8px; font-size: 14px; text-align: right; }
+.wiki-vorschau { min-height: 120px; overflow-wrap: anywhere; }
+.wiki-vorschau-titel { margin: 0 0 6px; font-size: 14px; }
+.wiki-warnung { margin: 0; padding: 8px 12px; border-radius: var(--radius); background: #fff3dc; color: #6b4100; }
+.wiki-konflikt, .wiki-entwurf { padding: 10px 12px; border-radius: var(--radius); background: #fff3dc; border: 1px solid #e0b25c; }
+.wiki-konflikt p, .wiki-entwurf p { margin: 0 0 8px; }
+.wiki-formathilfe > summary, .wiki-mehr > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+.wiki-formathilfe ul { margin: 0 0 8px; padding-left: 1.2rem; font-size: 14px; }
+.wiki-umschalter { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.wiki-umschalter-knopf { min-height: 44px; border: 1px solid var(--rand); border-radius: var(--radius); background: var(--flaeche); font: inherit; cursor: pointer; }
+.wiki-umschalter-knopf.aktiv { border: 2px solid var(--text); font-weight: 600; }
+.wiki-schreiben .wiki-vorschauteil { display: none; }
+.wiki-schreiben.zeigt-vorschau .wiki-schreibteil { display: none; }
+.wiki-schreiben.zeigt-vorschau .wiki-vorschauteil { display: block; }
+@media (min-width: 960px) {
+  .wiki-umschalter { display: none; }
+  .wiki-schreiben { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .wiki-schreiben .wiki-vorschauteil, .wiki-schreiben.zeigt-vorschau .wiki-schreibteil { display: block; }
+  .wiki-vorschau { max-height: 70vh; overflow-y: auto; }
+}
+.wiki-formathilfe > summary::before, .wiki-mehr > summary::before, .wiki-thema > summary::before { content: '▸'; display: inline-block; width: 1.2em; }
+.wiki-formathilfe[open] > summary::before, .wiki-mehr[open] > summary::before, .wiki-thema[open] > summary::before { content: '▾'; }

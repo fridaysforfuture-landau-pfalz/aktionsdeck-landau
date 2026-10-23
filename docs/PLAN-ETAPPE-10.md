@@ -343,7 +343,8 @@ Die Versionen in dieser Tabelle sind die geplanten. Nachbesserungen zählen die 
 | 10.0 | Plan Fassung 1 | 0.31.10 | #37 |
 | 10.1 | Plan Fassung 2, Sheet und Skript | 0.32.0 | #38 |
 | 10.2 | Textformat, Impressum, Info, Datenschutz; Antworten A bis D im Plan | 0.32.1 | #39 |
-| 10.3 | Reiter Wiki lesen und suchen, Anleitung Team, Hilfe entfällt | 0.32.2 | – |
+| 10.3 | Reiter Wiki lesen und suchen, Anleitung Team, Hilfe entfällt | 0.32.2 | #40 |
+| 10.4 | Seiten schreiben, Bilder, Entwurf, Konflikt, Löschen | 0.32.3 | – |
 
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt. Die Anmerkungen kommen in den nächsten Pull Request, vor dem nächsten Schritt.
 
