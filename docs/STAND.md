@@ -1,9 +1,9 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.31.7 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.8 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 0.31.0; mit 9.8 fertig gebaut, Abschluss nach der Prüfung). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
+Plan der laufenden Etappe: docs/PLAN-ETAPPE-10.md (Etappe 10 Wiki und öffentliche Seiten; die Datei wird als erste Aufgabe von Etappe 10 geschrieben, Schritt 10.0). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
 
 ## Erledigt
 - Etappe 0 und 1 (Fundament), Etappe 2 Material und Ausleihe, Zwischenplan Z1 bis Z8, Etappe 3 ToDos.
@@ -12,6 +12,7 @@ Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 
 - Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
 - Etappe 7 Mobi komplett (0.29.0 bis 0.29.12), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7, 7.8. 0.29.11 geprüft (22.10.2026), Anpassungen in 0.29.12.
 - Etappe 8 Protokoll, Reden, Learnings komplett und geprüft (0.29.12 bis 0.30.13, Abschluss der Doku 0.30.14), siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4), 8.4 Markierungen (0.30.5), 8.4a Anpassungen (0.30.6), 8.4b angelegte Einträge beim Verwerfen löschen (0.30.7), 8.5 Vorschläge aus dem Protokoll (0.30.8), 8.5a Anpassungen (0.30.9), 8.6 Reden-Archiv (0.30.10), 8.7 Verknüpfungen (0.30.11), 8.8 Löschen von Hand, Redetext und Kommentare je Absatz (0.30.12, Sheet und Skript von Hand), 8.8a Anpassungen zu 8.8 (0.30.13). Alles geprüft: 8.5a bis 8.8a am 22.10.2026 bestätigt.
+- Etappe 9 Team komplett und geprüft (0.30.15 bis 0.31.7, Abschluss der Doku 0.31.8), siehe `docs/PLAN-ETAPPE-9.md` und unten. Erledigt: 9.0 Plan Fassung 1 (0.30.15), 9.1 Plan Fassung 2, Sheet und Skript (0.31.0, von Hand bereitgestellt am 23.10.2026), 9.2 Reiter Team lesen (0.31.1), 9.3 Gruppen-Rollen bearbeiten (0.31.2), 9.4 Mein Eintrag (0.31.3), 9.5 Hüte je Person und freie Hüte (0.31.4), 9.5a Anmerkungen und 9.6 Berg (0.31.5), 9.6a Anmerkungen und 9.7 Verknüpfungen (0.31.6), 9.8 Hilfe zum Team (0.31.7). Alles geprüft am 23.10.2026.
 - Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
 
 ## Etappe 7 (Mobi), abgeschlossen mit 0.29.12
@@ -158,12 +159,12 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - Hinweis aus 8.8: Ein Pull Request wurde angenommen, bevor eine Nachbesserung im selben Zweig ankam. Regel ab jetzt: Jede Nachbesserung zählt die Version hoch, auch in einem noch offenen Pull Request. So zeigt die App sicher, welcher Stand da ist.
 - 9.0 (0.30.15): docs/PLAN-ETAPPE-9.md, Fassung 1 mit 20 Rückfragen (Abschnitt 4). Nur Doku und Versionssprung, Sheet und Skript unverändert.
 
-## Etappe 9 (Team), fertig gebaut (0.31.7), Prüfung von 9.6a bis 9.8 offen
+## Etappe 9 (Team), abgeschlossen mit 0.31.7 (Doku 0.31.8)
 - 9.0 (0.30.15): Plan Fassung 1 mit 20 Rückfragen (#26). Die Person hat am 23.10.2026 geantwortet.
-- 9.1 (0.31.0): Plan Fassung 2 (docs/PLAN-ETAPPE-9.md) und Sheet und Skript. **Von Hand bereitzustellen** (Liste im Pull Request).
+- 9.1 (0.31.0): Plan Fassung 2 (docs/PLAN-ETAPPE-9.md) und Sheet und Skript. Von Hand bereitgestellt (Liste im Pull Request #27).
   - Begriffe: Hüte bleiben Aufgaben mit Verantwortlichen oder offene Aufgaben ("Hut frei"). Dauerhafte Zuständigkeiten heißen "Gruppen-Rollen" (eine Rolle heißt nicht, dass man sich allein kümmern muss).
   - Tab Personen zusätzlich rollen (IDs aus Gruppen_Rollen, eine je Zeile, höchstens 12), notiz (120 Zeichen). Name in der Gruppe nur einmal (60 Zeichen). aktiv FALSE = Pause; die App schickt beim Anlegen TRUE.
-  - Neuer Tab Gruppen_Rollen (name, beschreibung, gewaehlt, sortierung). gewaehlt = höchstens eine Person. Die Liste bearbeitet die Gruppe in der App (ab 9.3, mit "Standard-Rollen übernehmen" für FFF und GP).
+  - Neuer Tab Gruppen_Rollen (name, beschreibung, gewaehlt, sortierung). gewaehlt = höchstens eine Person. Die Liste bearbeitet die Gruppe in der App (ab 9.3; die Standard-Rollen von FFF und GP stehen dort als Vorschläge im Formular "+ Rolle", es gibt keinen Knopf "Standard-Rollen übernehmen").
   - Neuer Tab Kapazitaet (person_id, kapazitaet, gueltig_ab, gueltig_bis, notiz). kapazitaet ganze Zahl 1 bis 10, höchstens 183 Tage gültig, wird nicht geändert (nur anlegen und löschen). Die Spalte heißt kapazitaet, weil es "wert" schon im System-Tab Einstellungen gibt.
   - Neu apps-script/Team.gs: teamPruefen (in create, batchCreate, update), teamKaskade (Person gelöscht = Kapazität mit; Rolle gelöscht = bei allen ausgetragen), teamUmbenennen (neuer Name einer Person wird auch in ToDos, Meilensteinen, Mobi_Plan (verantwortlich) und Umfrage_Antworten (person) ersetzt; Antwort von update enthält umbenannt), Editor-Test testenTeam (schreibt nichts).
   - Daten.gs ruft die Team-Prüfungen auf. Aufraeumen.gs entfernt Kapazitäts-Angaben, deren gueltig_bis mehr als 183 Tage vorbei ist. js/schema.js kennt Personen, Gruppen_Rollen, Kapazitaet.
@@ -190,13 +191,13 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - 9.5 (0.31.4): Hüte je Person und freie Hüte. Der Reiter Team lädt dafür auch ToDos, Meilensteine, Mobi_Plan, Projekte (7 Tabellen).
   - Hut je Person (team-rechnen.js: alleHuete, hueteVon, projekteAus, sortiereHuete): offenes ToDo, offener Meilenstein, nicht veröffentlichter Mobi-Beitrag mit dem Namen in verantwortlich (genauer Vergleich, "Ben" passt nicht auf "Bente"). Nur aus offenen Projekten (nicht erledigt/archiviert); ToDos ohne Projekt und Beiträge zu Veranstaltungen zählen.
   - Karte: "🎩 3 Hüte · 1 Projekt" bzw. "Keine Hüte". Detail: Liste "Hüte (n)" mit Symbol (✅ ToDo, 🏁 Meilenstein, 📣 Mobi), Projekt, Frist (überfällig rot, heute orange). Klick: ToDo ohne Projekt → Reiter ToDos, sonst das Projekt; Mobi-Beitrag → Reiter Mobi (Liste, gefiltert auf das Projekt).
-  - Abschnitt "🎩 Freie Hüte (n)" oben (nur wenn es welche gibt): offene ToDos ohne Verantwortliche, nächste Frist zuerst, höchstens 10, Knopf "Hut übernehmen" aus todos-hut.js, "Alle im Reiter ToDos →".
+  - Abschnitt "🎩 Freie Hüte (n)" oben (nur wenn es welche gibt): offene ToDos ohne Verantwortliche, nächste Frist zuerst, höchstens 10 (seit 9.5a die ersten 5, seit 9.6a die ersten 3, Rest über "Alle anzeigen"), Knopf "Hut übernehmen" aus todos-hut.js, "Alle im Reiter ToDos →".
   - Unten "Namen in Hüten ohne Team-Karte: Name (Zahl)" (namenOhneKarte), damit Tippfehler auffallen.
   - "Für jemanden eingetragen" (fuerJemandenEingetragen): nur noch, wenn erstellt_von nicht der Name ist UND die eintragende Person selbst eine andere Karte hat. Nach dem Umbenennen der eigenen Karte ist sie damit nicht mehr für alle bearbeitbar.
 - 9.5 geprüft (23.10.2026): alles da. Zwei Anmerkungen, umgesetzt in 0.31.5 (9.5a): Freie Hüte zeigen die ersten 5, der Rest über "▸ Alle anzeigen (n)"; im Detail am Handy überlappten die Marken "Du"/"Dabei", der Knopf "Bearbeiten …" und "Kapazität" (jetzt Abstände, Knopftext bricht um, geprüft bis 320 px).
 - 9.6 (0.31.5, zusammen mit 9.5a): Diagramm "Berg" oben im Reiter Team. Neue Datei js/views/team-berg.js (baueBerg), Rechnung bergDaten in team-rechnen.js. Der Reiter lädt dafür auch Veranstaltungen (8 Tabellen).
   - Gestapelte Flächen, eine Schicht je aktiver Person mit Angabe (Dicke = Kapazität am Mittwoch der Woche), Farben fest nach Namen A–Z (BERG_FARBEN, 8 Farben, geprüft auf Farbsehschwächen; ab der 9. Person wiederholen sie sich). Höhe = Kraft der Gruppe. Pausierte und abgelaufene Angaben zählen nicht.
-  - Darunter eigenes kleines Bild "Fällige Hüte je Woche" (mit und ohne Verantwortliche; eigene Skala, keine zwei Maßstäbe in einem Bild). Orange = eng: mindestens 3 Hüte und mehr als ein Hut je 4 Punkte Kraft (ENG_MIN_HUETE, ENG_PUNKTE_JE_HUT).
+  - Darunter eigenes kleines Bild "Fällige Hüte je Woche" (eigene Skala, keine zwei Maßstäbe in einem Bild; seit 9.6a ein Balken aus zwei Teilen, siehe unten). Orange = eng: mindestens 3 Hüte und mehr als ein Hut je 4 Punkte Kraft (ENG_MIN_HUETE, ENG_PUNKTE_JE_HUT).
   - Linien: Aktion (grün; Aktionsdatum aktiver Projekte, externe Veranstaltungen), Heute (gestrichelt). PC: 2 Wochen zurück, 10 voraus; Handy (unter 600 px): 1 zurück, 6 voraus, Datum jede zweite Woche.
   - Antippen/Zeigen einer Woche: Zeile darunter (Woche, Kraft mit Werten je Person, Hüte, Aktionen, "⚠ Hier wird es eng"). Legende mit Namen, "Zahlen zeigen" als Tabelle. Unter 2 Personen mit Angabe: Satz statt Bild.
 - 9.5a und 9.6 geprüft (23.10.2026): "super". Regel "eng" vorerst okay. Anmerkungen, umgesetzt in 0.31.6 (9.6a): Fällige Hüte und "eng" zählen nur Hüte mit Verantwortlichen; offene Aufgaben ohne Verantwortliche stehen als blaues Stück unten im selben Balken (Beschriftung "4+2", Legende, Tabelle "(+2 offen)"; Farben geprüft: Grau #4f5a56, Blau #5a96df, Orange #c77c00). Freie Hüte zeigen die ersten 3.
@@ -207,10 +208,10 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Adressen: #/g/<kurz>/team/<person-id> öffnet eine Karte, team/ich die eigene Karte zum Bearbeiten (app.js gibt ctx.unter jetzt auch für team weiter). Danach steht wieder #/g/<kurz>/team da.
   - Start: Zeile unter "Hallo …" für die eigene Person mit Team-Karte, wenn die Kapazität fehlt oder abgelaufen ist ("⛰️ Deine Kapazität ist seit … abgelaufen. Kurz aktualisieren?" bzw. "Trag kurz ein, wie viel Zeit du gerade hast."), Link auf team/ich, "✕" blendet sie auf dem Gerät 7 Tage aus (store.js: teamHinweisAus, setTeamHinweisAus). Ohne Team-Karte keine Zeile.
   - "Was ist neu?": Abschnitt "Team" mit "👥 Name · neu im Team" (nur neue Personen von anderen, keine Änderungen an Kapazität oder Rollen).
-- 9.6a und 9.7: Pull Request #33 angenommen. Rückfrage beantwortet: Das Team bleibt freiwillig, die Start-Zeile erscheint nur mit Team-Karte. Die Prüfung von 9.6a und 9.7 hat die Person noch nicht gemeldet.
+- 9.6a und 9.7: Pull Request #33 angenommen. Rückfrage beantwortet: Das Team bleibt freiwillig, die Start-Zeile erscheint nur mit Team-Karte. 9.6a und 9.7 geprüft (23.10.2026): alles da und gut.
 - 9.8 (0.31.7): Hilfe zum Team. js/views/hilfe.js hat einen Abschnitt "👥 Team" mit Aufklappern (Was ist der Reiter Team, Gruppen-Rollen mit dem Hinweis zur Unterstützung, Hüte, Kapazität mit den Bereichen, Der Berg, Wer sieht was / wer darf was, Namen ändern, Austragen und Datenschutz). Im Reiter Team unten der Link "Wie funktioniert der Reiter Team? → Hilfe". Der Platzhalter-Satz für das spätere Wiki bleibt.
-- Damit ist Etappe 9 fertig gebaut. Abschluss (Etappe 9 als "geprüft" eintragen) nach der Prüfung von 9.6a, 9.7 und 9.8 durch die Person.
-- Nächster Schritt: Prüfung von 9.6a, 9.7 und 9.8. Danach Etappe 10 (Wiki und öffentliche Seiten): erste Aufgabe docs/PLAN-ETAPPE-10.md schreiben (Fassung 1 mit Rückfragen). Für Etappe 10 vormerken: Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
+- 9.8 geprüft (23.10.2026): alles da und gut. Etappe 9 ist abgeschlossen (Entscheidung der Person, 23.10.2026). 0.31.8 schließt nur die Doku ab (STAND, Plan, CLAUDE.md).
+- Nächster Schritt: Etappe 10 (Wiki und öffentliche Seiten), Schritt 10.0: docs/PLAN-ETAPPE-10.md schreiben (Fassung 1 mit Rückfragen, aufgebaut wie die Pläne für Etappe 7 bis 9). Noch kein Code. Für Etappe 10 vormerken: Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -233,12 +234,12 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
 - Mobi im Kalender: erledigt in 7.7 (0.29.9), im normalen Kalender mit Filter "Mobi" (kein eigener Mobi-Kalender).
 
 ## Plan Etappen 7 bis 11
-Reiter (Stand 0.30.13): Start, Projekte, ToDos, Material, Mobi, Kalender, Dokumentation, Hilfe. "Posts" heißt Mobi. Der Reiter **Kalender bleibt** (Entscheidung Etappe 7). Untere Leiste am Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Dokumentation, Hilfe unter "Mehr").
-Geplant: Etappe 9 bringt den Reiter Team. Später Wiki statt Hilfe (Etappe 10). (Etappe 8 brachte den Reiter "Dokumentation", 📝, Kennung protokoll.)
+Reiter (Stand 0.31.8): Start, Projekte, ToDos, Material, Mobi, Kalender, Dokumentation, Team, Hilfe. "Posts" heißt Mobi. Der Reiter **Kalender bleibt** (Entscheidung Etappe 7). Untere Leiste am Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Dokumentation, Team, Hilfe unter "Mehr").
+Geplant: Wiki statt Hilfe (Etappe 10). (Etappe 8 brachte den Reiter "Dokumentation", 📝, Kennung protokoll; Etappe 9 den Reiter "Team", 👥, Kennung team.)
 - Etappe 7 Mobi: abgeschlossen (siehe oben und docs/PLAN-ETAPPE-7.md).
 - Etappe 8 Protokoll, Reden, Learnings: abgeschlossen. Plan und Schritte in **docs/PLAN-ETAPPE-8.md** (Dauerprotokoll mit Google-Dokument für FFF, Etherpad bei GP von Hand, Markierungen im Text mit Vorschlägen zum Abhaken, Reden-Archiv mit Probelesen über Kommentare, Learnings aus dem Protokoll).
-- Etappe 9 Team (fertig gebaut mit 0.31.7, Plan in docs/PLAN-ETAPPE-9.md, Fassung 2): Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
-- Etappe 10 Wiki und öffentliche Seiten: Wiki mit Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlichem Bereich. Impressum, Info, Datenschutz (Texte aus 6.1). Die Seite #/termine gibt es schon.
+- Etappe 9 Team: abgeschlossen (0.31.7, Plan und Schritte in docs/PLAN-ETAPPE-9.md): Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
+- Etappe 10 Wiki und öffentliche Seiten (als Nächstes, Plan folgt in docs/PLAN-ETAPPE-10.md): Wiki mit Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlichem Bereich. Impressum, Info, Datenschutz (Texte aus 6.1, dazu ein Absatz zum Team). Die Hilfe zum Team (js/views/hilfe.js) kommt ins Wiki. Die Seite #/termine gibt es schon.
 - Etappe 11 Komfort: OpenCollective-Kontostand (nur Klimastreik Landau, https://opencollective.com/klimastreik-landau, einmal pro Woche per Skript; erst testen, noch keine Zusage). Erinnerungen und Push so planen, dass sie später auf Push oder E-Mail aufsetzen können (Umfragen, überfällige ToDos, Pinnwand-Kommentare). Sicherung, Übersicht und Export, Dunkelmodus, Feinschliff, GitHub-Actions-Versionen anheben.
 - Neue Sheet-Tabs für spätere Etappen: Wiki (Mobi_Plan seit 0.29.0, Reden seit 0.30.0, Gruppen_Rollen und Kapazitaet seit 0.31.0). Jede Etappe nennt vorher, was im Sheet und Skript zu ergänzen ist und wann neu bereitgestellt wird.
 
@@ -300,8 +301,8 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - **Vor 1.0**: Test-ToDos und Test-Einträge im Sheet löscht die Person.
 
 ## Dateiübersicht
-- docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (Etappe 9, Fassung 2), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.30.12 am Ende)
+- docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (abgeschlossen), PLAN-ETAPPE-10.md (folgt), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.31.7 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
@@ -315,7 +316,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - Skripteigenschaften (nur im Editor): TOKEN_GEHEIMNIS, FOTO_ORDNER_g1, g2, g3. Seit 0.30.0: PROTOKOLL_DOK_g1 (ID des FFF-Dokuments), PROTOKOLL_DOK_g2 (GP, seit 22.10.2026), freiwillig PROTOKOLL_LINK_<gruppe_id> (externes Protokoll, nur https://; ein Dokument geht vor).
 - Nach jedem Commit: Actions grün abwarten, Seite zweimal neu laden.
 - Ein Syntaxfehler in einer Datei lässt den Reiter auf "Dieser Reiter ist noch in Arbeit" zurückfallen (app.js lädt jeden Reiter als Modul). Bei diesem Symptom zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern und übrig gebliebene Reste wie "..." prüfen, vor allem `});` und `}, s.token);`.
-- In Util.gs gibt es schon eine Funktion aus(): in neuen Skriptdateien keine Variable so nennen. Hilfsfunktionen in Termine.gs beginnen mit t oder ics.
+- In Util.gs gibt es schon eine Funktion aus(): in neuen Skriptdateien keine Variable so nennen. Hilfsfunktionen in Termine.gs beginnen mit t oder ics, in Team.gs mit team.
 - Zwischenspeicher je Reiter: ladeMitCache(key, ladeFn, anzeigen, zuerstCache), Schlüssel gruppe_id:<name> (Start: :todos, :projekteliste, :startextra; Kalender: :kalender; Protokoll: :protokoll; Reden: :reden; Team: :team). Vorheriger Anzeigename (Team, seit 0.31.3): aktionsdeck_name_vorher. Start-Zeile Team ausgeblendet (seit 0.31.6): aktionsdeck_teamhinweis_<gruppe_id>. Entwürfe nur auf dem Gerät (js/store.js): Protokoll aktionsdeck_entwurf_protokoll_<gruppe_id>, Rede aktionsdeck_entwurf_rede_<gruppe_id>; Abmelden löscht beide. Öffentliche Termine: Schlüssel oeffentlich:termine. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in zeigen() Fehlendes ergänzen.
 - Formulare: js/ui/form.js (Feldtypen text, zahl, datum, zeit, farbe, langtext, auswahl, bool, foto). Listen: zeigeListe in js/ui/table.js.
 - Arbeitsweise im Chat: neue Dateien ganz, bei bestehenden Dateien nur die zitierten Änderungen (erste und letzte Zeile des Bereichs, vollständig mit Klammern und Semikolons), CSS ans Ende anhängen. Am Ende Prüfliste und Tabelle "Wenn etwas nicht klappt". Der Nutzer arbeitet nur im Browser, Konsole gesperrt, und sammelt Anmerkungen zur Anzeige.

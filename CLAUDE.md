@@ -2,7 +2,7 @@
 
 Diese Datei liest du (der Agent) zuerst. Sie gilt für jede Aufgabe in diesem Repo.
 Der aktuelle Projektstand steht in `docs/STAND.md`, der Plan für die laufende Etappe in `docs/PLAN-ETAPPE-<Nummer>.md`
-(zurzeit Etappe 9: `docs/PLAN-ETAPPE-9.md`; diese Datei wird als erste Aufgabe von Etappe 9 geschrieben).
+(zurzeit Etappe 10: `docs/PLAN-ETAPPE-10.md`; diese Datei wird als erste Aufgabe von Etappe 10 geschrieben).
 
 ## 1. Worum es geht
 
