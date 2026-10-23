@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.31.0 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.31.1 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-9.md (Etappe 9 Team, Fassung 2 seit 0.31.0). Etappe 7 und 8: docs/PLAN-ETAPPE-7.md und docs/PLAN-ETAPPE-8.md, abgeschlossen, bleiben als Nachweis.
@@ -168,7 +168,12 @@ Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code
   - Neu apps-script/Team.gs: teamPruefen (in create, batchCreate, update), teamKaskade (Person gelöscht = Kapazität mit; Rolle gelöscht = bei allen ausgetragen), teamUmbenennen (neuer Name einer Person wird auch in ToDos, Meilensteinen, Mobi_Plan (verantwortlich) und Umfrage_Antworten (person) ersetzt; Antwort von update enthält umbenannt), Editor-Test testenTeam (schreibt nichts).
   - Daten.gs ruft die Team-Prüfungen auf. Aufraeumen.gs entfernt Kapazitäts-Angaben, deren gueltig_bis mehr als 183 Tage vorbei ist. js/schema.js kennt Personen, Gruppen_Rollen, Kapazitaet.
   - In der App ändert sich noch nichts Sichtbares. Der Reiter Team kommt in 9.2.
-- Nächster Schritt: Die Person stellt 9.1 von Hand bereit und prüft. Danach 9.2 (Reiter Team, nur lesen).
+- 9.1 von Hand übernommen und bereitgestellt (23.10.2026). Antworten der zweiten Runde: KB keine Standard-Rollen, kein Knopf "Standard-Rollen übernehmen" (Vorschläge im Formular "+ Rolle"), kein "gewählt bis", alle dürfen die Rollen-Liste ändern, Berg-Farben nach Namen.
+- 9.2 (0.31.1): Reiter Team (👥, Kennung team) in js/ui/nav.js (nach Dokumentation), js/config.js (features.team), am Handy unter "Mehr". Nur lesen.
+  - js/views/team.js: lädt Personen, Gruppen_Rollen, Kapazitaet (Zwischenspeicher gruppe_id:team, Aktualisierung wie die anderen Reiter). Karten: Name (Marke "Du"), Gruppen-Rollen als Chips (gewählte fett mit "gewählt"), Kapazität als 10 Kästchen mit Zahl und Satz ("gilt bis", grau "Abgelaufen seit … (war n)", "Ab TT.MM.: n" für spätere Angaben), Notiz. Eigene Karte zuerst (grüner Rand links), dann A–Z, Pausierte im Aufklapper unten. Suche (Name, Rolle, Notiz), Filter Rolle (nur benutzte Rollen; ohne Rollen ausgeblendet). Ohne eigene Karte: Hinweis "Du bist noch nicht im Team" (Eintragen kommt in 9.4). Leeres Team: freundlicher Text.
+  - Detail (PC rechts, Handy Vollbild): Marken Du/Dabei/Pause, Rollen mit Beschreibung und dem Hinweis "Eine Gruppen-Rolle heißt nicht …", Kapazität, Verlauf der letzten 6 Monate (gilt jetzt, kommt noch, von neuerer Angabe ersetzt, abgelaufen; mit Notiz), Notiz, "Im Team seit …, eingetragen von …".
+  - js/views/team-rechnen.js: rollenVon, sortiereRollen, istIch, istAktiv, namenAus, kapazitaetAm (die zuletzt angelegte Angabe, die den Tag abdeckt), angabeJetzt, angabeZustand, verlauf, kapazitaetText, sortierePersonen, passtSuche, passtRolle.
+- Nächster Schritt: 9.3 Gruppen-Rollen bearbeiten (0.31.2).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -245,7 +250,7 @@ Geplant: Etappe 9 bringt den Reiter Team. Später Wiki statt Hilfe (Etappe 10). 
 - AktionsDeck Dunkelgrau #1a1e20, Dunkelgrün #368469. FFF #1b7340; GP #70bd1c; KB #165834 (außerdem #2fa142, #0894ad). Hintergrund #dfe8e4. CSS-Variablen --gruppe, --gruppe-text, --gruen, --gruen-hell, --hintergrund.
 
 ## Oberfläche (Stand)
-- Reiter aktuell: Start, Projekte, ToDos, Material, Mobi, Kalender, Dokumentation (Kennung protokoll), Hilfe. Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Dokumentation, Hilfe).
+- Reiter aktuell: Start, Projekte, ToDos, Material, Mobi, Kalender, Dokumentation (Kennung protokoll), Team (seit 0.31.1), Hilfe. Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Dokumentation, Team, Hilfe).
 - Meldungen (toast) mittig. Projekte, Start, Kalender und Material-Dialoge nutzen Fenster (js/ui/fenster.js, zeigeFenster(titel, inhalt, beiZu, { aussenKlick }), mit ✕ oben rechts). Reiter ToDos und Material nutzen den Detailbereich rechts.
 - Öffentliche Seiten ohne Login: #/info/<seite> (Impressum, Info, Datenschutz, Texte kommen in 6.1/Etappe 10) und #/termine.
 
@@ -262,8 +267,8 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js
 - js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
-- js/views/: gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
-- Noch nicht vorhanden: Team, Wiki. Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
+- js/views/: team, team-rechnen (seit 0.31.1), gruppen, login, start, start-umfragen, start-brett, mehr, info, hilfe, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
+- Noch nicht vorhanden: Wiki. Reiter Team seit 0.31.1 (nur lesen). Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
 
 ## Hinweise
 - config.js enthält die echte API_URL: nie ersetzen, nur VERSION ändern.
@@ -273,6 +278,6 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 - Nach jedem Commit: Actions grün abwarten, Seite zweimal neu laden.
 - Ein Syntaxfehler in einer Datei lässt den Reiter auf "Dieser Reiter ist noch in Arbeit" zurückfallen (app.js lädt jeden Reiter als Modul). Bei diesem Symptom zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern und übrig gebliebene Reste wie "..." prüfen, vor allem `});` und `}, s.token);`.
 - In Util.gs gibt es schon eine Funktion aus(): in neuen Skriptdateien keine Variable so nennen. Hilfsfunktionen in Termine.gs beginnen mit t oder ics.
-- Zwischenspeicher je Reiter: ladeMitCache(key, ladeFn, anzeigen, zuerstCache), Schlüssel gruppe_id:<name> (Start: :todos, :projekteliste, :startextra; Kalender: :kalender; Protokoll: :protokoll; Reden: :reden). Entwürfe nur auf dem Gerät (js/store.js): Protokoll aktionsdeck_entwurf_protokoll_<gruppe_id>, Rede aktionsdeck_entwurf_rede_<gruppe_id>; Abmelden löscht beide. Öffentliche Termine: Schlüssel oeffentlich:termine. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in zeigen() Fehlendes ergänzen.
+- Zwischenspeicher je Reiter: ladeMitCache(key, ladeFn, anzeigen, zuerstCache), Schlüssel gruppe_id:<name> (Start: :todos, :projekteliste, :startextra; Kalender: :kalender; Protokoll: :protokoll; Reden: :reden; Team: :team). Entwürfe nur auf dem Gerät (js/store.js): Protokoll aktionsdeck_entwurf_protokoll_<gruppe_id>, Rede aktionsdeck_entwurf_rede_<gruppe_id>; Abmelden löscht beide. Öffentliche Termine: Schlüssel oeffentlich:termine. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in zeigen() Fehlendes ergänzen.
 - Formulare: js/ui/form.js (Feldtypen text, zahl, datum, zeit, farbe, langtext, auswahl, bool, foto). Listen: zeigeListe in js/ui/table.js.
 - Arbeitsweise im Chat: neue Dateien ganz, bei bestehenden Dateien nur die zitierten Änderungen (erste und letzte Zeile des Bereichs, vollständig mit Klammern und Semikolons), CSS ans Ende anhängen. Am Ende Prüfliste und Tabelle "Wenn etwas nicht klappt". Der Nutzer arbeitet nur im Browser, Konsole gesperrt, und sammelt Anmerkungen zur Anzeige.

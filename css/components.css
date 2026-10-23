@@ -2810,3 +2810,62 @@ p.notiz.erledigt {
   /* PC: Absatz links, Kommentare rechts daneben */
   .rede-text-mit .rede-reihe { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: start; }
 }
+
+/* ---- 0.31.1: Reiter Team (Karten, Kapazität, Detail) ---- */
+.team-filter { grid-template-columns: 1fr; }
+.team-raster { display: grid; gap: 12px; grid-template-columns: 1fr; }
+.team-karte {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  min-height: 44px;
+}
+.team-karte:hover { border-color: var(--gruppe); }
+.team-karte:focus-visible { outline: 3px solid var(--gruppe); }
+.team-karte.aktiv { border-color: var(--gruppe); box-shadow: 0 0 0 1px var(--gruppe); }
+.team-karte-ich { border-left: 6px solid var(--gruppe); }
+.team-name { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; }
+.team-marke {
+  display: inline-block;
+  font-size: 12px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: #eceeed;
+  color: var(--text-leise);
+}
+.team-marke-du { background: var(--gruppe); color: var(--gruppe-text); }
+.team-rollen { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; }
+.team-rolle {
+  font-size: 13px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--gruen-hell);
+  border: 1px solid var(--rand);
+}
+.team-rolle-gewaehlt { border-color: var(--gruppe); font-weight: 600; }
+.team-kapazitaet { display: grid; gap: 4px; }
+.team-balken { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; max-width: 240px; }
+.team-kaestchen { height: 12px; border-radius: 3px; background: #e4e9e7; }
+.team-kaestchen.voll { background: var(--gruppe); }
+.team-balken-grau .team-kaestchen.voll { background: #b9c2bf; }
+.team-kap-text { font-size: 14px; }
+.team-notiz { font-size: 14px; }
+.team-hinweis, .leer-karte { border-style: dashed; }
+.team-pausiert { margin-top: 12px; }
+.team-pausiert > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
+.team-detail h3 { margin: 1rem 0 0.4rem; font-size: 16px; }
+.team-rollen-liste, .team-verlauf { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
+.team-rollen-liste .team-marke { margin-left: 6px; }
+.team-verlauf-notiz { display: block; font-size: 14px; }
+.team-verlauf-abgelaufen, .team-verlauf-ueberholt { color: var(--text-leise); }
+.team-verlauf-gilt strong { color: var(--gruppe); }
+@media (min-width: 600px) {
+  .team-filter { grid-template-columns: 2fr 1fr; }
+  .team-raster { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+}

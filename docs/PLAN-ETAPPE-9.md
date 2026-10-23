@@ -5,8 +5,8 @@ Regeln für die Arbeit stehen in `CLAUDE.md`.
 
 **Status: Fassung 2.** Die Person hat die 20 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 4).
 Fassung 2 (eigentlich Schritt 9.0a) kommt im selben Pull Request wie Schritt 9.1, damit Plan und Skript zusammenpassen.
-Die kleinen offenen Fragen A bis F (Abschnitt 4) haben einen Vorschlag. Bis zur Antwort wird nach dem Vorschlag gebaut.
-**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26). 9.1 läuft mit Version 0.31.0.
+Die kleinen Fragen A bis F (Abschnitt 4) sind am 23.10.2026 beantwortet.
+**Erledigt:** 9.0 (Version 0.30.15, Fassung 1, Pull Request #26), 9.1 (Version 0.31.0, Pull Request #27, von Hand bereitgestellt am 23.10.2026). 9.2 läuft mit Version 0.31.1.
 
 ## 1. Ziel
 
@@ -72,7 +72,17 @@ Die kleinen offenen Fragen A bis F (Abschnitt 4) haben einen Vorschlag. Bis zur 
 19. Handy und PC wie vorgeschlagen (PC Raster und Detail rechts; Handy untereinander, Detail als Vollbild; zehn Knöpfe statt Schieberegler; Reiter am Handy unter „Mehr“).
 20. Reihenfolge: eigene Karte zuerst, dann A–Z, Pausierte unten. Nicht nach Kapazität sortiert.
 
-## 4. Offene kleine Fragen (mit Vorschlag, bis zur Antwort gilt der Vorschlag)
+## 4. Kleine Fragen der zweiten Runde
+
+**Antworten der Person (23.10.2026):**
+- A: Klimabündnis bekommt **keine** Standard-Rollen. Ob KB die App nutzt, ist offen, vielleicht kommt später eine andere Gruppe. Rollen kommen dann über „+ Rolle“.
+- B: **Kein** Knopf „Standard-Rollen übernehmen“. Die Rollen legt die Gruppe mit „+ Rolle“ an. Die Namen aus Abschnitt 3 stehen dort als Vorschläge zum Antippen (keine Pflicht).
+- C: **Kein** Datum „gewählt bis“.
+- D und F: wie Vorschlag (Dicke = Kapazität, feste Reihe mit 8 Farben nach Namen A–Z).
+- E: Alle in der Gruppe dürfen die Rollen-Liste ändern.
+- Den Pull Request muss der Agent nicht beobachten.
+
+Die Tabelle zeigt die Fragen mit den ursprünglichen Vorschlägen.
 
 | Nr | Frage | Vorschlag |
 |---|---|---|
@@ -143,9 +153,9 @@ Version: 0.31.1. Sheet und Skript bleiben unverändert.
 
 1. Neuer Reiter `team` (👥, „Team“) in `js/ui/nav.js` (`TABS`, nach `protokoll`), `js/config.js` (`features.team = true`), am Handy unter „Mehr“ (`js/views/mehr.js`).
 2. Neue Datei `js/views/team.js` (`render(container, ctx)`): lädt `Personen`, `Gruppen_Rollen`, `Kapazitaet` mit `listMehrere` (Zwischenspeicher `gruppe_id:team`, `ladeMitCache`).
-3. Neue Datei `js/views/team-rechnen.js`: `STANDARD_ROLLEN` je Gruppe (Abschnitt 3, mit `gewaehlt`), `rollenLesen` (IDs → Rollen, gelöschte fallen weg),
-   `istIch(person, name)`, `namenAus(text)` (genauer Vergleich wie `teamNamen` im Skript), `kapazitaetAm(person, kapazitaeten, tag)`, `kapazitaetText(wert)`,
-   `abgelaufen`, `sortierePersonen`. Kleine Beispiele als Kommentar, mit `node` geprüft.
+3. Neue Datei `js/views/team-rechnen.js`: `rollenVon` (IDs → Rollen, gelöschte fallen weg), `sortiereRollen`, `istIch(person, name)`, `istAktiv`,
+   `namenAus(text)` (genauer Vergleich wie `teamNamen` im Skript), `kapazitaetAm(personId, kapazitaeten, tag)`, `angabeJetzt` (gilt, künftig, abgelaufen, keine),
+   `angabeZustand`, `verlauf`, `kapazitaetText(wert)`, `sortierePersonen`, `passtSuche`, `passtRolle`. Kleine Beispiele als Kommentar, mit `node` geprüft.
 4. **Karte:** Name (Marke „Du“), Gruppen-Rollen als Chips (gewählte mit Marke „gewählt“), Kapazität als Balken 1 bis 10 mit Zahl und Satz, „gilt bis TT.MM.“ bzw. „abgelaufen seit TT.MM.“ (grau),
    „noch keine Angabe“, Notiz klein. Ohne eigene Karte oben ein Kasten „Du bist noch nicht im Team.“ (Knopf kommt in 9.4).
 5. **Detail** (Detailbereich rechts, Handy Vollbild mit „← Zurück“): alle Angaben, Verlauf der Kapazität (letzte 6 Monate, neueste oben).
@@ -161,10 +171,10 @@ Version: 0.31.2. Sheet und Skript bleiben unverändert.
 1. Im Reiter Team ein Aufklapper „Gruppen-Rollen (n)“ mit der Liste der Rollen (nach `sortierung`, dann A–Z), je Rolle die Personen, die sie haben.
    Darüber der Hinweis aus Abschnitt 3, Punkt 1.
 2. Knöpfe: „+ Rolle“, je Rolle „Bearbeiten“ (Name, Beschreibung, gewählt, Reihenfolge; mit Konfliktprüfung) und „Löschen“ (Rückfrage nennt die Personen mit der Rolle).
-3. Hat die Gruppe noch keine Rollen und gibt es eine Standardliste: Knopf „Standard-Rollen übernehmen (n)“ (`batchCreate`, Frage B).
-4. Neue Datei `js/views/team-rollen.js`, in `sw.js` eintragen.
+3. Im Formular „+ Rolle“ stehen die Namen aus Abschnitt 3 (je Gruppe, die es noch nicht gibt) als Vorschläge zum Antippen. Bei „Bundes-Deli 1“ und „Bundes-Deli 2“ ist „gewählt“ dann vorbelegt. Kein Knopf „alle übernehmen“ (Antwort B). KB hat keine Vorschläge (Antwort A).
+4. Neue Datei `js/views/team-rollen.js` (mit `STANDARD_ROLLEN` je Gruppe), in `sw.js` eintragen.
 
-**Prüfen:** FFF: „Standard-Rollen übernehmen“ legt 12 Rollen an (Bundes-Deli 1 und 2 mit „gewählt“). Rolle umbenennen, neue Rolle anlegen, Rolle löschen.
+**Prüfen:** FFF: „+ Rolle“ zeigt die Vorschläge, „Bundes-Deli 1“ antippen setzt „gewählt“. Rolle umbenennen, neue Rolle anlegen, Rolle löschen.
 Gleichen Namen zweimal anlegen: Meldung „Die Rolle gibt es schon“.
 
 ### 9.4 – Mein Eintrag: ins Team eintragen, Rollen, Kapazität, Pause, Umbenennen
@@ -263,7 +273,7 @@ Version: 0.31.7. Sheet und Skript bleiben unverändert.
 | 9.0 | Plan Fassung 1 mit Rückfragen | 0.30.15 | nein |
 | 9.1 | Plan Fassung 2; Spalten `Personen`, Tabs `Gruppen_Rollen` und `Kapazitaet`, `Team.gs`, Aufräumen | 0.31.0 | **ja, von Hand** |
 | 9.2 | Reiter Team: Karten und Detail (lesen) | 0.31.1 | nein |
-| 9.3 | Gruppen-Rollen bearbeiten, Standard-Rollen übernehmen | 0.31.2 | nein |
+| 9.3 | Gruppen-Rollen bearbeiten | 0.31.2 | nein |
 | 9.4 | Mein Eintrag: eintragen, Rollen, Kapazität, Pause, Austragen, Umbenennen | 0.31.3 | nein |
 | 9.5 | Hüte je Person, freie Hüte | 0.31.4 | nein |
 | 9.6 | Diagramm „Berg“ | 0.31.5 | nein |
