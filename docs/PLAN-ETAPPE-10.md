@@ -351,6 +351,7 @@ Die Versionen in dieser Tabelle sind die geplanten. Nachbesserungen zählen die 
 | 10.7 | Öffentliches Wiki #/wiki, Links Wiki auf Gruppenwahl, Info und in der App | 0.32.6 | #44 |
 | 10.8 | Kalender-Abo: Knöpfe Google, Apple, Adresse kopieren; Test-Anleitung | 0.32.7 | #45 |
 | 10.9 | Feinschliff und Abschluss der Doku (STAND, Plan, CLAUDE.md, Entwicklung App) | 0.32.8 | #46 |
+| 10.10 | Wünsche der Person: Entwicklung App ausführlich, Anleitung als Fließtext, Handy-Layout Mobi, Kalender, Kachel TOPs | 0.32.9 | #47 |
 
 Nach jedem Schritt: Pull Request, die Person prüft am Handy und am PC und meldet Anmerkungen gesammelt. Die Anmerkungen kommen in den nächsten Pull Request, vor dem nächsten Schritt.
 

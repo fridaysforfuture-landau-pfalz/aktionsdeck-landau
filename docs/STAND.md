@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.32.8 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.32.9 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-10.md (Etappe 10 Wiki und öffentliche Seiten; Fassung 2 seit 0.32.0, fertig gebaut mit 0.32.8, Prüfung durch die Person steht aus). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
@@ -239,7 +239,9 @@ Plan und Entscheidungen: docs/PLAN-ETAPPE-10.md. Prüfung durch die Person steht
 - 10.8 (0.32.7): Kalender-Abo im Aktionskalender und auf #/termine: Knöpfe "In Google Kalender öffnen" (calendar.google.com/calendar/render?cid=<webcal-Adresse>), "In Apple Kalender öffnen" (webcal://), "Adresse kopieren", dazu wie bisher "Kalender-Datei öffnen" (appleAboLink, googleAboLink in termine-liste.js). Anleitung Kalender ergänzt. Ob Google und Apple der Weiterleitung des Skripts folgen, testet die Person (Ergebnis hier eintragen). Kein Ausweg über GitHub Actions (Entscheidung 30).
 - 10.8: Pull Request #45.
 - 10.9 (0.32.8): Abschluss der Doku: STAND, Plan (Status fertig gebaut), CLAUDE.md (Reiter mit Wiki, Ordner texte/, öffentliche Aktionen termine und wiki, Hilfsmodule wiki-format und wiki-rechnen), texte/entwicklung.txt (Etappe 10 zusammengefasst). Sonst keine Änderung an der App.
-- Etappe 10 ist fertig gebaut (10.0 bis 10.9). Abschluss nach der Prüfung durch die Person. Erledigt aus der Planung: Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
+- Alle Pull Requests #40 bis #46 sind gemergt (24.10.2026). Die Bereitstellung von 10.1 und die Prüfung stehen noch aus (die Person ist gerade nur am Handy).
+- 10.10 (0.32.9), Wünsche der Person: texte/entwicklung.txt neu (Wer hat entwickelt, Ziel und Motivation: Vernetzung und Organisation der Gruppen in Landau, Grundlage für eigene Systeme anderer Gruppen; worauf die App aufbaut; wie sie entsteht; je Etappe Versionen, Pull Requests und Funktionen; Etappe 0 bis 6 und 7.1 bis 7.4 ohne Pull Requests). Einleitungssatz entfernt. Erste Schritte: Hinweis, dass die Anleitungen nur angemeldet sichtbar sind. Anleitungen pro Reiter (start, projekte, todos, material, mobi, kalender, dokumentation, team, wiki) als Fließtext. Handy (bis 959 px): Mobi-Knöpfe (Archiv, Mehrere bearbeiten, + Beiträge planen, + Einzelner Beitrag) rechtsbündig unter der Überschrift, Ansicht-Knöpfe in einer Zeile (die 40 px Überbreite ist weg); Kalender: Liste, Monat, Woche stehen zwischen "Stand …" und der Monatsnavigation bzw. der Liste (am PC unverändert oben, js/views/kalender.js artenPlatzieren); Start, Kachel TOPs: "+ Protokoll" rechtsbündig in der Titelzeile.
+- Nächster Schritt: Plan für Etappe 11 (docs/PLAN-ETAPPE-11.md, Schritt 11.0). Etappe 10 wird nach der Prüfung abgeschlossen. Erledigt aus der Planung: Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -331,7 +333,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 
 ## Dateiübersicht
 - docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (abgeschlossen), PLAN-ETAPPE-10.md (Fassung 2, seit 0.32.0), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.32.7 am Ende, 0.32.8 ohne neues CSS)
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.32.9 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs, Wiki.gs (seit 0.32.0) (Setup.gs nur im Editor)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js, wiki-format.js (seit 0.32.1)
 - texte/ (seit 0.32.1): impressum.txt, info.txt, datenschutz.txt, entwicklung.txt (seit 0.32.2), anleitung/ (liste.txt, team.txt, zustaendig.txt seit 0.32.2; erste-schritte, start, projekte, todos, material, mobi, kalender, dokumentation, wiki, fragen seit 0.32.5). Format wie im Wiki, auf GitHub direkt änderbar.

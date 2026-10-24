@@ -38,3 +38,5 @@ Ohne Verbindung kannst du lesen, was zuletzt geladen war. Schreiben geht nur mit
 ## Mehr Hilfe
 
 Für jeden Reiter gibt es im Wiki unter „Anleitung“ eine eigene Seite, zum Beispiel [[Start]], [[Projekte]] oder [[Häufige Fragen]].
+
+> Das Wiki mit den Anleitungen zu den einzelnen Reitern siehst du nur, wenn du angemeldet bist. Ohne Anmeldung sind nur diese Seite, „Entwicklung App“ und die öffentlichen Seiten der Gruppen zu sehen.

@@ -1,28 +1,21 @@
 > Ein Projekt ist eine Aktion oder Kampagne mit allem, was dazugehört.
 
-## Projekte anlegen
+## Ein Projekt anlegen
 
-- „+ Neu“ legt ein Projekt an: Titel, Beschreibung, Ort, Aktionsart, Start, Aktionsdatum, Deadline, Budget.
-- Beim Anlegen schlägt die App Standard-ToDos vor (mit Haken und Datum, gerechnet vom Aktionsdatum). Du wählst, welche du brauchst.
-- Status: Planung (steht unten unter „In Planung“), aktiv, erledigt (Archiv).
+Mit „+ Neu“ legst du ein Projekt an. Du gibst einen Titel, eine Beschreibung, den Ort, die Aktionsart und die wichtigen Daten an: Start, Aktionsdatum und Deadline. Ein Budget kannst du auch eintragen. Beim Anlegen schlägt die App Standard-ToDos vor, zum Beispiel die Anmeldung bei der Stadt oder die Pressearbeit. Die Daten rechnet sie vom Aktionsdatum aus. Du setzt einen Haken bei allem, was ihr braucht.
 
-## Teile eines Projekts
+Ein Projekt hat einen Status. In Planung steht es unten im Aufklapper „In Planung“. Ist es aktiv, steht es oben bei den laufenden Projekten. Ist es erledigt, wandert es ins Archiv.
 
-Ein Projekt klappt auf und hat Teile:
+## Die Teile eines Projekts
 
-- ToDos und Meilensteine, mit „Offene Hüte“ (Aufgaben ohne Verantwortliche) und Vorlagen für Meilensteine.
-- Material: aus dem Bestand vormerken und ausleihen, eigene Positionen, Haken „beschafft“.
-- Finanzen: Posten, geplant und tatsächlich, Haken „bezahlt“.
-- Mobi: Beiträge für Social Media und Presse, mit Zeitbalken.
-- Learnings: Was habt ihr gelernt?
-- Reden und Team: Reden zum Projekt und wer welche Hüte hat.
+Klappst du ein Projekt auf, siehst du seine Teile. Bei den ToDos und Meilensteinen planst du die Aufgaben. Unter „Offene Hüte“ stehen Aufgaben, für die noch jemand gesucht wird. Für Meilensteine gibt es Vorlagen mit passenden Schritten.
 
-## Abschließen
+Beim Material merkst du Dinge aus dem Bestand für das Projekt vor, leihst sie aus oder trägst eigene Positionen ein, die noch besorgt werden müssen. Bei den Finanzen stehen die Posten mit geplanten und echten Beträgen und einem Haken für „bezahlt“. Im Teil Mobi plant ihr die Beiträge für Social Media und Presse. Bei den Learnings haltet ihr fest, was ihr beim nächsten Mal anders machen wollt. Dazu kommen die Reden zum Projekt und ein Überblick, wer im Team welche Hüte hat.
 
-- Ein Projekt ist fertig mit Status „erledigt“. Es steht dann im Archiv.
-- Ist noch festes Material für das Projekt draußen, geht das nicht. Erst zurückgeben.
-- Offene ToDos und nicht beschafftes Material zeigt die App als Warnung.
+## Ein Projekt abschließen
+
+Ist die Aktion vorbei, setzt du den Status auf „erledigt“. Ist noch festes Material für das Projekt draußen, geht das nicht. Das Material muss zuerst zurückgegeben werden. Offene ToDos und noch nicht beschafftes Material zeigt dir die App vorher als Warnung.
 
 ## Aktionsideen
 
-Ideen für spätere Aktionen sammelt ihr im Aufklapper „Aktionsideen“. „Als Projekt starten“ macht daraus ein Projekt in Planung.
+Ideen für spätere Aktionen sammelt ihr im Aufklapper „Aktionsideen“. Mit „Als Projekt starten“ wird aus einer Idee ein neues Projekt in Planung. Die Idee bleibt trotzdem in der Liste stehen.

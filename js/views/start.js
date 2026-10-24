@@ -112,7 +112,7 @@ export async function render(container, ctx) {
     class: 'karte dash-kachel dash-tops',
     title: 'Was soll beim nächsten Plenum besprochen werden? Klick auf einen TOP = bearbeiten.'
   },
-    el('div', { class: 'dash-kachel-titel' },
+    el('div', { class: 'dash-kachel-titel dash-tops-titel' },
       el('h2', { text: 'TOPs' }),
       el('a', { class: 'knopf knopf-hell', href: basis + 'protokoll', text: 'Zur Dokumentation →' }),
       // „+ Protokoll“: Reiter Dokumentation mit offenem Formular

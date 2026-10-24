@@ -1,54 +1,97 @@
-> Hier steht, wie die App gewachsen ist. Bis zur Version 1.0 ist alles je Etappe zusammengefasst.
-
 ## Wer hat die App entwickelt?
 
 [Name oder Gruppe]
 
-AktionsDeck Landau ist freie Software (MIT-Lizenz). Den Quellcode findest du hier: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
+## Ziel und Motivation
 
-## Etappe 10: Wiki und öffentliche Seiten (0.32)
+AktionsDeck Landau soll die Vernetzung und Organisation der aktiven Klima-Gruppen in Landau stärken. Gruppen wie Fridays for Future, Greenpeace und das Klimabündnis planen ihre Aktionen, Aufgaben, Material und Treffen an einem Ort und können sich untereinander abstimmen.
 
-- Neuer Reiter Wiki mit Skillshare, Anleitung und Entwicklung App. Er ersetzt den Reiter Hilfe.
-- Seiten schreiben mit Knöpfen für Überschriften, Listen, Links und Bilder, mit Vorschau beim Tippen und Kommentaren.
-- Eine Anleitung für jeden Reiter und häufige Fragen.
-- Öffentliches Wiki ohne Anmeldung für Seiten, die eine Gruppe teilen möchte.
-- Impressum, Info und Datenschutz mit echten Texten.
-- Kalender-Abo mit einem Knopf für Google Kalender und Apple Kalender.
+Die App ist freie Software (MIT-Lizenz). Andere Gruppen in ganz Deutschland können sie als Grundlage für ein eigenes System nutzen und an ihre Bedürfnisse anpassen. Den Quellcode findest du hier: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 
-## Etappe 9: Team (0.31)
+## Worauf die App aufbaut
 
-- Reiter Team: wer mitmacht, Gruppen-Rollen, Kapazität von 1 bis 10 mit Datum.
-- Hüte je Person und freie Hüte.
-- Diagramm „Berg“: wie viel Kraft die Gruppe in den nächsten Wochen hat.
+- **Web-App (PWA):** Die App läuft im Browser und lässt sich am Handy wie eine App auf den Startbildschirm legen. Sie besteht nur aus HTML, CSS und JavaScript, ohne Baukasten (Framework) und ohne fremde Bibliotheken.
+- **GitHub:** Hier liegt der Quellcode. GitHub Pages stellt die App ins Internet, GitHub Actions veröffentlicht jede neue Version automatisch.
+- **Google Sheet:** Alle Daten der Gruppen liegen in einer Google-Tabelle, jede Art von Daten in einem eigenen Tab.
+- **Google Apps Script:** Ein kleines Programm an der Tabelle ist die Schnittstelle. Es prüft den PIN der Gruppe und gibt jeder Gruppe nur ihre eigenen Daten.
+- **Google Drive und Google Docs:** Fotos von Material und Bilder im Wiki liegen im Drive. Protokolle können direkt in ein Google-Dokument der Gruppe geschrieben werden.
+- **Speicher im Gerät:** Die App merkt sich den letzten Stand, damit sie schnell lädt und ohne Netz lesbar ist.
 
-## Etappe 8: Protokoll, Reden, Learnings (0.30)
+## Wie die App entsteht
 
-- Reiter Dokumentation mit Protokollen und einem Archiv der Reden.
-- Markierungen im Protokoll werden zu Vorschlägen zum Abhaken (zum Beispiel ToDos).
-- Reden zum Probelesen mit Kommentaren zu einzelnen Absätzen.
+Den Code schreibt die KI Claude (von Anthropic) nach den Wünschen und Entscheidungen der Gruppe. Bis Etappe 7 lief das im Chat, und die Dateien wurden von Hand auf GitHub hochgeladen. Seit Etappe 7 arbeitet Claude Code direkt im Repo: Jeder Schritt kommt als eigener Pull Request (ein Änderungsvorschlag mit Nummer).
 
-## Etappe 7: Mobi (0.29)
+Jede Etappe beginnt mit einem Plan und Rückfragen. Nach jedem Schritt prüft eine Person die neue Version am Handy und am PC und meldet Anmerkungen. Änderungen an der Tabelle und am Google-Skript werden von Hand eingespielt.
 
-- Reiter Mobi: Beiträge für Instagram und andere Kanäle planen, mit Status und Zeitstrahl.
-- Mobi-Beiträge im Kalender.
+## Etappe 10: Wiki und öffentliche Seiten
 
-## Etappe 6: Veranstaltungen und Kalender (0.27 und 0.28)
+Version 0.31.10 bis 0.32.9, Pull Requests #37 bis #47.
 
-- Reiter Kalender mit Liste, Monat und Aktionskalender.
-- Öffentliche Termine ohne Anmeldung und als Kalender-Abo.
+- **Wiki** mit drei Bereichen: **Skillshare** (Wissen der Gruppe nach festen Themen, zum Beispiel „Demo anmelden“), **Anleitung** (für jeden Reiter der App und eigene Seiten der Gruppe wie „Gruppe intern“) und **Entwicklung App** (diese Seite).
+- Seiten schreiben mit Knöpfen für Überschriften, Listen, fett, Links, Links auf andere Wiki-Seiten, Hinweiskästen und Bilder. Die Vorschau ändert sich beim Tippen.
+- Suche, Inhaltsverzeichnis, Kommentare zu Seiten. Schreiben zwei Personen gleichzeitig, geht nichts verloren. Ein Entwurf bleibt im Gerät.
+- **Öffentliches Wiki** ohne Anmeldung: Eine Gruppe kann einzelne Seiten für alle freigeben und den Link teilen. Namen und Kommentare bleiben intern.
+- **Impressum, Info und Datenschutz** mit echten Texten, Info mit den Links aller Gruppen.
+- **Kalender-Abo** mit einem Knopf für Google Kalender und Apple Kalender.
 
-## Etappe 5: Start als Zentrale (0.26)
+## Etappe 9: Team
 
-- Umfragen, Schwarzes Brett, Pinnwand, Kommentare und Aktionsideen auf dem Start.
-- „Was ist neu?“ zeigt, was andere geändert haben.
+Version 0.30.15 bis 0.31.9, Pull Requests #26 bis #36.
 
-## Etappe 4: Projekte (0.18 bis 0.25)
+- Neuer Reiter **Team**: Wer macht mit? Jede Person trägt sich freiwillig mit ihrem Namen ein.
+- **Gruppen-Rollen** wie Presse, Finanzen oder Bundes-Deli, mit „Wer hat die Rolle?“ und offenen Rollen.
+- **Kapazität** von 1 bis 10 mit einem Datum, bis wann sie gilt. Erinnerung auf dem Start, wenn sie abgelaufen ist.
+- **Hüte** je Person (offene Aufgaben mit ihrem Namen) und freie Hüte, die noch jemanden suchen.
+- Diagramm **„Berg“**: Wie viel Kraft hat die Gruppe in den nächsten Wochen, und wann wird es eng?
 
-- Projekte mit ToDos, Meilensteinen, Material, Finanzen und Learnings.
-- Hüte: Aufgaben, die noch Verantwortliche suchen.
+## Etappe 8: Protokoll, Reden, Learnings
+
+Version 0.29.12 bis 0.30.14, Pull Requests #8 bis #25.
+
+- Neuer Reiter **Dokumentation** mit Protokollen von Plenum, AG und Aktionen.
+- Protokolle direkt in der App schreiben, mit vorbereiteter Tagesordnung, gemeinsamen Entwürfen und Übernahme ins Google-Dokument der Gruppe.
+- **Markierungen** im Text (zum Beispiel „ToDo:“ oder „Termin:“) werden nach dem Speichern zu Vorschlägen, die man mit einem Haken anlegt.
+- Sammlung der **TOPs** fürs nächste Plenum.
+- **Reden-Archiv** mit Redetext in der App und Kommentaren zu einzelnen Absätzen zum Probelesen.
+
+## Etappe 7: Mobi
+
+Version 0.29.0 bis 0.29.12, Pull Requests #1 bis #8 (die Schritte 7.1 bis 7.4 noch ohne Pull Request).
+
+- Neuer Reiter **Mobi** für die Mobilisierung: Beiträge für Instagram, TikTok, Webseite, Presse, Radio und Print planen.
+- Jeder Beitrag geht Schritt für Schritt von der Idee bis „veröffentlicht“, mit Ansichten als Liste, Kanban, Zeitstrahl und Kalender.
+- „+ Beiträge planen“ schlägt passende Beiträge vor der Aktion vor. Warnung bei Projekten ohne Mobi.
+- Beim Anlegen eines Projekts schlägt die App Standard-ToDos vor.
+
+## Etappe 6: Veranstaltungen und Kalender
+
+Version 0.27 und 0.28, noch ohne Pull Requests.
+
+- Reiter **Kalender** mit Liste, Monat und Woche: Veranstaltungen, Projekte, Deadlines, Meilensteine und ToDos an einem Ort.
+- Vorlagen für wiederkehrende Termine wie das Plenum.
+- **Öffentliche Termine** ohne Anmeldung, als Aktionskalender aller Gruppen und als Kalender-Abo.
+
+## Etappe 5: Start als Zentrale
+
+Version 0.26, noch ohne Pull Requests.
+
+- Der **Start** wird die Zentrale der Gruppe: Umfragen, Schwarzes Brett, Pinnwand und Kacheln für Projekte und ToDos.
+- Kommentare zu ToDos und **„Was ist neu?“**: Was haben andere seit dem letzten Besuch geändert?
+- Sammlung von **Aktionsideen**, aus denen man ein Projekt starten kann.
+
+## Etappe 4: Projekte
+
+Version 0.18 bis 0.25, noch ohne Pull Requests.
+
+- Reiter **Projekte** für Aktionen und Kampagnen, mit Planung, Aktionsdatum und Abschluss.
+- In jedem Projekt: ToDos und Meilensteine (mit Vorlagen), Material, Finanzen und Learnings.
+- **Hüte:** Aufgaben, die noch Verantwortliche suchen, und „Hut übernehmen“.
 
 ## Etappe 0 bis 3: Grundlagen
 
-- Anmeldung mit Gruppen-PIN, App aufs Handy legen.
-- Material und Ausleihe.
-- ToDos.
+Version 0.1 bis 0.17, noch ohne Pull Requests.
+
+- Grundgerüst der App: Gruppenwahl, Anmeldung mit Gruppen-PIN, Anzeigename, App aufs Handy legen, Arbeiten ohne Netz (nur lesen).
+- Die Schnittstelle zum Google Sheet mit Schutz: Jede Gruppe sieht nur ihre Daten, gleichzeitiges Bearbeiten überschreibt nichts.
+- Reiter **Material** mit Bestand, Ausleihen, Zurückgeben und Fotos.
+- Reiter **ToDos** mit Verantwortlichen, Fälligkeit, Priorität und Filtern.
