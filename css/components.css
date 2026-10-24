@@ -3117,3 +3117,24 @@ p.notiz.erledigt {
 /* ---- 0.32.7: Kalender-Abo (Google, Apple, kopieren) ---- */
 .abo-knoepfe { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
 .abo-knoepfe .knopf { min-height: 44px; }
+
+/* ---- 0.32.9: Anpassungen am Handy (Mobi-Kopf, Kalender-Ansichten, Kachel TOPs) ---- */
+.kal-arten-gruppe { display: flex; gap: 6px; }
+.kal-arten { margin: 0 0 8px; }
+.dash-tops-titel > .knopf:last-child { margin-left: auto; }
+@media (max-width: 959px) {
+  .mobi-kopf { flex-wrap: wrap; }
+  .mobi-kopf .kopf-knoepfe { width: 100%; justify-content: flex-end; }
+  .mobi-ansicht { flex-wrap: wrap; }
+  .kal-arten .kal-arten-gruppe { width: 100%; }
+  .kal-arten .knopf { flex: 1 1 0; }
+  .dash-tops-titel { flex-wrap: nowrap; gap: 8px; }
+  .dash-tops-titel h2 { flex: none; }
+  .dash-tops-titel .knopf { padding: 0 10px; font-size: 13px; white-space: nowrap; }
+}
+@media (max-width: 959px) {
+  .mobi-kopf .kopf-knoepfe { gap: 6px; }
+  .mobi-kopf .kopf-knoepfe .knopf { padding: 0 10px; font-size: 14px; white-space: nowrap; }
+  .mobi-ansicht { gap: 6px; flex-wrap: nowrap; }
+  .mobi-ansicht .knopf { flex: 1 1 auto; min-width: 0; padding: 0 6px; font-size: 14px; }
+}

@@ -1,25 +1,19 @@
-> Mobi heißt Mobilisierung: Beiträge für Instagram, andere Kanäle, Presse und Print planen.
+> Mobi heißt Mobilisierung. Hier plant ihr die Beiträge für Instagram und andere Kanäle, für Presse und Print.
 
 ## Beiträge planen
 
-- Ein Beitrag gehört zu einem Projekt oder einer Veranstaltung und hat einen Kanal (zum Beispiel Instagram, Pressemitteilung, Radio).
-- „+ Beiträge planen“ schlägt passende Beiträge für die gewählten Kanäle vor, mit Datum vor der Aktion.
-- „+ Einzelner Beitrag“ legt einen einzelnen Beitrag an.
+Jeder Beitrag gehört zu einem Projekt oder einer Veranstaltung und hat einen Kanal, zum Beispiel Instagram, Pressemitteilung, Webseite oder Radio. Am schnellsten geht es mit „+ Beiträge planen“: Du wählst die Kanäle, und die App schlägt passende Beiträge mit einem Datum vor der Aktion vor. Du kannst die Vorschläge anpassen, bevor du sie anlegst. Mit „+ Einzelner Beitrag“ legst du einen einzelnen Beitrag an.
 
-## Status
+## Vom Entwurf bis zur Veröffentlichung
 
-Ein Beitrag geht Schritt für Schritt: Idee, Entwurf, (bei Instagram und TikTok: gedreht, geschnitten), Review, Anpassung, Bereit, Veröffentlicht.
+Ein Beitrag geht Schritt für Schritt voran: von der Idee über den Entwurf, das Review und eine mögliche Anpassung bis „bereit“ und schließlich „veröffentlicht“. Bei Instagram und TikTok kommen die Schritte „gedreht“ und „geschnitten“ dazu.
 
-## Ansichten
+## Ansichten und Filter
 
-- Liste: Kacheln nach Kanalgruppen.
-- Kanban: Spalten nach Status, mit „‹ Zurück“ und „Weiter ›“.
-- Zeitstrahl: alle Beiträge eines Projekts auf einer Zeitleiste.
-- Kalender: öffnet den Kalender nur mit Mobi-Beiträgen.
+Die Liste zeigt die Beiträge als Kacheln, geordnet nach Kanalgruppen. Im Kanban stehen sie in Spalten nach ihrem Schritt. Mit „‹ Zurück“ und „Weiter ›“ schiebst du sie weiter. Der Zeitstrahl zeigt alle Beiträge eines Projekts auf einer Zeitleiste. Der Knopf „Kalender“ öffnet den Kalender nur mit den Mobi-Beiträgen.
 
-Filter: Projekt oder Veranstaltung, Kanal, Status, Verantwortlich, „Nur meine“. „Mehrere bearbeiten“ ändert viele Beiträge auf einmal.
+Mit den Filtern wählst du ein Projekt oder eine Veranstaltung, einen Kanal, einen Schritt oder eine verantwortliche Person. „Nur meine“ zeigt deine eigenen Beiträge. Mit „Mehrere bearbeiten“ änderst du viele Beiträge auf einmal, zum Beispiel die Verantwortlichen.
 
 ## Hinweise
 
-- Überfällige Beiträge sind rot, heute fällige orange.
-- Oben warnt die App bei „Projekt ohne Mobi“ (Aktion in den nächsten 3 Wochen, aber kein Beitrag) und bei Beiträgen ohne Datum.
+Überfällige Beiträge sind rot, heute fällige orange. Oben warnt die App, wenn ein Projekt in den nächsten drei Wochen eine Aktion hat, aber noch keine Beiträge. Sie zeigt auch, welche Beiträge noch kein Datum haben.

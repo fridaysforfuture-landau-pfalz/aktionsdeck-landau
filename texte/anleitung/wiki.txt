@@ -1,43 +1,28 @@
-> Im Wiki sammelt die Gruppe Wissen zum Weitergeben. Es ersetzt die frühere Hilfe.
+> Im Wiki sammelt die Gruppe Wissen zum Weitergeben.
 
 ## Drei Bereiche
 
-- Skillshare: Wissen eurer Gruppe nach Themen, zum Beispiel „Demo anmelden“ oder „Banner malen“.
-- Anleitung: So funktioniert die App. Dazu eure eigenen Seiten, zum Beispiel „Gruppe intern“.
-- Entwicklung App: wie die App gewachsen ist.
+Oben stehen drei Knöpfe. Im Skillshare sammelt eure Gruppe Wissen nach Themen, zum Beispiel „Demo anmelden“ oder „Banner malen“. In der Anleitung steht, wie die App funktioniert. Dort können auch eigene Seiten eurer Gruppe stehen, zum Beispiel „Gruppe intern“ mit euren Abläufen und Absprachen. Unter „Entwicklung App“ steht, wie die App gewachsen ist.
 
-## Seite anlegen und bearbeiten
+## Seiten anlegen und bearbeiten
 
-- „+ Seite“ legt eine Seite an. Im Skillshare wählst du ein Thema.
-- „Bearbeiten“ und „Löschen“ stehen unter jeder eigenen Seite. Die Seiten der App-Anleitung sind nur lesbar.
-- Alle in der Gruppe dürfen schreiben. Es gibt keinen Verlauf alter Fassungen. Schreiben zwei Personen gleichzeitig, kommt ein Hinweis, und nichts wird überschrieben.
-- Beim Tippen merkt sich dein Gerät einen Entwurf.
+Mit „+ Seite“ legst du eine neue Seite an. Im Skillshare wählst du dazu ein Thema. Unter jeder eigenen Seite stehen „Bearbeiten“ und „Löschen“. Die Seiten der App-Anleitung sind nur lesbar. Alle in der Gruppe dürfen schreiben. Alte Fassungen werden nicht aufbewahrt. Speichern zwei Personen fast gleichzeitig, zeigt die App einen Hinweis und überschreibt nichts. Während du tippst, merkt sich dein Gerät einen Entwurf. So geht nichts verloren, wenn du den Reiter wechselst.
 
 ## So geht das Format
 
-Die Knöpfe über dem Textfeld fügen das an der Cursorstelle ein:
+Die Knöpfe über dem Textfeld fügen die Auszeichnung an der Stelle ein, an der dein Cursor steht. Eine leere Zeile beginnt einen neuen Absatz. Eine große Überschrift schreibst du als `## Überschrift` (Knopf Ü1), eine kleinere als `### Unterüberschrift` (Knopf Ü2). Eine Liste entsteht mit `- Punkt`, eine nummerierte Liste mit `1. Schritt`. Mit `**fett**` wird ein Wort fett (Knopf F).
 
-- Leerzeile = neuer Absatz
-- `## Überschrift` = große Überschrift (Knopf Ü1)
-- `### Unterüberschrift` = kleine Überschrift (Knopf Ü2)
-- `- Punkt` = Liste, `1. Schritt` = nummerierte Liste
-- `**fett**` = **fett** (Knopf F)
-- Eine Adresse wie `https://beispiel.de` wird von selbst ein Link. `[Text](https://…)` ist ein Link mit eigenem Text (Knopf Link).
-- `[[Titel einer Seite]]` = Link auf eine andere Wiki-Seite (Knopf Wiki-Link)
-- `> Hinweis` = grauer Kasten (Knopf Hinweis)
-- Knopf „Bild“: Bild hochladen und einfügen.
-
-Am PC steht die Vorschau neben dem Text, am Handy schaltest du mit „Schreiben | Vorschau“ um.
+Eine Adresse wie `https://beispiel.de` wird von selbst ein Link. Soll der Link einen eigenen Text haben, schreibst du `[Text](https://…)` (Knopf Link). Mit `[[Titel einer Seite]]` verlinkst du eine andere Wiki-Seite (Knopf Wiki-Link). Eine Zeile mit `> Hinweis` wird ein grauer Kasten. Mit dem Knopf „Bild“ lädst du ein Bild hoch und fügst es ein. Am PC steht die Vorschau neben dem Text, am Handy schaltest du mit „Schreiben | Vorschau“ um.
 
 ## Öffentlich
 
 > Mit dem Haken „Öffentlich“ kann jede Person im Internet die Seite lesen. Schreib dann keine Namen, Telefonnummern, Adressen oder Fotos von Personen hinein.
 
-Öffentliche Seiten stehen unter „Wiki“ bei den öffentlichen Links. „Link kopieren“ gibt dir die Adresse zum Teilen. Kommentare und Namen sind nie öffentlich.
+Öffentliche Seiten stehen bei den öffentlichen Links unter „Wiki“. Mit „Link kopieren“ bekommst du die Adresse zum Teilen. Kommentare und Namen sind nie öffentlich. Ganz unten im Skillshare findest du die öffentlichen Seiten aller Gruppen.
 
 ## Bilder
 
-Bilder liegen im Drive-Ordner der Gruppe und sind für alle lesbar, die den Link kennen. Auf Bildern sind keine Personen und keine persönlichen Daten.
+Bilder liegen im Drive-Ordner der Gruppe. Alle, die den Link kennen, können sie sehen. Darum sind auf Bildern keine Personen und keine persönlichen Daten.
 
 ## Kommentare
 

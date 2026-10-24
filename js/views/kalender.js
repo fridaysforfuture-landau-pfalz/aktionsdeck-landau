@@ -165,7 +165,15 @@ export async function render(container, ctx) {
     class: 'knopf knopf-hell', type: 'button', text: 'Aktionskalender',
     onclick: function () { aktionSchalten(true); }
   });
-  const ansichtLinks = el('div', { class: 'kal-ansicht-gruppe' }, listenKnopf, monatKnopf, wocheKnopf, aktionKnopf);
+  // Liste, Monat, Woche: am PC links in der oberen Zeile, am Handy unter „Stand …“ über dem Kalender (seit 0.32.9)
+  const artenGruppe = el('div', { class: 'kal-ansicht-gruppe kal-arten-gruppe' }, listenKnopf, monatKnopf, wocheKnopf);
+  const artenZeile = el('div', { class: 'kal-ansicht kal-arten' });
+  const ansichtLinks = el('div', { class: 'kal-ansicht-gruppe' }, artenGruppe, aktionKnopf);
+  const handyBreite = window.matchMedia('(max-width: 959px)');
+  function artenPlatzieren() {
+    if (handyBreite.matches) { artenZeile.append(artenGruppe); artenZeile.hidden = false; }
+    else { ansichtLinks.prepend(artenGruppe); artenZeile.hidden = true; }
+  }
   const ansichtRechts = el('div', { class: 'kal-ansicht-gruppe kal-ansicht-rechts' });
   const ansichtZeile = el('div', { class: 'kal-ansicht' }, ansichtLinks, ansichtRechts);
 
@@ -237,6 +245,7 @@ export async function render(container, ctx) {
     filterBox,
     kachelBox,
     status,
+    artenZeile,
     monatBox,
     listeTitel,
     kommBox,
@@ -252,6 +261,8 @@ export async function render(container, ctx) {
     aktionBox
   ));
   filterAnzeige();
+  artenPlatzieren();
+  if (handyBreite.addEventListener) handyBreite.addEventListener('change', function () { if (container.contains(artenZeile)) artenPlatzieren(); });
 
   // Aktionskalender = Seite "Öffentliche Termine" mitten im Reiter
   function aktionSchalten(an) {

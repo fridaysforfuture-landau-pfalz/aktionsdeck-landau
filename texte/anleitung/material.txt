@@ -2,22 +2,18 @@
 
 ## Zwei Arten von Material
 
-- Festes Material (zum Beispiel ein Pavillon): Es kommt zurück. Die App zählt, wie viel gerade draußen ist.
-- Verbrauchsmaterial (zum Beispiel Flyer): Mitnehmen senkt den Vorrat, zurückbringen erhöht ihn.
-
-Verfügbar ist: Anzahl minus mitgenommen plus zurückgebracht.
+Festes Material, zum Beispiel ein Pavillon oder ein Megafon, kommt nach der Aktion zurück. Die App zählt, wie viel davon gerade draußen ist. Verbrauchsmaterial wie Flyer oder Kreide wird weniger, wenn ihr etwas mitnehmt, und wieder mehr, wenn ihr Reste zurückbringt. Verfügbar ist also immer der Bestand minus das, was mitgenommen wurde, plus das, was zurückkam.
 
 ## Ausleihen und zurückgeben
 
-1. „Ausleihen“ wählen, Person und Datum eintragen, freiwillig ein Projekt.
-2. Beim Zurückgeben die Anzahl eintragen. Bei festem Material kannst du „davon defekt“ angeben.
+Mit „Ausleihen“ trägst du ein, wer das Material mitnimmt und wann. Auf Wunsch gibst du dazu ein Projekt an. Beim Zurückgeben trägst du die Anzahl ein. Bei festem Material kannst du angeben, ob etwas davon kaputt ist.
 
 ## Vormerken
 
-„Vormerken“ plant Material für ein Projekt ein. Das senkt die Verfügbarkeit nicht. Im Projekt steht dann „Vorgemerkt für dieses Projekt“.
+Mit „Vormerken“ planst du Material für ein Projekt ein, das erst später gebraucht wird. Das senkt die Verfügbarkeit nicht. Im Projekt steht dann, was dafür vorgemerkt ist.
 
 ## Material anlegen
 
-„+ Neu“: Name, Kategorie, Art (fest oder Verbrauch), Anzahl, Einheit, Ort, Foto, Notiz. Das Foto wird im Browser verkleinert und im Drive-Ordner der Gruppe gespeichert.
+Mit „+ Neu“ legst du ein neues Stück Material an: Name, Kategorie, Art (fest oder Verbrauch), Anzahl, Einheit, Ort und eine Notiz. Dazu kannst du ein Foto machen. Die App verkleinert es und speichert es im Drive-Ordner der Gruppe.
 
 > Auf Fotos bitte keine Personen.

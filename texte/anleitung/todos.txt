@@ -2,27 +2,20 @@
 
 ## ToDos anlegen
 
-- „+ Neu“ im Reiter ToDos legt ein allgemeines ToDo an. ToDos zu einem Projekt legst du im Projekt an.
-- Titel, weitere Informationen, Verantwortlich (mehrere mit Komma), fällig am, Priorität.
-- Leer bei „Verantwortlich“ heißt: Der Hut ist noch frei.
+Mit „+ Neu“ im Reiter ToDos legst du ein allgemeines ToDo an, das zu keinem Projekt gehört. Aufgaben zu einem Projekt legst du direkt im Projekt an. Ein ToDo hat einen Titel und auf Wunsch weitere Informationen, eine Frist und eine Priorität. Bei „Verantwortlich“ trägst du eine oder mehrere Personen ein, getrennt mit Komma. Bleibt das Feld leer, ist der Hut noch frei.
 
-## Liste und Filter
+## Die Liste
 
-- Oben die offenen ToDos, darunter „Erledigt, letzte 2 Wochen“. Älteres steht im Archiv.
-- Überfällig ist rot, heute fällig orange.
-- Filter: Suche, Verantwortlich, Fälligkeit, Priorität und „Nur meine“.
-- Abhaken geht mit einem Tipp auf das Kästchen.
+Oben stehen die offenen ToDos. Was überfällig ist, ist rot, und was heute fällig ist, orange. Darunter siehst du, was in den letzten zwei Wochen erledigt wurde. Älteres steht im Archiv. Zum Abhaken tippst du auf das Kästchen. Mit den Filtern suchst du nach Text, Verantwortlichen, Fälligkeit oder Priorität. „Nur meine“ zeigt dir nur deine eigenen Aufgaben.
 
 ## Hüte
 
-- „Noch offen“ zeigt Aufgaben ohne Verantwortliche. Mit „Hut übernehmen“ trägst du dich ein.
-- „Weitergeben“ gibt einen Hut an eine andere Person.
-- Im Reiter Team siehst du, wer wie viele Hüte hat. Mehr dazu: [[Team]].
+Unter „Noch offen“ stehen die Aufgaben ohne Verantwortliche. Mit „Hut übernehmen“ trägst du dich ein. Mit „Weitergeben“ gibst du einen Hut an eine andere Person ab. Im Reiter Team siehst du, wer wie viele Hüte hat. Mehr dazu steht unter [[Team]].
 
 ## Kommentare
 
-Zu jedem ToDo gibt es Kommentare. Die Zahl steht als „💬 n“ hinter dem Titel.
+Zu jedem ToDo kann die Gruppe Kommentare schreiben. Wie viele es gibt, zeigt die Marke „💬“ hinter dem Titel.
 
-## Sammel-ToDos aus Mobi
+## Einträge aus Mobi
 
-Einträge wie „📣 Social Media“ fassen die Mobi-Beiträge eines Projekts zusammen. Ein Klick öffnet sie im Reiter Mobi. Mehr dazu: [[Mobi]].
+Einträge wie „📣 Social Media“ fassen die Mobi-Beiträge eines Projekts zu einer Aufgabe zusammen. Sie zeigen, wie viele Beiträge schon veröffentlicht sind. Ein Klick öffnet die Beiträge im Reiter Mobi. Mehr dazu steht unter [[Mobi]].

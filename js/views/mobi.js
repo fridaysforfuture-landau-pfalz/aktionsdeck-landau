@@ -180,7 +180,7 @@ export async function render(container, ctx) {
   boxFertig.hidden = true;
 
   container.append(el('div', { class: 'seite' },
-    el('div', { class: 'kopfzeile' },
+    el('div', { class: 'kopfzeile mobi-kopf' },
       el('h1', { text: 'Mobi' }),
       el('div', { class: 'kopf-knoepfe' }, archivKnopf, mehrereKnopf, sammelKnopf, neuKnopf)
     ),

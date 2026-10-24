@@ -1,25 +1,21 @@
-> Der Start ist die Zentrale deiner Gruppe.
+> Der Start ist die Zentrale deiner Gruppe. Hier siehst du auf einen Blick, was gerade wichtig ist.
 
 ## Was steht auf dem Start?
 
-- Oben „Hallo Name“ mit den Knöpfen „+ Umfrage“, „+ Mitteilung“, „Archiv“ und der Glocke 🔔 „Was ist neu?“.
-- Laufende Umfragen und das Schwarze Brett (angeheftete Mitteilungen).
-- Die Kachel Projekte mit den laufenden Projekten, ihren ToDos und Mobi-Beiträgen.
-- Die Kacheln ToDos (allgemeine ToDos ohne Projekt) und TOPs fürs nächste Plenum.
-- Ganz unten die Pinnwand für kurze Nachrichten an alle.
+Oben begrüßt dich die App mit deinem Namen. Daneben stehen die Knöpfe „+ Umfrage“ und „+ Mitteilung“, das Archiv und die Glocke 🔔. Die Glocke zeigt dir unter „Was ist neu?“, was andere seit deinem letzten Besuch geändert haben. Deine eigenen Änderungen stehen dort nicht.
+
+Darunter folgen die laufenden Umfragen und das Schwarze Brett mit den angehefteten Mitteilungen. Die Kachel Projekte zeigt die laufenden Projekte mit ihren ToDos und Mobi-Beiträgen. Daneben stehen die Kacheln ToDos (allgemeine Aufgaben ohne Projekt) und TOPs, also die Themen fürs nächste Plenum. Mit „+ Protokoll“ in der Kachel TOPs fängst du direkt ein Protokoll an. Ganz unten ist die Pinnwand für kurze Nachrichten an alle.
 
 ## Umfragen
 
-- Mit „+ Umfrage“ legst du eine Frage mit Antworten an. Anonym ist Standard, „namentlich“ zeigt die Namen.
-- Jede Person (Anzeigename) hat eine Stimme. Mit „mehrere“ darf man mehrere Antworten wählen.
-- Die Frist färbt die Umfrage (heute orange, vorbei rot). Beendet wird sie nur von Hand. Danach steht sie im Archiv, mit „Ergebnis kopieren“ und „Wieder öffnen“.
+Mit „+ Umfrage“ stellst du der Gruppe eine Frage mit mehreren Antworten. Normalerweise ist eine Umfrage anonym. Mit „namentlich“ sieht man, wer was gewählt hat, und mit „mehrere“ darf jede Person mehr als eine Antwort wählen. Jeder Anzeigename hat eine Stimme.
+
+Eine Frist färbt die Umfrage: Am letzten Tag wird sie orange, danach rot. Beendet wird eine Umfrage aber nur von Hand. Danach steht sie im Archiv. Dort kannst du das Ergebnis kopieren oder die Umfrage wieder öffnen.
 
 ## Schwarzes Brett und Pinnwand
 
-- Eine Mitteilung ist angeheftet und steht oben. Nicht angeheftete stehen im Archiv.
-- Die Pinnwand ist für kurze Kommentare. Ein Pinnwand-Eintrag lässt sich „Als Mitteilung anheften“.
-- Veranstaltungen aus dem Kalender kann man anheften. Sie stehen dann in ihrer Farbe da.
+Eine neue Mitteilung ist angeheftet und steht oben auf dem Start. Nimmst du sie ab, landet sie im Archiv. Die Pinnwand ist für kurze Kommentare gedacht. Ist ein Eintrag wichtig, kannst du ihn mit „Als Mitteilung anheften“ ans Schwarze Brett holen. Auch Veranstaltungen aus dem Kalender lassen sich anheften. Sie erscheinen dann in ihrer Farbe.
 
 ## Erinnerung zur Kapazität
 
-Bist du im Team eingetragen und deine Kapazität fehlt oder ist abgelaufen, steht oben eine Zeile. Mit „✕“ blendest du sie für 7 Tage aus. Mehr dazu: [[Team]].
+Bist du im Team eingetragen und fehlt deine Kapazität oder ist sie abgelaufen, erinnert dich oben eine Zeile daran. Mit „✕“ blendest du sie für sieben Tage aus. Mehr dazu steht unter [[Team]].

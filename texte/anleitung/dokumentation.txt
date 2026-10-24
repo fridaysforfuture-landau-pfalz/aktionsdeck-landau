@@ -1,28 +1,21 @@
-> Im Reiter Dokumentation stehen Protokolle und Reden.
+> Im Reiter Dokumentation stehen die Protokolle und das Archiv der Reden.
 
-## Protokolle
+## Protokolle schreiben
 
-- „+ Protokoll“ öffnet das Formular: Titel, Datum, Art (Plenum, AG, Aktion, Sonstiges), Anwesende, Rollen, Projekt oder Veranstaltung, Protokolltext.
-- Beim Plenum ist der Text mit Tagesordnungspunkten vorbereitet. Offene TOPs aus der Sammlung tippst du an.
-- „Zwischenspeichern“ legt einen gemeinsamen Entwurf an, den alle in der Gruppe weiterschreiben können.
-- Beim Speichern kommt das Protokoll ins Google-Dokument der Gruppe (wenn eingerichtet).
+Mit „+ Protokoll“ öffnest du das Formular. Du gibst Titel, Datum und Art an (Plenum, AG, Aktion oder Sonstiges), dazu wer da war, wer welche Rolle hatte und auf Wunsch ein Projekt oder eine Veranstaltung. Bei einem Plenum ist der Text schon mit Tagesordnungspunkten vorbereitet. Offene Themen aus der TOP-Sammlung tippst du einfach an.
+
+Mit „Zwischenspeichern“ entsteht ein gemeinsamer Entwurf, an dem alle in der Gruppe weiterschreiben können. Beim Speichern kommt das fertige Protokoll in das Google-Dokument der Gruppe, wenn eines eingerichtet ist.
 
 ## Markierungen im Text
 
-Mit den Knöpfen über dem Text (oder einem Wort mit Doppelpunkt am Zeilenanfang) markierst du Dinge, die die App anlegen soll:
-
-- `ToDo:` zum Beispiel `ToDo: @Name Banner holen (bis 12.11.)`
-- `Learning:`, `Termin:`, `Mitteilung:`, `Umfrage:`, `Beschluss:`
-
-Nach dem Speichern zeigt „Vorschläge aus dem Protokoll“ alles zum Ankreuzen und Anlegen.
+Steht am Anfang einer Zeile ein Wort mit Doppelpunkt, weiß die App, was daraus werden soll. Aus `ToDo: @Name Banner holen (bis 12.11.)` wird ein ToDo. Genauso funktionieren `Learning:`, `Termin:`, `Mitteilung:`, `Umfrage:` und `Beschluss:`. Die Knöpfe über dem Textfeld helfen beim Schreiben und legen den Eintrag auf Wunsch gleich an. Nach dem Speichern zeigt „Vorschläge aus dem Protokoll“ alles, was noch nicht angelegt ist, zum Ankreuzen.
 
 ## TOPs
 
-Themen fürs nächste Plenum sammelt ihr in der Kachel „TOPs“ (im Reiter und auf dem Start).
+Themen fürs nächste Plenum sammelt ihr in der Kachel „TOPs“. Sie steht im Reiter und auf dem Start. Wer ein Thema hat, trägt es dort ein. So ist die Tagesordnung beim nächsten Plenum schon fertig.
 
 ## Reden
 
-- Im Umschalter „Reden“ steht das Archiv der Reden mit Status (Entwurf, Probelesen, Fertig, Gehalten).
-- Den Redetext kannst du in der App schreiben. Beim Probelesen kommentieren andere einzelne Absätze.
+Mit dem Umschalter „Reden“ kommst du zum Archiv der Reden. Jede Rede hat einen Status: Entwurf, Probelesen, Fertig oder Gehalten. Den Redetext kannst du direkt in der App schreiben. Beim Probelesen kommentieren andere einzelne Absätze, und die Kommentare stehen neben der passenden Stelle.
 
 > Schreib in Protokolle nur, was nötig ist. Keine Angaben zur Gesundheit oder zu privaten Dingen.
