@@ -119,7 +119,14 @@ function formatieren() {
 }
 
 // Nur den Tab Wiki formatieren (Schritt 10.1, seit 0.32.12)
+// Seit 0.32.13: meldet zuerst, ob das Skript den Tab Wiki kennt (sonst kommt in der App „Unbekannte Tabelle“).
 function formatierenWiki() {
+  if (TABELLEN.hasOwnProperty('Wiki')) {
+    Logger.log('Schema: Tab Wiki ist bekannt (' + TABELLEN.Wiki.length + ' eigene Spalten).');
+  } else {
+    Logger.log('Schema: FEHLER: Das Skript kennt den Tab Wiki nicht. Entweder ist Schema.gs im Editor noch alt, ' +
+      'oder eine andere Datei im Editor (zum Beispiel Setup.gs) legt TABELLEN noch einmal an und überschreibt die Liste.');
+  }
   formatierenTabs(['Wiki']);
 }
 
@@ -129,6 +136,8 @@ function formatierenTabs(namen) {
   namen.forEach(function (name) {
     var sh = ss.getSheetByName(name);
     if (!sh) { Logger.log(name + ': Tab fehlt, übersprungen'); return; }
+    // Steht diese Zeile als letzte im Protokoll, ist der Lauf bei diesem Tab abgebrochen (seit 0.32.13)
+    Logger.log(name + ': wird formatiert …');
     try {
       var spalten = sh.getLastColumn();
       if (spalten < 1) { Logger.log(name + ': keine Spaltenköpfe, übersprungen'); return; }
@@ -145,13 +154,34 @@ function formatierenTabs(namen) {
       SpreadsheetApp.flush();
       Logger.log(name + ': ok (' + bereiche.length + ' Text-Spalten)');
     } catch (e) {
-      fehlerZahl++;
-      Logger.log(name + ': FEHLER ' + (e && e.message ? e.message : e));
+      Logger.log(name + ': alle Spalten zusammen gehen nicht (' + (e && e.message ? e.message : e) + '), versuche jede Spalte einzeln');
+      if (!formatierenEinzeln(sh, name)) fehlerZahl++;
     }
   });
   Logger.log(fehlerZahl
     ? 'Formatierung fertig, aber ' + fehlerZahl + ' Tab(s) mit Fehler (siehe oben).'
     : 'Formatierung fertig.');
+}
+
+// Notweg (seit 0.32.13): jede Text-Spalte einzeln und nur bis zur letzten Zeile mit Inhalt (mindestens 1000).
+// Meldet, welche Spalte nicht geht. Gibt true zurück, wenn alle Spalten geklappt haben.
+function formatierenEinzeln(sh, name) {
+  var gut = true;
+  var zeilen = Math.max(sh.getLastRow(), 1000) - 1;
+  if (zeilen > sh.getMaxRows() - 1) zeilen = sh.getMaxRows() - 1;
+  var kopf = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  kopf.forEach(function (sp, i) {
+    if (spaltenTyp(String(sp)) !== 'text') return;
+    try {
+      sh.getRange(2, i + 1, zeilen, 1).setNumberFormat('@');
+      SpreadsheetApp.flush();
+    } catch (e) {
+      gut = false;
+      Logger.log(name + ': FEHLER in Spalte ' + spalteBuchstabe(i + 1) + ' (' + sp + '): ' + (e && e.message ? e.message : e));
+    }
+  });
+  Logger.log(name + (gut ? ': ok (Spalte für Spalte)' : ': FEHLER, siehe Zeilen oben'));
+  return gut;
 }
 
 // Spaltennummer -> Buchstabe (1 -> A, 27 -> AA)
