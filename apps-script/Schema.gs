@@ -112,19 +112,55 @@ function spaltenListe(tab) {
 
 // EINMAL ausführen (und nach neuen Spalten/Tabs wieder): stellt Text-Spalten auf "Nur Text",
 // damit Google keine IDs, Zeitstempel oder Datumswerte selbst umwandelt.
+// Seit 0.32.12: je Tab nur ein Aufruf für alle Text-Spalten zusammen, und jeder Tab ist einzeln abgesichert.
+// Klappt ein Tab nicht, steht im Protokoll, welcher es war, und die übrigen Tabs werden trotzdem formatiert.
 function formatieren() {
+  formatierenTabs(Object.keys(SYSTEM).concat(Object.keys(TABELLEN)));
+}
+
+// Nur den Tab Wiki formatieren (Schritt 10.1, seit 0.32.12)
+function formatierenWiki() {
+  formatierenTabs(['Wiki']);
+}
+
+function formatierenTabs(namen) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var namen = Object.keys(SYSTEM).concat(Object.keys(TABELLEN));
+  var fehlerZahl = 0;
   namen.forEach(function (name) {
     var sh = ss.getSheetByName(name);
-    if (!sh) return;
-    if (sh.getMaxRows() < 2) sh.insertRowsAfter(1, 998);
-    var kopf = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
-    kopf.forEach(function (sp, i) {
-      if (spaltenTyp(String(sp)) === 'text') {
-        sh.getRange(2, i + 1, sh.getMaxRows() - 1, 1).setNumberFormat('@');
-      }
-    });
+    if (!sh) { Logger.log(name + ': Tab fehlt, übersprungen'); return; }
+    try {
+      var spalten = sh.getLastColumn();
+      if (spalten < 1) { Logger.log(name + ': keine Spaltenköpfe, übersprungen'); return; }
+      if (sh.getMaxRows() < 2) sh.insertRowsAfter(1, 998);
+      var kopf = sh.getRange(1, 1, 1, spalten).getValues()[0];
+      var bereiche = [];
+      kopf.forEach(function (sp, i) {
+        if (spaltenTyp(String(sp)) === 'text') {
+          var b = spalteBuchstabe(i + 1);
+          bereiche.push(b + '2:' + b);
+        }
+      });
+      if (bereiche.length) sh.getRangeList(bereiche).setNumberFormat('@');
+      SpreadsheetApp.flush();
+      Logger.log(name + ': ok (' + bereiche.length + ' Text-Spalten)');
+    } catch (e) {
+      fehlerZahl++;
+      Logger.log(name + ': FEHLER ' + (e && e.message ? e.message : e));
+    }
   });
-  Logger.log('Formatierung fertig.');
+  Logger.log(fehlerZahl
+    ? 'Formatierung fertig, aber ' + fehlerZahl + ' Tab(s) mit Fehler (siehe oben).'
+    : 'Formatierung fertig.');
+}
+
+// Spaltennummer -> Buchstabe (1 -> A, 27 -> AA)
+function spalteBuchstabe(n) {
+  var s = '';
+  while (n > 0) {
+    var m = (n - 1) % 26;
+    s = String.fromCharCode(65 + m) + s;
+    n = Math.floor((n - 1) / 26);
+  }
+  return s;
 }
