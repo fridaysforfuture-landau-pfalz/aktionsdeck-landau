@@ -63,10 +63,7 @@ export async function render(container, ctx) {
 
   function zeichneUebersicht(meta, laedt) {
     leeren(inhalt);
-    inhalt.append(
-      el('h1', { text: 'Wiki' }),
-      hinweis('Wissen der Klima-Gruppen in Landau zum Weitergeben. Diese Seite ist ohne Anmeldung sichtbar.')
-    );
+    inhalt.append(el('h1', { text: 'Wiki' }));
     if (meta && !meta.aktuell) inhalt.append(hinweis('Ohne Verbindung: Stand vom ' + standText(meta.stand) + '.'));
 
     const app = el('section', { class: 'karte wiki-artikel' }, el('h2', { text: 'Zur App' }));

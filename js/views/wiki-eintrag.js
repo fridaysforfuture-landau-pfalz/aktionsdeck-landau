@@ -8,7 +8,8 @@
 // zeigeEintrag(box, opt)
 // opt: { ctx, token, gruppeId, seite (Zeile aus Wiki oder null = neu), bereich ('skillshare' | 'anleitung'),
 //        titel (Vorschlag beim Anlegen), seiten() (alle Seiten der Gruppe), seiteFinden(titel),
-//        beiFertig(eintrag), beiAbbruch() }
+//        beiFertig(eintrag), beiAbbruch(), beiLoeschen() (nur beim Bearbeiten, gibt ein Promise mit true/false) }
+// Seit 0.32.14: Knopf „Löschen“ beim Bearbeiten; Enter in einer Liste („- “ oder „1. “) beginnt den nächsten Punkt.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -111,6 +112,39 @@ export function zeigeEintrag(box, opt) {
   }
 
   text.addEventListener('input', beiEingabe);
+
+  // Enter in einer Liste: nächster Punkt mit „- “ bzw. der nächsten Zahl. Enter in einem leeren Punkt beendet die Liste.
+  function listeWeiter() {
+    const a = text.selectionStart;
+    if (a !== text.selectionEnd) return false;
+    const wert = text.value;
+    const anfang = wert.lastIndexOf('\n', a - 1) + 1;
+    const m = /^(\s*)(- |(\d{1,3})\. )(.*)$/.exec(wert.slice(anfang, a));
+    if (!m) return false;
+    if (!m[4].trim() && wert.slice(a).split('\n')[0].trim() === '') {
+      // Leerer Punkt: Zeichen entfernen, Liste ist zu Ende
+      text.value = wert.slice(0, anfang) + wert.slice(a);
+      text.setSelectionRange(anfang, anfang);
+      beiEingabe();
+      return true;
+    }
+    const zeichen = m[3] ? (Number(m[3]) + 1) + '. ' : '- ';
+    const einschub = '\n' + m[1] + zeichen;
+    if (wert.length + einschub.length > MAX_TEXT) return false;
+    text.value = wert.slice(0, a) + einschub + wert.slice(a);
+    text.setSelectionRange(a + einschub.length, a + einschub.length);
+    beiEingabe();
+    return true;
+  }
+  text.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Enter' || ev.shiftKey || ev.ctrlKey || ev.altKey || ev.metaKey || ev.isComposing) return;
+    if (listeWeiter()) ev.preventDefault();
+  });
+  // Handy-Tastaturen melden Enter manchmal nicht als Taste, sondern nur als Zeilenumbruch
+  text.addEventListener('beforeinput', function (ev) {
+    if (ev.inputType !== 'insertLineBreak' && ev.inputType !== 'insertParagraph') return;
+    if (listeWeiter()) ev.preventDefault();
+  });
   titel.addEventListener('input', function () {
     if (neu && !adresseVonHand) adresse.value = vorschlagAdresse();
     entwurfMerken();
@@ -257,6 +291,14 @@ export function zeigeEintrag(box, opt) {
     }
   });
 
+  const loeschenKnopf = (!neu && opt.beiLoeschen) ? el('button', {
+    class: 'knopf knopf-hell wiki-form-knoepfe-loeschen', type: 'button', text: 'Löschen',
+    onclick: async function () {
+      clearTimeout(entwurfTimer);
+      if (await opt.beiLoeschen()) loescheWikiEntwurf(opt.gruppeId);
+    }
+  }) : null;
+
   const form = el('form', { class: 'formular wiki-formular', novalidate: '' },
     entwurfBox,
     konfliktBox,
@@ -272,7 +314,7 @@ export function zeigeEintrag(box, opt) {
       el('p', { class: 'leise', text: 'Die Adresse bleibt gleich, wenn du den Titel änderst. So bleiben geteilte Links gültig.' })
     ),
     fehler,
-    el('div', { class: 'form-knoepfe' }, speichern, abbrechen)
+    el('div', { class: 'form-knoepfe' }, speichern, abbrechen, loeschenKnopf)
   );
 
   box.append(

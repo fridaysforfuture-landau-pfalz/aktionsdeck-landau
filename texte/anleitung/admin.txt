@@ -1,0 +1,54 @@
+> Diese Seite ist für die Personen mit Adminzugriff (Google Sheet, Google-Skript, GitHub). Wer das ist, steht unter [[Zuständig für die App]]. Für alle anderen ändert sich nichts.
+
+## Was dürfen Admins, was die App nicht kann?
+
+In der App dürfen alle mit dem Gruppen-PIN alles anlegen, ändern und löschen. Einige Dinge gehen aber nur direkt im Google Sheet oder im Apps-Script-Editor: einen PIN ändern oder sperren, Gelöschtes zurückholen und Einträge endgültig entfernen. Arbeite im Sheet immer vorsichtig. Ändere nie die erste Zeile (die Spaltenköpfe) und nie die Spalte `id`.
+
+## Einen PIN ändern oder sperren
+
+Die PINs stehen nirgends im Klartext. Im Tab `Zugang` steht je Gruppe eine Zeile mit `zugang_id`, `gruppe_id`, `pin_salt`, `pin_hash`, `aktiv` und `gueltig_bis`. Die App vergleicht den eingegebenen PIN mit `pin_salt` und `pin_hash`.
+
+- **Zugang sperren:** In der Zeile `aktiv` auf `FALSE` setzen. Alle, die mit diesem Zugang angemeldet sind, fliegen beim nächsten Aufruf raus. Mit `TRUE` geht der Zugang wieder.
+- **Zugang nur bis zu einem Datum:** In `gueltig_bis` ein Datum eintragen (zum Beispiel `2026-12-31`). Danach gilt der Zugang nicht mehr. Leer heißt: ohne Ende.
+- **Neuer PIN:** Lege eine neue Zeile mit neuer `zugang_id`, neuem `pin_salt` und neuem `pin_hash` an und setze die alte Zeile auf `aktiv` = `FALSE`. So müssen sich alle mit dem neuen PIN neu anmelden. Wie du Salt und Hash erzeugst, wird hier noch ergänzt.
+- Der PIN hat mindestens 6 Zeichen. Gib ihn nur persönlich oder auf einem sicheren Weg weiter, nie in einer öffentlichen Gruppe.
+
+## Zu viele Fehlversuche
+
+Nach 8 falschen PINs in 15 Minuten ist die Anmeldung für die ganze Gruppe 15 Minuten gesperrt. Das geht von selbst vorbei. Warte einfach 15 Minuten.
+
+## Gelöschtes zurückholen
+
+Löschen in der App ist zuerst nur Ausblenden: In der Zeile steht dann in der Spalte `geloescht` der Wert `TRUE`. So holst du einen Eintrag zurück:
+
+1. Öffne das Google Sheet und den passenden Tab, zum Beispiel `ToDos`, `Projekte` oder `Wiki`.
+2. Suche die Zeile. Hilfreich sind die Spalten `geaendert_am` (Zeitpunkt des Löschens) und `geaendert_von` (wer gelöscht hat). Der Tab `Log` zeigt alle Löschungen mit Zeit, Tabelle und Namen.
+3. Setze in der Spalte `geloescht` den Wert `FALSE`.
+4. In der App die Seite neu laden. Der Eintrag ist wieder da.
+
+Manche Einträge nehmen beim Löschen andere mit. Die musst du ebenfalls zurückholen, sonst fehlen sie:
+
+- **Projekt:** In den Tabs `Posts`, `ToDos`, `Meilensteine`, `Projekt_Team`, `Projekt_Material`, `Finanzen`, `Kommentare` und `Mobi_Plan` sind die Zeilen dieses Projekts mitgelöscht. Sie haben dieselbe `projekt_id` und meist denselben Zeitpunkt in `geaendert_am`.
+- **Veranstaltung:** Die Mobi-Beiträge dazu (Tab `Mobi_Plan`) sind mitgelöscht.
+- **Wiki-Seite:** Die Kommentare dazu (Tab `Kommentare`) sind mitgelöscht.
+
+## Endgültig löschen
+
+Gelöschte Zeilen bleiben im Sheet, bis jemand aufräumt. Das Aufräumen läuft nur, wenn du es im Apps-Script-Editor startest:
+
+1. Im Editor die Funktion `aufraeumenTesten` auswählen und auf „Ausführen“ klicken. Das zählt nur und löscht nichts. Im Protokoll steht, wie viele Zeilen entfernt würden.
+2. Passt das, die Funktion `aufraeumen` ausführen. Sie entfernt gelöschte Zeilen, die älter als 90 Tage sind, Log-Einträge älter als 180 Tage und alte Kapazitäts-Angaben im Team.
+
+Was einmal endgültig entfernt ist, lässt sich nicht zurückholen. Einen einzelnen Eintrag sofort endgültig loswerden: im Sheet die ganze Zeile löschen (Rechtsklick auf die Zeilennummer → „Zeile löschen“). Nie nur einzelne Zellen leeren.
+
+## Testdaten finden
+
+Die Funktion `testdatenListe` im Editor zeigt Einträge aus Umfragen, Mitteilungen, Kommentaren, Ideen, Veranstaltungen, Vorlagen und Mobi mit Zeilennummer. So findest du Testeinträge und löschst sie im Sheet.
+
+## Prüfen, ob alles läuft
+
+Im Editor gibt es Testfunktionen, die nichts verändern, zum Beispiel `testenFotoOrdner` (Foto-Ordner der Gruppen erreichbar?), `testenTermine` und `testenWiki`. Achte im Protokoll auf Wörter wie „FEHLER“, „FEHLT“ oder „nicht erreichbar“. Fehler der App findest du links im Editor unter „Ausführungen“.
+
+## Nach einer Änderung am Skript
+
+Wenn eine Datei im Ordner `apps-script/` im Repo geändert wurde: ganze Datei im Repo öffnen → „Raw“ → alles kopieren → im Editor die Datei ganz ersetzen → speichern. Danach Bereitstellen → Bereitstellungen verwalten → Stift → „Neue Version“ → Bereitstellen. Was genau zu tun ist, steht immer im Pull Request unter „Von Hand zu erledigen“.

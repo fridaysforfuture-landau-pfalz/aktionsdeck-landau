@@ -279,11 +279,18 @@ export async function render(container, ctx) {
       return;
     }
     const text = abschnitteMit(feste.entwicklung, suche);
-    if (!txt(text)) {
+    // Seit 0.32.14 steht „Zuständig für die App“ (Anleitung) auch hier
+    const zustaendig = feste.texte.zustaendig ? abschnitteMit(feste.texte.zustaendig, suche) : '';
+    if (!txt(text) && !txt(zustaendig)) {
       listeBox.append(el('p', { class: 'leise', text: 'Nichts gefunden.' }));
       return;
     }
-    listeBox.append(el('section', { class: 'karte' }, zeichneText(text, { seiteFinden: seiteFinden })));
+    if (txt(text)) listeBox.append(el('section', { class: 'karte' }, zeichneText(text, { seiteFinden: seiteFinden })));
+    if (txt(zustaendig)) {
+      listeBox.append(el('section', { class: 'karte' },
+        el('h2', { text: 'Zuständig für die App' }),
+        zeichneText(zustaendig, { seiteFinden: seiteFinden })));
+    }
   }
 
   // ---- Eine Seite ----
@@ -370,16 +377,18 @@ export async function render(container, ctx) {
     const frage = 'Die Seite „' + txt(z.titel) + '“ wirklich löschen?' +
       (istWahr(z.oeffentlich) ? '\n\nSie ist öffentlich und verschwindet dann auch aus dem öffentlichen Wiki.' : '') +
       '\n\nKommentare zur Seite werden mitgelöscht.';
-    if (!window.confirm(frage)) return;
-    if (!navigator.onLine) { toast('Keine Verbindung. Löschen geht nur mit Verbindung.'); return; }
+    if (!window.confirm(frage)) return false;
+    if (!navigator.onLine) { toast('Keine Verbindung. Löschen geht nur mit Verbindung.'); return false; }
     try {
       const r = await api('delete', { tabelle: 'Wiki', id: z.id, bekannt: z.geaendert_am }, s.token);
       await merken(r.eintrag);
       toast('Seite gelöscht.');
       location.hash = basis;
+      return true;
     } catch (e) {
-      if (ctx.behandleFehler(e)) return;
+      if (ctx.behandleFehler(e)) return false;
       toast(e.code === 'konflikt' ? 'Jemand anderes hat die Seite gerade geändert. Bitte neu laden und noch einmal versuchen.' : e.message);
+      return false;
     }
   }
 
@@ -418,7 +427,8 @@ export async function render(container, ctx) {
       },
       beiAbbruch: function () {
         location.hash = seiteZ ? basis + '/' + encodeURIComponent(seiteZ.id) : basis;
-      }
+      },
+      beiLoeschen: seiteZ ? function () { return loeschen(seiteZ); } : null
     });
   }
 
