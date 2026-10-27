@@ -3154,3 +3154,10 @@ p.notiz.erledigt {
   .seiten-kopf { padding-bottom: 10px; margin-bottom: 4px; }
 }
 .wiki-form-knoepfe-loeschen { margin-left: auto; }
+
+/* ---- 0.32.16: Bilder im Wiki halb so breit, anklickbar ---- */
+.wiki-bild-knopf { display: block; padding: 0; border: 0; background: none; cursor: zoom-in; max-width: 100%; }
+.wiki-bild-knopf img { width: 100%; }
+@media (min-width: 600px) {
+  .wiki-bild { max-width: 50%; }
+}

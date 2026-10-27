@@ -22,7 +22,7 @@ Eine Adresse wie `https://beispiel.de` wird von selbst ein Link. Soll der Link e
 
 ## Bilder
 
-Bilder liegen im Drive-Ordner der Gruppe. Alle, die den Link kennen, können sie sehen. Darum sind auf Bildern keine Personen und keine persönlichen Daten.
+Bilder liegen im Drive-Ordner der Gruppe. Alle, die den Link kennen, können sie sehen. Darum sind auf Bildern keine Personen und keine persönlichen Daten. Auf der Seite ist ein Bild am PC höchstens halb so breit wie der Text. Tippst du darauf, erscheint es groß.
 
 ## Kommentare
 
