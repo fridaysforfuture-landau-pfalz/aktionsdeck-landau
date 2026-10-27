@@ -4,14 +4,14 @@
 
 Adminzugriff heißt: Zugang zum Google Sheet, zum Google-Skript und zum Repo auf GitHub. Nur diese Personen können zum Beispiel einen PIN ändern, das Skript neu bereitstellen oder gelöschte Einträge zurückholen.
 
-- Google Sheet und Google-Skript: [Name oder Gruppe]
-- GitHub (Repo und Seite): [Name oder Gruppe]
+- Google Sheet und Google-Skript: Fridays for Future Landau
+- GitHub (Repo und Seite): Fridays for Future Landau, Tim Melchert
 
 > Diese Seite liegt als Datei im Repo und ist für alle lesbar, die die Adresse kennen. Schreib hier nur Namen, die öffentlich sein dürfen, oder nur die Gruppe und eine Kontakt-Adresse.
 
 ## Wer hat die App entwickelt?
 
-[Name oder Gruppe]
+Tim Melchert
 
 Mehr zur Entwicklung steht unter „Entwicklung App“.
 
