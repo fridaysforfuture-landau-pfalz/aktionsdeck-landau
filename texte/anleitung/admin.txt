@@ -10,8 +10,19 @@ Die PINs stehen nirgends im Klartext. Im Tab `Zugang` steht je Gruppe eine Zeile
 
 - **Zugang sperren:** In der Zeile `aktiv` auf `FALSE` setzen. Alle, die mit diesem Zugang angemeldet sind, fliegen beim nächsten Aufruf raus. Mit `TRUE` geht der Zugang wieder.
 - **Zugang nur bis zu einem Datum:** In `gueltig_bis` ein Datum eintragen (zum Beispiel `2026-12-31`). Danach gilt der Zugang nicht mehr. Leer heißt: ohne Ende.
-- **Neuer PIN:** Lege eine neue Zeile mit neuer `zugang_id`, neuem `pin_salt` und neuem `pin_hash` an und setze die alte Zeile auf `aktiv` = `FALSE`. So müssen sich alle mit dem neuen PIN neu anmelden. Wie du Salt und Hash erzeugst, wird hier noch ergänzt.
 - Der PIN hat mindestens 6 Zeichen. Gib ihn nur persönlich oder auf einem sicheren Weg weiter, nie in einer öffentlichen Gruppe.
+
+## Einen neuen PIN setzen
+
+Dafür gibt es im Apps-Script-Editor die Datei `Setup.gs` mit der Funktion `setupPins`.
+
+1. Öffne das Google Sheet in einem Tab und den Apps-Script-Editor (Erweiterungen → Apps Script) in einem zweiten Tab.
+2. Wähle im Editor oben die Funktion `setupPins` und klicke auf „Ausführen“.
+3. Wechsle zum Tab mit dem Sheet. Dort erscheinen die Fenster: zuerst die Liste der Gruppen, dann für jede aktive Gruppe die Frage nach dem PIN.
+4. Für die Gruppe, die einen neuen PIN bekommt, den PIN eintippen und „OK“ klicken. Bei allen anderen Gruppen auf „Abbrechen“ klicken. Dann bleibt ihr PIN, wie er ist.
+5. Am Ende steht, für welche Gruppen der PIN gesetzt wurde.
+
+Der alte PIN gilt danach nicht mehr. Geräte, die schon angemeldet sind, bleiben aber angemeldet, bis ihre Anmeldung abläuft (höchstens 14 Tage). Sollen alle sofort raus, zum Beispiel weil der PIN an die falschen Leute gegangen ist: In den Projekteinstellungen (Zahnrad links im Editor) unter „Skripteigenschaften“ die Eigenschaft `TOKEN_GEHEIMNIS` löschen und danach `setupGeheimnis` einmal ausführen. Dann müssen sich alle Gruppen neu anmelden.
 
 ## Zu viele Fehlversuche
 
@@ -47,7 +58,7 @@ Die Funktion `testdatenListe` im Editor zeigt Einträge aus Umfragen, Mitteilung
 
 ## Prüfen, ob alles läuft
 
-Im Editor gibt es Testfunktionen, die nichts verändern, zum Beispiel `testenFotoOrdner` (Foto-Ordner der Gruppen erreichbar?), `testenTermine` und `testenWiki`. Achte im Protokoll auf Wörter wie „FEHLER“, „FEHLT“ oder „nicht erreichbar“. Fehler der App findest du links im Editor unter „Ausführungen“.
+Im Editor gibt es Testfunktionen, die nichts verändern, zum Beispiel `testenFotoOrdner` (Foto-Ordner der Gruppen erreichbar?), `testenFotoSchreiben` (kann das Skript dort Dateien anlegen? legt eine Testdatei an und wirft sie gleich in den Papierkorb), `testenTermine` und `testenWiki`. Achte im Protokoll auf Wörter wie „FEHLER“, „FEHLT“ oder „nicht erreichbar“. Fehler der App findest du links im Editor unter „Ausführungen“.
 
 ## Nach einer Änderung am Skript
 

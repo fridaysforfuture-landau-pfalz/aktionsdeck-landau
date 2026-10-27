@@ -35,13 +35,34 @@ function aktionUploadImage(ctx, p) {
     datei = DriveApp.getFolderById(ordnerId).createFile(blob);
   } catch (e2) {
     Logger.log(String(e2));
-    fehler('intern', 'Das Foto konnte nicht gespeichert werden.');
+    // Seit 0.32.15 mit Googles Grund, damit man ihn ohne Konsole sieht (nur für angemeldete Gruppen)
+    var grund = String(e2 && e2.message ? e2.message : e2).replace(/\s+/g, ' ').slice(0, 200);
+    fehler('intern', 'Das Foto konnte nicht gespeichert werden. Google meldet: ' + grund);
   }
   try { datei.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); }
   catch (e3) { /* Der Ordner gibt die Freigabe meist schon weiter */ }
 
   protokoll(ctx, 'upload', zweck === 'wiki' ? 'Wiki' : 'Material', [datei.getId()], anzeige);
   return { foto_id: datei.getId() };
+}
+
+// Im Editor ausführen (seit 0.32.15): legt für jede aktive Gruppe eine kleine Testdatei im Foto-Ordner an
+// und wirft sie gleich in den Papierkorb. Zeigt Googles Meldung, wenn das Schreiben nicht geht.
+function testenFotoSchreiben() {
+  lies('Gruppen').zeilen.forEach(function (g) {
+    if (!truthy(g.aktiv)) return;
+    var name = 'FOTO_ORDNER_' + g.gruppe_id;
+    var id = PropertiesService.getScriptProperties().getProperty(name);
+    if (!id) { Logger.log(g.kurzname + ': FEHLT (' + name + ')'); return; }
+    try {
+      var ordner = DriveApp.getFolderById(id);
+      var datei = ordner.createFile(Utilities.newBlob('Test', 'text/plain', 'test_aktionsdeck.txt'));
+      datei.setTrashed(true);
+      Logger.log(g.kurzname + ': OK, Schreiben geht (Ordner "' + ordner.getName() + '")');
+    } catch (e) {
+      Logger.log(g.kurzname + ': FEHLER beim Schreiben: ' + String(e && e.message ? e.message : e));
+    }
+  });
 }
 
 // Im Editor ausführen: prüft für jede aktive Gruppe, ob der Foto-Ordner erreichbar ist.
