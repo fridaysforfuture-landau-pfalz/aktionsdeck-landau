@@ -55,7 +55,7 @@ Was es schon gibt und wiederverwendet wird:
 - **Service Worker** (`sw.js`): holt App-Dateien zuerst aus dem Netz. Hintergrund-Abrufe (Push, regelmäßiges Abrufen) gibt es nicht. Das bleibt so (Rückfrage 13).
 - **GitHub Actions** (`.github/workflows/jekyll-gh-pages.yml`): `actions/checkout@v4`, `configure-pages@v5`, `jekyll-build-pages@v1`, `upload-pages-artifact@v3`, `deploy-pages@v5`.
   Warnungen wegen Node 20 (siehe `docs/STAND.md`, „Offen“). Läuft noch grün.
-- **Etappe 10:** fertig gebaut, gemergt bis Pull Request #48. Bereitstellung von 10.1 und Prüfung durch die Person stehen aus.
+- **Etappe 10:** fertig gebaut, gemergt bis Pull Request #48. 10.1 ist bereitgestellt (Skript-Stand 10.1a, Pull Request #50, 27.10.2026). Die Prüfung durch die Person steht aus.
   Noch nicht bestätigte Prüfpunkte aus früheren Etappen: 0.26.3 (Etappe 5) und 0.28.9 bis 0.28.13 (Etappe 6), siehe `docs/STAND.md`, „Erledigt“.
 
 **Technische Grenze bei Push-Nachrichten (wichtig für Rückfrage 13):** Echte Push-Nachrichten aufs Handy (auch wenn die App zu ist) brauchen einen Absender,
