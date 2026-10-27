@@ -6,11 +6,11 @@ Oben stehen drei Knöpfe. Im Skillshare sammelt eure Gruppe Wissen nach Themen, 
 
 ## Seiten anlegen und bearbeiten
 
-Mit „+ Seite“ legst du eine neue Seite an. Im Skillshare wählst du dazu ein Thema. Unter jeder eigenen Seite stehen „Bearbeiten“ und „Löschen“. Die Seiten der App-Anleitung sind nur lesbar. Alle in der Gruppe dürfen schreiben. Alte Fassungen werden nicht aufbewahrt. Speichern zwei Personen fast gleichzeitig, zeigt die App einen Hinweis und überschreibt nichts. Während du tippst, merkt sich dein Gerät einen Entwurf. So geht nichts verloren, wenn du den Reiter wechselst.
+Mit „+ Seite“ legst du eine neue Seite an. Im Skillshare wählst du dazu ein Thema. Unter jeder eigenen Seite stehen „Bearbeiten“ und „Löschen“. „Löschen“ gibt es auch unten im Formular, wenn du eine Seite bearbeitest. Die Seiten der App-Anleitung sind nur lesbar. Alle in der Gruppe dürfen schreiben. Alte Fassungen werden nicht aufbewahrt. Speichern zwei Personen fast gleichzeitig, zeigt die App einen Hinweis und überschreibt nichts. Während du tippst, merkt sich dein Gerät einen Entwurf. So geht nichts verloren, wenn du den Reiter wechselst.
 
 ## So geht das Format
 
-Die Knöpfe über dem Textfeld fügen die Auszeichnung an der Stelle ein, an der dein Cursor steht. Eine leere Zeile beginnt einen neuen Absatz. Eine große Überschrift schreibst du als `## Überschrift` (Knopf Ü1), eine kleinere als `### Unterüberschrift` (Knopf Ü2). Eine Liste entsteht mit `- Punkt`, eine nummerierte Liste mit `1. Schritt`. Mit `**fett**` wird ein Wort fett (Knopf F).
+Die Knöpfe über dem Textfeld fügen die Auszeichnung an der Stelle ein, an der dein Cursor steht. Eine leere Zeile beginnt einen neuen Absatz. Eine große Überschrift schreibst du als `## Überschrift` (Knopf Ü1), eine kleinere als `### Unterüberschrift` (Knopf Ü2). Eine Liste entsteht mit `- Punkt`, eine nummerierte Liste mit `1. Schritt`. Drückst du in einer Liste Enter, beginnt die App den nächsten Punkt (mit `- ` oder der nächsten Zahl). Drückst du in einem leeren Punkt noch einmal Enter, ist die Liste zu Ende. Mit `**fett**` wird ein Wort fett (Knopf F).
 
 Eine Adresse wie `https://beispiel.de` wird von selbst ein Link. Soll der Link einen eigenen Text haben, schreibst du `[Text](https://…)` (Knopf Link). Mit `[[Titel einer Seite]]` verlinkst du eine andere Wiki-Seite (Knopf Wiki-Link). Eine Zeile mit `> Hinweis` wird ein grauer Kasten. Mit dem Knopf „Bild“ lädst du ein Bild hoch und fügst es ein. Am PC steht die Vorschau neben dem Text, am Handy schaltest du mit „Schreiben | Vorschau“ um.
 

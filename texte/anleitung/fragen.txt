@@ -1,24 +1,24 @@
-## Ich habe den PIN vergessen.
+## Was mache ich, wenn ich den PIN vergessen habe?
 
-Frag in deiner Gruppe. Einen neuen PIN richten die Personen mit Adminzugriff ein ([[Zuständig für die App]]).
+Frag in deiner Gruppe. Einen neuen PIN richten die Personen mit Adminzugriff ein ([[Zuständig für die App]], [[Für Admins]]).
 
-## „Jemand anderes hat diesen Eintrag inzwischen geändert.“
+## Was bedeutet „Jemand anderes hat diesen Eintrag inzwischen geändert“?
 
 Zwei Personen haben denselben Eintrag gleichzeitig bearbeitet. Die App überschreibt nichts. Lade neu, schau dir die neue Fassung an und trag deine Änderung noch einmal ein.
 
-## Die App zeigt einen alten Stand.
+## Warum zeigt die App einen alten Stand?
 
 Lade die Seite neu. Nach einem Update der App hilft es, die Seite zweimal neu zu laden. Die Version steht unter „Info“.
 
-## Ich bin ohne Netz.
+## Was geht ohne Netz?
 
 Du kannst lesen, was zuletzt geladen war. Schreiben geht erst wieder mit Verbindung.
 
-## Ich habe aus Versehen etwas gelöscht.
+## Ich habe aus Versehen etwas gelöscht. Kann ich das zurückholen?
 
-Gelöschtes ist zuerst nur ausgeblendet. Die Personen mit Adminzugriff können es im Sheet zurückholen (in den ersten 90 Tagen).
+Gelöschtes ist zuerst nur ausgeblendet. Ja. Die Personen mit Adminzugriff können es im Sheet zurückholen, solange das Aufräumen es noch nicht entfernt hat (frühestens nach 90 Tagen). Wie das geht, steht in [[Für Admins]].
 
-## Mein Name stimmt nicht.
+## Wie ändere ich meinen Namen?
 
 Unten „Name ändern“. Bist du im Team eingetragen, ändere den Namen auf deiner Team-Karte, dann ändert die App ihn auch in deinen ToDos. Mehr dazu: [[Team]].
 
@@ -26,6 +26,6 @@ Unten „Name ändern“. Bist du im Team eingetragen, ändere den Namen auf dei
 
 Nur deine Gruppe (mit dem PIN). Öffentlich sind nur veröffentlichte Termine und öffentliche Wiki-Seiten. Mehr steht im Datenschutz.
 
-## Ein Reiter zeigt „Dieser Reiter ist noch in Arbeit“.
+## Warum zeigt ein Reiter „Dieser Reiter ist noch in Arbeit“?
 
 Das kommt meist nach einem Update. Seite zweimal neu laden. Hilft das nicht, melde es ([[Zuständig für die App]]).

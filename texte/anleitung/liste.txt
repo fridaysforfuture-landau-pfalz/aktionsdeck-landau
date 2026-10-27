@@ -12,3 +12,4 @@ team | Team
 wiki | Wiki
 fragen | Häufige Fragen
 zustaendig | Zuständig für die App
+admin | Für Admins

@@ -81,8 +81,10 @@ export function baueGeruest(container, ctx) {
     ...tabs.map(function (t) { return eintrag('nav-link', basis, t, aktiv, ctx.neuLaden); }),
     el('div', { class: 'seiten-fuss' },
       el('span', { class: 'leise', text: 'Angemeldet als ' + (getName() || 'unbekannt') }),
-      el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Name ändern', onclick: ctx.nameAendern }),
-      el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abmelden', onclick: ctx.abmelden }),
+      el('div', { class: 'seiten-fuss-knoepfe' },
+        el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Name ändern', onclick: ctx.nameAendern }),
+        el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abmelden', onclick: ctx.abmelden })
+      ),
       oeffentlicheLinks()
     )
   );
