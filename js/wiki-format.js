@@ -9,6 +9,7 @@
 //   [[Titel]] = Link auf eine andere Wiki-Seite (fehlt sie: grau mit „(fehlt)“)
 //   > Hinweis = grauer Hinweiskasten
 //   ![Beschreibung](bild:<id>) in einer eigenen Zeile = Bild aus dem Drive-Ordner der Gruppe
+//     (seit 0.32.16 höchstens halb so breit wie der Text, Klick zeigt es groß: js/ui/lightbox.js)
 //   `Text` zwischen Backticks bleibt genau so stehen (für Beispiele in der Format-Hilfe, seit 0.32.5)
 // Nur http(s)-Adressen werden Links (sichereUrl). Alles andere bleibt Text, auch "<script>" oder "javascript:".
 //
@@ -26,6 +27,7 @@
 //   teileInline('[k](javascript:x)')   -> ['[k](javascript:x)']
 
 import { el } from './ui/dom.js';
+import { zeigeBild } from './ui/lightbox.js';
 import { sichereUrl } from './views/kalender-rechnen.js';
 
 const BILD_ID = /^[A-Za-z0-9_-]{10,100}$/;
@@ -167,7 +169,11 @@ export function zeichneText(text, opt) {
       const url = bildUrl(b.bild.id);
       if (!url) return;
       const bild = el('img', { src: url, alt: b.bild.beschreibung || 'Bild', loading: 'lazy' });
-      box.append(el('figure', { class: 'wiki-bild' }, bild,
+      const knopf = el('button', {
+        type: 'button', class: 'wiki-bild-knopf', 'aria-label': 'Bild vergrößern',
+        onclick: function () { zeigeBild(url, b.bild.beschreibung); }
+      }, bild);
+      box.append(el('figure', { class: 'wiki-bild' }, knopf,
         b.bild.beschreibung ? el('figcaption', { text: b.bild.beschreibung }) : null));
     } else {
       box.append(el('p', null, ...mitUmbruch(b.zeilen, o)));
