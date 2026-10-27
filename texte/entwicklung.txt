@@ -1,10 +1,10 @@
 ## Wer hat die App entwickelt?
 
-[Name oder Gruppe]
+Tim-Martin Melchert
 
 ## Ziel und Motivation
 
-AktionsDeck Landau soll die Vernetzung und Organisation der aktiven Klima-Gruppen in Landau stärken. Gruppen wie Fridays for Future, Greenpeace und das Klimabündnis planen ihre Aktionen, Aufgaben, Material und Treffen an einem Ort und können sich untereinander abstimmen.
+AktionsDeck Landau soll die Vernetzung und Organisation der aktiven Klima-Gruppen in Landau stärken. Gruppen wie Fridays for Future und Greenpeace planen ihre Aktionen, Aufgaben, Material und Treffen an einem Ort und können sich untereinander abstimmen.
 
 Die App ist freie Software (MIT-Lizenz). Andere Gruppen in ganz Deutschland können sie als Grundlage für ein eigenes System nutzen und an ihre Bedürfnisse anpassen. Den Quellcode findest du hier: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 
