@@ -1,24 +1,23 @@
 ## Angaben nach § 5 Digitale-Dienste-Gesetz (DDG)
 
-[Name der verantwortlichen Person oder Gruppe]
-[Straße und Hausnummer]
-[Postleitzahl und Ort]
+Tim-Martin Melchert
+Waffenstraße 30, 
+76829 Landau in der Pfalz
 
 ## Kontakt
 
-E-Mail: [E-Mail-Adresse]
+E-Mail: tm.aktivismus+aktionsdeck a gmail.com
 
 ## Verantwortlich für den Inhalt nach § 18 Absatz 2 Medienstaatsvertrag (MStV)
 
-[Name]
-[Anschrift wie oben]
+Tim-Martin Melchert
+Waffenstraße 30,
+76829 Landau in der Pfalz
 
 ## Wer steht hinter AktionsDeck Landau?
 
 AktionsDeck Landau ist eine Web-App für Klima-Gruppen in Landau. Die Gruppen planen damit ihre Arbeit.
 Öffentliche Termine und öffentliche Wiki-Seiten schreiben die Gruppen selbst. Für diese Inhalte ist die jeweilige Gruppe verantwortlich.
-
-Die Webseite von Fridays for Future Landau hat ein eigenes Impressum: https://fridaysforfuture-landau.de/kontakt/impressum
 
 ## Links zu anderen Seiten
 
