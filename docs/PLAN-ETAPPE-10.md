@@ -3,7 +3,7 @@
 Diese Datei ergänzt `docs/STAND.md`. Bei Widerspruch gilt `docs/STAND.md`, und du meldest den Widerspruch im Pull Request.
 Regeln für die Arbeit stehen in `CLAUDE.md`.
 
-**Status: fertig gebaut mit 10.9 (Version 0.32.8).** Abschluss nach der Prüfung durch die Person (und der Bereitstellung von 10.1).
+**Status: fertig gebaut mit 10.9 (Version 0.32.8).** Abschluss nach der Prüfung durch die Person. 10.1 ist bereitgestellt (Skript-Stand 10.1a, Pull Request #50; Stand 27.10.2026, siehe `docs/STAND.md`).
 Frühere Status-Zeile: **Fassung 2.** Die Person hat die 31 Rückfragen aus Fassung 1 am 23.10.2026 beantwortet (Abschnitt 3). „Plan ist gut.“
 Fassung 2 (eigentlich Schritt 10.0a) kommt im selben Pull Request wie Schritt 10.1, damit Plan und Skript zusammenpassen.
 **Erledigt:** 10.0 (Version 0.31.10, Fassung 1, Pull Request #37, gemergt). 10.1 (Version 0.32.0, Pull Request #38, gemergt). 10.2 (Version 0.32.1, Pull Request #39, gemergt). 10.3 bis 10.9 baut der Agent am 23.10.2026 nacheinander, je Schritt ein Pull Request (Auftrag der Person).
