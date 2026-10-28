@@ -7,6 +7,7 @@ import {
   getSession, clearSession, getName, setName, getGruppenCache, setGruppenCache, gibtEntwurf, loescheAlleEntwuerfe
 } from './store.js';
 import { cacheLeeren } from './cache.js';
+import { gruppenInfoAusCache, gruppenInfoLaden, gruppenInfoVergessen, cloudLinkSofort } from './gruppeninfo.js';
 import { baueGeruest, sichtbareTabs, tabLabel } from './ui/nav.js';
 import { frageName } from './ui/modal.js';
 import { toast } from './ui/toast.js';
@@ -83,6 +84,7 @@ async function ladeView(tab) {
 
 async function abmelden() {
   clearSession();
+  gruppenInfoVergessen();
   await cacheLeeren();
   location.hash = '#/';
   route();
@@ -210,6 +212,14 @@ async function route() {
     }
 
     ctx.session = s;
+    // Kontostand und Cloud-Link (11.3): erst der gemerkte Stand, dann im Hintergrund frisch.
+    // Kommt oder geht der Cloud-Link, wird die Seite neu aufgebaut (Reiter Cloud).
+    await gruppenInfoAusCache(s.gruppe_id);
+    if (nummer !== laufNummer) return;
+    const cloudVorher = !!cloudLinkSofort(s.gruppe_id);
+    gruppenInfoLaden(s).then(function () {
+      if (nummer === laufNummer && !!cloudLinkSofort(s.gruppe_id) !== cloudVorher) route();
+    }).catch(function () { /* abgelaufene Anmeldung meldet die Ansicht selbst */ });
     const erlaubt = sichtbareTabs().map(function (t) { return t.id; }).concat('mehr');
     // Seit 0.32.2 ersetzt das Wiki den Reiter Hilfe: alte Adressen …/hilfe öffnen das Wiki
     if (teile[2] === 'hilfe') teile[2] = 'wiki';

@@ -3161,3 +3161,8 @@ p.notiz.erledigt {
 @media (min-width: 600px) {
   .wiki-bild { max-width: 50%; }
 }
+
+/* ---- 0.33.2: Kontostand in den Finanzen, Reiter Cloud ---- */
+.konto-teil { padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--rand); }
+.konto-zeile { margin: 0 0 8px; }
+.cloud-knopf { margin-top: 12px; font-size: 18px; padding: 0 28px; }

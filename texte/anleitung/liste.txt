@@ -10,6 +10,7 @@ kalender | Kalender
 dokumentation | Dokumentation
 team | Team
 wiki | Wiki
+cloud | Cloud
 fragen | Häufige Fragen
 zustaendig | Zuständig für die App
 admin | Für Admins

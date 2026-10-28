@@ -69,7 +69,7 @@ Diese Angaben stehen nicht im Sheet, sondern im Apps-Script-Editor unter Projekt
 - `CLOUD_LINK_<gruppe_id>`: die Adresse der Cloud der Gruppe (beginnt mit `https://`). Nur Gruppen mit diesem Eintrag sehen den Reiter Cloud.
 - `KONTO_STAND_<gruppe_id>` schreibt das Skript selbst. Nicht ändern.
 
-Der Kontostand wird jeden Montag früh von selbst abgerufen. Dafür muss die Funktion `kontoAusloeserEinrichten` einmal im Editor gelaufen sein. Ob der Abruf klappt, zeigt `kontoTesten`.
+Der Kontostand wird jeden Montag früh von selbst abgerufen. Dafür muss die Funktion `kontoAusloeserEinrichten` einmal im Editor gelaufen sein. Ob der Abruf klappt, zeigt `kontoTesten`. Nach einer Änderung an `OC_KONTO_…` oder `CLOUD_LINK_…` die App einmal neu laden. Dann erscheinen der Kontostand oder der Reiter Cloud (oder sie verschwinden).
 
 ## Testdaten finden
 

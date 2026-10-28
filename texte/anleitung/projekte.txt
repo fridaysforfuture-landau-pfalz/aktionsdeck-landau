@@ -10,7 +10,7 @@ Ein Projekt hat einen Status. In Planung steht es unten im Aufklapper „In Plan
 
 Klappst du ein Projekt auf, siehst du seine Teile. Bei den ToDos und Meilensteinen planst du die Aufgaben. Unter „Offene Hüte“ stehen Aufgaben, für die noch jemand gesucht wird. Für Meilensteine gibt es Vorlagen mit passenden Schritten.
 
-Beim Material merkst du Dinge aus dem Bestand für das Projekt vor, leihst sie aus oder trägst eigene Positionen ein, die noch besorgt werden müssen. Bei den Finanzen stehen die Posten mit geplanten und echten Beträgen und einem Haken für „bezahlt“. Im Teil Mobi plant ihr die Beiträge für Social Media und Presse. Bei den Learnings haltet ihr fest, was ihr beim nächsten Mal anders machen wollt. Dazu kommen die Reden zum Projekt und ein Überblick, wer im Team welche Hüte hat.
+Beim Material merkst du Dinge aus dem Bestand für das Projekt vor, leihst sie aus oder trägst eigene Positionen ein, die noch besorgt werden müssen. Bei den Finanzen stehen die Posten mit geplanten und echten Beträgen und einem Haken für „bezahlt“. Hat eure Gruppe ein Konto bei OpenCollective, steht oben bei den Finanzen auch der Kontostand mit Datum. Er wird jeden Montag von selbst abgerufen. Mit „Jetzt abrufen“ holst du ihn sofort, höchstens einmal pro Stunde. Das ist nur zum Anschauen: Das Geld selbst läuft weiter über OpenCollective. Im Teil Mobi plant ihr die Beiträge für Social Media und Presse. Bei den Learnings haltet ihr fest, was ihr beim nächsten Mal anders machen wollt. Dazu kommen die Reden zum Projekt und ein Überblick, wer im Team welche Hüte hat.
 
 ## Ein Projekt abschließen
 
