@@ -83,6 +83,14 @@ Diese Angaben stehen nicht im Sheet, sondern im Apps-Script-Editor unter Projekt
 
 Der Kontostand wird jeden Montag früh von selbst abgerufen. Dafür muss die Funktion `kontoAusloeserEinrichten` einmal im Editor gelaufen sein. Ob der Abruf klappt, zeigt `kontoTesten`. Nach einer Änderung an `OC_KONTO_…` oder `CLOUD_LINK_…` die App einmal neu laden. Dann erscheinen der Kontostand oder der Reiter Cloud (oder sie verschwinden).
 
+## Signal-Link für Hilfe
+
+Der Knopf „Auf Signal schreiben“ (bei „Wen frage ich bei Problemen?“ und auf „Neue Gruppe anlegen“) holt den Link vom Skript, erst nach einer richtig gelösten Rechenaufgabe. Der Link steht unter Projekteinstellungen (Zahnrad) → Skripteigenschaften:
+
+- `SIGNAL_LINK`: der Link aus Signal (Einstellungen → Profil → Benutzername → QR-Code oder Link), beginnt mit `https://signal.me/`.
+
+Fehlt der Eintrag, steht im Fenster „Der Signal-Link ist noch nicht eingetragen.“ Einen neuen Link trägst du einfach dort ein, ohne neue Bereitstellung.
+
 ## Testdaten finden
 
 Die Funktion `testdatenListe` im Editor zeigt Einträge aus Umfragen, Mitteilungen, Kommentaren, Ideen, Veranstaltungen, Vorlagen und Mobi mit Zeilennummer. So findest du Testeinträge und löschst sie im Sheet.

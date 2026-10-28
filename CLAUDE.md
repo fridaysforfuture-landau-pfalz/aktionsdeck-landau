@@ -3,7 +3,7 @@
 Diese Datei liest du (der Agent) zuerst. Sie gilt für jede Aufgabe in diesem Repo.
 Der aktuelle Projektstand steht in `docs/STAND.md`, der Plan für die laufende Etappe in `docs/PLAN-ETAPPE-<Nummer>.md`
 (als Nächstes Etappe 12 „Prüfung und Qualität“: `docs/PLAN-ETAPPE-12.md`, Fassung 1, der letzte Schritt vor Version 1.0;
-Etappe 11 „Komfort“ in `docs/PLAN-ETAPPE-11.md` ist mit 0.33.12 fertig gebaut).
+Etappe 11 „Komfort“ in `docs/PLAN-ETAPPE-11.md` ist mit 0.33.13 fertig gebaut).
 
 ## 1. Worum es geht
 
@@ -74,7 +74,7 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
 - **Schnittstelle:** Google Apps Script als Web-App, an das Google Sheet gebunden. Aufruf per POST mit JSON als
   `text/plain`. Das Feld für die Aktion heißt `aktion`. Antwort: `{ok, data, error, code}`.
   Aktionen: `gruppen` (ohne Login), `login`, `bootstrap`, `list` (mit `seit`), `listMehrere`, `create`, `update`,
-  `delete` (weich), `batchCreate`. Ohne Login außerdem `termine` und `wiki` (nur öffentliche Daten, keine Namen).
+  `delete` (weich), `batchCreate`. Ohne Login außerdem `termine` und `wiki` (nur öffentliche Daten, keine Namen) und `signal` (Rechenaufgabe, danach der Signal-Link aus der Skripteigenschaft `SIGNAL_LINK`).
 - **Zugang:** Ein PIN pro Gruppe, kein Admin-PIN, keine Einzelkonten. Das Skript prüft den PIN und gibt ein signiertes
   Token (14 Tage) mit `gruppe_id`. Jeder Aufruf prüft Token und Gruppe. Ein Token sieht nur Daten seiner Gruppe.
 - **Anzeigename:** „Wer bist du?" wird nur im Gerät gespeichert und landet im Log.
