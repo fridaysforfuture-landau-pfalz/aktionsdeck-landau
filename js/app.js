@@ -11,6 +11,7 @@ import { gruppenInfoAusCache, gruppenInfoLaden, gruppenInfoVergessen, cloudLinkS
 import { baueGeruest, sichtbareTabs, tabLabel } from './ui/nav.js';
 import { frageName } from './ui/modal.js';
 import { toast } from './ui/toast.js';
+import { darstellungAnwenden, darstellungBeobachten } from './ui/darstellung.js';
 import * as gruppenView from './views/gruppen.js';
 import * as loginView from './views/login.js';
 import * as infoView from './views/info.js';
@@ -264,6 +265,8 @@ setInterval(function () {
   if (refreshFn && document.visibilityState === 'visible' && navigator.onLine) refreshFn();
 }, REFRESH_SEKUNDEN * 1000);
 
+darstellungAnwenden();
+darstellungBeobachten(function () { route(); });
 window.addEventListener('hashchange', route);
 route();
 serviceWorkerAnmelden();

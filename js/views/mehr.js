@@ -1,9 +1,10 @@
 // js/views/mehr.js
-// "Mehr" am Handy: weitere Reiter, Name ändern, Abmelden, öffentliche Seiten.
+// "Mehr" am Handy: weitere Reiter, Name ändern, Abmelden, Darstellung (hell/dunkel, seit 11.8), öffentliche Seiten.
 
 import { el, leeren } from '../ui/dom.js';
 import { sichtbareTabs, oeffentlicheLinks } from '../ui/nav.js';
 import { getName } from '../store.js';
+import { darstellungSchalter } from '../ui/darstellung.js';
 
 export function render(container, ctx) {
   leeren(container);
@@ -22,6 +23,7 @@ export function render(container, ctx) {
       el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Name ändern', onclick: ctx.nameAendern }),
       el('button', { class: 'knopf', type: 'button', text: 'Abmelden', onclick: ctx.abmelden })
     ),
+    darstellungSchalter(ctx.neuLaden),
     oeffentlicheLinks()
   );
   container.append(box);

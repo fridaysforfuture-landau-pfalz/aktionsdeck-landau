@@ -21,7 +21,7 @@ Danach öffnet sich die App wie eine normale App.
 
 - Am Handy unten: Start, Projekte, ToDos, Mobi und „Mehr“ (Material, Kalender, Dokumentation, Team, Wiki).
 - Am PC links in der Seitenleiste.
-- Unten stehen „Name ändern“, „Abmelden“ und die Seiten Impressum, Info und Datenschutz.
+- Unten stehen „Name ändern“, „Abmelden“, die Darstellung (hell oder dunkel) und die Seiten Impressum, Info und Datenschutz.
 
 ## Was ist neu?
 

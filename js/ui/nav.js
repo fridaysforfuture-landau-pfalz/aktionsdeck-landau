@@ -6,6 +6,7 @@ import { features } from '../config.js';
 import { getName, getSession } from '../store.js';
 import { cloudLinkSofort } from '../gruppeninfo.js';
 import { gruppenLogo } from './logo.js';
+import { darstellungSchalter } from './darstellung.js';
 
 export const TABS = [
   { id: 'start', label: 'Start', icon: '🏠' },
@@ -92,6 +93,7 @@ export function baueGeruest(container, ctx) {
         el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Name ändern', onclick: ctx.nameAendern }),
         el('button', { class: 'knopf knopf-hell', type: 'button', text: 'Abmelden', onclick: ctx.abmelden })
       ),
+      darstellungSchalter(ctx.neuLaden),
       oeffentlicheLinks()
     )
   );

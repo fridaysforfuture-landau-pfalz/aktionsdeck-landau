@@ -44,11 +44,14 @@ export function schriftfarbe(hex) {
   return 1.05 / (l + 0.05) >= (l + 0.05) / 0.0625 ? '#ffffff' : '#1a1e20';
 }
 
-// Sehr helle Version einer Farbe (für Deadline-Kästen)
-export function pastell(hex) {
+// Sehr helle Version einer Farbe (für Deadline-Kästen). dunkel = true (Dunkelmodus, 11.8): dunkle, gedeckte Version.
+const DUNKEL_GRUND = [27, 34, 32];   // wie --flaeche im Dunkelmodus (#1b2220)
+
+export function pastell(hex, dunkel) {
   const h = farbeVon(hex);
   const mix = function (i) {
     const c = parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
+    if (dunkel) return Math.round(DUNKEL_GRUND[i] + (c - DUNKEL_GRUND[i]) * 0.28);
     return Math.round(c + (255 - c) * 0.82);
   };
   return 'rgb(' + mix(0) + ',' + mix(1) + ',' + mix(2) + ')';

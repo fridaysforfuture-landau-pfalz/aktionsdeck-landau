@@ -184,3 +184,23 @@ export function loescheAlleEntwuerfe() {
     try { localStorage.removeItem(k); } catch (e) { /* ignorieren */ }
   });
 }
+
+// Darstellung (11.8): 'geraet' (wie das Gerät, Standard), 'hell' oder 'dunkel'. Je Gerät, für alle Gruppen.
+// Bleibt beim Abmelden erhalten. js/darstellung-start.js liest denselben Schlüssel schon vor dem ersten Zeichnen.
+const DARSTELLUNG_KEY = 'aktionsdeck_darstellung';
+
+export function getDarstellung() {
+  try {
+    const w = localStorage.getItem(DARSTELLUNG_KEY);
+    return w === 'hell' || w === 'dunkel' ? w : 'geraet';
+  } catch (e) {
+    return 'geraet';
+  }
+}
+
+export function setDarstellung(w) {
+  try {
+    if (w === 'hell' || w === 'dunkel') localStorage.setItem(DARSTELLUNG_KEY, w);
+    else localStorage.removeItem(DARSTELLUNG_KEY);
+  } catch (e) { /* ignorieren */ }
+}

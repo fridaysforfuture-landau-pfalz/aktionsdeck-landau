@@ -22,6 +22,10 @@ Gelöschtes ist zuerst nur ausgeblendet. Ja. Die Personen mit Adminzugriff könn
 
 Unten „Name ändern“. Bist du im Team eingetragen, ändere den Namen auf deiner Team-Karte, dann ändert die App ihn auch in deinen ToDos. Mehr dazu: [[Team]].
 
+## Wie stelle ich die App dunkel?
+
+Unter „Darstellung“ wählst du „Wie das Gerät“, „Hell“ oder „Dunkel“. Am Handy steht das in „Mehr“ unter „Abmelden“, am PC unten in der Seitenleiste unter „Name ändern“ und „Abmelden“. Mit „Wie das Gerät“ (so ist es am Anfang) ist die App dunkel, wenn dein Handy oder PC auf dunkel steht. Die Einstellung gilt nur auf diesem Gerät, für alle Gruppen, und bleibt beim Abmelden erhalten. Gedruckt wird immer hell.
+
 ## Wer sieht meine Daten?
 
 Nur deine Gruppe (mit dem PIN). Öffentlich sind nur veröffentlichte Termine und öffentliche Wiki-Seiten. Mehr steht im Datenschutz.
