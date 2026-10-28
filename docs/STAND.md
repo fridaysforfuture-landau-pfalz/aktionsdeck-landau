@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-- Version der App: **0.34.2** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **0.34.3** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
-- Nächster Schritt: **12.5 Geschwindigkeit prüfen** (Bericht im Chat; neues Editor-Werkzeug `messenSkript`).
+- Nächster Schritt: **12.6 Geschwindigkeit verbessern** (nach Freigabe des Berichts 12.5 und dem Protokoll von `messenSkript`).
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -220,7 +220,8 @@ Eine neue Tabelle oder Spalte ist nur ein Eintrag in `Schema.gs` und in `js/sche
 - Etappen 0 bis 11 sind fertig und von der Person geprüft (bis 0.33.15, 28.10.2026). Kurzfassung in Abschnitt 8,
   ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
 - Etappe 12 läuft: 12.1 Plan Fassung 2 (0.33.16, #75), 12.2 Plan Fassung 3 und diese eine Doku-Datei (0.34.0),
-  12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2).
+  12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2),
+  12.5 Geschwindigkeitsbericht (nur im Chat) mit dem Editor-Werkzeug `messenSkript` (0.34.3).
 - Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
   Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
@@ -373,7 +374,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - **Editor-Funktionen:** `formatieren`, `formatierenWiki` (Schema.gs); `aufraeumenTesten`, `aufraeumen` (löscht `geloescht=TRUE` älter als 90 Tage,
   Log älter als 180 Tage, alte Kapazitäten), `testzeilenAnzeigen`, `testdatenListe` (Aufraeumen.gs); `setupGeheimnis`, `setupPins` (Setup.gs);
   Tests `testenTermine`, `testenTermineSicher`, `testenProtokollDok`, `testenProtokollAnhaengen`, `testenTeam`, `testenWiki`, `testenWikiSicher`,
-  `testenFotoOrdner`, `testenFotoSchreiben`, `testenRechte` (Auth.gs, Rechte je Gruppe und Token), `kontoTesten`, `kontoAbrufen`, `kontoAusloeserEinrichten`.
+  `testenFotoOrdner`, `testenFotoSchreiben`, `testenRechte` (Auth.gs, Rechte je Gruppe und Token), `messenSkript` (Werkzeuge.gs, misst Laufzeiten, schreibt nichts), `kontoTesten`, `kontoAbrufen`, `kontoAusloeserEinrichten`.
 - **Zwischenspeicher (IndexedDB)** `ladeMitCache(key, ladeFn, anzeigen, zuerstCache)`, Schlüssel `<gruppe_id>:<name>`: todos, projekteliste, startextra,
   startmobi, startfuerdich, projekte, kalender, protokoll, reden, team, wiki, gruppeinfo, uebersicht. Öffentlich: `oeffentlich:termine`,
   `oeffentlich:wiki`, `oeffentlich:wiki:<gruppe>:<adresse>`. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in `zeigen()` Fehlendes ergänzen.
@@ -400,7 +401,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - `icons/`: `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`, `logo.svg`, `gruppen/`.
 - `css/`: `base.css` (alle Farb-Variablen), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, Blöcke je Version).
 - `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
-  Team.gs, Wiki.gs, Konto.gs, Signal.gs, Setup.gs.
+  Team.gs, Wiki.gs, Konto.gs, Signal.gs, Setup.gs, Werkzeuge.gs (nur Editor-Werkzeuge, keine Bereitstellung nötig).
 - `js/`: app, config, api, store, cache, schema, vorlagen, kanaele, wiki-format, gruppeninfo, darstellung-start (normales Skript).
 - `js/ui/`: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit, druck, darstellung, signal.
 - `js/views/`: gruppen, login, start, start-umfragen, start-brett, mehr, info, platzhalter, ideen,
@@ -452,6 +453,7 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 12.4 (0.34.1): Schutz vor Formeln beim Block-Schreiben, Anzeigename bereinigt, neuer PIN meldet alte Geräte ab, Zahlen strenger,
     Kalender-Datei mit `\r`, Content-Security-Policy, Service Worker nur im App-Ordner, Gruppenwechsel leert den Zwischenspeicher, Editor-Test `testenRechte`.
   - 0.34.2: Nachbesserung: Content-Security-Policy erlaubt Bilder von allen `https:`-Adressen (Fotos wurden blockiert).
+  - 12.5 (0.34.3): Geschwindigkeitsbericht (nur im Chat); neues Editor-Werkzeug `messenSkript` in `Werkzeuge.gs`.
 
 ---
 
