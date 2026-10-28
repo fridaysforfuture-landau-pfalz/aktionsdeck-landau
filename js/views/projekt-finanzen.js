@@ -2,6 +2,7 @@
 // Teil "Finanzen" eines Projekts: Posten aus dem Tab Finanzen, Summen, "bezahlt"-Haken,
 // "Aus Material übernehmen" (Beschaffung kaufen/mieten). Geld läuft über OpenCollective,
 // hier steht nur die Übersicht geplant / tatsächlich.
+// Seit 11.3 oben der Kontostand der Gruppe bei OpenCollective (nur Gruppen mit Konto, nur zum Anschauen).
 //
 // opt: { ctx, token, projekt, holeDaten() -> { fin, pm }, arbeitet (Objekt),
 //        offen, beiToggle(offen), neuZeichnen(), neuLaden() -> Promise, merken() }
@@ -13,6 +14,11 @@ import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { SCHEMA, istWahr } from '../schema.js';
 import { datumText } from './todos-rechnen.js';
+import { WOCHENTAGE_KURZ } from './kalender-rechnen.js';
+import { gruppenInfoSofort, gruppenInfoFrisch, gruppenInfoLaden, kontoAktualisieren } from '../gruppeninfo.js';
+
+// Alle Finanz-Teile (ein Teil je Projekt) warten gemeinsam auf den frischen Kontostand: nur einmal neu zeichnen
+let kontoWartet = false;
 
 function leer(v) {
   return v === '' || v === undefined || v === null;
@@ -33,6 +39,21 @@ function runde(n) {
 
 function nachPosten(a, b) {
   return String(a.posten).localeCompare(String(b.posten), 'de');
+}
+
+// "Mo, 03.11.2026" in der Zeit des Geräts
+function standText(iso) {
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  const zwei = function (n) { return (n < 10 ? '0' : '') + n; };
+  return WOCHENTAGE_KURZ[(d.getDay() + 6) % 7] + ', ' + zwei(d.getDate()) + '.' + zwei(d.getMonth() + 1) + '.' + d.getFullYear();
+}
+
+function betragText(k) {
+  if (typeof k.betrag !== 'number') return 'noch nicht abgerufen';
+  const w = String(k.waehrung || 'EUR');
+  return w === 'EUR' ? euro(k.betrag)
+    : Number(k.betrag).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + w.slice(0, 5);
 }
 
 const ART_TEXT = { kauf: 'Kauf', miete: 'Miete', sonstiges: 'Sonstiges', einnahme: 'Einnahme', spende: 'Spende' };
@@ -216,6 +237,62 @@ export function baueFinanzTeil(opt) {
     }
   }
 
+  // ---- Kontostand der Gruppe (11.3) ----
+
+  async function kontoAbrufen() {
+    if (opt.arbeitet.konto) return;
+    opt.arbeitet.konto = true;
+    opt.neuZeichnen();
+    try {
+      const res = await kontoAktualisieren(ctx.session);
+      toast(res && res.frisch
+        ? 'Gerade erst abgerufen. Neu abrufen geht frühestens eine Stunde nach dem letzten Abruf.'
+        : 'Kontostand abgerufen.');
+    } catch (e) {
+      if (!ctx.behandleFehler(e)) toast(e.message);
+    }
+    delete opt.arbeitet.konto;
+    opt.neuZeichnen();
+  }
+
+  function kontoTeil() {
+    const s = ctx.session;
+    const info = gruppenInfoSofort(s.gruppe_id);
+    if (!gruppenInfoFrisch(s.gruppe_id) && !kontoWartet) {
+      kontoWartet = true;
+      gruppenInfoLaden(s).then(function () {
+        kontoWartet = false;
+        if (gruppenInfoSofort(s.gruppe_id) !== info) opt.neuZeichnen();
+      }).catch(function (e) {
+        kontoWartet = false;
+        ctx.behandleFehler(e);
+      });
+    }
+    const k = info && info.konto;
+    if (!k) return null;
+    const stand = k.stand_am ? standText(k.stand_am) : '';
+    const quelle = /^[a-z0-9-]{1,60}$/.test(String(k.quelle || '')) ? String(k.quelle) : '';
+    const abrufen = el('button', {
+      class: 'knopf knopf-hell', type: 'button', text: opt.arbeitet.konto ? 'Wird abgerufen …' : 'Jetzt abrufen',
+      onclick: kontoAbrufen
+    });
+    if (opt.arbeitet.konto) abrufen.disabled = true;
+    return el('div', { class: 'konto-teil' },
+      el('p', { class: 'konto-zeile' },
+        el('span', { text: 'Kontostand der Gruppe: ' }),
+        el('strong', { text: betragText(k) }),
+        stand ? el('span', { class: 'leise', text: ' (Stand ' + stand + ')' }) : null
+      ),
+      el('div', { class: 'teil-aktionen' },
+        abrufen,
+        quelle ? el('a', {
+          class: 'knopf knopf-hell', href: 'https://opencollective.com/' + quelle,
+          target: '_blank', rel: 'noopener noreferrer', text: 'Zu OpenCollective →'
+        }) : null
+      )
+    );
+  }
+
   // ---- Zeichnen ----
 
   function zeile(r) {
@@ -262,6 +339,7 @@ export function baueFinanzTeil(opt) {
     : null;
 
   const body = el('div', { class: 'projekt-teil-body' },
+    kontoTeil(),
     el('div', { class: 'teil-aktionen' },
       knopf('+ Posten', false, function () { formZeigen(null); }),
       knopf('Aus Material übernehmen', true, uebernehmen)

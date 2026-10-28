@@ -77,6 +77,8 @@ Die Nummern sind die der Rückfragen aus Fassung 1.
 
 ## 4. Kleine offene Fragen (Fassung 2)
 
+**Beantwortet am 28.10.2026:** A wie vorgeschlagen (Reiter „Cloud“, Knopf „Cloud öffnen →“ im neuen Tab, am PC nach Wiki). B **je Gerät**, nicht je Gruppe: ein Schlüssel `aktionsdeck_darstellung` für alle Gruppen. C am PC in der Seitenleiste **unter „Name ändern“ und „Abmelden“**.
+
 - **A. Reiter Cloud:** Wie soll er heißen („Cloud“ mit ☁️?), und was passiert beim Antippen?
   *Vorschlag:* Der Reiter zeigt eine kurze Seite mit dem großen Knopf **„Cloud öffnen →“** (neuer Tab) und einem Satz, wofür die Cloud da ist.
   Am PC in der Seitenleiste nach „Wiki“, am Handy unter „Mehr“. Die Adresse trägst du als Skripteigenschaft `CLOUD_LINK_g1` ein (beginnt mit `https://`).
@@ -103,7 +105,7 @@ Die Nummern sind die der Rückfragen aus Fassung 1.
 - Abruf über die öffentliche Schnittstelle von OpenCollective (`https://api.opencollective.com/graphql/v2`, ohne Schlüssel): nur Kontostand und Währung.
 - `apps-script/Code.gs` verteilt die beiden Aktionen.
 
-**Neue Schlüssel auf dem Gerät** (`js/store.js`): `aktionsdeck_darstellung_<gruppe_id>` (`geraet` | `hell` | `dunkel`, je nach Antwort auf Frage B). Zwischenspeicher: `gruppe_id:gruppeinfo`.
+**Neue Schlüssel auf dem Gerät** (`js/store.js`): `aktionsdeck_darstellung` (`geraet` | `hell` | `dunkel`, je Gerät, Antwort B). Zwischenspeicher: `gruppe_id:gruppeinfo`.
 
 ## 6. Schritte
 

@@ -3,7 +3,8 @@
 
 import { el } from './dom.js';
 import { features } from '../config.js';
-import { getName } from '../store.js';
+import { getName, getSession } from '../store.js';
+import { cloudLinkSofort } from '../gruppeninfo.js';
 import { gruppenLogo } from './logo.js';
 
 export const TABS = [
@@ -15,7 +16,8 @@ export const TABS = [
   { id: 'kalender', label: 'Kalender', icon: '📅' },
   { id: 'protokoll', label: 'Dokumentation', icon: '📝' },   // Protokolle und (ab 8.6) Reden
   { id: 'team', label: 'Team', icon: '👥' },                  // Etappe 9
-  { id: 'wiki', label: 'Wiki', icon: '📖' }                   // Etappe 10, ersetzt „Hilfe“
+  { id: 'wiki', label: 'Wiki', icon: '📖' },                  // Etappe 10, ersetzt „Hilfe“
+  { id: 'cloud', label: 'Cloud', icon: '☁️' }                 // 11.3, nur mit Cloud-Link der Gruppe
 ];
 
 // Öffentliche Seiten (ohne Login): Reihenfolge wie auf der Startseite
@@ -29,7 +31,12 @@ const MEHR = { id: 'mehr', label: 'Mehr', icon: '⋯' };
 const UNTEN = ['start', 'projekte', 'todos', 'mobi'];
 
 export function sichtbareTabs() {
-  return TABS.filter(function (t) { return features[t.id] !== false; });
+  const s = getSession();
+  return TABS.filter(function (t) {
+    if (features[t.id] === false) return false;
+    if (t.id === 'cloud') return !!(s && cloudLinkSofort(s.gruppe_id));
+    return true;
+  });
 }
 
 export function tabLabel(id) {

@@ -1,0 +1,15 @@
+> Hier steht, wie der Reiter Cloud funktioniert.
+
+## Was ist der Reiter Cloud?
+
+Manche Gruppen haben eine eigene Cloud für ihre Dateien, zum Beispiel für Fotos, Vorlagen oder Dokumente. Der Reiter Cloud bringt dich mit einem Klick dorthin. Am PC steht er in der Seitenleiste unter Wiki, am Handy unter „Mehr“.
+
+Den Reiter sehen nur Gruppen, für die eine Cloud eingetragen ist. Bei allen anderen Gruppen gibt es ihn nicht.
+
+## So öffnest du die Cloud
+
+Tippe auf „Cloud öffnen →“. Die Cloud öffnet sich in einem neuen Tab. Die App bleibt im alten Tab offen. Die Cloud ist ein eigener Dienst außerhalb der App. Ob du dich dort anmelden musst, hängt von der Cloud ab, nicht von der App.
+
+## Wer trägt die Cloud ein?
+
+Die Adresse der Cloud trägt jemand mit Adminzugriff ein. Wie das geht, steht unter [[Für Admins]].
