@@ -129,7 +129,49 @@ function mitSperre(fn) {
   try { lock.waitLock(20000); }
   catch (e) { fehler('beschaeftigt', 'Gerade ist viel los. Bitte gleich noch einmal versuchen.'); }
   try { return fn(); }
-  finally { lock.releaseLock(); }
+  finally {
+    merkenVergessen();   // 12.6: Wer schreibt, macht den Zwischenspeicher ungültig
+    lock.releaseLock();
+  }
+}
+
+// ---- 12.6: Zwischenspeicher für gelesene Tabs ----
+// Lesen eines Tabs dauert bei Google etwa 0,2 bis 0,35 s, egal wie klein er ist. liesGemerkt merkt sich
+// den Inhalt 2 Minuten im Zwischenspeicher des Skripts. Jede Änderung über die App (mitSperre, verteile)
+// macht ihn sofort ungültig: Dann gilt ein neuer "Stand", alte Einträge werden nicht mehr gelesen.
+// Wer schreibt, liest immer mit lies() (frische Zeilennummern), nie mit liesGemerkt.
+// Änderungen direkt im Sheet erscheinen in der App nach höchstens 2 Minuten.
+var MERKEN_SEKUNDEN = 120;
+var MERKEN_HOECHSTENS = 45000;   // Zeichen je Tab; größere Tabs werden nicht gemerkt (Grenze von Google: 100 KB)
+var merkStandJetzt = null;       // einmal je Ausführung gelesen
+
+function merkStand() {
+  if (merkStandJetzt === null) {
+    try { merkStandJetzt = CacheService.getScriptCache().get('merk_stand') || '0'; }
+    catch (e) { merkStandJetzt = '0'; }
+  }
+  return merkStandJetzt;
+}
+
+function merkenVergessen() {
+  merkStandJetzt = String(Date.now()) + '_' + Math.floor(Math.random() * 1e6);
+  try { CacheService.getScriptCache().put('merk_stand', merkStandJetzt, 21600); } catch (e) { /* dann eben ohne */ }
+}
+
+// Wie lies(name), aber nur mit .zeilen (ohne sh und kopf). Nur zum Anzeigen und Prüfen, nie vor dem Schreiben.
+function liesGemerkt(name) {
+  var cache = null, key = 'merk_' + merkStand() + '_' + name;
+  try {
+    cache = CacheService.getScriptCache();
+    var roh = cache.get(key);
+    if (roh) return { zeilen: JSON.parse(roh) };
+  } catch (e) { /* frisch lesen */ }
+  var t = lies(name);
+  try {
+    var text = JSON.stringify(t.zeilen);
+    if (cache && text.length <= MERKEN_HOECHSTENS) cache.put(key, text, MERKEN_SEKUNDEN);
+  } catch (e) { /* nicht schlimm */ }
+  return t;
 }
 
 function anzeigename(p) {

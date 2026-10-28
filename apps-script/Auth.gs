@@ -8,7 +8,7 @@ var TOKEN_TAGE = 14;
 function gruppeSuchen(kennung, nurId) {
   var k = String(kennung || '').trim().toLowerCase();
   if (!k) return null;
-  var zeilen = lies('Gruppen').zeilen;
+  var zeilen = liesGemerkt('Gruppen').zeilen;   // 12.6
   for (var i = 0; i < zeilen.length; i++) {
     var z = zeilen[i];
     if (!truthy(z.aktiv)) continue;
@@ -24,7 +24,7 @@ function gruppeOeffentlich(z) {
 
 // API "gruppen" (ohne Login): nur Name, Kurzname, Farbe
 function aktionGruppen(p) {
-  var liste = lies('Gruppen').zeilen.filter(function (z) { return truthy(z.aktiv); });
+  var liste = liesGemerkt('Gruppen').zeilen.filter(function (z) { return truthy(z.aktiv); });   // 12.6
   liste.sort(function (a, b) { return Number(a.sortierung) - Number(b.sortierung); });
   return liste.map(gruppeOeffentlich);
 }
@@ -36,7 +36,7 @@ function zugangGueltig(z) {
 }
 
 function zugangFinden(gid, pin) {
-  var zeilen = lies('Zugang').zeilen;
+  var zeilen = liesGemerkt('Zugang').zeilen;   // 12.6
   for (var i = 0; i < zeilen.length; i++) {
     var z = zeilen[i];
     if (String(z.gruppe_id) !== String(gid) || !zugangGueltig(z)) continue;
@@ -127,7 +127,7 @@ function tokenPruefen(token) {
 
   var g = gruppeSuchen(d.g, true);
   if (!g) fehler('auth', weg);
-  var zeilen = lies('Zugang').zeilen;
+  var zeilen = liesGemerkt('Zugang').zeilen;   // 12.6: spart bei jeder Anfrage etwa 0,5 s
   for (var i = 0; i < zeilen.length; i++) {
     var z = zeilen[i];
     if (String(z.zugang_id) === String(d.z) && String(z.gruppe_id) === String(g.gruppe_id) && zugangGueltig(z) &&
