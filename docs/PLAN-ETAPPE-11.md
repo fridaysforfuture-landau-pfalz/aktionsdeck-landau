@@ -3,7 +3,7 @@
 Diese Datei ergänzt `docs/STAND.md`. Bei Widerspruch gilt `docs/STAND.md`, und du meldest den Widerspruch im Pull Request.
 Regeln für die Arbeit stehen in `CLAUDE.md`.
 
-**Status: fertig gebaut (Schritt 11.11, Version 0.33.13, 28.10.2026).** 11.1 bis 11.8a von der Person geprüft. Nachgeschoben: 11.4a (gelbe Kachel „Für dich“), 11.8a (Anmerkungen zum Dunkelmodus), Signal-Knopf in 11.9 (0.33.11) 11.10 (öffentliche Termine nach Veranstalter, Wunsch der Person) und 11.11 (Signal-Link als Skripteigenschaft), darum endet die Etappe mit 0.33.13 statt 0.33.8.
+**Status: fertig und geprüft (Version 0.33.15, 28.10.2026).** Alle Schritte von der Person geprüft. Nachgeschoben: 11.4a (gelbe Kachel „Für dich“), 11.8a (Anmerkungen zum Dunkelmodus), Signal-Knopf in 11.9 (0.33.11), 11.10 (öffentliche Termine nach Veranstalter, Wunsch der Person) 11.11 und 11.11a (Signal-Link als Skripteigenschaft, Texte) und 11.12 (Doku), darum endet die Etappe mit 0.33.15 statt 0.33.8.
 Frühere Status-Zeile: **Fassung 2 (Schritt 11.1, Version 0.33.0).** Die Antworten der Person vom 28.10.2026 stehen in Abschnitt 3.
 Fassung 1 (24.10.2026, 31 Rückfragen) ist im Git-Verlauf dieser Datei nachzulesen. Kleine offene Fragen stehen in Abschnitt 4. Sie halten den Bau nicht auf,
 nur die Schritte, die sie betreffen.
