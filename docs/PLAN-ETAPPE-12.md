@@ -128,7 +128,7 @@ Version 0.34.1. Je nach Funden mit Skript-Änderung (dann „Von Hand zu erledig
 
 **Prüfen:** Alle Reiter, öffentliche Seiten, Bilder, Fotos hochladen, Kalender-Abo, Signal-Knopf, Kontostand und Cloud laufen wie vorher.
 
-### 12.5 – Geschwindigkeit prüfen (Bericht, W1)
+### 12.5 – Geschwindigkeit prüfen (Bericht, W1) – erledigt (0.34.3)
 
 Version 0.34.3, nur für das Werkzeug. Skript-Datei neu, **keine neue Bereitstellung nötig**.
 

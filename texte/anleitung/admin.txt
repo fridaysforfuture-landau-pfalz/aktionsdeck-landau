@@ -105,7 +105,7 @@ Die Funktion `testdatenListe` im Editor zeigt Einträge aus Umfragen, Mitteilung
 
 ## Prüfen, ob alles läuft
 
-Im Editor gibt es Testfunktionen, die nichts verändern, zum Beispiel `testenFotoOrdner` (Foto-Ordner der Gruppen erreichbar?), `testenFotoSchreiben` (kann das Skript dort Dateien anlegen? legt eine Testdatei an und wirft sie gleich in den Papierkorb), `testenTermine`, `testenWiki` und `testenRechte` (sieht jede Gruppe nur ihre eigenen Daten? werden gefälschte und alte Anmeldungen abgelehnt? Am Ende muss „Fertig, alles ok.“ stehen). Achte im Protokoll auf Wörter wie „FEHLER“, „FEHLT“ oder „nicht erreichbar“. Fehler der App findest du links im Editor unter „Ausführungen“.
+Im Editor gibt es Testfunktionen, die nichts verändern, zum Beispiel `testenFotoOrdner` (Foto-Ordner der Gruppen erreichbar?), `testenFotoSchreiben` (kann das Skript dort Dateien anlegen? legt eine Testdatei an und wirft sie gleich in den Papierkorb), `testenTermine`, `testenWiki` und `testenRechte` (sieht jede Gruppe nur ihre eigenen Daten? werden gefälschte und alte Anmeldungen abgelehnt? Am Ende muss „Fertig, alles ok.“ stehen). `messenSkript` misst, wie lange das Skript für die wichtigsten Aufrufe braucht, und schreibt nichts. Achte im Protokoll auf Wörter wie „FEHLER“, „FEHLT“ oder „nicht erreichbar“. Fehler der App findest du links im Editor unter „Ausführungen“.
 
 ## Nach einer Änderung am Skript
 
