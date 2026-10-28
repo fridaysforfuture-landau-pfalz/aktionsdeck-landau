@@ -94,8 +94,10 @@ export function baueKommentare(opt) {
 
   async function laden() {
     try {
-      const r = await api('list', { tabelle: 'Kommentare' }, opt.token);
-      const passend = r.zeilen.filter(function (k) {
+      // 12.6: opt.holeZeilen (freiwillig) liefert die Zeilen aus einer laufenden Sammel-Anfrage; null = selbst laden
+      const vorhanden = opt.holeZeilen ? opt.holeZeilen() : null;
+      const zeilenAlle = vorhanden ? await vorhanden : (await api('list', { tabelle: 'Kommentare' }, opt.token)).zeilen;
+      const passend = zeilenAlle.filter(function (k) {
         if (txt(k.bezug_art) !== art || txt(k.bezug_id) !== bezug) return false;
         // Kommentare zu einem Absatz stehen beim Absatz (js/views/rede-text.js)
         if (opt.ohneStelle && txt(k.stelle)) return false;

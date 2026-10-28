@@ -3349,3 +3349,23 @@ a, .wiki-text a, .wiki-iv-knopf, .info-gruppe-links a { color: var(--link); }
 
 /* ---- 0.33.13: Signal-Link vom Skript ---- */
 .signal-form a.knopf { display: inline-flex; align-items: center; text-decoration: none; margin-top: 4px; }
+
+/* ---- 0.34.4: Hinweis „Neue Version da“ ---- */
+.neue-version {
+  position: fixed;
+  left: 50%;
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));   /* über der unteren Leiste */
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px 10px 16px;
+  border-radius: var(--radius);
+  background: var(--balken);
+  color: var(--balken-text);
+  box-shadow: 0 6px 24px var(--schatten-gross);
+  z-index: 2900;
+}
+.neue-version .knopf { margin: 0; white-space: nowrap; }
+@media (min-width: 960px) { .neue-version { bottom: 16px; } }

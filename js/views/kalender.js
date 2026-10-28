@@ -1177,15 +1177,15 @@ export async function render(container, ctx) {
       const ok = await ladeMitCache(
         s.gruppe_id + ':kalender',
         async function () {
+          // 12.6: Beide Anfragen gleichzeitig.
+          // Öffentliche Termine anderer Gruppen (ohne Login). Klappt es nicht, bleibt die Liste leer.
+          const oeffAnfrage = api('termine', {}).then(function (o) {
+            return Array.isArray(o) ? o : [];
+          }).catch(function () { return []; });
           const r = await api('listMehrere', {
             tabellen: ['Veranstaltungen', 'Projekte', 'Meilensteine', 'ToDos', 'Mobi_Plan']
           }, s.token);
-          // Öffentliche Termine anderer Gruppen (ohne Login). Klappt es nicht, bleibt die Liste leer.
-          let oeff = [];
-          try {
-            const o = await api('termine', {});
-            if (Array.isArray(o)) oeff = o;
-          } catch (e2) { /* ignorieren */ }
+          const oeff = await oeffAnfrage;
           const t = (r && r.tabellen) || {};
           return {
             veranstaltungen: t.Veranstaltungen || [],
