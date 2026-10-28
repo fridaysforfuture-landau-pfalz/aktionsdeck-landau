@@ -675,9 +675,10 @@ export async function render(container, ctx) {
     let seite = 0;
     function mass() {
       const spalte = wrap.querySelector('.kanban-spalte');
-      const breite = spalte ? spalte.offsetWidth : 1;
+      // Genaue Breite (Spalten wachsen am PC seit 0.34.7 mit, dann mit Nachkommastellen); 1 px Spielraum fürs Runden
+      const breite = spalte ? spalte.getBoundingClientRect().width : 1;
       const abstand = parseFloat(getComputedStyle(wrap).columnGap) || 0;
-      const proSeite = Math.max(1, Math.floor((wrap.clientWidth + abstand) / (breite + abstand)));
+      const proSeite = Math.max(1, Math.floor((wrap.clientWidth + abstand + 1) / (breite + abstand)));
       return { schritt: proSeite * (breite + abstand), proSeite: proSeite, seiten: Math.ceil(anzahl.length / proSeite) };
     }
     function beitraegeAuf(m, i) {

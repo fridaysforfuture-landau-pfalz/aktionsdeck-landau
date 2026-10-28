@@ -1,10 +1,6 @@
 /* Gerüst: PC = Seitenleiste + Mitte + Detail rechts. Handy = untere Leiste. */
 
-#app {
-  min-height: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-}
+#app { min-height: 100%; }
 
 .seite { padding: var(--abstand); }
 
@@ -105,6 +101,13 @@
   }
 
   .nav-link:hover { background: var(--gruen-hell); }
+
+  /* „Mehr ▾“: Reiter, die in der Leiste keinen Platz mehr haben (seit 0.34.7) */
+  .nav-mehr > summary { list-style: none; cursor: pointer; }
+  .nav-mehr > summary::-webkit-details-marker { display: none; }
+  .nav-mehr-pfeil { margin-left: auto; }
+  .nav-mehr[open] .nav-mehr-pfeil { transform: rotate(180deg); }
+  .nav-mehr-liste { display: grid; gap: 4px; margin-top: 4px; padding-left: 12px; }
 
   .nav-link.aktiv {
     background: var(--gruen-hell);
