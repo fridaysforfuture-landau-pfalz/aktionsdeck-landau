@@ -1,402 +1,515 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.33.16 (gleich in js/config.js und sw.js: beide Dateien prüfen)
-Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
-Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-Nächste Etappe: docs/PLAN-ETAPPE-12.md (Etappe 12 Prüfung und Qualität, Fassung 2 seit 0.33.16, letzter Schritt vor 1.0; die Person beantwortet die Rückfragen in Abschnitt 4, dann 12.2). Etappe 11 (docs/PLAN-ETAPPE-11.md, Komfort) ist fertig und geprüft (0.33.0 bis 0.33.15, 28.10.2026). Etappe 10 (docs/PLAN-ETAPPE-10.md) ist fertig und geprüft (27.10.2026). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
+**Diese Datei ist die einzige Doku-Datei für den Agenten:** Arbeitsregeln, Aufbau, aktueller Stand, Festlegungen und Pläne.
+Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
+Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-## Erledigt
-- Etappe 0 und 1 (Fundament), Etappe 2 Material und Ausleihe, Zwischenplan Z1 bis Z8, Etappe 3 ToDos.
-- Etappe 4 komplett (0.18.0 bis 0.25.x): Projekte, ToDos und Meilensteine im Projekt, Meilenstein-Vorlagen, Hüte, Material im Projekt, Finanzen, Planung und Abschluss, Learnings, Aufräumen.
-- Etappe 5 Start als Zentrale (0.26.0 bis 0.26.3): Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen, Aktionsart. Alle Prüfpunkte bestätigt bis auf 0.26.3 (Pinnwand "Als Mitteilung anheften", Handy-Knöpfe in einer Zeile, Suche unter "Nicht angeheftet", "Ergebnis kopieren": noch zu prüfen).
-- Etappe 6 Veranstaltungen und Kalender komplett (0.27.0 bis 0.28.13), siehe unten. Noch zu prüfen: 0.28.9 bis 0.28.13 (Anheften in Farbe, Kalender am Handy, Termine.gs, öffentliche Seite, Aktionskalender, ✕ in Fenstern).
-- Etappe 7 Mobi komplett (0.29.0 bis 0.29.12), siehe unten und `docs/PLAN-ETAPPE-7.md`. Erledigt: 7.1, 7.1a, 7.2, 7.3, 7.4, 7.4a, 7.4b, 7.5, 7.6, 7.7, 7.8. 0.29.11 geprüft (22.10.2026), Anpassungen in 0.29.12.
-- Etappe 8 Protokoll, Reden, Learnings komplett und geprüft (0.29.12 bis 0.30.13, Abschluss der Doku 0.30.14), siehe `docs/PLAN-ETAPPE-8.md`. Erledigt: 8.0 (0.29.12), 8.1 (0.30.0, Sheet und Skript, von Hand bereitgestellt und geprüft am 22.10.2026), 8.2 (0.30.1), 8.3 (0.30.2), 8.3a Anpassungen (0.30.3), 8.3b Anpassungen und gemeinsamer Entwurf (0.30.4), 8.4 Markierungen (0.30.5), 8.4a Anpassungen (0.30.6), 8.4b angelegte Einträge beim Verwerfen löschen (0.30.7), 8.5 Vorschläge aus dem Protokoll (0.30.8), 8.5a Anpassungen (0.30.9), 8.6 Reden-Archiv (0.30.10), 8.7 Verknüpfungen (0.30.11), 8.8 Löschen von Hand, Redetext und Kommentare je Absatz (0.30.12, Sheet und Skript von Hand), 8.8a Anpassungen zu 8.8 (0.30.13). Alles geprüft: 8.5a bis 8.8a am 22.10.2026 bestätigt.
-- Etappe 9 Team komplett und geprüft (0.30.15 bis 0.31.7, Abschluss der Doku 0.31.8, Nachbesserung 9.8a 0.31.9), siehe `docs/PLAN-ETAPPE-9.md` und unten. Erledigt: 9.0 Plan Fassung 1 (0.30.15), 9.1 Plan Fassung 2, Sheet und Skript (0.31.0, von Hand bereitgestellt am 23.10.2026), 9.2 Reiter Team lesen (0.31.1), 9.3 Gruppen-Rollen bearbeiten (0.31.2), 9.4 Mein Eintrag (0.31.3), 9.5 Hüte je Person und freie Hüte (0.31.4), 9.5a Anmerkungen und 9.6 Berg (0.31.5), 9.6a Anmerkungen und 9.7 Verknüpfungen (0.31.6), 9.8 Hilfe zum Team (0.31.7). Alles geprüft am 23.10.2026. Nach dem Abschluss: 9.8a Gruppen-Rollen (0.31.9, Wünsche der Person).
-- Etappe 10 Wiki und öffentliche Seiten fertig gebaut (0.31.10 bis 0.32.8), siehe `docs/PLAN-ETAPPE-10.md` und unten. 10.0 #37, 10.1 #38 (Sheet und Skript, bereitgestellt bis 27.10.2026, Skript-Stand 10.1a #50), 10.2 #39, 10.3 #40, 10.4 #41, 10.5 #42, 10.6 #43, 10.7 #44, 10.8 #45, 10.9 #46, Anpassungen 10.10 #47, 10.11 #56, 10.12 #58, 10.13 #59. Geprüft am 27.10.2026 (Gesamt-Prüfliste). Kalender-Abo in Google Kalender klappt (28.10.2026).
-- Etappe 11 Komfort fertig und von der Person geprüft (0.33.0 bis 0.33.15, 28.10.2026), siehe `docs/PLAN-ETAPPE-11.md` und unten. Pull Requests #60 bis #74. Als Nächstes: Etappe 12 (Rückfragen in docs/PLAN-ETAPPE-12.md Abschnitt 4 beantworten, dann 12.1).
-- Das Sheet wurde vor 0.26.0 komplett geleert. Danach sind beim Testen von Etappe 5 und 6 Testeinträge entstanden (Umfragen, Mitteilungen, Kommentare, Ideen, Veranstaltungen, Vorlagen): die Person löscht sie vor 1.0 (siehe Offen). Der Editor-Lauf `testdatenListe` (Aufraeumen.gs) zeigt sie mit Zeilennummern.
+- Version der App: **0.34.0** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
+- Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
+- Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
+- Nächster Schritt: **12.3 Sicherheit prüfen** (Bericht im Chat, keine Änderung an der App).
 
-## Etappe 7 (Mobi), abgeschlossen mit 0.29.12
-Diese Liste wurde in 7.4a aus `docs/PLAN-ETAPPE-7.md` (Abschnitt 2) und dem Code übernommen. Bis 7.4 stand hier noch 0.28.13.
-- 7.1 / 7.1a (0.29.0, 0.29.1): Tab Mobi_Plan (projekt_id, veranstaltung_id, kanal, format, titel, text, kanal_text, hashtags, datum, uhrzeit, status, verantwortlich, canva_link, ergebnis, notiz). Projekte zusätzlich zielgruppe, werbeart, kampagnenziel, handlungsaufruf, kanaele. ToDos zusätzlich mobi_id. apps-script/Mobi.gs prüft den Bezug (Projekt oder Veranstaltung) und löscht mit Verknüpfung (mobiKaskade). Der alte Tab Posts ist ungenutzt.
-- 7.2 (0.29.2): js/kanaele.js (feste Kanalliste mit Farben und Zeichengrenzen), js/views/mobi-eintrag.js (Beitrag-Fenster), js/views/mobi-plan.js (Teil "Mobi" im Projekt), js/views/mobi-rechnen.js. Reiter "Posts" heißt "Mobi".
-- 7.3 (0.29.3): js/views/mobi.js (Reiter Mobi: Liste und Kanban, Filter, "Mehrere bearbeiten", Archiv, Zählzeile).
-- 7.4 (0.29.4): Vorlagen "Mobi: Demo / Großaktion" und "Mobi: Infostand / kleine Aktion" mit ToDo-Bausteinen (js/vorlagen.js, js/views/mobi-vorlage.js, projekt-todos.js, todos-abhaken.js). Untere Leiste am Handy: Start, Projekte, ToDos, Mobi, Mehr (Material steht unter "Mehr"). Abschnitt "Zugehörige ToDos" im Beitrag. Entscheidung B (21.10.2026): Die Bausteine werden in 7.5 zurückgebaut.
-- 7.4a (0.29.5): Im Teil "Mobi" im Projekt ist die Kanal-Checkliste (Hauptkanal/Zusatzkanal) weg. Stattdessen steht über der Beitragsliste eine Zeile "Kanäle: Instagram 5 · Pressemitteilung 1" (nur Kanäle mit Beiträgen, Kanalfarbe als Punkt). leseKanaele und schreibeKanaele sind aus js/kanaele.js entfernt. Die Spalte Projekte.kanaele bleibt im Sheet und im Schema, wird aber nicht mehr benutzt. Format und Status im Beitrag-Formular sind groß beschriftet (gespeichert wird weiter klein). Überfällige Beiträge: Balken bleibt in Kanalfarbe, Titel rot und fett; heute fällige: Titel orange und fett (Projekt, Liste, Karten, Kanban). Sortierung: überfällige (älteste zuerst), heute, übrige offene nach Datum, ohne Datum, Veröffentlichte. In sw.js war in Zeile 5 "onst" statt "const" (seit 0.29.4): korrigiert.
-- 7.4a geprüft (21.10.2026): alles bestätigt bis auf "Formate groß" im Beitrag-Formular (blieb klein). Nachbesserung in 0.29.6: mobi-eintrag.js baut die Format- und Status-Auswahl jetzt selbst aus kanaele.js und mobi-rechnen.js. Entscheidung: Der hellorange Hintergrund bei "heute fällig" kommt nicht zurück, die Titel in Rot und Orange reichen.
-- 7.4b (0.29.6): Neue Status gedreht ("Gedreht"), geschnitten ("Geschnitten"), anpassung ("Anpassung"). Zwei Reihenfolgen in js/kanaele.js: SCHRITTE_STANDARD (idee, entwurf, review, anpassung, bereit, veroeffentlicht) und SCHRITTE_VIDEO (idee, entwurf, gedreht, geschnitten, review, anpassung, bereit, veroeffentlicht; Instagram und TikTok). Jeder Kanal hat die Felder schritte und gruppe (social, digital, print, extern, sonstiges; ersetzt das alte Feld bereich). KANALGRUPPEN und kanaeleDerGruppe(gruppe, kurzname) in js/kanaele.js. mobi-rechnen.js: STATI = alle Status in Video-Reihenfolge, statiFuer(kanalName), nachbarStatus(b, -1|+1).
-- Reiter Mobi, Kanban: Spalten aus Kanalfilter und sichtbaren Beiträgen (nur Kanäle ohne Video-Schritte = 6 Spalten, sonst 8; ein vorhandener Status bekommt immer eine Spalte). "‹ Zurück" und "Weiter ›" folgen der Reihenfolge des Kanals der Karte. Bei "Anpassung" zusätzlich "Zurück zu Entwurf".
-- Reiter Mobi, Kanalfilter: oben die Gruppen "Social Media (alle)", "Digital (alle)", "Print (alle)", "Extern (alle)" (Werte g:social usw.), danach die einzelnen Kanäle.
-- Reiter Mobi, Ansicht Liste: Kacheln statt Tabelle (js/views/mobi-kachel.js). PC: vier Spalten Social Media, Digital, Print, Sonstiges (Extern, Sonstiges und unbekannte Kanäle) mit Anzahl. Handy: untereinander, leere Spalten ausgeblendet. "Veröffentlicht, letzte 2 Wochen" als graue Kacheln darunter. Das Archiv bleibt eine einfache Liste (zeigeListe).
-- Beitrag-Fenster: Die Status-Auswahl passt sich dem Kanal an (Standard oder mit Video-Schritten). Ein gespeicherter Status, der nicht passt, bleibt wählbar.
-- Skript-Dateien im Repo umbenannt: apps-script/Upload → Upload.gs, apps-script/termine.gs → Termine.gs (Inhalt gleich, im Editor nichts zu tun).
-- 7.4b geprüft (21.10.2026): alles bestätigt bis auf "Kanban mit Filter Instagram: 8 Spalten". Ursache: Es gab 8 Spalten, aber am PC passten nur 6 auf den Bildschirm (die letzten lagen rechts außerhalb). Seit 0.29.7 brechen die Kanban-Spalten am PC in eine zweite Reihe um (Raster, mindestens 190 px je Spalte), es gibt kein Seitwärts-Scrollen mehr. Am Handy scrollen die Spalten weiter seitwärts.
-- 7.5 (0.29.7): Knopf "+ Beiträge" im Teil "Mobi" im Projekt und im Reiter Mobi (dort nur, wenn oben ein Projekt oder eine Veranstaltung gewählt ist, sonst Hinweis). Fenster js/views/mobi-sammlung.js (zeigeSammlung): Schritt 1 Kanäle nach Kanalgruppen plus "Sonstiges" mit eigenem Titel, Schritt 2 Vorschau mit Haken, Titel, Format, Datum (änderbar). Bezugsdatum = Aktionsdatum (Veranstaltung: ihr Datum), ohne Datum Hinweis und leeres Datum. Vorhandene Beiträge (gleicher Kanal und Titel im Projekt) werden grau mit "Gibt es schon" gezeigt und nicht doppelt angelegt. Anlegen mit batchCreate (Status "idee"). Sätze in js/kanaele.js (STANDARD_BEITRAEGE), Tage zum Nachlesen in docs/MOBI-STANDARD-BEITRAEGE.md (alles Platzhalter).
-- 7.5 Rückbau (Entscheidung B): Vorlagen "Mobi: Demo / Großaktion" und "Mobi: Infostand / kleine Aktion", baustein, bausteinText, vorlageAnzahl aus js/vorlagen.js entfernt. js/views/mobi-vorlage.js gelöscht (auch aus sw.js). projekt-todos.js: keine Bausteine mehr, Vorlagen-Auswahl zeigt wieder "(n ToDos)". "+ Eigener Schritt" in der Vorlagen-Liste ist geblieben (Rückfrage). todos-abhaken.js: Frage "Beitrag auf Veröffentlicht setzen" entfällt. Beitrag-Fenster: Abschnitt "Zugehörige ToDos" und der ToDo-Hinweis beim Löschen entfallen. Die alte Vorlage "Mobi" ist unverändert. Spalte ToDos.mobi_id und mobiKaskade im Skript bleiben (harmlos).
-- apps-script/Schema.gs: nur der Kommentar zu den Status ist aktualisiert (8 Status).
-- 7.5 geprüft (21.10.2026): alles bestätigt. Wünsche daraus, umgesetzt in 0.29.8: Kanban am PC wieder in einer Reihe, darüber Seiten-Knöpfe und eine Leiste zum Verschieben; Knöpfe heißen jetzt "+ Beiträge planen" (Kanalauswahl, Hauptknopf) und "+ Einzelner Beitrag". Offen: Idee F (Standard-ToDos beim Anlegen eines Projekts statt Vorlagen "Mobi"/"Pressearbeit"), siehe PLAN-ETAPPE-7.md Abschnitt 4. Die Test-ToDos im Sheet löscht die Person spätestens vor 1.0.
-- Kanban (0.29.8): Eine Reihe, Spalten am PC 220 px breit. Über den Spalten: Knöpfe "‹ Seite 1 (n)" und "Seite 2 (n) ›" mit "Seite x von y" (n = Zahl der Beiträge auf der Seite, die gerade nicht zu sehen ist; mit Filter weniger), darunter eine Leiste zum Verschieben (nur PC; die untere Leiste ist am PC ausgeblendet). Wie viele Spalten eine Seite hat, ergibt sich aus der Breite. Passt alles auf eine Seite, sind Knöpfe und Leiste weg. Am Handy ist eine Seite eine Spalte. Der Seitwärts-Stand bleibt beim Aktualisieren erhalten.
-- 7.6 (0.29.8): Sammel-ToDos (js/views/mobi-todo.js, sammelTodos). Pro Projekt und Kanal ein berechneter Eintrag "📣 Kanal" (nicht gespeichert). Datum = nächstes Datum eines offenen Beitrags, sonst das späteste. Zusatz "x von y veröffentlicht", Verantwortliche = Namen der offenen Beiträge, "Hut frei" bei offenem Beitrag ohne Namen. Erledigt, wenn alle Beiträge veröffentlicht sind (erledigt_am = letzte Änderung, danach Archiv-Regel wie bei ToDos). Nur Beiträge von offenen Projekten, nicht von Veranstaltungen. Kein Kästchen, Kanalfarbe als Balken und Punkt; überfällig/heute = Titel rot/orange.
-- Wo sie stehen: Reiter ToDos (Liste, Erledigt, Archiv, Zählzeile; Filter "Verantwortlich" prüft jede Person einzeln; nicht bei "Noch offen"), Teil ToDos im Projekt (bei "Ohne Meilenstein", Zählzeile), Start (Projekt-Block, Liste "ToDos (n offen)", nur offene; nicht in der Kachel ToDos, die nur allgemeine ToDos zeigt). Der Start lädt dafür Mobi_Plan (Zwischenspeicher gruppe_id:startmobi). Der Reiter ToDos lädt Mobi_Plan mit.
-- Klick auf ein Sammel-ToDo: Reiter Mobi, Kanban, gefiltert auf Projekt und Kanal. Die Vorgabe liegt in js/views/mobi-todo.js (oeffneSammel, nimmMobiVorgabe) und wird von mobi.js beim Öffnen einmal gelesen.
-- Nicht im Kalender (kommt mit den Beiträgen in 7.7).
-- 7.6 geprüft (21.10.2026): alles bestätigt. Änderungen daraus in 0.29.9: Kanban-Seitenknöpfe sprangen am PC nicht (die mitlaufende Leiste hat das weiche Scrollen zurückgesetzt). Jetzt springen sie sofort, und die Rückkopplung ist für 300 ms gesperrt. Die Knöpfe stehen direkt neben "Seite x von y". Sammel-ToDos gibt es pro Projekt und Kanalgruppe ("📣 Social Media", "📣 Digital", "📣 Print", "📣 Extern", "📣 Sonstiges"; Farbe aus KANALGRUPPEN in js/kanaele.js); ein Klick filtert den Kanban auf die Gruppe (Sonstiges: auf den Kanal Sonstiges). Start: eigener Schalter "Mobi (n offen)" im Projekt-Block (nur bei Projekten mit Beiträgen); "ToDos (n offen)" zählt nur echte ToDos.
-- Idee F (0.29.9): Standard-ToDos beim Anlegen eines Projekts über "+ Neu" (js/vorlagen.js STANDARD_TODOS, Liste mit Haken und Datum im Formular, Fälligkeit vom Aktionsdatum, angelegt mit batchCreate nach dem Projekt). Nachlesen: docs/STANDARD-TODOS.md. Vorlagen "Mobi" und "Pressearbeit" entfernt. "Versammlungsleitung festlegen" (vorher "Ansprechperson für die Aktion festlegen") steht in "Genehmigung und Anmeldung" an zweiter Stelle. Neue Standard-Beiträge: Danke-Post (Instagram, -1), Pressemitteilung Rückblick (-1), Rückblick auf der Webseite (-3). "+ Eigener Schritt" bleibt.
-- 7.7 (0.29.9): Mobi-Beiträge mit Datum sind Termine im Kalender (kalender-rechnen.js, quelle "mobi"): Titel "📣 Kanal: Titel", Kanalfarbe, Uhrzeit, Projekt oder Veranstaltung, Verantwortliche. Veröffentlichte grau. Hinweis "n Tage bis zur Aktion" (bzw. "zur Veranstaltung", "am Tag der Aktion", "n Tage nach …"). Beiträge nach der Aktion/Veranstaltung pink, außer Titel mit "Danke" oder "Rückblick". Offene überfällige Beiträge bleiben bei "Kommende" (rot). Klick öffnet das Beitrag-Fenster. Beiträge abgeschlossener Projekte nur mit Filter Archiv-Projekte. Neuer Filter "Mobi" (Standard an). Der Kalender lädt Mobi_Plan mit.
-- Wochenansicht (Knopf "Woche"): Montag bis Sonntag der Woche des gewählten Tags, ‹ › blättern, "Heute". PC: 7 Spalten, Handy: Tage untereinander. Jeder Termin ist ein Knopf (Klick wie in der Liste), "+" legt eine Veranstaltung an diesem Tag an. Projektbalken stehen dort nicht. Am Handy stehen Vorlagen und "+ Veranstaltung" jetzt in einer zweiten Zeile.
-- Veranstaltung bearbeiten: Knopf "In Mobi einplanen" (Fenster aus mobi-sammlung.js, Bezug veranstaltung_id, Bezugsdatum = Veranstaltungsdatum). Löschen nennt die Zahl der Mobi-Beiträge, die mitgelöscht werden (das Skript macht das schon, mobiKaskade).
-- 7.7 geprüft (21.10.2026): alles bestätigt. Anpassungen daraus in 0.29.10:
-  - Kanban: Seiten-Knöpfe und "Seite x von y" stehen mittig.
-  - Standard-ToDos: neu "Reden festlegen" (7) und "O-Ton Radio" (5), entfernt "Bei der Presse nachfassen". Awareness-Team und Person für Fotos bleiben (bestätigt).
-  - Neuer Kanal "Radio" (Gruppe Digital, Farbe #e65100) mit Standard-Beitrag "O-Ton Radio" (Sonstiges, 3 Tage vorher).
-  - "Versammlungsleitung festlegen" 21 Tage vorher (gleich wie "Versammlung bei der Stadt anmelden"). "Danke-Post schreiben" aus der Vorlage "Nachbereitung" entfernt (dafür Standard-Beitrag "Danke-Post"; ein ToDo legt keinen Beitrag an).
-  - "Als Projekt starten" (Aktionsidee) öffnet das Formular "Neues Projekt", vorausgefüllt, mit Standard-ToDos.
-  - Mobi-Kalender: Knopf "Kalender" im Reiter Mobi und Knopf "Nur Mobi" im Kalender-Filter. Beide stellen den Kalender auf Mobi-Beiträge, Projekt-Aktionen und Deadlines um (MOBI_FILTER in kalender-rechnen.js) und zeigen eine rosa Leiste mit "Alle Termine zeigen" (stellt die vorherigen Filter wieder her) und "← Zurück zu Mobi". Der Kalender bleibt ein Reiter (kein zweiter Kalender in Mobi).
-- Nachtrag aus der Prüfung (0.29.11): Knopf "Nur Mobi" im Kalender-Filter entfernt (unnötig neben dem Filter "Mobi"; der Mobi-Kalender ist über den Knopf "Kalender" im Reiter Mobi erreichbar). "O-Ton Radio" ist nur noch Standard-Beitrag (Kanal Radio), kein Standard-ToDo mehr.
-- 7.8 Feinschliff (0.29.11):
-  - 💬-Marke an Beiträgen mit Kommentaren (bezug_art mobi; mobiKommentarZahlen in mobi-rechnen.js): Kacheln, Kanban, Archiv im Reiter Mobi (lädt jetzt Kommentare mit) und Beitragsliste im Projekt. Neuer oder gelöschter Kommentar im Beitrag-Fenster lädt die Liste neu.
-  - "Was ist neu?" (js/ui/neu-seit.js): Mobi-Beiträge sind eine Quelle (neu, geändert, veröffentlicht; ohne eigene Änderungen). Beiträge zu Projekten stehen beim Projekt, zu Veranstaltungen im Abschnitt "Mobi". Kommentare zu Beiträgen führen in den Reiter Mobi.
-  - Warnungen (mobiWarnungen in mobi-rechnen.js): Reiter Mobi oben "Projekt ohne Mobi" (offenes Projekt, Aktionsdatum in den nächsten 21 Tagen, kein Beitrag; Link ins Projekt) und "n Beiträge ohne Datum" (offen, Namen anklickbar). Im Teil "Mobi" im Projekt dieselben Hinweise für dieses Projekt.
-  - Zeitstrahl pro Projekt (js/views/mobi-zeitstrahl.js) im Teil "Mobi": eine Bahn je Kanal, Punkte am Datum (Kanalfarbe, grau = veröffentlicht, roter Rand = überfällig, Zahl = mehrere am selben Tag mit Auswahl), Linien für Aktion (grün) und heute (gestrichelt). Klick öffnet den Beitrag. Seit 0.29.12 im Reiter Mobi (Ansicht "Zeitstrahl"), im Projekt nur ein Balken (siehe unten).
-  - Drag-and-Drop am PC: nur als Vorschlag im Pull Request, nicht gebaut.
-- 7.8 geprüft (22.10.2026): alles bestätigt. Anpassung in 0.29.12 (Schritt 8.0): Der ganze Zeitstrahl steht im Reiter Mobi (Knopf "Zeitstrahl" neben Liste, Kanban, Kalender), je Projekt oder Veranstaltung ein Strahl (gefiltert wie der Kanban), mit Tagesstrichen und Datum je Montag (am Handy nur Anfang, Ende, Heute, Aktion). Im Projekt (Teil "Mobi") steht nur noch ein Balken (baueZeitbalken): Abschnitte mit Beiträgen in Kanalfarbe, grau wenn veröffentlicht, Linien für Aktion und Heute; Knopf "Ganzer Zeitstrahl im Reiter Mobi →" (oeffneMobiAnsicht in mobi-todo.js, setzt Projekt-Filter und Ansicht). Drag-and-Drop: nein (Entscheidung 22.10.2026).
-- 8.0 geprüft (22.10.2026): alles bestätigt. Anpassung in 0.30.0: Im Zeitstrahl (Reiter Mobi) stehen Beiträge mit Status "Idee" nicht mehr (Hinweis in der Legende). Seit 0.30.1 fehlen sie auch im Balken im Projekt (Entscheidung 22.10.2026).
+Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
+6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
 
-## Etappe 8 (Protokoll, Reden, Learnings), abgeschlossen mit 0.30.13
-- 8.1 (0.30.0): Sheet und Skript.
-  - Tab Protokolle hat zusätzlich art, veranstaltung_id, rollen, im_dokument, vorschlaege_erledigt. Neuer Tab Reden (projekt_id, veranstaltung_id, titel, redner, datum, aktionsart, link, status, notiz). Schema.gs und js/schema.js sind angepasst (Formularfelder Protokolle: Datum, Titel, Art, Anwesend, Protokolltext; Reden: Titel, Redner, Datum, Aktionsart, Link, Status groß beschriftet, Notiz).
-  - Höchstlänge für Textfelder: 5000 Zeichen, nur Protokolle.text 20 000 (MAX_TEXT und MAX_TEXT_AUSNAHMEN in Schema.gs, typisieren in Util.gs bekommt den Tab). form.js: Feld-Angabe max für langtext (Standard 5000).
-  - Daten.gs: Protokolle stehen nicht mehr in PROJEKT_PFLICHT und PROJEKT_ABHAENGIG (Projekt freiwillig, bleiben beim Löschen eines Projekts erhalten). delete für Protokolle und Reden gesperrt (NIE_LOESCHEN in Schema.gs): "Protokolle und Reden werden nicht gelöscht." veranstaltung_id von Protokollen und Reden muss zur Gruppe gehören (protokollBezugPruefen in Protokoll.gs). im_dokument und vorschlaege_erledigt stehen in BOOL_SPALTEN.
-  - Neu apps-script/Protokoll.gs: Aktionen protokollSpeichern, protokollInsDokument, protokollInfo (in Code.gs eingetragen). Einfügen direkt unter dem ersten Absatz mit [[NEUE PROTOKOLLE HIER]] (Titel fett, Datum, Rollen, Anwesend, Protokolltext, "- " wird Aufzählung, Trennlinie). Fehlt die Markierung, wird nichts geschrieben. Editor-Tests testenProtokollDok und testenProtokollAnhaengen.
-  - js/views/projekte.js: Das Löschfenster eines Projekts zählt keine Protokolle mehr.
-  - Keine appsscript.json im Repo: Google fragt beim ersten Lauf nach der Berechtigung für Dokumente.
-- 8.1 geprüft (22.10.2026): alles bestätigt. Editor-Test zeigte "gp: Modus keins": PROTOKOLL_LINK_g2 fehlt noch oder beginnt nicht mit https:// (die Person prüft die Skripteigenschaft). Die Zeile "Datum: …" im Dokument bleibt (Entscheidung 22.10.2026).
-- 8.2 (0.30.1): Reiter "Protokoll" (📝) in js/ui/nav.js und js/config.js (features.protokoll), am PC nach "Kalender", am Handy unter "Mehr" (js/views/mehr.js).
-  - js/views/protokoll.js: Liste neueste zuerst, nach Jahr gruppiert (Datum, Art, Projekt/Veranstaltung, Titel, Anwesend gekürzt, Marke "✔ im Dokument"; "⚠ noch nicht im Dokument" nur bei Gruppen mit Dokument). Suche (Titel, Text, Anwesend), Filter Art, Filter Projekt/Veranstaltung (nur was in Protokollen vorkommt). Zwischenspeicher gruppe_id:protokoll. Der Modus (protokollInfo) wird bei jedem Öffnen des Reiters geholt und nicht im Gerät gespeichert.
-  - Lesefenster: alle Felder, Protokolltext mit Absätzen. Knöpfe: "Im Dokument bearbeiten" (nur im_dokument TRUE und Modus dokument, neuer Tab), "Pad öffnen" (Modus extern), "Protokoll kopieren" (Klartext), solange nicht im Dokument: "Bearbeiten" (einfaches Formular aus js/schema.js, mit Konfliktprüfung; das ganze Formular kommt mit 8.3) und "Ins Dokument übernehmen" (nur Modus dokument). Feste Hinweise zur Einfügestelle und "Die App zeigt den Stand beim Speichern".
-  - "Vorschläge ansehen" kommt mit 8.5 (das Fenster gibt es noch nicht). Der Umschalter Protokolle · Reden kommt mit 8.6.
-  - js/views/protokoll-rechnen.js: ARTEN, artText, rollenFuer (FFF und GP: Moderation, Protokoll, Awareness; KB keine), imDokument, datumVon, sortiereProtokolle, nachJahr, passtSuche, bezugSchluessel, kopierText, einfuegeHinweis.
-- 8.2 geprüft (22.10.2026): Punkte 1 bis 3, 9 und 10 bestätigt. Punkte 4 bis 8 prüft die Person mit dem Formular aus 8.3.
-- Entscheidung 22.10.2026: Der Reiter heißt in der Anzeige "Dokumentation" (Protokolle und Reden). Die Kennung im Code und in der Adresse bleibt "protokoll" (#/g/<kurzname>/protokoll).
-- GP hat jetzt auch ein Google-Dokument (Skripteigenschaft PROTOKOLL_DOK_g2). Damit gilt für GP Modus "dokument" statt Pad (Entscheidung A ist damit für GP überholt). Der Editor-Test fand das Dokument nicht: Seit 0.30.2 nennt testenProtokollDok den Grund (Namen der Eigenschaften, falsche ID, kein Zugriff, keine Google-Docs-Datei), und protokollDokId nimmt auch eine ganze Adresse an (Teil nach /d/).
-- 8.3 (0.30.2): Knopf "+ Protokoll" im Reiter. Neues Formular js/views/protokoll-eintrag.js (zeigeProtokollFormular; Fenster, am Handy Vollbild, Klasse modal-vollbild):
-  - Titel (folgt Art und Datum, bis man ihn selbst ändert: "Protokoll Plenum TT.MM.JJJJ"), Datum (heute), Art.
-  - Anwesend: Textfeld (Komma) und Namen zum Antippen (Personen, eigener Anzeigename, Anwesende und Rollen bisheriger Protokolle, häufige zuerst, höchstens 30).
-  - Rollen je Gruppe (rollenFuer), Protokoll vorbelegt mit dem Anzeigenamen; Namensvorschläge. Gespeichert als "Rolle: Name" je Zeile, leere Rollen fallen weg.
-  - Projekt oder Veranstaltung: offene Projekte und Veranstaltungen ab 30 Tagen vor heute.
-  - Protokolltext: Plenum vorbefüllt mit "1.", "2.", "Sonstiges"; "+ TOP" fügt die nächste Nummer vor "Sonstiges" ein. Zähler bis 20 000 Zeichen (mit Schlusszeile). Datenschutzhinweis.
-  - Nächstes Plenum (nur neue Plenums-Protokolle): Datum und Uhrzeit aus der Termin-Vorlage, deren Name mit "Plenum" beginnt, sonst STANDARD aus kalender-vorlagen.js (jetzt exportiert); erster passender Wochentag nach dem Protokoll-Datum. Beim Speichern wird "Nächstes Plenum: TT.MM.JJJJ, HH:MM" angehängt.
-  - Entwurf (nur neue Protokolle): 1 Sekunde nach der letzten Eingabe und beim Schließen in localStorage (store.js: getEntwurf, setEntwurf, loescheEntwurf; ein Entwurf je Gruppe). "+ Protokoll" mit Entwurf fragt "Fortsetzen" oder "Verwerfen". Nach dem Speichern gelöscht. "Entwurf kopieren".
-  - Speichern über protokollSpeichern. Im Dokument: Meldung "Protokoll gespeichert und im Dokument ergänzt." Sonst öffnet das Lesefenster mit dem Grund und "Ins Dokument übernehmen" (Modus dokument) bzw. "Protokoll kopieren".
-  - "Bearbeiten" im Lesefenster öffnet dasselbe Formular (ohne Entwurf und ohne Nächstes Plenum, update mit Konfliktprüfung). Das einfache Formular aus 0.30.1 ist weg.
-  - Der Reiter lädt dafür auch Personen und Termin_Vorlagen (Zwischenspeicher gruppe_id:protokoll).
-  - "Vorschläge aus dem Protokoll" kommt mit 8.5 (Markierungen mit 8.4).
-- 8.3 geprüft (22.10.2026): alles bestätigt, Protokoll wurde ins Dokument eingefügt. GP-Fehler gefunden (Eigenschaft hieß PROTOKOLL_LINK_g2 statt PROTOKOLL_DOK_g2), jetzt wird das GP-Dokument gefunden. Das Erkennen ganzer Adressen bleibt (nicht unsicherer, siehe Pull Request 8.3a).
-- 8.3a Anpassungen (0.30.3), Wünsche der Person aus der Prüfung von 8.3:
-  - Filter Art und Projekt/Veranstaltung entfernt, nur noch die Suche.
-  - Formular direkt im Inhalt des Reiters (PC und Handy, kein Fenster): oben Kopf, Suche, TOP-Sammlung, die zwei neuesten Protokolle, darunter das Formular, darunter "Ältere Protokolle" (nach Jahr). Die Suche wirkt auf beide Listen. Die Entwurf-Frage steht ebenfalls im Inhalt.
-  - Alte Protokolle öffnen im Detailbereich (PC rechts, Handy Vollbild mit "← Zurück"), das Formular bleibt offen (zum Kopieren). "Geschrieben" steht nicht mehr im Detail.
-  - TOP-Sammlung (neuer Tab TOPs: titel, notiz, protokoll_id; js/views/tops.js, baueTopSammlung, offeneTops): im Reiter statt der Filter und als Kachel "TOPs" auf dem Start. Klick auf einen TOP = bearbeiten (Speichern, Löschen, Abbrechen), "+" = speichern. Offen = ohne protokoll_id.
-  - Im Formular nach "Projekt oder Veranstaltung": Abschnitt "TOPs" mit den offenen TOPs zum Antippen (Nummer in Reihenfolge des Antippens, nochmal antippen = TOP samt Abschnitt aus dem Text, mit Rückfrage wenn schon Text darunter steht) und Feld "Weiterer TOP" mit "+ TOP" (nur für dieses Protokoll). Leere Nummern der Gliederung werden zuerst gefüllt, beim Speichern fallen leere Nummern weg, alles wird neu nummeriert (textAufraeumen). Nach dem Speichern bekommen benutzte TOPs die protokoll_id.
-  - Stichpunkte im Protokolltext: Enter unter einem TOP oder Stichpunkt beginnt "- ", Tab rückt ein (Tab-Zeichen davor), Umschalt+Tab aus, Rücktaste auf leerem Stichpunkt = normaler Text, Enter auf leerem Stichpunkt beendet die Liste. Esc und dann Tab verlässt das Feld. Knöpfe ⇤ ⇥ für das Handy. Rechenhilfen in protokoll-rechnen.js (topListe, topHinzu, topEntfernen, topsNummerieren, textAufraeumen, stichpunktEnter, stichpunktTab, stichpunktRueck).
-  - Aussehen im Dokument (Protokoll.gs): Titel Überschrift 2, Arial 23, schwarz, fett. TOPs ("1. Titel", "Sonstiges") Überschrift 3, Arial 17, Gruppenfarbe (Tab Gruppen). Übriges Arial 11, schwarz. Stichpunkte mit Einrückung (Tabs = Ebene). Nach der Trennlinie eine Leerzeile.
-  - Start: rechte Spalte mit ToDos und TOPs, zusammen so hoch wie die Kachel Projekte (am PC und ab 600 px; Projekte mindestens 340 px). Ist eine Kachel abgeschnitten, steht darunter "▾ Ganz zeigen".
-  - Entwurf: Beim Knopf "Abmelden" werden alle Protokoll-Entwürfe des Geräts gelöscht, vorher kommt eine Warnung (store.js: gibtEntwurf, loescheAlleEntwuerfe; app.js: abmeldenVonHand). Läuft nur die Anmeldung ab, bleibt der Entwurf.
-  - Die CSS-Regeln .modal-vollbild aus 0.30.2 werden nicht mehr benutzt (stören nicht, Aufräumen vor 1.0).
-- 8.3a geprüft (22.10.2026): alles bestätigt. Entscheidungen: Titel im Dokument fett, TOPs nicht fett (passt). ToDos und TOPs auf dem Start untereinander (passt).
-- 8.3b (0.30.4), Wünsche aus der Prüfung von 8.3a und gemeinsamer Entwurf:
-  - Reiter Dokumentation oben in zwei Spalten (am PC ab 960 px): links Suche und Umschalter "Protokolle" · "Reden (bald)" (Reden kommt mit 8.6, Knopf bis dahin gesperrt) und die Statuszeile, rechts eine kleinere Kachel "TOPs fürs nächste Plenum".
-  - Mehr Abstand zwischen Hinweistext und TOP-Chips (im Formular, in der Sammlung, auf dem Start).
-  - Standard im Protokolltext: TOP-Überschrift, Stichpunkt, Leerzeile, nächster TOP (plenumGliederung, topHinzu setzt den Cursor in den Stichpunkt). Leere Stichpunkte fallen beim Speichern weg (textAufraeumen).
-  - Start: statt Knopf "Ganz zeigen" ein Umschalter "▸ Alle anzeigen" unten in der Kachel (Stil wie bei den Projekten, dash-schalter), nur wenn etwas abgeschnitten ist. Die Kachel Projekte ist ab 600 px mindestens 480 px hoch. Der Erklärsatz in der Kachel TOPs steht als Tooltip.
-  - Protokolltext in der App wie im Dokument (textAnsicht in protokoll.js): TOP-Zeilen fett in Gruppenfarbe (17 px), Stichpunkte als eingerückte Liste, übrige Zeilen als Absatz.
-  - Gemeinsamer Entwurf: neue Spalte Protokolle.entwurf (BOOL_SPALTEN). protokollSpeichern nimmt { daten, entwurf, id, bekannt }: ohne id neu, mit id einen Entwurf weiterschreiben (Konfliktprüfung, gesperrt sobald im Dokument), entwurf true = nur Sheet, false = ins Dokument. protokollInsDokument lehnt Entwürfe ab. Im Formular "Zwischenspeichern" und automatisch alle 2 Minuten (wenn sich etwas geändert hat; nach einem Konflikt nicht mehr automatisch). Der Entwurf auf dem Gerät merkt sich server_id und server_bekannt. Im Reiter steht oben "Gemeinsame Entwürfe" mit "✎ Entwurf von Name, Zeit"; im Detail "Weiterschreiben". Ins Dokument kommt ein Entwurf erst mit "Speichern" (danach werden auch die TOPs abgehakt). Löschen von Entwürfen gibt es nicht (Protokolle werden nie gelöscht).
-- 8.4 (0.30.5): Markierungen im Protokolltext (neue Datei js/views/protokoll-marken.js, baueMarken; eingebaut in protokoll-eintrag.js).
-  - Knopfreihe über dem Textfeld: ☐ ToDo, 💡 Learning, 📅 Termin, 📌 Mitteilung, 📊 Umfrage, 👉 Beschluss, + Einfügen. Jeder Knopf öffnet ein kleines Formular unter der Reihe (kein Fenster) und fügt die fertige Zeile an der Cursorstelle ein (leere Zeile oder leerer Stichpunkt wird gefüllt, sonst neue Zeile darunter, im Stichpunkt wieder als Stichpunkt; zeileEinfuegen).
-  - Schreibweisen: "☐ @Name: Aufgabe (bis TT.MM.)" (mehrere: "@Anna @Ben:", ohne @ = Hut frei), "💡 Aktionsart: Text", "📅 Titel, TT.MM.JJJJ, HH:MM, Ort", "📌 Titel: Text", "📊 Frage? | A | B", "👉 Text". Frist ohne Jahr = nächstes Vorkommen ab heute.
-  - Tastenkürzel am PC: Strg+Alt+T, L, V, M, U, B (Konflikte siehe Pull Request 8.4).
-  - "@" im Text: Namen zum Antippen unter dem Feld.
-  - "+ Einfügen": neueste 10 Mitteilungen (angeheftete zuerst) und Pinnwand-Kommentare mit Suche; fügt "📌 Mitteilung „Titel“: Text" bzw. "💬 Pinnwand (Name, TT.MM.): Text" ein. Eine schon vorhandene Mitteilung wird beim Lesen übersprungen.
-  - leseMarkierungen(text, { heute, projektAktionsart, mitteilungen }) in protokoll-rechnen.js liest nur Zeilen mit Symbol am Anfang (auch nach "- "). Ergebnis: todos, learnings, termine (auch "Nächstes Plenum: …"), mitteilungen, umfragen, beschluesse, fehler (mit Grund), uebersprungen. Unter dem Feld steht eine Übersicht ("Erkannt: …") mit den Fehlerzeilen.
-  - In der Textansicht sind 👉-Beschlüsse fett.
-- 8.3b/8.4 geprüft (22.10.2026). Befund: Zwischenspeichern landete im Dokument, jedes weitere Speichern noch einmal darüber. Ursache (sehr wahrscheinlich): Es war noch ein älteres Skript bereitgestellt, das "entwurf" nicht kennt. Seit 0.30.6 meldet protokollInfo entwurf: true; ohne das bietet die App kein Zwischenspeichern an. Kommt trotzdem ein Eintrag ohne entwurf zurück, hört die App auf und nennt den Grund.
-- 8.4a (0.30.6), Wünsche aus der Prüfung:
-  - Die Markierungs-Knöpfe legen den Eintrag gleich an ("Anlegen und einfügen"): ToDo (mit Projekt, leer = allgemeines ToDo, details = "Aus dem Protokoll vom …"), Learning (mit Projekt und Aktionsart, vorbelegt vom Projekt des Protokolls), Veranstaltung (Art intern/extern, nicht veröffentlicht), Mitteilung (angeheftet), Umfrage (Frist, mehrere Antworten, namentlich). Die Zeile bekommt "✔" am Ende und wird von leseMarkierungen als "schon angelegt" übersprungen. "Nur in den Text" schreibt nur die Zeile. 👉 Beschluss legt nichts an.
-  - Datums- und Zeitfelder in den kleinen Formularen öffnen die Auswahl im ganzen Feld.
-  - Die @-Namensauswahl im Text ist entfernt (Namen werden im ToDo-Formular gewählt).
-  - "+ Einfügen" legt nichts an: Mitteilungen kommen als "↪ Mitteilung „Titel“: Text" (keine Markierung mehr), Pinnwand wie bisher.
-  - Reiterwechsel: Das Formular sichert den Entwurf sofort und hält an (weg()); beim Zurückkommen öffnet der Reiter es wieder (offenMerk in protokoll.js). Ein fertiges Protokoll im Bearbeiten-Modus öffnet wieder mit dem gespeicherten Stand (ungespeicherte Änderungen daran gehen beim Reiterwechsel verloren).
-  - Start-Kachel TOPs: Knopf "+ Protokoll" (öffnet den Reiter mit dem Formular; setzeProtokollWunsch/nimmProtokollWunsch in tops.js).
-  - Gemeinsame Entwürfe lassen sich verwerfen (Detail und Formular, "Entwurf verwerfen"). Daten.gs erlaubt delete auf Protokolle nur bei entwurf TRUE und nicht im Dokument; fertige Protokolle und Reden bleiben gesperrt.
-- 8.4a geprüft (22.10.2026): alles bestätigt. Zwischenspeichern fehlte, weil im Sheet noch eine Spalte im Tab Protokolle fehlte (vermutlich entwurf). #15 wurde aus Versehen zurückgenommen (#16) und mit #17 wiederhergestellt. Entscheidung: Ein fertiges Protokoll braucht keine Sicherung auf dem Gerät.
-- 8.4b (0.30.7): Neue Spalte Protokolle.angelegt (je Zeile "Tabelle:id"). Die Markierungs-Knöpfe merken sich jeden angelegten Eintrag (Formular, Entwurf auf dem Gerät, Zwischenspeichern, Speichern). "Entwurf verwerfen" (Formular und Detail) löscht diese Einträge mit (Rückfrage nennt die Zahl; loescheAngelegte in protokoll-eintrag.js; angelegtLesen/angelegtText in protokoll-rechnen.js).
-- 8.5 (0.30.8): Vorschläge aus dem Protokoll (neue Datei js/views/protokoll-vorschlaege.js, baueVorschlaege, vorschlagZahl). Steht im Reiter im Inhalt über dem Formularplatz (kein Fenster).
-  - Öffnet sich nach dem fertigen Speichern, wenn Markierungen ohne ✔ im Text stehen, und über "Vorschläge ansehen (n)" im Detail (fertige Protokolle, im Dokument oder nicht; nicht bei Entwürfen). Ist vorschlaege_erledigt TRUE: "Vorschläge noch einmal ansehen" mit Rückfrage.
-  - Abschnitte (leere fehlen): ToDos (Text, Verantwortlich, Frist, Projekt vom Protokoll), Learnings nach Aktionsart (Text, Aktionsart, Projekt), Termine (Titel, Datum, Uhrzeit, Ort, intern/extern; gleiche Veranstaltung am selben Tag = "Gibt es schon", nicht angekreuzt; "Nächstes Plenum" nimmt Name, Ort und Ende der Plenums-Vorlage), Mitteilungen (angeheftet), Umfragen (Antworten, Frist, mehrere, namentlich), nicht lesbare Zeilen (grau mit Grund). Zeilen mit ✔ stehen nicht drin (Hinweis mit Zahl).
-  - "Angekreuzte anlegen": je Tabelle ein batchCreate, Ergebnis je Bereich; bereits geklappte Bereiche werden bei einem zweiten Versuch nicht doppelt angelegt. Danach update vorschlaege_erledigt = TRUE ohne Konfliktprüfung. details/beschreibung = "Aus dem Protokoll vom …".
-- 8.4b und 8.5 geprüft (22.10.2026): alles bestätigt bis auf zwei Wünsche, umgesetzt in 8.5a (0.30.9):
-  - Im Protokoll-Formular heißt "Abbrechen" jetzt "Schließen" (der Entwurf bleibt).
-  - Markierungen auch als Wort mit Doppelpunkt am Zeilenanfang (auch nach "- "): "ToDo:" (auch "To-Do:", "Aufgabe:"), "Learning:", "Termin:", "Mitteilung:", "Umfrage:", "Beschluss:"; Groß- und Kleinschreibung egal (MARKEN_WOERTER in protokoll-rechnen.js). Ohne Doppelpunkt wird nichts gedeutet.
-- 8.6 (0.30.10): Reden-Archiv im Reiter Dokumentation (Umschalter "Protokolle" · "Reden" unter der Überschrift; die Wahl bleibt beim Reiterwechsel; "+ Protokoll" vom Start zeigt immer die Protokolle). Neue Dateien js/views/reden.js (baueReden) und js/views/rede-eintrag.js (baueRedeFormular, REDE_STATI, redeStatusText, naechsterStatus, linkPruefen).
-  - Liste neueste zuerst (Datum, sonst Anlegen), nichts ausgeblendet: Datum · Projekt/Veranstaltung, Titel mit 💬-Zahl, Redner · Aktionsart, Status als Marke (Entwurf grau, Probelesen orange, Fertig grün, Gehalten blau). Suche (Titel, Redner, Aktionsart, Notiz, Projekt, Veranstaltung), Filter Status und Jahr. Zwischenspeicher gruppe_id:reden.
-  - "+ Rede" (Knopf oben, wird in der Ansicht Reden zu "+ Rede"): Formular im Inhalt (Titel, Redner mit Vorschlägen, Datum, Projekt oder Veranstaltung, Aktionsart vom Projekt vorbelegt, Link nur https:// mit Warnung bei anderen Seiten als docs/drive.google.com, Status, Notiz). Ändern mit Konfliktprüfung. Kein Löschen.
-  - Detail (Detailbereich): Felder, "Dokument öffnen" (neuer Tab), "Status: → nächster" (ohne Konfliktprüfung), "Bearbeiten", Kommentare zum Probelesen (baueKommentare, art "rede"). kommentarZahlen(liste, art) in todos-rechnen.js kennt jetzt eine Art (Standard todo).
-  - Kommentare zu Reden führen in "Was ist neu?" noch zum Start (kommt mit 8.7).
-- 8.7 (0.30.11): Verknüpfungen. Sheet und Skript unverändert.
-  - Projekt: neuer Teil "Reden" (nach "Learnings"), neue Datei js/views/projekt-reden.js (baueRedenTeil). Liste der Reden des Projekts mit Status und 💬-Zahl, "+ Rede" mit vorausgewähltem Projekt. projekte.js lädt dafür auch die Tabelle Reden.
-  - Adressen im Reiter Dokumentation (app.js gibt ctx.unter jetzt auch für protokoll weiter): #/g/<kurz>/protokoll/rede:<id> öffnet eine Rede, rede-neu:p:<projekt-id> öffnet "+ Rede" mit Projekt, protokoll:<id> öffnet ein Protokoll, protokoll-neu:v:<veranstaltung-id> öffnet "+ Protokoll" vorbelegt. Danach steht wieder #/g/<kurz>/protokoll in der Adresszeile.
-  - Kalender: Im Fenster einer internen Veranstaltung Knopf "Protokoll schreiben": Datum, Titel und Veranstaltung vorbelegt. Beginnt der Titel mit "Plenum", ist die Art Plenum (mit Gliederung), sonst Art Sonstiges und Titel "Protokoll <Titel>". Gibt es einen offenen Entwurf, kommt erst die Frage "Weiterschreiben oder verwerfen" (beim Verwerfen gilt die Vorbelegung).
-  - "Was ist neu?": neuer Abschnitt "Dokumentation" mit Protokollen (📝, auch Entwürfe) und Reden (🎤) von anderen. Kommentare zu Reden führen jetzt zur Rede.
-- 8.7 geprüft: Rückfrage beantwortet, Reden-Filter nur Status und Jahr reicht.
-- 8.8 (0.30.12), Wünsche der Person nach 8.7. **Sheet und Skript geändert** (neue Spalten Reden.text und Kommentare.stelle; Daten.gs und Schema.gs).
-  - Löschen von Hand: Knopf "Löschen" im Detail eines fertigen Protokolls und einer Rede, mit Rückfrage. Die App schickt vonHand: true, nur dann löscht das Skript (weich). Nie automatisch. Aus dem Protokoll angelegte Einträge bleiben. Das Google-Dokument bleibt, wie es ist (die App liest und ändert es nie).
-  - Redetext in der App (Feld "Redetext" im Formular, bis 20 000 Zeichen). Der Link ist freiwillig. Suche findet auch Wörter im Redetext.
-  - Kommentare je Absatz (neue Datei js/views/rede-text.js). Die Anpassung der Person (8.8a, 0.30.13) kam erst nach dem Annehmen von #23 und steht darum in einem eigenen Pull Request: Der Redetext steht **nicht im Detail** (zu schmal). Dort stehen nur "X Absätze · Y Kommentare zu Absätzen", die übrigen Felder, die Knöpfe und die Kommentare zur ganzen Rede. Lesen und Kommentieren der Absätze im Formular ("Bearbeiten und Absätze kommentieren"): Jeder Absatz ist ein eigenes Textfeld (Leerzeile darin = neuer Absatz beim Speichern); am PC stehen die Kommentare rechts daneben, am Handy darunter (alle Kommentar-Blöcke untereinander, mit Strich am Absatz). Kommentieren geht erst nach dem Anlegen und speichert sofort, ohne das Formular neu aufzubauen. stelle = "Nummer|Anfang des Absatzes". Nicht mehr gefundene Absätze: "Kommentare zu geänderten Stellen" mit Zitat. baueKommentare kennt ohneStelle. Die 💬-Zahl in der Liste zählt alle Kommentare.
-  - Beim Bearbeiten schließt sich das Detail (auch am PC), damit das Formular die ganze Breite hat.
-  - Nicht gespeicherte Rede bleibt beim Reiterwechsel: Jede Eingabe wird auf dem Gerät gemerkt (store.js: getRedeEntwurf, setRedeEntwurf, loescheRedeEntwurf; eine je Gruppe). Beim Zurückkommen öffnet das Formular wieder mit Hinweis. Speichern oder "Schließen" löscht den Entwurf ("Schließen" fragt bei Änderungen nach). Die Konfliktprüfung nutzt den Stand beim ersten Öffnen. Abmelden löscht ihn mit (Warnung wie beim Protokoll).
-  - Projekt: Klick auf eine Rede öffnet das Formular (Adresse #/g/<kurz>/protokoll/rede-bearbeiten:<id>).
-- 8.5a, 8.6, 8.7, 8.8 und 8.8a geprüft (22.10.2026): alles bestätigt. Damit sind auch die Sheet-Spalten Reden.text und Kommentare.stelle sowie Daten.gs und Schema.gs aus 8.8 im Einsatz (Löschen und Kommentare je Absatz liefen bei der Prüfung).
-- Etappe 8 ist abgeschlossen (0.30.13). 0.30.14 schließt nur die Doku ab.
-- Hinweis aus 8.8: Ein Pull Request wurde angenommen, bevor eine Nachbesserung im selben Zweig ankam. Regel ab jetzt: Jede Nachbesserung zählt die Version hoch, auch in einem noch offenen Pull Request. So zeigt die App sicher, welcher Stand da ist.
-- 9.0 (0.30.15): docs/PLAN-ETAPPE-9.md, Fassung 1 mit 20 Rückfragen (Abschnitt 4). Nur Doku und Versionssprung, Sheet und Skript unverändert.
+---
 
-## Etappe 9 (Team), abgeschlossen mit 0.31.7 (Doku 0.31.8)
-- 9.0 (0.30.15): Plan Fassung 1 mit 20 Rückfragen (#26). Die Person hat am 23.10.2026 geantwortet.
-- 9.1 (0.31.0): Plan Fassung 2 (docs/PLAN-ETAPPE-9.md) und Sheet und Skript. Von Hand bereitgestellt (Liste im Pull Request #27).
-  - Begriffe: Hüte bleiben Aufgaben mit Verantwortlichen oder offene Aufgaben ("Hut frei"). Dauerhafte Zuständigkeiten heißen "Gruppen-Rollen" (eine Rolle heißt nicht, dass man sich allein kümmern muss).
-  - Tab Personen zusätzlich rollen (IDs aus Gruppen_Rollen, eine je Zeile, höchstens 12), notiz (120 Zeichen). Name in der Gruppe nur einmal (60 Zeichen). aktiv FALSE = Pause; die App schickt beim Anlegen TRUE.
-  - Neuer Tab Gruppen_Rollen (name, beschreibung, gewaehlt, sortierung). gewaehlt = höchstens eine Person. Die Liste bearbeitet die Gruppe in der App (ab 9.3; die Standard-Rollen von FFF und GP stehen dort als Vorschläge im Formular "+ Rolle", es gibt keinen Knopf "Standard-Rollen übernehmen").
-  - Neuer Tab Kapazitaet (person_id, kapazitaet, gueltig_ab, gueltig_bis, notiz). kapazitaet ganze Zahl 1 bis 10, höchstens 183 Tage gültig, wird nicht geändert (nur anlegen und löschen). Die Spalte heißt kapazitaet, weil es "wert" schon im System-Tab Einstellungen gibt.
-  - Neu apps-script/Team.gs: teamPruefen (in create, batchCreate, update), teamKaskade (Person gelöscht = Kapazität mit; Rolle gelöscht = bei allen ausgetragen), teamUmbenennen (neuer Name einer Person wird auch in ToDos, Meilensteinen, Mobi_Plan (verantwortlich) und Umfrage_Antworten (person) ersetzt; Antwort von update enthält umbenannt), Editor-Test testenTeam (schreibt nichts).
-  - Daten.gs ruft die Team-Prüfungen auf. Aufraeumen.gs entfernt Kapazitäts-Angaben, deren gueltig_bis mehr als 183 Tage vorbei ist. js/schema.js kennt Personen, Gruppen_Rollen, Kapazitaet.
-  - In der App ändert sich noch nichts Sichtbares. Der Reiter Team kommt in 9.2.
-- 9.1 von Hand übernommen und bereitgestellt (23.10.2026). Antworten der zweiten Runde: KB keine Standard-Rollen, kein Knopf "Standard-Rollen übernehmen" (Vorschläge im Formular "+ Rolle"), kein "gewählt bis", alle dürfen die Rollen-Liste ändern, Berg-Farben nach Namen.
-- 9.2 (0.31.1): Reiter Team (👥, Kennung team) in js/ui/nav.js (nach Dokumentation), js/config.js (features.team), am Handy unter "Mehr". Nur lesen.
-  - js/views/team.js: lädt Personen, Gruppen_Rollen, Kapazitaet (Zwischenspeicher gruppe_id:team, Aktualisierung wie die anderen Reiter). Karten: Name (Marke "Du"), Gruppen-Rollen als Chips (gewählte fett mit "gewählt"), Kapazität als 10 Kästchen mit Zahl und Satz ("gilt bis", grau "Abgelaufen seit … (war n)", "Ab TT.MM.: n" für spätere Angaben), Notiz. Eigene Karte zuerst (grüner Rand links), dann A–Z, Pausierte im Aufklapper unten. Suche (Name, Rolle, Notiz), Filter Rolle (nur benutzte Rollen; ohne Rollen ausgeblendet). Ohne eigene Karte: Hinweis "Du bist noch nicht im Team" (Eintragen kommt in 9.4). Leeres Team: freundlicher Text.
-  - Detail (PC rechts, Handy Vollbild): Marken Du/Dabei/Pause, Rollen mit Beschreibung und dem Hinweis "Eine Gruppen-Rolle heißt nicht …", Kapazität, Verlauf der letzten 6 Monate (gilt jetzt, kommt noch, von neuerer Angabe ersetzt, abgelaufen; mit Notiz), Notiz, "Im Team seit …, eingetragen von …".
-  - js/views/team-rechnen.js: rollenVon, sortiereRollen, istIch, istAktiv, namenAus, kapazitaetAm (die zuletzt angelegte Angabe, die den Tag abdeckt), angabeJetzt, angabeZustand, verlauf, kapazitaetText, sortierePersonen, passtSuche, passtRolle.
-- 9.2 geprüft (23.10.2026): alles da. Rückfrage beantwortet: Rollennamen als Vorschläge im Formular "+ Rolle" sind in Ordnung.
-- 9.3 (0.31.2): Gruppen-Rollen bearbeiten. Neue Datei js/views/team-rollen.js (baueRollen, STANDARD_ROLLEN, vorschlaegeFuer, HINWEIS_ROLLEN).
-  - Aufklapper "Gruppen-Rollen (n)" unten im Reiter Team (offen, solange es keine Rollen gibt). Je Rolle: Name, Marke "gewählt", Beschreibung, "Haben: Namen" bzw. "Noch niemand", Knopf "Bearbeiten". Darüber der Hinweis "Eine Gruppen-Rolle heißt nicht …". Knopf "+ Rolle".
-  - Fenster "Neue Gruppen-Rolle" / "Rolle bearbeiten" (Name höchstens 40 Zeichen, Beschreibung, Fest gewählt, Reihenfolge; Konfliktprüfung). Beim Anlegen stehen die Standard-Rollen der Gruppe, die es noch nicht gibt, als Vorschläge zum Antippen darüber (FFF 12, GP 4 mit Beschreibung, KB keine). Bundes-Deli 1 und 2 setzen "gewählt".
-  - "Löschen" im Fenster mit Rückfrage, die die Personen mit der Rolle nennt. Das Skript trägt die Rolle bei ihnen aus.
-- 9.3 geprüft (23.10.2026): alles da.
-- 9.4 (0.31.3): Mein Eintrag. Neue Datei js/views/team-eintrag.js (zeigeEintrag, umbenennen).
-  - "Mich eintragen" (Kasten oben, auch bei leerem Team): legt die Karte mit dem Anzeigenamen an (aktiv TRUE) und öffnet das Formular. Ohne Anzeigenamen erst "Wer bist du?".
-  - "Für jemanden eintragen" (klein unter den Karten): Fenster mit Name. Solche Karten (erstellt_von ist nicht der Name) dürfen alle bearbeiten, Marke "eingetragen von …" im Detail (darfBearbeiten in team-rechnen.js). Absprache, kein Schutz.
-  - Detail: Knopf "Bearbeiten und Kapazität eintragen" (eigene Karte) bzw. "Bearbeiten". Fremde Karten haben keinen Knopf.
-  - Formular im Detailbereich: Kapazität mit zehn Knöpfen (zwei Reihen, mindestens 44 px), Satz ("7 = gut Zeit"), Gilt ab (heute), Gilt bis (Vorschlag 4 Wochen; Knöpfe 2 Wochen, 4 Wochen, 3 Monate), Notiz bis 120 Zeichen mit Zähler und Datenschutzsatz. "Kapazität speichern" legt eine neue Zeile an. Bisherige Angaben mit "Löschen". Gruppen-Rollen als Knöpfe zum An- und Abwählen (gewählte Rolle einer anderen Person gesperrt mit "hat Name"), "+ Rolle" legt eine neue Rolle an und wählt sie. Name, Notiz, Haken "Dabei" (ohne = Pause). "Speichern" mit Konfliktprüfung; bei neuem Namen Rückfrage, die Meldung nennt, was das Skript mitgeändert hat ("Auch geändert: 2 ToDos, 1 Mobi-Beitrag"). Bei der eigenen Karte wird der Anzeigename im Gerät umgestellt. "Mich austragen" bzw. "Aus dem Team austragen" mit Rückfrage.
-  - Name auf dem Gerät geändert ("Name ändern"): store.js merkt sich den vorigen Namen (getNameVorher, loescheNameVorher). Gibt es zum neuen Namen keine Karte, aber zum vorigen, fragt der Reiter "Deine Team-Karte heißt noch … Umbenennen?" (oder "Nein, das bin nicht ich").
-  - Beim Bearbeiten baut das automatische Neuladen das Formular nicht neu auf (Eingaben bleiben).
-- 9.4 geprüft (23.10.2026): alles okay. Rückfrage beantwortet: ja, "für jemanden eingetragen" abfangen (in 9.5 umgesetzt).
-- 9.5 (0.31.4): Hüte je Person und freie Hüte. Der Reiter Team lädt dafür auch ToDos, Meilensteine, Mobi_Plan, Projekte (7 Tabellen).
-  - Hut je Person (team-rechnen.js: alleHuete, hueteVon, projekteAus, sortiereHuete): offenes ToDo, offener Meilenstein, nicht veröffentlichter Mobi-Beitrag mit dem Namen in verantwortlich (genauer Vergleich, "Ben" passt nicht auf "Bente"). Nur aus offenen Projekten (nicht erledigt/archiviert); ToDos ohne Projekt und Beiträge zu Veranstaltungen zählen.
-  - Karte: "🎩 3 Hüte · 1 Projekt" bzw. "Keine Hüte". Detail: Liste "Hüte (n)" mit Symbol (✅ ToDo, 🏁 Meilenstein, 📣 Mobi), Projekt, Frist (überfällig rot, heute orange). Klick: ToDo ohne Projekt → Reiter ToDos, sonst das Projekt; Mobi-Beitrag → Reiter Mobi (Liste, gefiltert auf das Projekt).
-  - Abschnitt "🎩 Freie Hüte (n)" oben (nur wenn es welche gibt): offene ToDos ohne Verantwortliche, nächste Frist zuerst, höchstens 10 (seit 9.5a die ersten 5, seit 9.6a die ersten 3, Rest über "Alle anzeigen"), Knopf "Hut übernehmen" aus todos-hut.js, "Alle im Reiter ToDos →".
-  - Unten "Namen in Hüten ohne Team-Karte: Name (Zahl)" (namenOhneKarte), damit Tippfehler auffallen.
-  - "Für jemanden eingetragen" (fuerJemandenEingetragen): nur noch, wenn erstellt_von nicht der Name ist UND die eintragende Person selbst eine andere Karte hat. Nach dem Umbenennen der eigenen Karte ist sie damit nicht mehr für alle bearbeitbar.
-- 9.5 geprüft (23.10.2026): alles da. Zwei Anmerkungen, umgesetzt in 0.31.5 (9.5a): Freie Hüte zeigen die ersten 5, der Rest über "▸ Alle anzeigen (n)"; im Detail am Handy überlappten die Marken "Du"/"Dabei", der Knopf "Bearbeiten …" und "Kapazität" (jetzt Abstände, Knopftext bricht um, geprüft bis 320 px).
-- 9.6 (0.31.5, zusammen mit 9.5a): Diagramm "Berg" oben im Reiter Team. Neue Datei js/views/team-berg.js (baueBerg), Rechnung bergDaten in team-rechnen.js. Der Reiter lädt dafür auch Veranstaltungen (8 Tabellen).
-  - Gestapelte Flächen, eine Schicht je aktiver Person mit Angabe (Dicke = Kapazität am Mittwoch der Woche), Farben fest nach Namen A–Z (BERG_FARBEN, 8 Farben, geprüft auf Farbsehschwächen; ab der 9. Person wiederholen sie sich). Höhe = Kraft der Gruppe. Pausierte und abgelaufene Angaben zählen nicht.
-  - Darunter eigenes kleines Bild "Fällige Hüte je Woche" (eigene Skala, keine zwei Maßstäbe in einem Bild; seit 9.6a ein Balken aus zwei Teilen, siehe unten). Orange = eng: mindestens 3 Hüte und mehr als ein Hut je 4 Punkte Kraft (ENG_MIN_HUETE, ENG_PUNKTE_JE_HUT).
-  - Linien: Aktion (grün; Aktionsdatum aktiver Projekte, externe Veranstaltungen), Heute (gestrichelt). PC: 2 Wochen zurück, 10 voraus; Handy (unter 600 px): 1 zurück, 6 voraus, Datum jede zweite Woche.
-  - Antippen/Zeigen einer Woche: Zeile darunter (Woche, Kraft mit Werten je Person, Hüte, Aktionen, "⚠ Hier wird es eng"). Legende mit Namen, "Zahlen zeigen" als Tabelle. Unter 2 Personen mit Angabe: Satz statt Bild.
-- 9.5a und 9.6 geprüft (23.10.2026): "super". Regel "eng" vorerst okay. Anmerkungen, umgesetzt in 0.31.6 (9.6a): Fällige Hüte und "eng" zählen nur Hüte mit Verantwortlichen; offene Aufgaben ohne Verantwortliche stehen als blaues Stück unten im selben Balken (Beschriftung "4+2", Legende, Tabelle "(+2 offen)"; Farben geprüft: Grau #4f5a56, Blau #5a96df, Orange #c77c00). Freie Hüte zeigen die ersten 3.
-- 9.7 (0.31.6, zusammen mit 9.6a): Verknüpfungen.
-  - Neue Datei js/views/team-namen.js (ladeTeamKlein, setzeTeamKlein, teamKlein, namenMitRollen): Personen, Gruppen_Rollen, Kapazitaet für andere Reiter, zuerst aus dem Zwischenspeicher gruppe_id:team, dann frisch (höchstens einmal je Minute). Geladen von ToDos, Projekte, Mobi und Start; der Reiter Team übergibt seine Daten.
-  - Namensvorschläge bei "Verantwortlich" (ToDo-Formular, ToDo im Projekt, Mehrere bearbeiten in Mobi, Mobi-Beitrag, Hut weitergeben): Team-Mitglieder (aktiv) zuerst mit Gruppen-Rollen in der Beschriftung ("Anna (Presse, Technik)"), gespeichert wird nur der Name. js/ui/form.js: ein Vorschlag darf { wert, label } sein.
-  - Projekt: neuer Teil "Team" (js/views/projekt-team.js, nach "Reden"): Namen mit Hüten in diesem Projekt und Gruppen-Rollen, "keine Team-Karte" bei Namen ohne Karte, Zahl der offenen Aufgaben ohne Verantwortliche. Klick öffnet die Karte im Reiter Team.
-  - Adressen: #/g/<kurz>/team/<person-id> öffnet eine Karte, team/ich die eigene Karte zum Bearbeiten (app.js gibt ctx.unter jetzt auch für team weiter). Danach steht wieder #/g/<kurz>/team da.
-  - Start: Zeile unter "Hallo …" für die eigene Person mit Team-Karte, wenn die Kapazität fehlt oder abgelaufen ist ("⛰️ Deine Kapazität ist seit … abgelaufen. Kurz aktualisieren?" bzw. "Trag kurz ein, wie viel Zeit du gerade hast."), Link auf team/ich, "✕" blendet sie auf dem Gerät 7 Tage aus (store.js: teamHinweisAus, setTeamHinweisAus). Ohne Team-Karte keine Zeile.
-  - "Was ist neu?": Abschnitt "Team" mit "👥 Name · neu im Team" (nur neue Personen von anderen, keine Änderungen an Kapazität oder Rollen).
-- 9.6a und 9.7: Pull Request #33 angenommen. Rückfrage beantwortet: Das Team bleibt freiwillig, die Start-Zeile erscheint nur mit Team-Karte. 9.6a und 9.7 geprüft (23.10.2026): alles da und gut.
-- 9.8 (0.31.7): Hilfe zum Team. js/views/hilfe.js hat einen Abschnitt "👥 Team" mit Aufklappern (Was ist der Reiter Team, Gruppen-Rollen mit dem Hinweis zur Unterstützung, Hüte, Kapazität mit den Bereichen, Der Berg, Wer sieht was / wer darf was, Namen ändern, Austragen und Datenschutz). Im Reiter Team unten der Link "Wie funktioniert der Reiter Team? → Hilfe". Der Platzhalter-Satz für das spätere Wiki bleibt.
-- 9.8 geprüft (23.10.2026): alles da und gut. Etappe 9 ist abgeschlossen (Entscheidung der Person, 23.10.2026). 0.31.8 schließt nur die Doku ab (STAND, Plan, CLAUDE.md).
-- 9.8a (0.31.9), Wünsche der Person nach dem Abschluss (Gruppen-Rollen, js/views/team-rollen.js):
-  - Im Fenster "+ Rolle" und "Rolle bearbeiten" steht "Wer hat die Rolle? (antippen, freiwillig)" mit allen Team-Karten (A–Z, Pausierte mit "(Pause)"); beim Bearbeiten sind die bisherigen vorgewählt. Beim Speichern ändert die App Personen.rollen der betroffenen Karten (mit Konfliktprüfung), in dieser Reihenfolge: austragen, Rolle speichern, eintragen. Bei "Fest gewählt" höchstens eine Person (Meldung im Fenster; das Skript prüft es auch). Klappt es bei einer Karte nicht, nennt die Meldung den Namen.
-  - Damit trägt man auch andere in eine Rolle ein. Die Absprache "jede Person pflegt ihre eigene Karte" gilt weiter für Kapazität, Name und Notiz.
-  - Überschrift "Gruppen-Rollen (n · m offen)", offene Rollen (niemand hat sie) mit oranger Marke "offen".
-  - Hilfe (js/views/hilfe.js, Gruppen-Rollen) ergänzt.
+## 1. Arbeitsregeln
 
-## Etappe 10 (Wiki und öffentliche Seiten), fertig gebaut mit 0.32.8
-Plan und Entscheidungen: docs/PLAN-ETAPPE-10.md. Prüfung durch die Person steht aus (siehe Offen).
-- Etappe 10 begonnen: 10.0 (0.31.10) docs/PLAN-ETAPPE-10.md, Fassung 1 mit 31 Rückfragen. Nur Doku, Sheet und Skript unverändert. Fund: Die "Texte aus 6.1" für Impressum, Info und Datenschutz gibt es im Repo nicht (js/views/info.js zeigt nur einen Platzhalter); sie werden in Etappe 10 neu geschrieben.
-- 10.0 gemergt (Pull Request #37). Rückfragen am 23.10.2026 beantwortet (Plan Abschnitt 3): Reiter Wiki mit drei Knöpfen (Skillshare, Anleitung, Entwicklung App), feste Themen, kein Verlauf, Bilder ja, "Gruppe intern" unter Anleitung, Entwicklung App und "Erste Schritte" immer öffentlich, Impressum mit Platzhaltern, kein Abschnitt in "Was ist neu?", kein Ausweg über GitHub Actions.
-- 10.1 (0.32.0): Plan Fassung 2. Neuer Tab Wiki (bereich, thema, titel, adresse, text, oeffentlich). Neue Datei apps-script/Wiki.gs: wikiPruefen (Bereich skillshare|anleitung, Titel Pflicht und in der Gruppe nur einmal, Adresse a-z0-9 mit Bindestrichen, höchstens 60, nur einmal), wikiKaskade (Seite gelöscht = Kommentare mit bezug_art wiki gehen mit), öffentliche Aktion wiki ohne Login (Liste ohne Text plus Gruppen mit Links; eine Seite mit gruppe und adresse; keine IDs, Namen, Uhrzeiten; Zwischenspeicher wiki_alle und wiki_s_<gruppe>_<adresse>, je 2 Minuten, nur für vorhandene Seiten), Editor-Tests testenWiki und testenWikiSicher. Daten.gs ruft wikiPruefen und wikiKaskade auf, Code.gs verteilt wiki, Upload.gs nimmt zweck 'wiki' an (Dateiname wiki_, Log Wiki). Schema.gs und js/schema.js haben den Tab Wiki. Muss von Hand bereitgestellt werden (Liste im Pull Request).
-- 10.1 gemergt (Pull Request #38). Kleine Fragen A bis D beantwortet (Plan Abschnitt 4): feste Themen-Liste der Person (in der App nicht bearbeitbar), Entwicklung App je Etappe zusammengefasst bis Ende Etappe 10, Zeile je Version erst nach 1.0.
-- 10.2 (0.32.1): Neue Datei js/wiki-format.js (zeichneText, bloecke, teileInline, ueberschriften, bildUrlStandard): Absätze, ## und ### Überschriften, Listen mit - und 1., **fett**, Links (Adresse oder [Text](https://…), nur http/https), [[Titel]] für Wiki-Links, > Hinweis, ![Beschreibung](bild:<id>) für Bilder (Drive-Vorschaubild), Inhaltsverzeichnis ab 3 Überschriften (Knöpfe, keine Sprungmarken wegen des Routings). Neuer Ordner texte/ mit impressum.txt (Platzhalter in eckigen Klammern), info.txt und datenschutz.txt (mit Absatz Team). js/views/info.js lädt die Texte (auch ohne Netz, sie stehen in HUELLE); Info zeigt die Gruppen mit Webseite, Instagram und weiteren Links aus der öffentlichen Aktion wiki (Zwischenspeicher oeffentlich:wiki) und die Version. Die FFF-Webseite konnte der Agent nicht öffnen (Adresse in seiner Umgebung gesperrt), das Impressum verlinkt sie nur.
-- 10.2 gemergt (Pull Request #39). Rückfrage beantwortet: Das Impressum nennt keine Betreiber-Gruppe. Auftrag der Person (23.10.2026): 10.3 bis 10.9 nacheinander bauen, je Schritt ein Pull Request; das Skript (10.1) stellt sie danach bereit.
-- 10.3 (0.32.2): Reiter Wiki (📖, Kennung wiki) statt Hilfe. js/views/hilfe.js gelöscht; alte Adressen …/hilfe öffnen das Wiki (app.js), ctx.unter auch für wiki. Neue Dateien js/views/wiki.js und js/views/wiki-rechnen.js (THEMEN fest: Aktionen und Demos, Anmeldung, Finanzen und Förderung, Gruppe und Treffen, Material, Mobi, Presse, Recht, Social Media, Technik, Sonstiges zuletzt; Suche, Ausschnitt, Adresse aus Titel, Liste der Anleitung). Oben drei Knöpfe über die ganze Breite (Skillshare grünlich, Anleitung bläulich, Entwicklung App sandfarben; gewählter mit dunklem Rand), darunter Suche und Inhalt. Skillshare nach Themen (Aufklapper, Seiten A–Z, Marke 🌐 öffentlich), Anleitung mit festen Seiten aus texte/anleitung/ (liste.txt, team.txt aus der bisherigen Hilfe, zustaendig.txt mit Platzhaltern) und darunter "Von unserer Gruppe" (Wiki-Seiten mit bereich anleitung). Entwicklung App aus texte/entwicklung.txt (je Etappe zusammengefasst, Suche zeigt passende Abschnitte). Seite im Inhalt mit "← Wiki", Thema, Stand, Inhaltsverzeichnis, Wiki-Links. Adressen wiki/<id>, wiki/anleitung:<datei>, wiki/entwicklung. Zwischenspeicher gruppe_id:wiki. Link im Reiter Team zeigt auf wiki/anleitung:team.
-- 10.3: Pull Request #40.
-- 10.4 (0.32.3): Seiten schreiben (neue Datei js/views/wiki-eintrag.js). "+ Seite" neben der Suche (Skillshare und Anleitung), "+ Gruppe intern anlegen" unter "Von unserer Gruppe" (solange es keine Seite mit diesem Titel gibt), "Bearbeiten" und "Löschen" (Rückfrage, nennt öffentlich und Kommentare) unter jeder Seite aus dem Sheet. Formular im Inhalt: Titel (80), Thema (Auswahl aus der festen Liste, nur Skillshare, Pflicht), Knöpfe Ü1, Ü2, • Liste, 1. Liste, F, Link (fragt die Adresse), Wiki-Link, Hinweis, Bild (fügen an der Cursorstelle ein, ohne Auswahl wird der Platzhalter markiert), Textfeld mit Zähler (20 000), Vorschau beim Tippen (PC daneben, Handy Umschalter Schreiben | Vorschau), Aufklapper "So geht das Format", Haken Öffentlich mit Warnsatz, unter "Mehr" die Adresse (beim Anlegen aus dem Titel, eindeutig; bleibt beim Umbenennen). Bild: Datei, Beschreibung (Pflicht), Haken "keine Personen und keine persönlichen Daten" (Pflicht), verkleinert auf 1000 px, uploadImage mit zweck wiki, fügt ![Beschreibung](bild:<id>) ein. Konflikt: Hinweis mit Name und Uhrzeit, eigener Text bleibt, "Text kopieren", "Neue Fassung laden" (eigener Text bleibt als Entwurf). Entwurf im Gerät (aktionsdeck_entwurf_wiki_<gruppe_id>, einer je Gruppe, Abmelden löscht ihn), beim Öffnen "Entwurf übernehmen" oder "Verwerfen". Bearbeiten öffnet erst mit frischem Stand. Kein Neuladen alle 45 Sekunden beim Schreiben. Neue und gelöschte Seiten kommen sofort in den Zwischenspeicher.
-- 10.4: Pull Request #41.
-- 10.5 (0.32.4): Kommentare unter jeder Seite aus dem Sheet (baueKommentare, art wiki, nur intern; Hinweis "nie öffentlich"). Marke "💬 n" in der Liste. Der Reiter lädt dafür Wiki und Kommentare mit listMehrere (Zwischenspeicher gruppe_id:wiki enthält jetzt { wiki, kommentare }; ältere Form wird noch gelesen). Die offene Seite wird beim Neuladen nur neu aufgebaut, wenn sie sich geändert hat (getippter Kommentar bleibt). "Link kopieren" bei öffentlichen Seiten (Adresse #/wiki/<gruppe>/<adresse>, die Seite dazu kommt in 10.7). "Was ist neu?": Kommentare zu Wiki-Seiten heißen "Kommentar zu einer Wiki-Seite" und führen zur Seite (kein eigener Abschnitt Wiki).
-- 10.5: Pull Request #42.
-- 10.6 (0.32.5): App-Anleitung in texte/anleitung/: Erste Schritte (öffentlich, ab 10.7), Start, Projekte, ToDos und Hüte, Material, Mobi, Kalender (mit Kalender-Abo), Dokumentation, Team, Wiki (mit Format-Hilfe), Häufige Fragen, Zuständig für die App. Reihenfolge in liste.txt. Neu im Textformat: Text zwischen Backticks bleibt genau so stehen (für Beispiele, Klasse wiki-code). CLAUDE.md Abschnitt 3, Punkt 7: Ändert ein Schritt einen Reiter, wird die Anleitungsseite im selben Pull Request angepasst; Zeile je Version in texte/entwicklung.txt erst nach 1.0.
-- 10.6: Pull Request #43.
-- 10.7 (0.32.6): Öffentliches Wiki ohne Login (neue Datei js/views/wiki-oeffentlich.js, Weg in app.js vor dem Login-Teil). #/wiki: "Zur App" (Entwicklung App, öffentliche Anleitungsseiten aus liste.txt, zurzeit Erste Schritte) und die öffentlichen Seiten der Gruppen nach Gruppe und Thema (Auswahl ab zwei Gruppen). #/wiki/app/entwicklung, #/wiki/app/<datei> (nur mit oeffentlich in liste.txt), #/wiki/<gruppe>/<adresse> (Aktion wiki mit gruppe und adresse). Zwischenspeicher oeffentlich:wiki und oeffentlich:wiki:<gruppe>:<adresse>; ist eine Seite nicht mehr öffentlich, gilt auch die gemerkte Kopie nicht mehr. Keine Namen, keine Kommentare; [[Titel]] nur auf andere öffentliche Seiten derselben Gruppe, sonst einfacher Text (wiki-format: fehltAlsText). Link "Wiki" in oeffentlicheLinks (Seitenleiste, Mehr), auf der Gruppenwahl (Knopf neben Impressum, Info, Datenschutz) und auf Info ("📖 Öffentliches Wiki"). Im Reiter Wiki unten im Skillshare "🌐 Öffentliche Seiten aller Gruppen →".
-- 10.7: Pull Request #44.
-- 10.8 (0.32.7): Kalender-Abo im Aktionskalender und auf #/termine: Knöpfe "In Google Kalender öffnen" (calendar.google.com/calendar/render?cid=<webcal-Adresse>), "In Apple Kalender öffnen" (webcal://), "Adresse kopieren", dazu wie bisher "Kalender-Datei öffnen" (appleAboLink, googleAboLink in termine-liste.js). Anleitung Kalender ergänzt. Ob Google und Apple der Weiterleitung des Skripts folgen, testet die Person (Ergebnis hier eintragen). Kein Ausweg über GitHub Actions (Entscheidung 30).
-- 10.8: Pull Request #45.
-- 10.9 (0.32.8): Abschluss der Doku: STAND, Plan (Status fertig gebaut), CLAUDE.md (Reiter mit Wiki, Ordner texte/, öffentliche Aktionen termine und wiki, Hilfsmodule wiki-format und wiki-rechnen), texte/entwicklung.txt (Etappe 10 zusammengefasst). Sonst keine Änderung an der App.
-- Alle Pull Requests #40 bis #46 sind gemergt (24.10.2026). Die Bereitstellung von 10.1 und die Prüfung stehen noch aus (die Person ist gerade nur am Handy).
-- 10.10 (0.32.9), Wünsche der Person: texte/entwicklung.txt neu (Wer hat entwickelt, Ziel und Motivation: Vernetzung und Organisation der Gruppen in Landau, Grundlage für eigene Systeme anderer Gruppen; worauf die App aufbaut; wie sie entsteht; je Etappe Versionen, Pull Requests und Funktionen; Etappe 0 bis 6 und 7.1 bis 7.4 ohne Pull Requests). Einleitungssatz entfernt. Erste Schritte: Hinweis, dass die Anleitungen nur angemeldet sichtbar sind. Anleitungen pro Reiter (start, projekte, todos, material, mobi, kalender, dokumentation, team, wiki) als Fließtext. Handy (bis 959 px): Mobi-Knöpfe (Archiv, Mehrere bearbeiten, + Beiträge planen, + Einzelner Beitrag) rechtsbündig unter der Überschrift, Ansicht-Knöpfe in einer Zeile (die 40 px Überbreite ist weg); Kalender: Liste, Monat, Woche stehen zwischen "Stand …" und der Monatsnavigation bzw. der Liste (am PC unverändert oben, js/views/kalender.js artenPlatzieren); Start, Kachel TOPs: "+ Protokoll" rechtsbündig in der Titelzeile.
-- 10.10: Pull Request #47.
-- 11.0 (0.32.10): docs/PLAN-ETAPPE-11.md, Fassung 1 mit 24 Rückfragen: Etappe 11 "Prüfung und Qualität" (Prüfbericht, Sicherheit, Geschwindigkeit, Barrierefreiheit, PC-Breite beim Rauszoomen, App-Icon für den Startbildschirm, Tabs im Sheet sortieren, CSS ordnen, GitHub Actions). Vorschlag: Die bisher geplante Etappe 11 "Komfort" wird Etappe 12. Nur Doku. Pull Request #48, gemergt.
-- Umentschieden (24.10.2026): Zuerst kommt Etappe 11 "Komfort", die Prüfung wird Etappe 12 und ist der letzte Schritt vor 1.0.
-- 11.0 (0.32.11): docs/PLAN-ETAPPE-11.md (alt, Prüfung und Qualität) umbenannt in docs/PLAN-ETAPPE-12.md (Schritte 12.x, Versionen 0.34.x, Rückfrage 1 als entschieden markiert). Neue docs/PLAN-ETAPPE-11.md "Komfort", Fassung 1 mit 31 Rückfragen: OpenCollective-Kontostand (Tab Kontostand, Konto.gs, Zeitauslöser), Mein Bereich (Einstellungen auf dem Gerät), Erinnerungen "Für dich" auf dem Start (ohne Push, Regeln an einer Stelle für späteres Push oder E-Mail), Sicherung des Sheets (Sicherung.gs) und Daten herunterladen (CSV), Übersicht für einen Zeitraum, Drucken, Dunkelmodus in zwei Schritten, Feinschliff, GitHub Actions. Der Plan geht davon aus, dass Sheet und Skript für Etappe 10 (Pull Request #38) vor 11.1 eingerichtet werden. Nur Doku.
-- 10.1a (0.32.12): Die Person hat beim Bereitstellen von 10.1 (25.10.2026) den Tab Wiki angelegt und den Code kopiert; formatieren brach mit "Ein unbekannter Fehler ist aufgetreten" ab. apps-script/Schema.gs: formatieren nutzt jetzt formatierenTabs (je Tab ein Aufruf mit getRangeList für alle Text-Spalten, jeder Tab mit try/catch, Protokoll je Tab "ok" oder "FEHLER", am Ende Zahl der Fehler), neu formatierenWiki (nur Tab Wiki) und spalteBuchstabe. Ursache nicht sicher bekannt (vermutlich ein Aussetzer bei Google bei den vielen Einzel-Aufrufen, zum Beispiel im großen Tab Log). Pull Request #50, gemergt.
-- Erledigt (27.10.2026): Die App meldete im Reiter Wiki „Unbekannte Tabelle“. Die Person hat den Tab Wiki von Hand auf „Nur Text“ formatiert (Format → Zahl → Nur Text). Seitdem tritt kein Fehler mehr auf, Skillshare-Seiten lassen sich speichern. **Aktueller Stand des Skripts ist 10.1a (Pull Request #50, 0.32.12).** Pull Request #51 (neue Datei Einrichtung.gs) und #52 (10.1c, formatieren mit Notweg je Spalte) werden nicht übernommen. Es wird im Entwicklungsprozess normal weitergemacht. Tritt der Fehler bei formatieren wieder auf: #52 enthält einen fertigen Vorschlag.
-- Prüfung Etappe 10 (27.10.2026): Die Gesamt-Prüfliste (59 Punkte, aus den Pull Requests #39 bis #47 und den alten Punkten 0.26.3 und 0.28.9 bis 0.28.13) ist bestätigt bis auf Punkt 26 (Bild im Wiki: „Bild konnte nicht gespeichert werden“, Ursache offen, siehe Offen) und die Anmerkungen unten. Damit sind auch 0.26.3 und 0.28.9 bis 0.28.13 bestätigt. Editor-Tests testenWiki und testenWikiSicher: laufen ohne Probleme (27.10.2026). Die Platzhalter in texte/impressum.txt und texte/datenschutz.txt hat die Person begonnen auszufüllen (Commits auf main).
-- 10.11 (0.32.14), Anmerkungen aus der Prüfung. Version 0.32.13 wird übersprungen (sie war kurz auf main, Pull Request #52, danach zurückgenommen; ein Browser könnte die alte Hülle unter diesem Namen noch haben).
-  - texte/anleitung/fragen.txt: Überschriften als Fragen.
-  - Neue Anleitungsseite texte/anleitung/admin.txt „Für Admins“ (in liste.txt nach „Zuständig für die App“, nicht öffentlich): PIN sperren oder ändern (Tab Zugang, aktiv, gueltig_bis, neue Zeile), Fehlversuche, Gelöschtes zurückholen (geloescht auf FALSE, mitgelöschte Einträge bei Projekt, Veranstaltung, Wiki-Seite), endgültig löschen (aufraeumenTesten, aufraeumen), testdatenListe, Testfunktionen, Skript neu bereitstellen. Wie Salt und Hash für einen neuen PIN erzeugt werden, fehlt noch (Rückfrage, Setup.gs liegt nur im Editor).
-  - Reiter Wiki, Entwicklung App: darunter eine zweite Karte „Zuständig für die App“ (Text aus texte/anleitung/zustaendig.txt, auch in der Suche).
-  - Wiki-Formular (js/views/wiki-eintrag.js): Knopf „Löschen“ beim Bearbeiten (ruft loeschen aus wiki.js, löscht danach den Entwurf im Gerät). Enter in einer Liste („- “ oder „1. “, auch eingerückt) beginnt den nächsten Punkt (bei Zahlen die nächste Zahl); Enter in einem leeren Punkt entfernt das Zeichen und beendet die Liste. Auch über beforeinput (Handy-Tastaturen).
-  - Öffentliches Wiki (#/wiki): Satz „Wissen der Klima-Gruppen in Landau zum Weitergeben. Diese Seite ist ohne Anmeldung sichtbar.“ entfernt.
-  - PC-Seitenleiste (js/ui/nav.js, CSS 0.32.14): „Name ändern“ und „Abmelden“ nebeneinander, Impressum, Info, Datenschutz, Wiki in einer Zeile (12 px), bei niedrigen Bildschirmen (bis 760 px Höhe) Reiter 40 px hoch, und die Leiste lässt sich scrollen. Vorher war sie bei 657 px Fensterhöhe 771 px hoch, die Links lagen unter dem Bildschirmrand.
-  - texte/anleitung/wiki.txt: Löschen im Formular und Listen mit Enter.
-- 10.11 gemergt (Pull Request #56). Prüfliste bestätigt (27.10.2026). Rückfragen: Die Person hat Setup.gs ins Repo hochgeladen (#57); „Zuständig für die App“ kommt nicht auf die öffentliche Seite.
-- 10.12 (0.32.15), Bild-Fehler. Angaben der Person: Meldung „Das Foto konnte nicht gespeichert werden.“, die Datei kommt nicht im Drive an, auch Fotos beim Material gehen nicht, testenFotoOrdner meldet alle Ordner OK (prüft aber nur das Lesen), unter „Ausführungen“ steht alles als abgeschlossen (der Fehler wird abgefangen). apps-script/Upload.gs: Die Meldung nennt jetzt Googles Grund („… Google meldet: …“, höchstens 200 Zeichen). Neue Editor-Funktion testenFotoSchreiben (legt je Gruppe eine Testdatei an und wirft sie in den Papierkorb, Protokoll „OK“ oder „FEHLER beim Schreiben: …“). texte/anleitung/admin.txt: Abschnitt „Einen neuen PIN setzen“ mit setupPins aus Setup.gs, testenFotoSchreiben bei den Testfunktionen. Muss von Hand bereitgestellt werden. Vermutete Ursachen (ungeprüft): Das Konto, unter dem das Skript läuft, darf in den Ordnern nur lesen, oder der Drive-Speicher des Kontos ist voll.
-- 10.12 gemergt (Pull Request #58). Ergebnis (27.10.2026): testenFotoSchreiben meldet für fff, gp und kb „OK, Schreiben geht“. Nach dem Übernehmen von Upload.gs und der neuen Bereitstellung klappt das Hochladen in der App ohne Fehler. Vermutlich war die bisherige Bereitstellung nicht auf dem neuesten Stand. Ursache nicht sicher bekannt.
-- 10.13 (0.32.16), Wunsch der Person: Bilder im Wiki sind ab 600 px Breite höchstens halb so breit wie der Text (am Handy volle Breite) und anklickbar. Ein Klick zeigt das Bild groß (zeigeBild aus js/ui/lightbox.js, wie beim Material). Gilt für die Seite in der App, die Vorschau im Formular und das öffentliche Wiki (js/wiki-format.js). texte/anleitung/wiki.txt ergänzt.
-- 10.13 gemergt (Pull Request #59). Rückfragen zu Plan 11 am 28.10.2026 beantwortet, weiter in „Etappe 11“ unten. Erledigt aus der Planung: Absatz zum Team im Datenschutztext (Name, Gruppen-Rollen, Kapazität mit Datum, kurze Notiz; nur für die Gruppe; Austragen löscht, alte Kapazitäten nach 6 Monaten weg); die Hilfe zum Team ins Wiki übernehmen.
+### 1.1 Worum es geht und mit wem du arbeitest
 
-## Etappe 11 (Komfort), fertig und geprüft mit 0.33.15
-Plan und Entscheidungen: docs/PLAN-ETAPPE-11.md (Fassung 2).
-- 11.1 (0.33.0): Plan Fassung 2 mit den Antworten vom 28.10.2026 (Abschnitt 3) und drei kleinen offenen Fragen (Abschnitt 4: Name und Verhalten des Reiters Cloud, Dunkelmodus „per Gruppe“, Schalter am PC). Neue Datei apps-script/Konto.gs: Kontostand und Cloud-Link stehen in Skripteigenschaften, nicht im Sheet (OC_KONTO_<gruppe_id>, KONTO_STAND_<gruppe_id> nur vom Skript, CLOUD_LINK_<gruppe_id>). Abruf über https://api.opencollective.com/graphql/v2 (nur Kontostand und Währung). Editor: kontoTesten, kontoAbrufen (Zeitauslöser), kontoAusloeserEinrichten (Montag 6 bis 7 Uhr, kein doppelter). Aktionen mit Login: gruppeInfo (Konto und Cloud-Link der eigenen Gruppe) und kontoAktualisieren (höchstens einmal pro Stunde ein echter Abruf, sonst gemerkter Stand mit frisch: true; Log „konto“). Code.gs verteilt beide. Am Sheet ändert sich nichts. texte/datenschutz.txt: Absatz Kontostand. texte/anleitung/admin.txt: Versionsverlauf, Kontostand und Cloud. docs/PLAN-ETAPPE-12.md: Rückfrage 11a „Was könnte kaputt gehen?“ und Punkt 4 in 12.2. CLAUDE.md zeigt auf Etappe 11. Muss von Hand bereitgestellt werden.
-- 11.1 gemergt (Pull Request #60).
-- 11.2 (0.33.1): .github/workflows/jekyll-gh-pages.yml auf die aktuellen Versionen der Actions (Node 24): actions/checkout v4 → v7, actions/configure-pages v5 → v6, actions/upload-pages-artifact v3 → v5. actions/deploy-pages war schon v5. actions/jekyll-build-pages bleibt v1 (läuft als Docker, nicht mit Node). Punkt „GitHub Actions“ unter „Offen“ gestrichen.
-- 11.1 von Hand bereitgestellt (28.10.2026): kontoTesten zeigt für fff 283.93 EUR (klimastreik-landau), Auslöser kontoAbrufen angelegt. Kalender-Abo in Google Kalender klappt. 11.2 gemergt (Pull Request #61).
-- Antworten auf die kleinen Fragen (28.10.2026): A Reiter „Cloud“ mit Knopf „Cloud öffnen →“ (neuer Tab), am PC nach Wiki, am Handy unter Mehr. B Dunkelmodus je Gerät, nicht je Gruppe (ein Schlüssel aktionsdeck_darstellung). C Schalter am PC in der Seitenleiste unter „Name ändern“ und „Abmelden“.
-- 11.3 (0.33.2): Neue Datei js/gruppeninfo.js: holt gruppeInfo (Kontostand, Cloud-Link) höchstens einmal pro Stunde, merkt den Stand in IndexedDB (<gruppe_id>:gruppeinfo, beim Abmelden weg) und im Speicher; kontoAktualisieren für „Jetzt abrufen“. js/app.js lädt den gemerkten Stand vor dem Gerüst und baut die Seite neu auf, wenn der Cloud-Link kommt oder geht. Teil Finanzen (projekt-finanzen.js): oben „Kontostand der Gruppe: … € (Stand Mo, 03.11.2026)“, Knöpfe „Jetzt abrufen“ und „Zu OpenCollective →“, nur für Gruppen mit Konto. Neuer Reiter Cloud (js/views/cloud.js, nav.js, mehr.js, config.js features.cloud), nur sichtbar mit Cloud-Link. Anleitung: projekte.txt ergänzt, neue Seite texte/anleitung/cloud.txt, admin.txt (nach Änderung der Eigenschaften neu laden). Die Person trägt CLOUD_LINK_g1 ein.
-- 11.3 gemergt (Pull Request #62). Die Person hat CLOUD_LINK_g1 eingetragen.
-- 11.4 (0.33.3): Neue Datei js/views/erinnerungen-rechnen.js mit allen Regeln für „Für dich“ (umfragenOffen, aktionVorbei, materialOffen, kapazitaetOffen). Kachel „Für dich (n)“ ganz oben auf dem Start (js/views/start.js), nur wenn es etwas gibt: laufende Umfrage ohne eigene Stimme (Klick öffnet die Umfrage, oeffneUmfrage aus start-umfragen.js jetzt exportiert), Material, das man selbst (Anzeigename = person) für ein Projekt mitgenommen hat, wenn die Aktion vorbei ist (Aktionsdatum, sonst Deadline vor heute, sonst Projekt abgeschlossen) und je Material und Projekt noch etwas draußen ist (Link zum Reiter Material), und die Kapazität (vorher eigene Zeile seit 9.7, ✕ blendet weiter 7 Tage aus). Neuer Zwischenspeicher <gruppe_id>:startfuerdich (Ausleihe, Material). Zahl am App-Symbol über navigator.setAppBadge, nur auf dem Start neu berechnet, beim Abmelden gelöscht (app.js). Keine Frage nach Mitteilungen. Anleitung start.txt: Abschnitt „Für dich“.
-- 11.4 gemergt (Pull Request #63). 11.3 geprüft: Kontostand und Reiter Cloud klappen, nachdem die Person Code.gs noch einmal kopiert hat (die bereitgestellte Fassung kannte gruppeInfo noch nicht).
-- 11.5 (0.33.4): Jahresübersicht. Neue Dateien js/views/uebersicht.js (Seite, Adresse #/g/<kurzname>/projekte/uebersicht, projekte.js leitet bei ctx.unter = 'uebersicht' dorthin) und js/views/uebersicht-rechnen.js (jahreAus, jahresZahlen, alsText). Knopf „📊 Jahresübersicht →“ über die volle Breite im Archiv der Projekte. Laufendes Jahr offen oben, frühere Jahre als Aufklapper, je Jahr „Als Text kopieren“. Inhalt: Projekte (Jahr des Aktionsdatums, sonst Deadline, Start, angelegt), Veranstaltungen intern/extern (nur gespeicherte, keine aus Vorlagen), Mobi veröffentlicht je Kanal, ToDos erledigt (davon in Projekten), Geld je Projekt (Datum des Postens, sonst Jahr des Projekts), Material Top 5 mitgenommen, Protokolle je Art, gehaltene Reden, Learnings je Aktionsart. Zwischenspeicher <gruppe_id>:uebersicht. Anleitung projekte.txt: Abschnitt „Jahresübersicht“.
-- 11.5 gemergt (Pull Request #64). 11.1 bis 11.4 von der Person geprüft (28.10.2026).
-- 11.4a (0.33.5): Wunsch der Person: Kachel „Für dich“ auffälliger. Gelber Hintergrund, oranger Rand oben und links (CSS-Block 0.33.5). Kein Rot, weil Rot für Fehler und Überfälliges steht. Die folgenden Schritte rücken eine Version weiter (11.6 = 0.33.6, 11.7 = 0.33.7, 11.8 = 0.33.8, 11.9 = 0.33.9).
-- 11.4a gemergt (Pull Request #65).
-- 11.6 (0.33.6): Drucken. Neue Datei js/ui/druck.js (drucke: baut ein Druckblatt #druckblatt, Klasse druckt am body, window.print(), nach afterprint wieder weg). Knopf „🖨 Drucken“ im Teil Material (Packliste, leere Kästchen, Menge, Ort) und im Teil ToDos (je Meilenstein, erledigte angekreuzt) eines Projekts. CSS-Block 0.33.6 mit @media print: Druckblatt allein auf dem Blatt; auf allen anderen Seiten fallen Leisten, Knöpfe, Meldungen und Fenster weg, weiß statt Hintergrundfarbe. Anleitung projekte.txt: Abschnitt „Drucken“.
-- 11.7 (0.33.7): Dunkelmodus Teil 1. Alle festen Farben in css/components.css (außer dem Druckblock @media print) stehen jetzt als Variablen in css/base.css (:root, Block „0.33.7“, gleiche Werte wie vorher). Auch die Kalender-Farben in js/views/kalender.js (grau, rot, rosa) sind Variablen (--grau-marke, --fehler, --frist-rosa). Nicht umgestellt, weil es Daten oder Standardwerte sind: Gruppenfarbe #368469 als Ersatzwert, Kanalfarben (js/kanaele.js), Berg-Farben (team-rechnen.js), Schriftfarbe auf Terminfarbe (kalender-rechnen.js, app.js), Foto-Hintergrund (bild.js). Hinweis für 11.8: css/components.css Zeile „:root { --hintergrund: #dfe8e4; }“ (Block 0.21.6) überschreibt den Hintergrund aus base.css. Geprüft: Bildschirmfotos aller Reiter und öffentlichen Seiten vorher und nachher (390 und 1280 px) sind gleich, außer der Versionsnummer.
-- 11.8 (0.33.8): Dunkelmodus Teil 2. Klasse „dunkel“ am <html>: setzt js/darstellung-start.js (normales Skript im <head>, vor dem ersten Zeichnen, kein helles Aufblitzen) und js/ui/darstellung.js (istDunkel, darstellungAnwenden, darstellungBeobachten, darstellungSchalter). Einstellung in js/store.js (getDarstellung, setDarstellung; Schlüssel aktionsdeck_darstellung = hell | dunkel, ohne Eintrag „wie das Gerät“), je Gerät für alle Gruppen, bleibt beim Abmelden. Dunkle Werte aller Farb-Variablen im CSS-Block 0.33.8 (nur @media screen, gedruckt wird hell; color-scheme: dark). Gruppen-Logos im Dunkeln auf heller runder Fläche. Gruppen- und Terminfarben bleiben. pastell(hex, dunkel) in kalender-rechnen.js gibt im Dunkeln eine gedeckte dunkle Farbe (Deadline-Kästen im Kalender, Mitteilungen mit Veranstaltungsfarbe). theme-color hell #368469, dunkel #0b0f0e. Schalter „Wie das Gerät | Hell | Dunkel“ in „Mehr“ unter „Abmelden“ und am PC in der Seitenleiste unter „Name ändern“/„Abmelden“. Kontrast im Testbrowser auf allen Reitern und öffentlichen Seiten geprüft (Schrift mindestens 4,5:1, große Schrift 3:1). Anleitung fragen.txt und erste-schritte.txt, datenschutz.txt (neuer Punkt im Gerät gespeichert).
-- 11.8a (0.33.9): Anmerkungen der Person zum Dunkelmodus. Links im hellen Modus dunkler (neue Variable --link, hell #276650, dunkel #6cc4a1; gilt für a, .wiki-text a, .wiki-iv-knopf, .info-gruppe-links a). Hintergrund im Dunkeln heller und grauer (#343a38), Kacheln (--flaeche) bleiben dunkel. Schalter jetzt „Gerät“ als Wort, Hell und Dunkel als weißer und schwarzer Punkt mit Rahmen (Name für Vorlesen und als Hinweis beim Zeigen). CSS-Block 0.33.9. Die folgende Version rückt weiter (11.9 = 0.33.10).
-- 11.6 bis 11.8a gemergt (Pull Requests #66 bis #69) und von der Person geprüft (28.10.2026). Anmerkungen zu 11.8 sind in 11.8a umgesetzt.
-- 11.9 (0.33.10): Abschluss. Doku: STAND.md, Status in PLAN-ETAPPE-11.md, texte/entwicklung.txt (Etappe 11 zusammengefasst), CLAUDE.md (Hilfsmodule gruppeninfo, erinnerungen-rechnen, uebersicht-rechnen, druck, darstellung; Reiter Cloud; Regel für neue Farben), PLAN-ETAPPE-12.md (Ausgangslage: was Etappe 11 neu bringt). Anmerkungen der Person (28.10.2026): Satz „Tragt nur ein, was nötig ist …“ aus texte/datenschutz.txt gelöscht; Info: Links der Gruppen mit Symbol (Webseite: Weltkugel, Instagram: Kamera-Symbol, als SVG im Code von info.js) und Name, die Adressen kommen wie bisher aus dem Tab Gruppen (webseite, instagram); Knopf „Wiki“ im Menü von Impressum, Info, Datenschutz; neue öffentliche Anleitungsseite texte/anleitung/neue-gruppe.txt („Neue Gruppe anlegen“, mit Platzhalter [Kontakt]) und Abschnitt „Eine neue Gruppe anlegen“ in admin.txt. CSS-Block 0.33.10.
-- 11.9 Nachtrag (0.33.11, im selben Pull Request #70): Signal-Knopf mit Rechenaufgabe. Neues Modul js/ui/signal.js (signalKnoepfe(knoten)): Steht in einem festen Text „[Signal]“, wird daraus der Knopf „💬 Auf Signal schreiben“. Klick öffnet ein Fenster mit einer Plus-Aufgabe (zwei Zahlen von 2 bis 9). Richtig: Signal-Link öffnet sich in neuem Tab, Fenster zu. Falsch: Hinweis und neue Aufgabe. Der Link stand fest in signal.js (seit 0.33.13 Skripteigenschaft, siehe 11.11). Benutzt nur für die festen Texte (info.js, wiki.js bei Anleitungsseiten und „Zuständig für die App“, wiki-oeffentlich.js bei festen Seiten), nie für Wiki-Seiten aus dem Sheet. „[Signal]“ steht in texte/anleitung/zustaendig.txt (Wen frage ich bei Problemen?) und texte/anleitung/neue-gruppe.txt. CSS-Block 0.33.11.
-- 11.10 (0.33.12): Öffentliche Termine nach Veranstalter (Wunsch der Person). js/views/termine-liste.js: neue Funktion veranstalterVon(t) (Veranstalter, ohne Eintrag die Gruppe, die eingetragen hat). Aktionskalender und #/termine: oben Auswahl „Alle Veranstalter“ plus jeder Veranstalter (gleiche Namen ohne Rücksicht auf Groß- und Kleinschreibung und Leerzeichen zählen als einer) und Sortierung „Nach Veranstalter“ (Standard: Überschrift je Veranstalter A bis Z, darin nach Datum) oder „Nach Datum“ (Überschrift je Monat wie bisher). Die Auswahl der Gruppe steht jetzt nur noch im Kasten „Im eigenen Kalender abonnieren“, weil das Skript das Abo nach Gruppe filtert. Kacheln zeigen den Veranstalter statt der Gruppe; Detailfenster zusätzlich „Eingetragen von: <Gruppe>“, wenn ein anderer Veranstalter eingetragen ist. Seitenleiste der Gruppenwahl bleibt nach Datum (die nächsten 8), zeigt immer „Veranstalter: …“. Anleitung kalender.txt. CSS-Block 0.33.12. Skript unverändert.
-- 11.11 (0.33.13): Signal-Link als Skripteigenschaft (Wunsch der Person). Neue Datei apps-script/Signal.gs mit aktionSignal (Aktion „signal“ ohne Login, in Code.gs eingetragen). Ohne Antwort: neue Aufgabe (zwei Zahlen 2 bis 9) und ein Schlüssel = Ablauf (10 Minuten) + Signatur mit dem Token-Geheimnis (signiere aus Util.gs); das Skript merkt sich nichts. Mit Antwort: Schlüssel prüfen, bei richtiger Summe kommt der Link aus der Skripteigenschaft SIGNAL_LINK (muss mit https:// beginnen). Fehlercodes: fehlt (kein Link eingetragen), falsch, abgelaufen, ungueltig. js/ui/signal.js holt Aufgabe und Link vom Skript; nach richtiger Antwort erscheint der Knopf „💬 Signal öffnen“ (ein Fenster nach einer Server-Antwort würden manche Handys blockieren). Der Link steht nicht mehr im Code, aber noch in der Geschichte des Repos (0.33.11). Anleitung admin.txt: Abschnitt „Signal-Link für Hilfe“. CSS-Block 0.33.13.
-- 11.11a (0.33.14): Anmerkungen der Person. texte/anleitung/neue-gruppe.txt: Zeile „Kontakt: [Kontakt]“ gelöscht, der Signal-Knopf steht als eigener Absatz ohne Aufzählungspunkt; texte/anleitung/zustaendig.txt: Signal-Knopf ebenso als eigener Absatz unter der Liste. Meldung „Bitte neu anmelden“ beim Signal-Knopf: Die bereitgestellte Skript-Version kannte die Aktion signal noch nicht (Code.gs ersetzen und neue Version bereitstellen). Code unverändert.
-- 11.9 bis 11.11a gemergt (Pull Requests #70 bis #73) und von der Person geprüft (28.10.2026): Signal-Knopf mit Rechenaufgabe klappt am PC und am Handy (Skript bereitgestellt, neuer Link als SIGNAL_LINK), öffentliche Termine nach Veranstalter. 11.12 (0.33.15): nur Doku, Etappe 11 abgeschlossen.
-- 12.1 (0.33.16): Plan Etappe 12 Fassung 2 (docs/PLAN-ETAPPE-12.md) mit den Wünschen der Person vom 28.10.2026 (W1 bis W10: Geschwindigkeit, Sicherheit mit /security-review und Strix, CSS ordnen, Ungenutztes löschen, eine Doku-Datei, Tabs sortieren, Barrierefreiheit, Layout beim Rauszoomen, App-Icon und Ladebildschirm, Fehlerseite), neuer Reihenfolge (12.2 bis 12.13, Ende mit 1.0.0) und 23 Rückfragen. Nur Doku.
-- Nächster Schritt: Die Person beantwortet die Rückfragen in docs/PLAN-ETAPPE-12.md (Abschnitt 4). Danach 12.2 eine Datei für Stand, Regeln und Pläne (0.34.0).
+AktionsDeck Landau ist eine Web-App (PWA) für Klima-Gruppen. Gruppen am Anfang: Fridays for Future (fff),
+Greenpeace (gp), Klimabündnis (kb). Weitere Gruppen kommen später dazu.
+Die Person, die mit dir arbeitet, ist keine Programmiererin und kein Programmierer. Sie arbeitet nur im Browser
+(GitHub-Webseite, Google Sheet, Apps-Script-Editor). Die Browser-Konsole ist bei ihr gesperrt.
+Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-Skript von Hand.
 
-## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
-- Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
-- js/views/kalender-rechnen.js: baut die Terminliste (Veranstaltungen, öffentliche Termine anderer Gruppen, Projekt-Aktion, Deadline, Projektbalken, Meilensteine, ToDo-Fristen). Nichts wird gespeichert.
-- js/views/kalender.js: Ansichten Liste, Monat (Startansicht) und Aktionskalender. Ansicht, Monat, Tag, Filter und Filter-Auf/Zu bleiben beim Reiterwechsel im Merker (an das Token gebunden). Filter: Intern, Extern, Projekte, Deadlines, Meilensteine, ToDos, Nur meine ToDos, Archiv-Projekte, Öffentliche Termine anderer Gruppen (Standard aus; Klick auf so einen Termin öffnet ein Info-Fenster). Am Handy klappt ein Trichter-Symbol neben der Suche die Filter auf, am PC sind sie immer sichtbar. Suche.
-- Kopf des Kalenders: "Kalender" links und Archiv rechts. Darunter links Liste, Monat, Aktionskalender, rechts Vorlagen und + Veranstaltung, alles in einer Zeile. Archiv zeigt alle vergangenen Termine grau mit Suche.
-- Liste: Kommende nach Monaten. Überfällige offene ToDos und Meilensteine bleiben bei Kommende (rot). Kacheln für externe, noch nicht veröffentlichte Veranstaltungen nur in der Liste (Haken "Veröffentlichen" speichert sofort).
-- Veranstaltung anlegen/ändern/löschen mit Uhrzeit, mehreren Tagen, freier Farbe (leer = Gruppenfarbe). "Veröffentlichen" nur bei extern (bei intern wird FALSE gespeichert); das Formular warnt, dass der Text öffentlich wird. Ganzer Kasten in Veranstaltungsfarbe mit 📅. Deadline ⏰ (Pastell-Kasten), ToDos ✅, Meilensteine 🏁. Projekte in Planung nie im Kalender. Abgeschlossene Projekte nur mit Filter Archiv-Projekte (grau).
-- Monat: Kopf in einer Zeile (Handy: ‹ Monat › und Heute links, 📅 rechts; PC: Monat mittig, Heute und 📅 rechts). Veranstaltungen im Tag oben und in Farbe (Handy: Streifen über die ganze Tagesbreite, übrige Termine als Punkte). Projektbalken in festen Bahnen (höchstens 3). Deadline-Abschnitt pink. Ab 600 px öffnet ein Klick auf einen Tag ein großes Fenster mit allen Terminen. Die Tagesliste bleibt immer. Knopf "+ Veranstaltungen an diesem Tag".
-- Termin-Vorlagen (js/views/kalender-vorlagen.js): je Gruppe, "Termin anlegen" füllt das Formular (nächster Wochentag). Standard: Plenum FFF (Donnerstag 18:30), Plenum GP (Dienstag 19:00), beide KHG, Moltkestraße 9, Landau. KB braucht keine.
-- Anheften (Regel): gruppeneigene externe Veranstaltung (art extern, Veranstalter leer) = Mitteilung am Schwarzen Brett ("Als Mitteilung anheften"). Interne oder fremde (extern mit Veranstalter) = Kommentar an der Pinnwand ("An Pinnwand heften", bezug_art pinnwand). Beide mit Doppelt-Prüfung und Farbe. Pinnwand-Kasten in Veranstaltungsfarbe; Mitteilung behält ihr Layout, bekommt aber linken Rand und Pastell-Hintergrund in der Veranstaltungsfarbe. Wird ein Pinnwand-Kasten zur Mitteilung (Kommentare.angeheftet = TRUE, nur bei Kommentaren mit Farbe), verschwindet er von der Pinnwand. Die Spalte Kommentare.angeheftet WIRD benutzt (kommentare.js, start.js).
-- Skript Termine.gs (ohne Login): Aktion termine als POST (App) und GET (`...exec?aktion=termine[&gruppe=fff][&format=ics]`). Nur art extern und oeffentlich TRUE, nur kommende (mehrtägige bis zum letzten Tag), nur aktive Gruppen. Felder: titel, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, gruppe_name, kurzname, farbe, gruppe_web, gruppe_instagram, gruppe_links. Keine IDs, Bearbeiter, Zeitstempel. Es gibt EINEN Zwischenspeicher-Eintrag "termine_alle" (2 Minuten), der Gruppenfilter läuft danach im Speicher. Gruppenfilter nur [a-z0-9_-], höchstens 30 Zeichen. Kalender-Datei (.ics) mit maskierten Sonderzeichen. Editor-Tests: testenTermine, testenTermineSicher.
-- Öffentliche Seite #/termine (ohne Login) und Aktionskalender im Reiter Kalender: derselbe Inhalt aus js/views/termine-liste.js (baueAktionskalender). Feste Kacheln (Datum, Titel, Uhrzeit, Ort, Gruppe; fehlende Angaben bleiben als Leerzeile) in Veranstaltungsfarbe, nach Monaten (PC drei Spalten). Klick öffnet ein Detailfenster (Veranstaltungslink, Webseite, Instagram und weitere Links der Gruppe). Für Angemeldete gibt es den Anheften-Knopf auf der Kachel und im Fenster. Gruppen-Auswahl nur bei Terminen von mindestens zwei Gruppen. Abo-Adresse (Kalender per URL) mit Gruppenfilter. Vergangene Termine werden auch in der App sofort ausgeblendet.
-- Gruppenwahl: linke Seitenleiste "Öffentliche Termine" (Rahmen, oberer Strich dunkelgrau #1a1e20, am PC fest/sticky, Handy unter den Gruppen). Die nächsten 8 Termine, darunter "Alle Termine →". Mit Terminen liegen die Gruppen am PC zu zweit pro Reihe, ohne Termine zu dritt. Ohne Termine ist keine Leiste da.
-- Was ist neu?: Veranstaltungen sind eine Quelle (nur kommende, nur von anderen, Abschnitt "Veranstaltungen").
-- Alle Fenster (fenster.js, modal.js bei Name ändern, material-buchen.js, material-vormerken.js) haben oben rechts ein ✕ (xKnopf aus js/ui/fenster.js). Der Detailbereich der Reiter ToDos und Material hat den Knopf "← Zurück".
-- nav.js: Klick auf "Mehr" im Kalender, Posts oder Hilfe öffnet die Übersicht (beiAktiv nur, wenn der Reiter wirklich "mehr" ist).
-- 6.9 erledigt: Sicherheitsprüfung Termine, Test, Aufräumen (Testdaten-Liste), siehe oben.
-- Wunsch für Etappe 7: Wichtige Veranstaltungen (werden schon über Pinnwand oder Mitteilung angeheftet) sollen in Mobi als Story einplanbar sein.
-- Mobi im Kalender: erledigt in 7.7 (0.29.9), im normalen Kalender mit Filter "Mobi" (kein eigener Mobi-Kalender).
+### 1.2 Sprache und Ton
 
-## Plan Etappen 7 bis 11
-Reiter (Stand 0.32.2): Start, Projekte, ToDos, Material, Mobi, Kalender, Dokumentation, Team, Wiki (statt Hilfe). "Posts" heißt Mobi. Der Reiter **Kalender bleibt** (Entscheidung Etappe 7). Untere Leiste am Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Dokumentation, Team, Wiki unter "Mehr").
-Geplant: Wiki statt Hilfe (Etappe 10). (Etappe 8 brachte den Reiter "Dokumentation", 📝, Kennung protokoll; Etappe 9 den Reiter "Team", 👥, Kennung team.)
-- Etappe 7 Mobi: abgeschlossen (siehe oben und docs/PLAN-ETAPPE-7.md).
-- Etappe 8 Protokoll, Reden, Learnings: abgeschlossen. Plan und Schritte in **docs/PLAN-ETAPPE-8.md** (Dauerprotokoll mit Google-Dokument für FFF, Etherpad bei GP von Hand, Markierungen im Text mit Vorschlägen zum Abhaken, Reden-Archiv mit Probelesen über Kommentare, Learnings aus dem Protokoll).
-- Etappe 9 Team: abgeschlossen (0.31.7, Plan und Schritte in docs/PLAN-ETAPPE-9.md): Reiter Team, Hüte pro Person, Kapazität 1 bis 10 mit Gültigkeitsdatum, Diagramm "Berg". Angaben sind für die Gruppe sichtbar, Zuordnung über den Anzeigenamen.
-- Etappe 10 Wiki und öffentliche Seiten (fertig und geprüft, 0.31.10 bis 0.32.16; Plan in docs/PLAN-ETAPPE-10.md): Wiki mit Bereich nur mit PIN (App-Anleitung, Skillshare) und öffentlichem Bereich. Impressum, Info, Datenschutz (die Texte aus 6.1 gibt es nicht, sie werden neu geschrieben; dazu ein Absatz zum Team). Die Hilfe zum Team (js/views/hilfe.js) kommt ins Wiki. Die Seite #/termine gibt es schon.
-- Etappe 11 Komfort (Plan Fassung 2 in docs/PLAN-ETAPPE-11.md, seit 0.33.0): Kontostand von OpenCollective in den Finanzen (nur FFF), Reiter Cloud (nur FFF), Erinnerungen „Für dich“ (Umfragen, Material, Kapazität) mit Zahl am App-Symbol, Jahresübersicht im Archiv der Projekte, Drucken (Material und ToDos eines Projekts), Dunkelmodus, GitHub Actions, Feinschliff. Gestrichen: Mein Bereich, Push, E-Mail, Sicherungskopien, Downloads.
-- Etappe 12 Prüfung und Qualität (Plan Fassung 2 in docs/PLAN-ETAPPE-12.md, seit 0.33.16): eine Doku-Datei, Prüfbericht, Sicherheit, Geschwindigkeit, Ungenutztes löschen, Barrierefreiheit, Layout am PC, App-Icon und Ladebildschirm, Fehlerseite, Tabs sortieren, CSS ordnen, Abschluss mit 1.0.0. Letzter Schritt vor 1.0.
-- Neue Sheet-Tabs: Mobi_Plan seit 0.29.0, Reden seit 0.30.0, Gruppen_Rollen und Kapazitaet seit 0.31.0, Wiki seit 0.32.0. Jede Etappe nennt vorher, was im Sheet und Skript zu ergänzen ist und wann neu bereitgestellt wird.
+- Schreibe alles auf Deutsch in einfachen Worten: Antworten, Commit-Nachrichten, Pull-Request-Texte, Kommentare im Code.
+- Kurze Sätze. Keine Fachwörter ohne Erklärung.
+- Nenne immer Dateipfade und die Schrittnummer (zum Beispiel „7.4a“).
+- Stelle alle Rückfragen gesammelt am Ende deiner Antwort, nicht zwischendurch.
+- Anmerkungen zur Anzeige (Aussehen, Texte) sammelt die Person selbst und meldet sie gesammelt. Frage dazu nicht nach.
 
-## Festlegungen Start als Zentrale (Etappe 5)
-- Tabs und Spalten (Schema.gs und js/schema.js): Umfragen (frage, optionen, ablauf_am, mehrfach, beendet, namentlich), Umfrage_Antworten (umfrage_id, person, auswahl), Mitteilungen (titel, text, angeheftet, farbe), Ideen (titel, beschreibung, aktionsart, projekt_id), Kommentare (projekt_id, bezug_art, bezug_id, text, angeheftet, farbe), Projekte zusätzlich aktionsart. Kommentare gehören nicht zu PROJEKT_PFLICHT (Pinnwand ohne Projekt). BOOL_SPALTEN enthält mehrfach, angeheftet, beendet, namentlich, oeffentlich.
-- Kommentare (js/ui/kommentare.js): baueKommentare({ ctx, token, art ('todo'|'pinnwand'|...), bezugId, projektId, titel, platzhalter, leerText, neuesteZuerst, max, beiAenderung, alsMitteilung }) gibt { el, laden } zurück. Pinnwand auf dem Start (art pinnwand, bezugId leer, max 30) hat je Kommentar "Als Mitteilung anheften" (öffnet das Mitteilungs-Formular vorausgefüllt, mit Farbe) und "Löschen". Kommentare mit Farbe sind Veranstaltungen und werden als farbiger Kasten gezeigt. ToDo-Kommentare: nur "Löschen". Im ToDo-Detail (todos.js) und im Bearbeiten-Fenster des ToDos im Projekt (projekt-todos.js). Kommentar-Zahl als Marke "💬 n" (todos-rechnen.js: kommentarZahlen, kommentarMarke) in der ToDo-Tabelle, den Karten und den ToDos im Projekt, nicht auf dem Start.
-- Umfragen (js/views/start-umfragen.js): Kachel zeigt nur laufende Umfragen, je eine Zeile. Klick öffnet ein Fenster (Abstimmen, Ergebnis mit Balken). Beendet wird NUR von Hand (Spalte beendet), danach Archiv. Frist (ablauf_am) beendet nichts: heute orange, überfällig rot, sonst leicht grün. Beendete Umfragen: Ergebnis als Text, bei namentlich mit Namen, Knopf "Ergebnis kopieren", "Wieder öffnen". Anonym ist Standard. Hat schon jemand abgestimmt, sind Antworten und "namentlich" nicht mehr änderbar. Eine Stimme je Anzeigename. Das Ablaufdatum sperrt nur in der App.
-- Schwarzes Brett (js/views/start-brett.js): Kachel zeigt nur ANGEHEFTETE Mitteilungen. Neue sind angeheftet. Nicht angeheftete stehen im Archiv (neueste 10, Suche für alle). Mitteilungen mit Farbe (Veranstaltung) zeigen Rand und Pastell-Hintergrund in dieser Farbe. Alle mit dem Gruppen-PIN dürfen alles löschen.
-- Start-Kopf: "Hallo Name" mit "+ Umfrage", "+ Mitteilung", "Archiv (n)" und Glocke "Was ist neu?" (js/ui/neu-seit.js, letzter Besuch pro Gerät und Gruppe in store.js). Quellen: Umfragen, Mitteilungen, Veranstaltungen, Kommentare, Projekte (mit Meilensteinen und ToDos), ToDos ohne Projekt. Eigene Änderungen stehen nicht drin. Darunter Umfragen und Brett, Kacheln Projekte und ToDos, ganz unten die Pinnwand.
-- Aktionsideen (js/views/ideen.js): Aufklapper im Reiter Projekte. "Als Projekt starten" legt ein Projekt in Planung an. Die Idee BLEIBT in der Liste.
-- Aktionsart: Feld im Projekt (Vorschläge aus Projekten, Learnings, Ideen). Im aufgeklappten Projekt stehen rechts Toggler "Learnings" und "Aktionsideen" mit derselben Aktionsart.
-- Material: "Auch vorgemerkt für ..." nennt nur AKTIVE Projekte. Vormerkungen senken die Verfügbarkeit nie.
-- Start: Projekte mit Status Planung stehen nicht in der Kachel Projekte.
-- Vorschlagslisten (datalist in form.js): höchstens 30 Einträge, je höchstens 40 Zeichen.
+### 1.3 So arbeitest du an einer Aufgabe
 
-## Festlegungen Projekte (Etappe 4)
-- Tabs und Spalten: Projekte (titel, beschreibung, ort, status planung|aktiv|erledigt|archiviert, start_datum, aktionsdatum, deadline, budget_geplant, aktionsart), Meilensteine (projekt_id, titel, datum, verantwortlich, erledigt), Projekt_Material (projekt_id, material_id, name, kategorie, menge, beschaffung vorhanden|kaufen|mieten|leihen, beschafft, notiz), Finanzen (projekt_id, projekt_material_id, posten, art, menge, einzelpreis, betrag_geplant, betrag_tatsaechlich, bezahlt, bezahlt_von, datum, beleg_id), Learnings (projekt_id, aktionsart, text), Protokolle, Posts, Vorlagen_ToDo, Projekt_Team (wird nicht mehr benutzt, bleibt im Sheet).
-- ToDos haben zusätzlich meilenstein_id.
-- Skript: Aktionen listMehrere, projektLoeschen (prüft zuerst Material draußen, Fehlercode "draussen"; löscht weich alle abhängigen Tabs; Learnings bleiben), buchen mit projekt_id je Position (Rückgabe pro Projekt geprüft), delete auf Projekte gesperrt.
-- Reiter Projekte (js/views/projekte.js): Übersicht "Laufende Projekte", Learnings und Aktionsideen als Aufklapper, Filter, Archiv-Knopf, aufklappbare Blöcke. Aktive oben, "In Planung" als Aufklapper ganz unten. Teile im Block: ToDos (mit Meilensteinen und "Offene Hüte"), Material, Finanzen, Learnings. Aufklapp-Zustand bleibt beim Reiterwechsel. Sprung per #/g/<kurzname>/projekte/<projekt-id>. Zwischenspeicher gruppe_id:projekte.
-- Abschließen: gesperrt, wenn festes Material für das Projekt draußen ist. Warnung bei offenen ToDos und nicht beschafftem Material. Status erledigt = Archiv. Verbrauchsmaterial sperrt nicht.
-- Hüte: offenes ToDo OHNE Verantwortliche (js/views/todos-hut.js: istOffenerHut, huetKnoepfe). "Offene Hüte" (Projekt), "Noch offen" (Reiter ToDos).
-- Meilenstein-Vorlagen: fest in js/vorlagen.js (Mobi, Pressearbeit, Genehmigung und Anmeldung, Material und Aufbau, Nachbereitung). tage_vorher = Tage vor dem Meilenstein-Datum (negativ = danach). Die Tage sind Platzhalter, nur die Mobi-Schritte stammen vom Nutzer.
-- Material im Projekt (projekt-material.js): Positionen, Haken "beschafft", "+ Aus Bestand", "+ Eigene Position", Ausleihen, Zurückgeben. Komplette Rückgabe löscht die Position. Verbrauchsmaterial mit 0 zurück = alles verbraucht.
-- Finanzen (projekt-finanzen.js): Posten, Haken bezahlt, Summen, Geplant leer = Menge mal Einzelpreis, "Aus Material übernehmen". Geld läuft über OpenCollective, kein Foto-Upload für Belege.
-- Learnings (projekt-learnings.js): Aktionsart frei mit Vorschlägen, Teil im Projekt und Übersicht nach Aktionsart.
-- Aufräumen (apps-script/Aufraeumen.gs, nur Editor): aufraeumenTesten, aufraeumen (löscht geloescht=TRUE älter als 90 Tage und Log älter als 180 Tage), testzeilenAnzeigen, testdatenListe. Einmal im Halbjahr. Keine neue Bereitstellung nötig.
-- Löschen in der App = geloescht TRUE (nur ausgeblendet).
+1. Lies diese Datei, dann (solange es ihn gibt) den Plan der laufenden Etappe, dann genau die Dateien, die du für den Schritt brauchst.
+2. Rate nie. Fehlt eine Datei, widersprechen sich Stand und Code, oder wirkt der Stand veraltet: Schreibe es klar in den
+   Pull-Request-Text und arbeite nur an dem weiter, was sicher ist.
+3. Prüfe zuerst `js/config.js` (VERSION) gegen den Kopf dieser Datei. Weichen sie ab, melde es.
+4. Arbeite auf einem eigenen Zweig. **Ein Schritt = ein Zweig = ein Pull Request.** Nie direkt auf `main`.
+5. Ändere nur, was der Schritt verlangt. Keine Aufräumaktionen nebenbei, keine Umbenennungen, kein Umformatieren.
+6. Bestehende Dateien bearbeitest du gezielt (Edit), du schreibst sie nicht komplett neu.
+   Ganze Dateien nur, wenn sie neu sind oder mehr als etwa die Hälfte neu ist.
+7. Aktualisiere am Ende diese Datei: Version im Kopf, nächster Schritt, Abschnitt 3 (Stand und Offen), bei Bedarf Festlegungen (4),
+   Merkzettel (5), Dateiübersicht (6) und eine kurze Zeile in der Geschichte (8). **Keine langen Berichte je Schritt mehr:**
+   Einzelheiten stehen im Pull Request.
+   Ändert der Schritt, wie ein Reiter funktioniert, passe im selben Pull Request die Seite in `texte/anleitung/` an
+   (Liste in `texte/anleitung/liste.txt`, Format wie im Wiki). Nach Version 1.0 bekommt `texte/entwicklung.txt` zusätzlich
+   je Version eine kurze Zeile (neueste oben). Dateien in `texte/` sind öffentlich abrufbar: nichts Internes hineinschreiben.
+8. Prüfe deine Arbeit (1.6), dann öffne den Pull Request mit dem Text aus 1.7.
 
-## Festlegungen ToDos (Etappe 3)
-- Tab ToDos: id, gruppe_id, erstellt_am, erstellt_von, geaendert_am, geaendert_von, geloescht, projekt_id, post_id, text, verantwortlich, faellig_am, erledigt, erledigt_am, erledigt_von, prioritaet, sortierung, details, meilenstein_id.
-- "text" = Titel, "details" = weitere Informationen. Reiter ToDos: offene oben, Tabelle "Erledigt, letzte 2 Wochen", Knopf Archiv (Regel erledigt_am, sonst geaendert_am, 14 Tage).
-- Datumsformate lesbar (normDatum). Überfällig rot, heute orange.
-- Filter: Suche, Verantwortlich, Fälligkeit, Priorität, Nur meine. Abhaken ohne Konfliktprüfung. Bearbeiten prüft Konflikt (bekannt = geaendert_am). Aktualisierung alle 45 Sekunden.
-- Start-Kachel ToDos zeigt nur allgemeine ToDos (ohne projekt_id und post_id).
-- Rechenhelfer js/views/todos-rechnen.js.
+### 1.4 Harte Regeln
 
-## Festlegungen Material und buchen
-- Festes Material: anzahl = Bestand, ausgeliehen = mitgenommen - zurueck - defekt. Verbrauchsmaterial: anzahl = Vorrat, Mitnehmen senkt, Rückgabe erhöht, kein "defekt".
-- buchen: { art, person, datum, projekt_id, notiz, positionen:[{material_id, anzahl, defekt, projekt_id}] }, max. 100. Fehlercodes: ungueltig, zuwenig, nicht_gefunden, beschaeftigt. Ausleihe wird nur über buchen geschrieben.
-- Vormerken (material-vormerken.js): Zeile in Projekt_Material, nur Planung, senkt die Verfügbarkeit nicht.
-- Foto-Upload: Browser verkleinert auf 1000 px, Skript prüft JPEG, speichert im Drive-Ordner FOTO_ORDNER_<gruppe_id>.
+- **Version:** Bei jeder Änderung `VERSION` in `js/config.js` UND in `sw.js` gemeinsam hochzählen.
+  Beide müssen am Ende exakt gleich sein. Kleine Schritte zählen den letzten Teil hoch (0.29.4 → 0.29.5),
+  ein neuer Hauptschritt zählt den mittleren Teil hoch. Im Zweifel: letzten Teil hochzählen.
+  Jede Nachbesserung zählt die Version hoch, auch in einem noch offenen Pull Request.
+- **`js/config.js`:** Dort steht die echte `API_URL`. Die Datei nie ersetzen und nie neu schreiben.
+  Ändere nur die Zeile mit `VERSION` und, falls im Plan verlangt, den Block `features`.
+- **Neue Dateien** (JS, CSS, Bilder), die zur App-Hülle gehören, trägst du in `sw.js` in die Liste `HUELLE` ein.
+  Gelöschte Dateien trägst du dort wieder aus. Prüfe am Ende, dass jede Datei in `HUELLE` existiert.
+- **Keine Geheimnisse im Repo:** keine PINs, keine Hashes, kein Token-Geheimnis, keine Sheet-Zugangsdaten.
+- **Texte aus Daten nur mit `textContent`** (oder dem `el()`-Helfer mit `text:`) anzeigen. Nie `innerHTML` mit Daten.
+- **Links aus Daten** (zum Beispiel Canva-Link) nur öffnen, wenn sie mit `https://` oder `http://` beginnen (`sichereUrl`).
+- **CSS:** Alle Regeln stehen in `css/components.css` (dazu `css/base.css` für Variablen und `css/layout.css` für das Gerüst).
+  **Bis Schritt 12.16** hängst du neue Regeln ans Ende von `css/components.css` an und beginnst mit einem Kommentar
+  `/* ---- <Version>: <Thema> ---- */`. **Ab 12.16** (CSS geordnet) kommen neue Regeln in den passenden Abschnitt, mit Kommentar
+  und Version; doppelte Regeln für dieselbe Klasse vermeidest du, du änderst die vorhandene. Den Abschnitt musst du der Person
+  nicht eigens nennen; sie fragt, wenn sie es wissen will. Bestehende Regeln änderst du nur, wenn es nicht anders geht, und sagst es im PR.
+- **Farben:** nur über die Variablen in `css/base.css`; jede neue Farbe braucht auch einen dunklen Wert (Dunkelmodus, Block 0.33.8 in `css/components.css`).
+- **Kein Build, keine Pakete, kein Framework.** Reines HTML, CSS und JavaScript mit ES-Modulen. Relative Pfade.
+  Keine externen Skripte oder Schriften laden.
+- **Hash-Routing:** `#/g/<kurzname>/<reiter>`.
+- **Keine Offline-Schreibzugriffe.** Schreiben geht nur mit Verbindung.
+- Tippflächen am Handy mindestens 44 px hoch. Am Handy gibt es Karten statt Tabellen.
+- Der Dateiname einer Ansicht ist `js/views/<name>.js` mit `render(container, ctx)`.
+  Reiter und Schalter stehen in `js/config.js` (`features`) und `js/ui/nav.js`.
 
-## Gruppen und Farben
-- g1/fff, g2/gp, g3/kb. Logos icons/gruppen/<kurzname>.svg (Ersatz .png, dann icons/logo.svg). Gruppenliste liegt in localStorage. Der Tab Gruppen hat zusätzlich webseite, instagram, weitere_links (öffentlich).
-- AktionsDeck Dunkelgrau #1a1e20, Dunkelgrün #368469. FFF #1b7340; GP #70bd1c; KB #165834 (außerdem #2fa142, #0894ad). Hintergrund #dfe8e4. CSS-Variablen --gruppe, --gruppe-text, --gruen, --gruen-hell, --hintergrund.
+### 1.5 Google-Skript (`apps-script/*.gs`)
 
-## Oberfläche (Stand)
-- Reiter aktuell: Start, Projekte, ToDos, Material, Mobi, Kalender, Dokumentation (Kennung protokoll), Team (seit 0.31.1), Wiki (seit 0.32.2, statt Hilfe). Handy: Start, Projekte, ToDos, Mobi, Mehr (Material, Kalender, Dokumentation, Team, Wiki).
-- Meldungen (toast) mittig. Projekte, Start, Kalender und Material-Dialoge nutzen Fenster (js/ui/fenster.js, zeigeFenster(titel, inhalt, beiZu, { aussenKlick }), mit ✕ oben rechts). Reiter ToDos und Material nutzen den Detailbereich rechts.
-- Öffentliche Seiten ohne Login: #/info/<seite> (Impressum, Info, Datenschutz, Texte seit 0.32.1 in texte/<seite>.txt), #/termine und #/wiki (seit 0.32.6).
+Du kannst das Skript nicht ausführen und das Sheet nicht ändern. Das macht die Person von Hand. Darum gilt:
 
-## Offen (mit Zeitpunkt)
-Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
-- **Etappe 10 (Kalender-Abo)**: Google Kalender klappt (28.10.2026). Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
-- **Aufräumen vor dem Update auf 1.0**: Alte, nicht mehr genutzte CSS-Regeln (.kal-pfeil, .kal-nav, .kal-datum, .kal-monat-kopf, .modal-vollbild, .dash-rechts-teil, seit 0.32.2 auch .hilfe-abschnitt, .hilfe-teil, .hilfe-text) und die ungenutzte Funktion topEinfuegen in protokoll-rechnen.js entfernen. Stören bis dahin nicht.
-- **Vor 1.0**: Test-ToDos und Test-Einträge im Sheet löscht die Person.
-- **ToDo für die Person (seit 0.32.1)**: Platzhalter in eckigen Klammern ausfüllen: texte/impressum.txt (Name, Anschrift, E-Mail, Verantwortlich nach MStV) und texte/datenschutz.txt (E-Mail-Adresse). Auf GitHub: Datei öffnen, Stift, ändern, "Commit changes". Danach Datenschutztext von jemandem prüfen lassen, der sich auskennt. Seit 0.32.2 auch texte/anleitung/zustaendig.txt (wer Adminzugriff hat, Kontakt bei Problemen), seit 0.33.10 texte/anleitung/neue-gruppe.txt ([Kontakt]) und texte/entwicklung.txt (wer die App entwickelt hat). Achtung: Dateien in texte/ sind öffentlich lesbar, dort nur Namen, die öffentlich sein dürfen.
+- Ändere `.gs`-Dateien im Repo nur, wenn der Schritt es verlangt.
+- Das Skript prüft Spaltenköpfe streng. Neue Spalten im Sheet müssen **vor** dem Skript da sein.
+- Beim Schreiben ins Sheet werden Werte, die mit `=`, `+`, `-` oder `@` beginnen, mit führendem Hochkomma geschützt.
+  Jeder Schreibzugriff läuft mit `LockService`. Es werden nur geänderte Felder geschrieben.
+- **Wenn sich eine `.gs`-Datei oder das Sheet ändert, schreibst du in den Pull-Request-Text einen Abschnitt
+  „Von Hand zu erledigen“** mit genau diesen Punkten, in dieser Reihenfolge:
+  1. Welche Spalten oder Tabs im Sheet neu angelegt werden (Namen zum Abtippen, Zeile 1, in welcher Reihenfolge).
+  2. Welche `.gs`-Dateien sich geändert haben. Die Person kopiert dann die **ganze Datei** aus dem Repo in den
+     Apps-Script-Editor (Datei im Repo öffnen → „Raw“ → alles kopieren → im Editor ersetzen).
+  3. Welche Funktion im Editor einmal ausgeführt wird (zum Beispiel `formatieren`) und was im Protokoll stehen soll.
+  4. Danach: Bereitstellen → Bereitstellungen verwalten → Stift → „Neue Version“ → Bereitstellen.
+- Gibt es keine Änderung an Sheet oder Skript, schreibe ausdrücklich: „Sheet und Skript bleiben unverändert.“
+- Neue Sheet-Spalte oder neuer Tab: erst im Sheet ergänzen (Kopfzeile von Hand tippen, ohne unsichtbare Zeichen),
+  dann `Schema.gs` (Editor und GitHub), dann `formatieren()` (nur bei neuen Text-Spalten nötig), dann neu bereitstellen.
+- Erfahrung: Kennt die App eine neue Aktion nicht („Bitte neu anmelden“, „Unbekannte Aktion“), ist meist eine alte Fassung von
+  `Code.gs` bereitgestellt. Dann `Code.gs` ersetzen und eine neue Version bereitstellen.
 
-## Dateiübersicht
-- docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (abgeschlossen), PLAN-ETAPPE-10.md (Fassung 2, seit 0.32.0, fertig und geprüft), PLAN-ETAPPE-11.md (Komfort, Fassung 2, seit 0.33.0, fertig gebaut mit 0.33.13), PLAN-ETAPPE-12.md (Prüfung und Qualität, Fassung 1 seit 0.32.10, Fassung 2 seit 0.33.16), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base mit allen Farb-Variablen seit 0.33.7, layout, components; Blöcke bis 0.33.13 am Ende, dunkle Farben in den Blöcken 0.33.8 und 0.33.9)
-- apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs, Wiki.gs (seit 0.32.0), Konto.gs (seit 0.33.0), Signal.gs (seit 0.33.13), Setup.gs (setupGeheimnis, setupPins; seit 27.10.2026 auch im Repo, von der Person hochgeladen)
-- js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js, wiki-format.js (seit 0.32.1), gruppeninfo.js (seit 0.33.2), darstellung-start.js (seit 0.33.8, normales Skript, kein Modul)
-- texte/ (seit 0.32.1): impressum.txt, info.txt, datenschutz.txt, entwicklung.txt (seit 0.32.2), anleitung/ (liste.txt, team.txt, zustaendig.txt seit 0.32.2; erste-schritte, start, projekte, todos, material, mobi, kalender, dokumentation, wiki, fragen seit 0.32.5; admin seit 0.32.14; cloud seit 0.33.2; neue-gruppe seit 0.33.10, öffentlich). Format wie im Wiki, auf GitHub direkt änderbar.
-- js/ui/: signal (seit 0.33.11), darstellung (seit 0.33.8), druck (seit 0.33.6), dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
-- js/views/: cloud (seit 0.33.2), erinnerungen-rechnen (seit 0.33.3), uebersicht und uebersicht-rechnen (seit 0.33.4), wiki, wiki-rechnen (seit 0.32.2), wiki-eintrag (seit 0.32.3), wiki-oeffentlich (seit 0.32.6), team, team-rechnen (seit 0.31.1), team-rollen (seit 0.31.2), team-eintrag (seit 0.31.3), team-berg (seit 0.31.5), team-namen und projekt-team (seit 0.31.6), gruppen, login, start, start-umfragen, start-brett, mehr, info, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
-- Reiter Wiki seit 0.32.2 (wiki, wiki-rechnen; Tab Wiki und Wiki.gs seit 0.32.0), Reiter Hilfe entfällt (hilfe.js gelöscht). Reiter Team seit 0.31.1 (Eintragen seit 0.31.3, Berg seit 0.31.5, Hilfe dazu seit 0.31.7). Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
+### 1.6 Prüfen vor dem Pull Request
 
-## Hinweise
-- config.js enthält die echte API_URL: nie ersetzen, nur VERSION ändern.
-- Neue Dateien immer in sw.js (HUELLE) eintragen, gelöschte austragen. Dateien in HUELLE müssen im Repo existieren.
-- Skript geändert = neue Bereitstellung (Bereitstellen, Bereitstellungen verwalten, Stift, Neue Version). Neue Sheet-Spalte oder neuer Tab: erst im Sheet ergänzen (Kopfzeile von Hand tippen, ohne unsichtbare Zeichen), dann Schema.gs (Editor und GitHub), dann formatieren() ausführen (nur bei neuen Text-Spalten nötig), dann neu bereitstellen.
-- Skripteigenschaften (nur im Editor): TOKEN_GEHEIMNIS, FOTO_ORDNER_g1, g2, g3. Seit 0.30.0: PROTOKOLL_DOK_g1 (ID des FFF-Dokuments), PROTOKOLL_DOK_g2 (GP, seit 22.10.2026), freiwillig PROTOKOLL_LINK_<gruppe_id> (externes Protokoll, nur https://; ein Dokument geht vor).
-- Nach jedem Commit: Actions grün abwarten, Seite zweimal neu laden.
-- Ein Syntaxfehler in einer Datei lässt den Reiter auf "Dieser Reiter ist noch in Arbeit" zurückfallen (app.js lädt jeden Reiter als Modul). Bei diesem Symptom zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern und übrig gebliebene Reste wie "..." prüfen, vor allem `});` und `}, s.token);`.
-- In Util.gs gibt es schon eine Funktion aus(): in neuen Skriptdateien keine Variable so nennen. Hilfsfunktionen in Termine.gs beginnen mit t oder ics, in Team.gs mit team, in Wiki.gs mit wiki (Wiki.gs benutzt tLink, tInstagram, tLinks, tFarbe aus Termine.gs).
-- Zwischenspeicher je Reiter: ladeMitCache(key, ladeFn, anzeigen, zuerstCache), Schlüssel gruppe_id:<name> (Start: :todos, :projekteliste, :startextra; Kalender: :kalender; Protokoll: :protokoll; Reden: :reden; Team: :team). Vorheriger Anzeigename (Team, seit 0.31.3): aktionsdeck_name_vorher. Start-Zeile Team ausgeblendet (seit 0.31.6): aktionsdeck_teamhinweis_<gruppe_id>. Entwürfe nur auf dem Gerät (js/store.js): Protokoll aktionsdeck_entwurf_protokoll_<gruppe_id>, Rede aktionsdeck_entwurf_rede_<gruppe_id>, Wiki aktionsdeck_entwurf_wiki_<gruppe_id> (seit 0.32.3); Abmelden löscht alle. Öffentliche Termine: Schlüssel oeffentlich:termine. Öffentliches Wiki (seit 0.32.6): oeffentlich:wiki und oeffentlich:wiki:<gruppe>:<adresse>. Wiki im Reiter: gruppe_id:wiki. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in zeigen() Fehlendes ergänzen.
-- Formulare: js/ui/form.js (Feldtypen text, zahl, datum, zeit, farbe, langtext, auswahl, bool, foto). Listen: zeigeListe in js/ui/table.js.
-- Arbeitsweise im Chat: neue Dateien ganz, bei bestehenden Dateien nur die zitierten Änderungen (erste und letzte Zeile des Bereichs, vollständig mit Klammern und Semikolons), CSS ans Ende anhängen. Am Ende Prüfliste und Tabelle "Wenn etwas nicht klappt". Der Nutzer arbeitet nur im Browser, Konsole gesperrt, und sammelt Anmerkungen zur Anzeige.
+Du hast keinen Browser auf dem Gerät der Person. Prüfe darum, was du kannst, und sage, was du nicht prüfen konntest.
+
+1. Syntax: Für jede geänderte oder neue `.js`-Datei eine temporäre Kopie mit Endung `.mjs` anlegen und
+   `node --check <datei>.mjs` ausführen. Die Kopien nicht einchecken.
+2. Importe: Jeder `import`-Pfad in geänderten Dateien zeigt auf eine vorhandene Datei, und jeder importierte Name wird
+   in dieser Datei auch exportiert.
+3. `sw.js`: Jede Datei in `HUELLE` existiert. Jede neue JS- oder CSS-Datei steht in `HUELLE`.
+4. Version: `js/config.js` und `sw.js` haben dieselbe VERSION.
+5. Keine Reste: Suche nach `innerHTML`, `console.log`, `debugger`, `TODO` in deinen Änderungen.
+6. Diese Datei ist aktualisiert.
+7. Bei sichtbaren Änderungen: im Testbrowser alle betroffenen Reiter bei Handy- (390 px) und PC-Breite (1280 px), hell und dunkel.
+
+### 1.7 Pull-Request-Text (immer so aufbauen)
+
+```
+## Schritt <Nummer>: <Titel>
+Version: <alt> → <neu>
+
+### Was ist neu
+- (einfache Sätze)
+
+### Geänderte Dateien
+- Pfad: kurz, was sich ändert
+
+### Sheet und Skript
+Sheet und Skript bleiben unverändert.   (oder: Abschnitt „Von Hand zu erledigen“, siehe 1.5)
+
+### Prüfen (Liste für die Person, am Handy und am PC)
+1. ...
+
+### Nicht geprüft / unsicher
+- (ehrlich auflisten)
+
+### Rückfragen
+1. ...
+```
+
+Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abwarten, die Seite zweimal neu laden, unter „Info“ die Version prüfen.
+
+### 1.8 Was du nicht tust
+
+- Nicht auf `main` pushen, keinen Pull Request selbst mergen.
+- Keine Dateien löschen, die der Plan nicht ausdrücklich nennt.
+- Keine Daten, PINs oder Geheimnisse erfinden, abfragen oder einchecken.
+- Keine neuen Bibliotheken, keinen Build, keine Tracker, keine Cookies.
+- Keine Funktionen bauen, die nicht im Plan stehen. Ideen schreibst du unter „Rückfragen“.
+- Keine echten Personennamen oder Fotos mit Personen in Beispieldaten.
+
+---
+
+## 2. Aufbau
+
+### 2.1 Oberfläche
+
+- Statische PWA auf GitHub Pages. Repo-Bereiche: `index.html`, `manifest.webmanifest`, `sw.js`, `docs/`, `icons/`,
+  `css/` (base, layout, components), `apps-script/` (Kopie des Google-Skripts),
+  `js/` (app, config, api, store, cache, schema, vorlagen, kanaele, wiki-format, gruppeninfo, darstellung-start, ui/, views/),
+  `texte/` (feste Texte im Wiki-Format, öffentlich abrufbar).
+- **PC (ab 960 px):** Seitenleiste links, Inhalt in der Mitte, Details rechts. Seitenleiste unten: „Name ändern“, „Abmelden“,
+  Schalter Hell/Dunkel, Links Impressum, Info, Datenschutz, Wiki.
+  **Handy (bis 959 px):** untere Leiste (Start, Projekte, ToDos, Mobi, Mehr), Details als Vollbild.
+- **Reiter:** Start, Projekte, ToDos, Mobi, Material, Kalender, Dokumentation (Kennung `protokoll`), Team, Wiki, Cloud
+  (am Handy alle ab Material unter „Mehr“). Cloud erscheint nur, wenn die Gruppe einen Cloud-Link hat (`js/gruppeninfo.js`).
+- **Öffentlich ohne Login:** `#/info/<seite>` (Impressum, Info, Datenschutz; Texte in `texte/<seite>.txt`), `#/termine`, `#/wiki`.
+- Meldungen (toast) mittig. Fenster über `js/ui/fenster.js` (`zeigeFenster(titel, inhalt, beiZu, { aussenKlick })`, mit ✕ oben rechts).
+  ToDos und Material nutzen den Detailbereich rechts (mit „← Zurück“).
+- Grün als Grundfarbe, Gruppenfarbe aus dem Sheet (CSS-Variable). Ein gemeinsames App-Icon. Dunkelmodus je Gerät.
+
+### 2.2 Schnittstelle und Zugang
+
+- Google Apps Script als Web-App (Ausführen als Besitzer, Zugriff: Jeder), an das Google Sheet gebunden. Aufruf per POST mit JSON als
+  `text/plain`. Das Feld für die Aktion heißt `aktion`. Antwort: `{ok, data, error, code}`.
+- Aktionen mit Login: `login`, `bootstrap`, `list` (mit `seit`), `listMehrere`, `create`, `update`, `delete` (weich), `batchCreate`,
+  `uploadImage`, `buchen`, `projektLoeschen`, `protokollSpeichern`, `protokollInsDokument`, `protokollInfo`, `gruppeInfo`, `kontoAktualisieren`.
+  Ohne Login: `gruppen`, `termine` (auch als GET, mit `format=ics`), `wiki` (nur öffentliche Daten, keine Namen), `signal`
+  (Rechenaufgabe, danach der Signal-Link aus der Skripteigenschaft `SIGNAL_LINK`).
+- **Zugang:** Ein PIN pro Gruppe (mindestens 6 Zeichen), kein Admin-PIN, keine Einzelkonten. Das Skript prüft den PIN
+  (SHA-256 mit Salt, Hash im Tab `Zugang`) und gibt ein signiertes Token (HMAC, 14 Tage) mit `gruppe_id` und `zugang_id`.
+  Geheimnis nur in den Skripteigenschaften (`TOKEN_GEHEIMNIS`). Jeder Aufruf prüft Token, Gruppe und ob der Zugang aktiv ist.
+  Ein Token sieht nur Daten seiner Gruppe. Sperre pro Gruppe: 8 Fehlversuche in 15 Minuten → 15 Minuten gesperrt.
+- **Anzeigename:** „Wer bist du?“ wird nur im Gerät gespeichert und landet im Log.
+- **Gleichzeitiges Arbeiten:** Beim Ändern schickt die App den bekannten Wert `geaendert_am` als `bekannt` mit.
+  Weicht er ab, zeigt sie einen Hinweis statt zu überschreiben. Löschen ist weich (`geloescht = TRUE`).
+  Offene Seiten laden alle 30 bis 60 Sekunden neu. Zwischenspeicher: IndexedDB (`js/cache.js`, `ladeMitCache`).
+- Fotos: Drive-Ordner je Gruppe mit Link-Freigabe, im Sheet steht nur die `foto_id`. Keine Personen auf Fotos.
+
+### 2.3 Google Sheet (Tabs)
+
+Alle Daten-Tabs haben zusätzlich: `id, gruppe_id, erstellt_am, erstellt_von, geaendert_am, geaendert_von, geloescht`.
+Die erste Zeile enthält die Spaltenköpfe (klein, ohne Umlaute). Die Schreibweise `gruppe_id` ist genau so richtig.
+Die Tabs und Spalten stehen in `apps-script/Schema.gs` und `js/schema.js`. **Beide müssen zusammenpassen.**
+Eine neue Tabelle oder Spalte ist nur ein Eintrag in `Schema.gs` und in `js/schema.js`.
+
+- System-Tabs: `Gruppen` (gruppe_id, name, kurzname, farbe, sortierung, aktiv, webseite, instagram, weitere_links),
+  `Zugang` (zugang_id, gruppe_id, pin_salt, pin_hash, aktiv, gueltig_bis), `Einstellungen` (schluessel, wert),
+  `Log` (zeit, gruppe_id, aktion, tabelle, datensatz_id, anzeigename).
+- Daten-Tabs (Spalten siehe `Schema.gs`): Personen, Material, Ausleihe, ToDos, Projekte, Meilensteine, Projekt_Material, Finanzen,
+  Vorlagen_ToDo, Protokolle, Reden, TOPs, Kommentare, Learnings, Umfragen, Umfrage_Antworten, Mitteilungen, Ideen,
+  Veranstaltungen, Termin_Vorlagen, Mobi_Plan, Gruppen_Rollen, Kapazitaet, Wiki.
+- Ungenutzt, bleiben im Sheet: `Posts` (ersetzt durch Mobi_Plan), `Projekt_Team`, Spalte `Projekte.kanaele`. Das Skript räumt
+  `Posts` und `Projekt_Team` beim Löschen eines Projekts noch mit auf.
+- Höchstlänge für Textfelder 5000 Zeichen, Ausnahmen 20 000 (`MAX_TEXT`, `MAX_TEXT_AUSNAHMEN` in `Schema.gs`).
+  `NIE_LOESCHEN`: fertige Protokolle und Reden nur mit `vonHand: true`.
+
+---
+
+## 3. Aktueller Stand und Offen
+
+### 3.1 Stand
+
+- Etappen 0 bis 11 sind fertig und von der Person geprüft (bis 0.33.15, 28.10.2026). Kurzfassung in Abschnitt 8,
+  ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
+- Etappe 12 läuft: 12.1 Plan Fassung 2 (0.33.16, #75), 12.2 Plan Fassung 3 und diese eine Doku-Datei (0.34.0).
+- Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
+  Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
+- Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
+
+### 3.2 Offen
+
+- **Für die Person vor 1.0:** Testdaten im Sheet löschen (in 12.17; `testdatenListe` in `apps-script/Aufraeumen.gs` zeigt sie mit Zeilennummern),
+  auch Testeinträge aus der Sicherheitsprüfung 12.3. Datenschutztext von jemandem prüfen lassen, der sich auskennt.
+- **Für den Agenten (12.8):** ungenutzte CSS-Regeln `.kal-pfeil`, `.kal-nav`, `.kal-datum`, `.kal-monat-kopf`, `.modal-vollbild`,
+  `.dash-rechts-teil`, `.hilfe-abschnitt`, `.hilfe-teil`, `.hilfe-text`; ungenutzte Funktion `topEinfuegen` in `js/views/protokoll-rechnen.js`.
+- Der alte Signal-Link steht noch in der Geschichte des Repos (0.33.11). Der aktuelle Link steht nur in der Skripteigenschaft.
+- Wenn `formatieren` wieder mit „Ein unbekannter Fehler ist aufgetreten“ abbricht: Pull Request #52 (nicht übernommen) enthält einen fertigen Notweg.
+
+---
+
+## 4. Festlegungen je Bereich
+
+Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
+
+### 4.1 Start (Etappe 5, 11)
+
+- Kopf: „Hallo Name“ mit „+ Umfrage“, „+ Mitteilung“, „Archiv (n)“ und Glocke „Was ist neu?“ (`js/ui/neu-seit.js`, letzter Besuch je Gerät und Gruppe).
+  Quellen: Umfragen, Mitteilungen, Veranstaltungen, Kommentare (auch zu Mobi, Reden, Wiki), Projekte mit Meilensteinen und ToDos, ToDos ohne Projekt,
+  Mobi-Beiträge, Protokolle und Reden, neue Team-Mitglieder. Eigene Änderungen stehen nicht drin.
+- **„Für dich (n)“** ganz oben (`js/views/erinnerungen-rechnen.js`), gelb mit orangem Rand, nur wenn es etwas gibt: laufende Umfrage ohne eigene Stimme,
+  selbst mitgenommenes Material eines Projekts, dessen Aktion vorbei ist, fehlende oder abgelaufene Kapazität (✕ blendet 7 Tage aus). Zahl am App-Symbol
+  (`navigator.setAppBadge`), nur auf dem Start neu berechnet, beim Abmelden gelöscht.
+- Umfragen (`js/views/start-umfragen.js`): Kachel zeigt nur laufende. Beendet wird **nur von Hand** (Spalte `beendet`). Frist sperrt nur in der App.
+  Anonym ist Standard. Nach der ersten Stimme sind Antworten und „namentlich“ fest. Eine Stimme je Anzeigename.
+- Schwarzes Brett (`js/views/start-brett.js`): Kachel zeigt nur angeheftete Mitteilungen, neue sind angeheftet, übrige im Archiv.
+- Pinnwand (Kommentare mit `bezug_art pinnwand`), unter den Kacheln Projekte und ToDos (rechte Spalte ToDos und TOPs).
+  „Als Mitteilung anheften“. Kommentare mit Farbe sind angeheftete Veranstaltungen.
+- Kacheln: Projekte (ohne Status Planung), ToDos (nur allgemeine, ohne `projekt_id` und `post_id`), TOPs mit „+ Protokoll“.
+- Kommentare überall über `baueKommentare` (`js/ui/kommentare.js`), Marke „💬 n“.
+- Aktionsideen (`js/views/ideen.js`): Aufklapper im Reiter Projekte, „Als Projekt starten“ öffnet „Neues Projekt“ vorausgefüllt; die Idee bleibt.
+- Vorschlagslisten (datalist in `form.js`): höchstens 30 Einträge, je höchstens 40 Zeichen.
+
+### 4.2 Projekte (Etappe 4, 11)
+
+- Status `planung|aktiv|erledigt|archiviert`. Erledigt = Archiv (Filter Archiv). „In Planung“ als Aufklapper unten, nie im Kalender.
+- Teile im Block: ToDos (mit Meilensteinen und „Offene Hüte“), Material, Finanzen, Learnings, Reden, Team, Mobi. Sprung per `#/g/<kurz>/projekte/<id>`.
+- Abschließen gesperrt, wenn festes Material draußen ist. Warnung bei offenen ToDos und nicht beschafftem Material.
+- `projektLoeschen` (Skript) prüft zuerst Material draußen (Code `draussen`), löscht weich alle abhängigen Tabs; Learnings und Protokolle bleiben.
+- **Standard-ToDos** beim Anlegen (Anhang A, `js/vorlagen.js` `STANDARD_TODOS`), Fälligkeit vom Aktionsdatum.
+  Meilenstein-Vorlagen fest in `js/vorlagen.js` (Genehmigung und Anmeldung, Material und Aufbau, Nachbereitung).
+- Finanzen: Geld läuft über OpenCollective, kein Beleg-Upload. **Kontostand** oben im Teil Finanzen nur für Gruppen mit Konto (FFF),
+  „Jetzt abrufen“ höchstens einmal pro Stunde ein echter Abruf.
+- **Jahresübersicht** (`js/views/uebersicht.js`, `uebersicht-rechnen.js`) im Archiv, Adresse `#/g/<kurz>/projekte/uebersicht`.
+- **Drucken** (`js/ui/druck.js`): Packliste im Teil Material, ToDos je Meilenstein. CSS-Block 0.33.6 mit `@media print`.
+- Hüte: offenes ToDo ohne Verantwortliche (`js/views/todos-hut.js`).
+
+### 4.3 ToDos (Etappe 3)
+
+- `text` = Titel, `details` = weitere Informationen. Offene oben, „Erledigt, letzte 2 Wochen“, Archiv (erledigt_am, sonst geaendert_am, 14 Tage).
+- Überfällig rot, heute orange. Filter: Suche, Verantwortlich, Fälligkeit, Priorität, Nur meine. Abhaken ohne Konfliktprüfung, Bearbeiten mit.
+- Sammel-ToDos „📣 Kanalgruppe“ aus Mobi-Beiträgen (berechnet, nicht gespeichert, `js/views/mobi-todo.js`).
+
+### 4.4 Material und Ausleihe (Etappe 2)
+
+- Festes Material: `anzahl` = Bestand, ausgeliehen = mitgenommen − zurueck − defekt. Verbrauchsmaterial: `anzahl` = Vorrat.
+  Verfügbar = anzahl − Summe mitgenommen + Summe zurueck.
+- `buchen`: `{ art, person, datum, projekt_id, notiz, positionen:[{material_id, anzahl, defekt, projekt_id}] }`, höchstens 100.
+  Fehlercodes: ungueltig, zuwenig, nicht_gefunden, beschaeftigt. Ausleihe wird nur angehängt, nur über `buchen`.
+- Vormerken: Zeile in Projekt_Material, senkt die Verfügbarkeit nie. „Auch vorgemerkt für …“ nennt nur aktive Projekte.
+- Foto-Upload: Browser verkleinert auf 1000 px, Skript prüft JPEG, speichert in `FOTO_ORDNER_<gruppe_id>`.
+
+### 4.5 Kalender und Veranstaltungen (Etappe 6)
+
+- Termine werden berechnet (`js/views/kalender-rechnen.js`): Veranstaltungen, öffentliche Termine anderer Gruppen, Projekt-Aktion, Deadline,
+  Projektbalken, Meilensteine, ToDo-Fristen, Mobi-Beiträge. Nichts davon wird gespeichert.
+- Ansichten Liste, Monat (Start), Woche, Aktionskalender. Ansicht, Monat, Filter bleiben beim Reiterwechsel.
+- Veranstaltung: intern/extern, mehrere Tage, freie Farbe. „Veröffentlichen“ nur bei extern.
+- Anheften: eigene externe Veranstaltung = Mitteilung; interne oder fremde = Pinnwand-Kasten in Farbe.
+- Termin-Vorlagen: Plenum FFF (Donnerstag 18:30), Plenum GP (Dienstag 19:00), beide KHG, Moltkestraße 9, Landau.
+- Öffentlich (`Termine.gs`): nur extern und veröffentlicht, nur kommende, nur aktive Gruppen; keine IDs, Bearbeiter, Zeitstempel.
+  Zwischenspeicher `termine_alle` (2 Minuten). Kalender-Abo (webcal, Google, Apple) mit Gruppenfilter.
+  Aktionskalender und `#/termine` mit Auswahl und Sortierung **nach Veranstalter** (ohne Eintrag: die Gruppe), Gruppenwahl nur fürs Abo.
+- Gruppenwahl: Seitenleiste „Öffentliche Termine“ (die nächsten 8, nach Datum).
+
+### 4.6 Mobi (Etappe 7)
+
+- Tab `Mobi_Plan`, Bezug Projekt oder Veranstaltung (`Mobi.gs`, `mobiKaskade`). Kanäle fest in `js/kanaele.js` (Farben, Zeichengrenzen, Gruppen
+  social, digital, print, extern, sonstiges). Status-Reihenfolgen `SCHRITTE_STANDARD` und `SCHRITTE_VIDEO` (Instagram, TikTok).
+- Reiter Mobi: Liste (Kacheln), Kanban (eine Reihe, Seitenknöpfe), Kalender, Zeitstrahl (ohne Status „Idee“). Im Projekt: Balken statt Zeitstrahl.
+- „+ Beiträge planen“: Standard-Beiträge je Kanal (Anhang B, `STANDARD_BEITRAEGE`), Bezugsdatum = Aktionsdatum, nichts doppelt.
+- Warnungen: „Projekt ohne Mobi“ (Aktion in 21 Tagen), „Beiträge ohne Datum“. Kein Drag-and-Drop.
+
+### 4.7 Dokumentation: Protokolle, Reden, Learnings (Etappe 8)
+
+- Reiter „Dokumentation“, Kennung `protokoll`. Protokoll-Formular im Inhalt, Entwurf im Gerät und gemeinsamer Entwurf im Sheet (`entwurf`).
+- Modus je Gruppe aus `protokollInfo`: Dokument (`PROTOKOLL_DOK_<gruppe_id>`), extern (`PROTOKOLL_LINK_<gruppe_id>`, nur https) oder keins.
+  Einfügen im Google-Dokument unter `[[NEUE PROTOKOLLE HIER]]`. Die App liest und ändert das Dokument sonst nie.
+- Markierungen im Text (☐ ToDo, 💡 Learning, 📅 Termin, 📌 Mitteilung, 📊 Umfrage, 👉 Beschluss, auch als Wort mit Doppelpunkt) legen Einträge an
+  oder kommen als Vorschläge nach dem Speichern. Angelegte Einträge stehen in `Protokolle.angelegt`.
+- TOP-Sammlung (Tab `TOPs`), Plenum-Gliederung, „Nächstes Plenum“ aus der Termin-Vorlage.
+- Reden: Archiv mit Status (Entwurf, Probelesen, Fertig, Gehalten), Redetext in der App mit Kommentaren je Absatz (`stelle`).
+- Protokolle und Reden werden nur von Hand gelöscht (`vonHand: true`). Gemeinsame Entwürfe lassen sich verwerfen.
+
+### 4.8 Team (Etappe 9)
+
+- Hüte = Aufgaben mit Verantwortlichen oder offen („Hut frei“). Dauerhafte Zuständigkeiten = „Gruppen-Rollen“.
+- Personen (`rollen`, `notiz`, `aktiv` = dabei/Pause), Gruppen_Rollen (`gewaehlt` = höchstens eine Person), Kapazitaet 1 bis 10, höchstens 183 Tage gültig.
+- `Team.gs`: `teamPruefen`, `teamKaskade`, `teamUmbenennen` (neuer Name auch in ToDos, Meilensteinen, Mobi_Plan, Umfrage_Antworten).
+- Diagramm „Berg“ (Kraft der Gruppe) mit „Fällige Hüte je Woche“. Angaben sind für die ganze Gruppe sichtbar, Zuordnung über den Anzeigenamen.
+- Team ist freiwillig. Jede Person pflegt Kapazität, Name und Notiz ihrer eigenen Karte; Rollen dürfen alle zuweisen.
+
+### 4.9 Wiki und öffentliche Seiten (Etappe 10)
+
+- Reiter Wiki mit drei Knöpfen: Skillshare (Seiten aus dem Tab `Wiki`, feste Themen in `js/views/wiki-rechnen.js`), Anleitung (feste Seiten aus
+  `texte/anleitung/`, Liste in `liste.txt`, dazu „Von unserer Gruppe“), Entwicklung App (`texte/entwicklung.txt` und „Zuständig für die App“).
+- Textformat (`js/wiki-format.js`): `##`, `###`, Listen, `**fett**`, Links, `[[Titel]]`, `> Hinweis`, `![Beschreibung](bild:<id>)`, Backticks.
+  Bilder ab 600 px höchstens halb so breit, anklickbar.
+- Öffentliches Wiki `#/wiki` ohne Namen und Kommentare. Entwicklung App und „Erste Schritte“ sind immer öffentlich.
+  Zwischenspeicher im Skript 2 Minuten.
+- `[Signal]` in einem festen Text wird zum Knopf „💬 Auf Signal schreiben“ mit Rechenaufgabe (`js/ui/signal.js`, Aktion `signal`).
+  Nur in festen Texten, nie in Wiki-Seiten aus dem Sheet.
+- Info zeigt die Gruppen mit Webseite und Instagram (Symbole) aus dem Tab Gruppen und die Version.
+
+### 4.10 Komfort (Etappe 11)
+
+- Reiter **Cloud** (`js/views/cloud.js`): Knopf „Cloud öffnen →“ (neuer Tab), nur mit `CLOUD_LINK_<gruppe_id>`.
+- **Kontostand:** `Konto.gs`, Abruf bei `https://api.opencollective.com/graphql/v2` (nur Kontostand und Währung), Zeitauslöser montags.
+  Werte in Skripteigenschaften, nicht im Sheet.
+- **Dunkelmodus** je Gerät (Schlüssel `aktionsdeck_darstellung` = hell | dunkel, ohne Eintrag „wie das Gerät“). Klasse `dunkel` am `<html>`,
+  gesetzt von `js/darstellung-start.js` (normales Skript im `<head>`, kein Modul). Dunkle Werte in den CSS-Blöcken 0.33.8 und 0.33.9.
+  Gedruckt wird hell. Gruppen- und Terminfarben bleiben.
+- Gestrichen in Etappe 11: Mein Bereich, Push, E-Mail, Sicherungskopien, Downloads.
+
+---
+
+## 5. Technik-Merkzettel
+
+- **Hilfsmodule, die du vor dem Neubauen suchst und wiederverwendest:** `js/ui/dom.js` (`el`, `leeren`), `js/ui/fenster.js` (`zeigeFenster`),
+  `js/ui/form.js` (`baueFormular`; Feldtypen text, zahl, datum, zeit, farbe, langtext, auswahl, bool, foto; Vorschlag darf `{ wert, label }` sein),
+  `js/ui/table.js` (`zeigeListe`), `js/ui/toast.js`, `js/ui/kommentare.js` (`baueKommentare`), `js/views/todos-rechnen.js`,
+  `js/views/kalender-rechnen.js`, `js/views/mobi-rechnen.js`, `js/wiki-format.js` (`zeichneText`), `js/views/wiki-rechnen.js`,
+  `js/gruppeninfo.js` (Kontostand und Cloud-Link), `js/views/erinnerungen-rechnen.js`, `js/views/uebersicht-rechnen.js`,
+  `js/ui/druck.js` (`drucke`), `js/ui/darstellung.js` (`istDunkel`), `js/views/team-namen.js` (Namen mit Rollen für andere Reiter).
+  Lies die Datei, bevor du sie benutzt. Rate keine Signaturen.
+- **Ein Syntaxfehler** in einer Datei lässt den Reiter auf „Dieser Reiter ist noch in Arbeit“ zurückfallen (`app.js` lädt jeden Reiter als Modul).
+  Dann zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern prüfen, vor allem `});` und `}, s.token);`.
+- **Skript:** In `Util.gs` gibt es `aus()`: in neuen Skriptdateien keine Variable so nennen. Vorsilben: `Termine.gs` t/ics, `Team.gs` team,
+  `Wiki.gs` wiki (benutzt `tLink`, `tInstagram`, `tLinks`, `tFarbe` aus `Termine.gs`). Keine `appsscript.json` im Repo.
+- **Skripteigenschaften** (nur im Editor): `TOKEN_GEHEIMNIS`, `FOTO_ORDNER_g1/g2/g3`, `PROTOKOLL_DOK_g1`, `PROTOKOLL_DOK_g2`,
+  freiwillig `PROTOKOLL_LINK_<gruppe_id>`, `OC_KONTO_<gruppe_id>`, `KONTO_STAND_<gruppe_id>` (nur vom Skript), `CLOUD_LINK_<gruppe_id>`, `SIGNAL_LINK`.
+- **Editor-Funktionen:** `formatieren`, `formatierenWiki` (Schema.gs); `aufraeumenTesten`, `aufraeumen` (löscht `geloescht=TRUE` älter als 90 Tage,
+  Log älter als 180 Tage, alte Kapazitäten), `testzeilenAnzeigen`, `testdatenListe` (Aufraeumen.gs); `setupGeheimnis`, `setupPins` (Setup.gs);
+  Tests `testenTermine`, `testenTermineSicher`, `testenProtokollDok`, `testenProtokollAnhaengen`, `testenTeam`, `testenWiki`, `testenWikiSicher`,
+  `testenFotoOrdner`, `testenFotoSchreiben`, `kontoTesten`, `kontoAbrufen`, `kontoAusloeserEinrichten`.
+- **Zwischenspeicher (IndexedDB)** `ladeMitCache(key, ladeFn, anzeigen, zuerstCache)`, Schlüssel `<gruppe_id>:<name>`: todos, projekteliste, startextra,
+  startmobi, startfuerdich, projekte, kalender, protokoll, reden, team, wiki, gruppeinfo, uebersicht. Öffentlich: `oeffentlich:termine`,
+  `oeffentlich:wiki`, `oeffentlich:wiki:<gruppe>:<adresse>`. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in `zeigen()` Fehlendes ergänzen.
+- **Im Gerät (localStorage, `js/store.js`):** `aktionsdeck_session`, `aktionsdeck_name`, `aktionsdeck_gruppen`, `aktionsdeck_besuch_…` (Was ist neu?), `aktionsdeck_name_vorher`, `aktionsdeck_teamhinweis_<gruppe_id>`,
+  `aktionsdeck_darstellung`, Entwürfe `aktionsdeck_entwurf_protokoll_<gruppe_id>`, `…_rede_<gruppe_id>`, `…_wiki_<gruppe_id>`.
+  Abmelden löscht Sitzung und Zwischenspeicher; der Knopf „Abmelden“ löscht außerdem die Entwürfe (vorher Warnung). Die Darstellung bleibt.
+- **Service Worker** (`sw.js`): App-Dateien zuerst aus dem Netz, sonst Zwischenspeicher (`aktionsdeck-<VERSION>`). Daten nicht im Service Worker.
+- Version 0.32.13 wurde übersprungen (war kurz auf `main`).
+
+### 5.1 Gruppen und Farben
+
+- g1/fff, g2/gp, g3/kb. Logos `icons/gruppen/<kurzname>.svg` (Ersatz .png, dann `icons/logo.svg`). Im Dunkeln auf heller runder Fläche.
+- AktionsDeck Dunkelgrau `#1a1e20`, Dunkelgrün `#368469`. FFF `#1b7340`; GP `#70bd1c`; KB `#165834` (außerdem `#2fa142`, `#0894ad`).
+  Hintergrund hell `#dfe8e4`, dunkel `#343a38`. Variablen `--gruppe`, `--gruppe-text`, `--gruen`, `--gruen-hell`, `--hintergrund`, `--link`.
+- `theme-color` hell `#368469`, dunkel `#0b0f0e`.
+
+---
+
+## 6. Dateiübersicht
+
+- Hauptordner: `index.html`, `manifest.webmanifest`, `sw.js`, `README.md`, `LICENSE`, `CLAUDE.md` (zeigt nur hierher).
+- `docs/`: `STAND.md` (diese Datei), bis zum Ende von Etappe 12 `PLAN-ETAPPE-12.md`.
+- `icons/`: `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`, `logo.svg`, `gruppen/`.
+- `css/`: `base.css` (alle Farb-Variablen), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, Blöcke je Version).
+- `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
+  Team.gs, Wiki.gs, Konto.gs, Signal.gs, Setup.gs.
+- `js/`: app, config, api, store, cache, schema, vorlagen, kanaele, wiki-format, gruppeninfo, darstellung-start (normales Skript).
+- `js/ui/`: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit, druck, darstellung, signal.
+- `js/views/`: gruppen, login, start, start-umfragen, start-brett, mehr, info, platzhalter, ideen,
+  material, material-detail, material-rechnen, material-buchen, material-vormerken,
+  todos, todos-rechnen, todos-abhaken, todos-hut,
+  projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, projekt-reden, projekt-team, uebersicht, uebersicht-rechnen,
+  kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste,
+  mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl,
+  protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text,
+  team, team-rechnen, team-rollen, team-eintrag, team-berg, team-namen,
+  wiki, wiki-rechnen, wiki-eintrag, wiki-oeffentlich, cloud, erinnerungen-rechnen.
+- `texte/`: impressum, info, datenschutz, entwicklung; `anleitung/` mit liste, erste-schritte (öffentlich), start, projekte, todos, material, mobi,
+  kalender, dokumentation, team, wiki, cloud, fragen, zustaendig, admin, neue-gruppe (öffentlich). Format wie im Wiki, auf GitHub direkt änderbar.
+- `.github/workflows/jekyll-gh-pages.yml`: checkout v7, configure-pages v6, jekyll-build-pages v1, upload-pages-artifact v5, deploy-pages v5.
+
+---
+
+## 7. Pläne
+
+- **Etappe 12 „Prüfung und Qualität“** (jetzt): Schritte und Entscheidungen in `docs/PLAN-ETAPPE-12.md` (Fassung 3).
+  Reihenfolge: 12.3 Sicherheit prüfen → 12.4 beheben → 12.5 Geschwindigkeit prüfen → 12.6 verbessern → 12.7 Ungenutztes prüfen → 12.8 löschen →
+  12.9 Layout am PC → 12.10 Barrierefreiheit prüfen (mit Test am Bildschirmleser) → 12.11 verbessern → 12.12 App-Icon und Ladebildschirm →
+  12.13 Fehlerseite → 12.14 Tabs sortieren → 12.15 CSS prüfen → 12.16 CSS ordnen → 12.17 Abschluss, **Version 1.0.0**.
+  Berichte kommen nur in die Projektdateien im Chat (`pruefung/`), nicht ins Repo.
+- **Nach 1.0:** offen. Ideen sammelt die Person; jede neue Etappe beginnt mit einem Plan mit Rückfragen.
+
+---
+
+## 8. Geschichte (kurz)
+
+Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull Requests auf GitHub und die Geschichte dieser Datei.
+
+- **Etappe 0 bis 3** (bis 0.17.x): Fundament, Material und Ausleihe, Zwischenplan Z1 bis Z8, ToDos.
+- **Etappe 4** (0.18.0 bis 0.25.x): Projekte mit ToDos, Meilensteinen, Hüten, Material, Finanzen, Learnings, Abschluss.
+- **Etappe 5** (0.26.0 bis 0.26.3): Start als Zentrale: Umfragen, Schwarzes Brett, Pinnwand, Kommentare, Aktionsideen.
+- **Etappe 6** (0.27.0 bis 0.28.13): Veranstaltungen und Kalender, öffentliche Termine, Aktionskalender.
+- **Etappe 7** (0.29.0 bis 0.29.12): Mobi mit Kanälen, Kanban, Zeitstrahl, Standard-Beiträgen und Standard-ToDos. Pull Requests ab 7.5.
+- **Etappe 8** (0.29.12 bis 0.30.14): Dokumentation mit Protokollen (Google-Dokument, Markierungen, Vorschläge), Reden, Learnings.
+- **Etappe 9** (0.30.15 bis 0.31.9): Team mit Gruppen-Rollen, Hüten, Kapazität und Berg. Pull Requests #26 bis #36.
+- **Etappe 10** (0.31.10 bis 0.32.16): Wiki, Anleitung, öffentliches Wiki, Impressum, Info, Datenschutz, Kalender-Abo. Pull Requests #37 bis #59.
+- **Etappe 11** (0.32.10 bis 0.33.15): Komfort: Kontostand, Cloud, „Für dich“, Jahresübersicht, Drucken, Dunkelmodus, Signal-Knopf,
+  Termine nach Veranstalter, GitHub Actions. Pull Requests #48 und #60 bis #74.
+- **Etappe 12** (ab 0.33.16):
+  - 12.1 (0.33.16, #75): Plan Fassung 2 mit den Wünschen der Person.
+  - 12.2 (0.34.0): Plan Fassung 3. Eine Doku-Datei: `docs/STAND.md` enthält jetzt Regeln, Stand, Festlegungen und Pläne; `CLAUDE.md` zeigt nur hierher.
+    Gelöscht: Pläne 7 bis 11, `STANDARD-TODOS.md` und `MOBI-STANDARD-BEITRAEGE.md` (jetzt Anhang A und B), vier Bildschirmfotos im Hauptordner.
+    `[Kontakt]` in `texte/anleitung/zustaendig.txt` entfernt (Signal-Knopf reicht).
+
+---
+
+## Anhang A: Standard-ToDos beim Anlegen eines Projekts
+
+Zum Nachlesen. Die App liest die Werte aus `js/vorlagen.js` (Liste `STANDARD_TODOS`). Wer dort etwas ändert, ändert es auch hier.
+
+- Reiter Projekte → „+ Neu“ (oder „Als Projekt starten“ bei einer Aktionsidee). Unter den Feldern steht die Liste, alle mit Haken. Haken weg = wird nicht angelegt.
+- Die Fälligkeit wird vom **Aktionsdatum** zurückgerechnet („Tage vorher“). Ändert man das Aktionsdatum im Formular, rechnen sich die Daten neu,
+  außer den selbst geänderten. Ohne Aktionsdatum kein Fälligkeitsdatum.
+- Die ToDos gehören zum Projekt, aber zu keinem Meilenstein („Ohne Meilenstein“).
+- **Alle Tage sind Annahmen (Platzhalter).**
+
+| ToDo | Tage vorher |
+|---|---|
+| Bühne? | 21 |
+| Band? | 21 |
+| Uploadplan erstellen | 14 |
+| Band anfragen | 14 |
+| Anfrage Bollerwagen Foodsharing | 14 |
+| Presseverteiler prüfen | 8 |
+| Reden festlegen | 7 |
+| Awareness-Team festlegen | 5 |
+| Person für Fotos festlegen | 3 |
+
+Meilenstein-Vorlagen: „Genehmigung und Anmeldung“ (darin „Versammlungsleitung festlegen“ an zweiter Stelle, 21 Tage vorher, wie „Versammlung bei
+der Stadt anmelden“), „Material und Aufbau“, „Nachbereitung“. Die Vorlagen „Mobi“ und „Pressearbeit“ gibt es nicht mehr; ihre Aufgaben stecken in den
+Standard-Beiträgen (Anhang B) und den Standard-ToDos. Ein ToDo legt keinen Beitrag von selbst an.
+
+Ändern: eine Zeile in `js/vorlagen.js` unter `STANDARD_TODOS`, zum Beispiel `{ text: 'Band anfragen', tage_vorher: 14 }` → `tage_vorher: 21`.
+Danach Version hochzählen und diesen Anhang anpassen.
+
+## Anhang B: Mobi-Standard-Beiträge
+
+Zum Nachlesen. Die App liest die Werte aus `js/kanaele.js` (Liste `STANDARD_BEITRAEGE`). Wer dort etwas ändert, ändert es auch hier.
+
+- Im Projekt (Teil „Mobi“) oder im Reiter Mobi (mit gewähltem Projekt oder gewählter Veranstaltung): „+ Beiträge planen“. Einzelne Beiträge mit „+ Einzelner Beitrag“.
+- **Bezugsdatum** ist das Aktionsdatum (bei einer Veranstaltung ihr Datum). **Tage vorher**: 0 = am Tag, negativ = danach.
+  Ohne Bezugsdatum kein Datum (in der Vorschau eintragbar). In der Vorschau lässt sich jeder Beitrag abwählen und ändern.
+- Gleicher Titel auf gleichem Kanal im Projekt wird nicht noch einmal angelegt („Gibt es schon“). Neue Beiträge starten mit Status „Idee“.
+- Danke- und Rückblick-Beiträge (Titel enthält „Danke“ oder „Rückblick“) liegen absichtlich nach der Aktion und sind im Kalender nicht pink.
+- **Alle Tage sind Annahmen (Platzhalter).** Die Instagram-Liste hat die Person genannt, die Tage und alle anderen Kanäle sind Vorschläge.
+
+**Instagram (Social Media)**
+
+| Beitrag | Format | Tage vorher |
+|---|---|---|
+| Heute Demo | Beitrag | 0 |
+| Packliste | Beitrag | 1 |
+| Awarenesskonzept | Beitrag | 5 |
+| Demosprüche | Beitrag | 4 |
+| Reel 1 / 2 / 3 | Reel | 10 / 7 / 3 |
+| Thema-Post 1 bis 6 | Beitrag | 7, 6, 5, 4, 3, 2 |
+| Story 1 / 2 / 3 (am Tag) | Story | 3 / 1 / 0 |
+| Danke-Post | Beitrag | -1 (danach) |
+
+**Weitere Kanäle**
+
+| Kanal (Gruppe) | Beitrag | Format | Tage vorher |
+|---|---|---|---|
+| Facebook (Social Media) | Veranstaltung / Erinnerung | Beitrag | 10 / 1 |
+| TikTok (Social Media) | Video 1 / Video 2 | Video | 7 / 2 |
+| Pressemitteilung (Digital) | Pressemitteilung / Pressemitteilung Rückblick | Text | 7 / -1 |
+| Webseite (Digital) | Ankündigung / Rückblick auf der Webseite | Text | 10 / -3 |
+| Newsletter (Digital) | Newsletter | Text | 5 |
+| WhatsApp und Telegram (Digital) | Ankündigung / Erinnerung | Text | 7 / 1 |
+| Unimail (Digital) | Unimail | Text | 5 |
+| Radio (Digital) | O-Ton Radio | Sonstiges | 3 |
+| Mail an Fördermitglieder (Hamburg) (Digital, nur gp) | Mail an Fördermitglieder | Text | 5 |
+| Plakate und Flyer (Print) | Plakate und Flyer | Sonstiges | 14 |
+| Kreideaktion (Print) | Kreideaktion | Sonstiges | 1 |
+| Werbung über andere Gruppen (Extern) | Anfrage an andere Gruppen | Text | 10 |
+| Schuldelis (Extern) | Schuldelis informieren | Text | 7 |
+| Sonstiges | eigener Titel, Datum selbst eintragen | Sonstiges | – |
+
+Ändern: eine Zeile in `js/kanaele.js` unter `STANDARD_BEITRAEGE`, zum Beispiel `{ name: 'Packliste', format: 'beitrag', tage_vorher: 1 }` → `tage_vorher: 2`.
+Danach Version hochzählen und diesen Anhang anpassen.

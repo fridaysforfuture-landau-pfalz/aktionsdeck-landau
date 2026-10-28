@@ -41,7 +41,7 @@ export const KANAELE = [
 
 // Standard-Beiträge je Kanal (Kennung aus KANAELE) für „+ Beiträge planen“.
 // tage_vorher = so viele Tage VOR dem Bezugsdatum (Aktionsdatum oder Veranstaltungsdatum), negativ = danach.
-// Alle Tage sind Platzhalter und leicht änderbar. Nachlesen: docs/MOBI-STANDARD-BEITRAEGE.md (bei Änderung mitpflegen).
+// Alle Tage sind Platzhalter und leicht änderbar. Nachlesen: docs/STAND.md, Anhang B (bei Änderung mitpflegen).
 // Sonstiges hat keinen Satz: dort gibt die Person einen eigenen Titel ein.
 export const STANDARD_BEITRAEGE = {
   instagram: [

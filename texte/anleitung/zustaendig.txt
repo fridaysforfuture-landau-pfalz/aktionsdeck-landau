@@ -17,7 +17,6 @@ Mehr zur Entwicklung steht unter „Entwicklung App“.
 
 ## Wen frage ich bei Problemen?
 
-- PIN vergessen oder neuer PIN: [Kontakt]
-- Fehler in der App: [Kontakt]
+PIN vergessen, neuer PIN oder ein Fehler in der App: Schreib uns auf Signal.
 
 [Signal]
