@@ -25,6 +25,7 @@ import { zeigeBeitragFormular } from './mobi-eintrag.js';
 import { zeigeSammlung } from './mobi-sammlung.js';
 import { zeigeVorlagen } from './kalender-vorlagen.js';
 import { baueAktionskalender } from './termine-liste.js';
+import { istDunkel } from '../ui/darstellung.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = {
@@ -378,7 +379,7 @@ export async function render(container, ctx) {
       li.style.background = t.farbe;
       li.style.color = schriftfarbe(t.farbe);
     }
-    if (frist) li.style.background = pastell(t.farbe);
+    if (frist) li.style.background = pastell(t.farbe, istDunkel());
     if (t.url) {
       li.append(el('a', {
         class: 'kal-link', href: t.url, target: '_blank', rel: 'noopener noreferrer',

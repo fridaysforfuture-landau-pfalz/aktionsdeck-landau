@@ -11,6 +11,7 @@ import { toast } from '../ui/toast.js';
 import { SCHEMA, istWahr } from '../schema.js';
 import { datumText } from './todos-rechnen.js';
 import { pastell } from './kalender-rechnen.js';
+import { istDunkel } from '../ui/darstellung.js';
 
 function txt(v) {
   return String(v === undefined || v === null ? '' : v).trim();
@@ -150,7 +151,7 @@ function mitteilung(m, opt) {
   // Veranstaltung: Rand und Hintergrund in der Veranstaltungsfarbe, Layout bleibt gleich
   if (farbeOk(m.farbe)) {
     box.style.borderLeftColor = txt(m.farbe);
-    box.style.background = pastell(txt(m.farbe));
+    box.style.background = pastell(txt(m.farbe), istDunkel());
   }
   return box;
 }

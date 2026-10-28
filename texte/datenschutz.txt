@@ -37,6 +37,7 @@ Die App speichert einige Dinge nur in deinem Browser (lokaler Speicher und Index
 - die Liste der Gruppen und eine Kopie der Daten, damit die App schnell lädt und ohne Netz lesbar ist
 - Entwürfe (zum Beispiel ein Protokoll), bis du speicherst oder dich abmeldest
 - wann du zuletzt da warst („Was ist neu?“) und welche Hinweise du ausgeblendet hast
+- ob die App hell, dunkel oder wie das Gerät aussehen soll
 
 „Abmelden“ löscht die Anmeldung, die Kopie der Daten und die Entwürfe. Den Rest löschst du in den Einstellungen deines Browsers („Websitedaten löschen“).
 
