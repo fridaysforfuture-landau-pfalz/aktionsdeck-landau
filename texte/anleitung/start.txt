@@ -4,7 +4,7 @@
 
 Oben begrüßt dich die App mit deinem Namen. Daneben stehen die Knöpfe „+ Umfrage“ und „+ Mitteilung“, das Archiv und die Glocke 🔔. Die Glocke zeigt dir unter „Was ist neu?“, was andere seit deinem letzten Besuch geändert haben. Deine eigenen Änderungen stehen dort nicht.
 
-Darunter folgen die laufenden Umfragen und das Schwarze Brett mit den angehefteten Mitteilungen. Die Kachel Projekte zeigt die laufenden Projekte mit ihren ToDos und Mobi-Beiträgen. Daneben stehen die Kacheln ToDos (allgemeine Aufgaben ohne Projekt) und TOPs, also die Themen fürs nächste Plenum. Mit „+ Protokoll“ in der Kachel TOPs fängst du direkt ein Protokoll an. Ganz unten ist die Pinnwand für kurze Nachrichten an alle.
+Gibt es etwas, das du erledigen solltest, steht ganz oben die Kachel „Für dich“ (siehe unten). Darunter folgen die laufenden Umfragen und das Schwarze Brett mit den angehefteten Mitteilungen. Die Kachel Projekte zeigt die laufenden Projekte mit ihren ToDos und Mobi-Beiträgen. Daneben stehen die Kacheln ToDos (allgemeine Aufgaben ohne Projekt) und TOPs, also die Themen fürs nächste Plenum. Mit „+ Protokoll“ in der Kachel TOPs fängst du direkt ein Protokoll an. Ganz unten ist die Pinnwand für kurze Nachrichten an alle.
 
 ## Umfragen
 
@@ -16,6 +16,12 @@ Eine Frist färbt die Umfrage: Am letzten Tag wird sie orange, danach rot. Beend
 
 Eine neue Mitteilung ist angeheftet und steht oben auf dem Start. Nimmst du sie ab, landet sie im Archiv. Die Pinnwand ist für kurze Kommentare gedacht. Ist ein Eintrag wichtig, kannst du ihn mit „Als Mitteilung anheften“ ans Schwarze Brett holen. Auch Veranstaltungen aus dem Kalender lassen sich anheften. Sie erscheinen dann in ihrer Farbe.
 
-## Erinnerung zur Kapazität
+## Für dich
 
-Bist du im Team eingetragen und fehlt deine Kapazität oder ist sie abgelaufen, erinnert dich oben eine Zeile daran. Mit „✕“ blendest du sie für sieben Tage aus. Mehr dazu steht unter [[Team]].
+Die Kachel „Für dich“ erinnert dich an Dinge, die nur dich betreffen. Sie erscheint nur, wenn es etwas gibt. Die App erkennt dich an deinem Anzeigenamen („Wer bist du?“).
+
+- **Umfragen:** Eine Umfrage läuft, und du hast noch nicht abgestimmt. Tippe darauf, dann kannst du gleich abstimmen. Danach verschwindet die Zeile.
+- **Material:** Du hast Material für ein Projekt mitgenommen, die Aktion ist vorbei, und es ist noch nicht ganz zurück. Die Aktion zählt als vorbei, wenn das Aktionsdatum (oder sonst die Deadline) vor heute liegt oder das Projekt erledigt ist. Die Zeile führt zum Reiter Material. Dort buchst du die Rückgabe, dann verschwindet sie.
+- **Kapazität:** Du bist im Team eingetragen, und deine Kapazität fehlt oder ist abgelaufen. Mit „✕“ blendest du diesen Hinweis für sieben Tage aus. Mehr dazu steht unter [[Team]].
+
+Die Zahl hinter „Für dich“ steht auf vielen Handys und PCs auch am App-Symbol, wenn die App auf dem Startbildschirm installiert ist. Am iPhone erscheint sie nur, wenn Mitteilungen für die App erlaubt sind. Die App fragt nicht danach. Die Zahl wird neu berechnet, wenn du den Start öffnest.

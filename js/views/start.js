@@ -8,6 +8,8 @@
 // Die anderen Kacheln sind noch Platzhalter (Posts/Kalender Etappe 5).
 // Rechts unter den ToDos steht die Kachel TOPs (js/views/tops.js, seit 0.30.3). ToDos und TOPs sind zusammen
 // so hoch wie die Kachel Projekte; ist eine abgeschnitten, gibt es unten in der Kachel „▸ Alle anzeigen“.
+// Ganz oben steht seit 11.4 die Kachel „Für dich“ (Regeln in js/views/erinnerungen-rechnen.js), nur wenn es etwas gibt.
+// Ihre Zahl steht auch am App-Symbol, wo das Gerät es kann.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -16,14 +18,14 @@ import { gruppenLogo } from '../ui/logo.js';
 import { fortschrittsBalken } from '../ui/balken.js';
 import { toast } from '../ui/toast.js';
 import { baueKommentare } from '../ui/kommentare.js';
-import { zeichneUmfragen, zeichneArchiv, neueUmfrage, anzahlBeendet } from './start-umfragen.js';
+import { zeichneUmfragen, zeichneArchiv, neueUmfrage, anzahlBeendet, oeffneUmfrage } from './start-umfragen.js';
+import { umfragenOffen, materialOffen, kapazitaetOffen } from './erinnerungen-rechnen.js';
 import {
   zeichneBrett, neueMitteilung, mitteilungAus, zeichneBrettArchiv,
   findeMitteilung, anzahlNichtAngeheftet
 } from './start-brett.js';
 import { getName, setLetzterBesuch, teamHinweisAus, setTeamHinweisAus } from '../store.js';
 import { ladeTeamKlein } from './team-namen.js';
-import { istIch, angabeJetzt } from './team-rechnen.js';
 import { heuteIso as teamHeute, datumText as teamDatum } from './todos-rechnen.js';
 import { holeNeu, zeigeNeu } from '../ui/neu-seit.js';
 import { istWahr } from '../schema.js';
@@ -58,6 +60,14 @@ const KACHELN = [
   { titel: 'ToDos', todos: true }
 ];
 
+// Zahl am App-Symbol (11.4), nur wo das Gerät es kann. Es wird nicht nach Mitteilungen gefragt.
+function appSymbolZahl(n) {
+  try {
+    if (n > 0 && navigator.setAppBadge) navigator.setAppBadge(n).catch(function () { return null; });
+    else if (!n && navigator.clearAppBadge) navigator.clearAppBadge().catch(function () { return null; });
+  } catch (e) { /* ignorieren */ }
+}
+
 // Planung = Vorbereitung (auch wenn der Status leer ist)
 function istPlanung(p) {
   return (String(p.status || '').trim() || 'planung') === 'planung';
@@ -77,6 +87,8 @@ export async function render(container, ctx) {
   let mobiDaten = null;     // { mobi } für die Sammel-ToDos
   let extraDaten = null;    // { umfragen, antworten, mitteilungen }
   let extraJson = '';
+  let ausleihDaten = null;  // { ausleihe, material } für „Für dich“
+  let teamDaten = null;     // Team (klein) für die Kapazität in „Für dich“
   let offline = false;
   const arbeitet = {};
 
@@ -278,26 +290,59 @@ export async function render(container, ctx) {
     el('section', { class: 'karte start-pinnwand' }, pinnwand.el)
   );
 
-  // Zeile für die eigene Person, wenn ihre Kapazität fehlt oder abgelaufen ist (9.7). Nur mit Team-Karte.
-  // „✕“ blendet sie auf diesem Gerät für 7 Tage aus.
-  const teamZeile = el('div');
+  // Kachel „Für dich“ (11.4): offene Umfragen, Material zurückbringen, Kapazität (seit 9.7, vorher eigene Zeile).
+  // Bei der Kapazität blendet „✕“ den Hinweis auf diesem Gerät für 7 Tage aus.
+  const fuerDich = el('div');
   ladeTeamKlein(s).then(function (team) {
-    if (teamHinweisAus(s.gruppe_id)) return;
-    const ich = team.personen.find(function (p) { return istIch(p, getName()); });
-    if (!ich) return;
-    const stand = angabeJetzt(ich.id, team.kapazitaet, teamHeute());
-    if (stand.zustand === 'gilt') return;
-    const text = stand.zustand === 'abgelaufen'
-      ? 'Deine Kapazität ist seit ' + teamDatum(stand.angabe.gueltig_bis) + ' abgelaufen. Kurz aktualisieren?'
-      : 'Trag kurz ein, wie viel Zeit du gerade hast.';
-    teamZeile.append(el('div', { class: 'start-team-zeile' },
-      el('a', { href: '#/g/' + encodeURIComponent(s.kurzname) + '/team/ich', text: '⛰️ ' + text }),
-      el('button', {
-        class: 'start-team-weg', type: 'button', 'aria-label': 'Für 7 Tage ausblenden', title: 'Für 7 Tage ausblenden', text: '✕',
-        onclick: function () { setTeamHinweisAus(s.gruppe_id); leeren(teamZeile); }
-      })
-    ));
+    teamDaten = team;
+    zeichneFuerDich();
   });
+
+  function fuerDichZeile(icon, text, info, aktion, weg) {
+    const inhalt = [el('strong', { text: icon + ' ' + text }), info ? el('span', { class: 'leise', text: info }) : null];
+    const haupt = typeof aktion === 'string'
+      ? el('a', { class: 'dash-todo pt-todo', href: aktion }, ...inhalt)
+      : el('button', { class: 'dash-todo pt-todo', type: 'button', onclick: aktion }, ...inhalt);
+    return el('li', { class: 'dash-zeile fuer-dich-zeile' }, haupt, weg || null);
+  }
+
+  function zeichneFuerDich() {
+    const name = getName();
+    const heute = teamHeute();
+    const zeilen = [];
+    if (extraDaten) {
+      umfragenOffen(extraDaten.umfragen, extraDaten.antworten, name).forEach(function (u) {
+        zeilen.push(fuerDichZeile('🗳️', String(u.frage), 'Umfrage · Du hast noch nicht abgestimmt',
+          function () { oeffneUmfrage(u.id, extraOpt()); }));
+      });
+    }
+    if (ausleihDaten && projektDaten) {
+      materialOffen(ausleihDaten.ausleihe, ausleihDaten.material, projektDaten.projekte, name, heute).forEach(function (m) {
+        zeilen.push(fuerDichZeile('📦', m.name + (m.anzahl !== 1 ? ' (' + m.anzahl + ')' : '') + ' zurückbringen',
+          'Mitgenommen für „' + m.projekt + '“ · Die Aktion ist vorbei', basis + 'material'));
+      });
+    }
+    const kap = teamHinweisAus(s.gruppe_id) ? null : kapazitaetOffen(teamDaten, name, heute);
+    if (kap) {
+      const text = kap.zustand === 'abgelaufen'
+        ? 'Deine Kapazität ist seit ' + teamDatum(kap.angabe.gueltig_bis) + ' abgelaufen. Kurz aktualisieren?'
+        : 'Trag kurz ein, wie viel Zeit du gerade hast.';
+      zeilen.push(fuerDichZeile('⛰️', text, 'Team', basis + 'team/ich',
+        el('button', {
+          class: 'start-team-weg', type: 'button', 'aria-label': 'Für 7 Tage ausblenden', title: 'Für 7 Tage ausblenden', text: '✕',
+          onclick: function () { setTeamHinweisAus(s.gruppe_id); zeichneFuerDich(); }
+        })
+      ));
+    }
+    leeren(fuerDich);
+    if (zeilen.length) {
+      fuerDich.append(el('section', { class: 'karte dash-kachel fuer-dich' },
+        el('div', { class: 'dash-kachel-titel' }, el('h2', { text: 'Für dich (' + zeilen.length + ')' })),
+        el('ul', { class: 'dash-todo-liste' }, ...zeilen)
+      ));
+    }
+    appSymbolZahl(zeilen.length);
+  }
 
   container.append(el('div', { class: 'seite' },
     el('div', { class: 'dash-kopf' },
@@ -305,7 +350,7 @@ export async function render(container, ctx) {
       el('h1', { text: 'Hallo ' + (getName() || '') }),
       kopfKnoepfe
     ),
-    teamZeile,
+    fuerDich,
     fuss,
     archivBox,
     dashBox
@@ -459,6 +504,7 @@ export async function render(container, ctx) {
           projektDaten = daten;
           projektFehler = '';
           zeichneProjekte();
+          zeichneFuerDich();
         },
         zuerstCache
       );
@@ -466,6 +512,28 @@ export async function render(container, ctx) {
       if (ctx.behandleFehler(e)) return;
       projektFehler = e.message;
       zeichneProjekte();
+    }
+  }
+
+  // Material für „Für dich“: Ausleihen und Namen des Materials
+  async function ladeFuerDich(zuerstCache) {
+    try {
+      await ladeMitCache(
+        s.gruppe_id + ':startfuerdich',
+        async function () {
+          const r = await api('listMehrere', { tabellen: ['Ausleihe', 'Material'] }, s.token);
+          const t = (r && r.tabellen) || {};
+          return { ausleihe: t.Ausleihe || [], material: t.Material || [] };
+        },
+        function (daten) {
+          ausleihDaten = daten;
+          zeichneFuerDich();
+        },
+        zuerstCache
+      );
+    } catch (e) {
+      // Ohne diese Daten fehlt in „Für dich“ nur das Material
+      ctx.behandleFehler(e);
     }
   }
 
@@ -529,6 +597,7 @@ export async function render(container, ctx) {
         function (daten) {
           extraDaten = daten;
           zeichneExtra();
+          zeichneFuerDich();
         },
         zuerstCache
       );
@@ -773,8 +842,8 @@ export async function render(container, ctx) {
 
   ctx.setzeRefresh(function () {
     if (Object.keys(arbeitet).length) return Promise.resolve();
-    return Promise.all([laden(false), ladeProjekte(false), ladeMobi(false), ladeExtra(false), pinnwand.laden(), ladeNeuSeit(false), ladeTops(false)]);
+    return Promise.all([laden(false), ladeProjekte(false), ladeMobi(false), ladeExtra(false), ladeFuerDich(false), pinnwand.laden(), ladeNeuSeit(false), ladeTops(false)]);
   });
-  await Promise.all([laden(true), ladeProjekte(true), ladeMobi(true), ladeExtra(true), ladeNeuSeit(true), ladeTops(true)]);
+  await Promise.all([laden(true), ladeProjekte(true), ladeMobi(true), ladeExtra(true), ladeFuerDich(true), ladeNeuSeit(true), ladeTops(true)]);
   hoehePruefen();
 }

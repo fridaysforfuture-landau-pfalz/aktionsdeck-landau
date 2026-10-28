@@ -85,6 +85,8 @@ async function ladeView(tab) {
 async function abmelden() {
   clearSession();
   gruppenInfoVergessen();
+  // Zahl am App-Symbol (11.4) weg
+  try { if (navigator.clearAppBadge) navigator.clearAppBadge().catch(function () { return null; }); } catch (e) { /* ignorieren */ }
   await cacheLeeren();
   location.hash = '#/';
   route();
