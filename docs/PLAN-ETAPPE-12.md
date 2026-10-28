@@ -105,7 +105,7 @@ Version 0.34.0. Sheet und Skript bleiben unverändert.
 
 **Prüfen:** In `docs/` stehen nur `STAND.md` und dieser Plan. Die App läuft wie vorher. Wiki → Anleitung → „Zuständig für die App“: kein `[Kontakt]` mehr, der Signal-Knopf ist da.
 
-### 12.3 – Sicherheit prüfen (Bericht, W2)
+### 12.3 – Sicherheit prüfen (Bericht, W2) – erledigt
 
 Keine Änderung an der App, kein Pull Request.
 
@@ -118,7 +118,7 @@ Keine Änderung an der App, kein Pull Request.
 
 **Ergebnis:** `pruefung/sicherheit-bericht.md`. Die Person gibt frei.
 
-### 12.4 – Sicherheit beheben (W2)
+### 12.4 – Sicherheit beheben (W2) – erledigt (0.34.1)
 
 Version 0.34.1. Je nach Funden mit Skript-Änderung (dann „Von Hand zu erledigen“).
 

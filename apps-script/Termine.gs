@@ -161,7 +161,7 @@ function icsText(s) {
     .replace(/\\/g, '\\\\')
     .replace(/;/g, '\\;')
     .replace(/,/g, '\\,')
-    .replace(/\r?\n/g, '\\n');
+    .replace(/\r\n|\r|\n/g, '\\n'); // 12.4: auch ein einzelnes \r
 }
 
 // Zeilen länger als 75 Zeichen werden umgebrochen (hier vorsichtig bei 60)

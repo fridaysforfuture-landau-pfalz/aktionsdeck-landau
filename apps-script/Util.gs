@@ -78,7 +78,8 @@ function typisieren(v, sp, tab) {
   if (typ === 'zahl') {
     if (String(v).trim() === '') return '';
     var n = Number(String(v).replace(',', '.'));
-    if (isNaN(n)) fehler('ungueltig', 'Feld "' + sp + '" muss eine Zahl sein.');
+    // 12.4: isFinite statt isNaN, damit "Infinity" nicht als Zahl gilt; "0x10" ist keine Kommazahl
+    if (!isFinite(n) || /^\s*[+\-]?0[xXbBoO]/.test(String(v))) fehler('ungueltig', 'Feld "' + sp + '" muss eine Zahl sein.');
     return n;
   }
   if (typeof v === 'object') fehler('ungueltig', 'Feld "' + sp + '" hat einen ungültigen Wert.');
@@ -132,7 +133,9 @@ function mitSperre(fn) {
 }
 
 function anzeigename(p) {
-  var n = String((p && p.anzeigename) || '').trim().slice(0, 60);
+  // 12.4: Steuerzeichen raus, und vorne keine Zeichen, mit denen eine Formel beginnt (= + - @).
+  var n = String((p && p.anzeigename) || '').replace(/[\u0000-\u001f\u007f]/g, ' ');
+  n = n.trim().replace(/^[=+\-@\s]+/, '').slice(0, 60).trim();
   return n || 'unbekannt';
 }
 

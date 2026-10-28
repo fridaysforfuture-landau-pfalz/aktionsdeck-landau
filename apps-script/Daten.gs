@@ -134,6 +134,8 @@ function schreibeSpalten(t, zeilen, felder) {
     var werte = bereich.getValues();
     for (var i = 0; i < anz; i++) {
       if (gesetzt[min + i]) werte[i][0] = felder[sp];
+      // 12.4: Auch die Zeilen dazwischen werden neu geschrieben. Ohne Schutz würde aus "=…" eine Formel.
+      werte[i][0] = schuetzen(werte[i][0]);
     }
     bereich.setValues(werte);
   });
