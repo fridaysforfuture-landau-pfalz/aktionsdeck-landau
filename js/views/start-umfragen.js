@@ -276,7 +276,8 @@ function umfrageBlock(u, opt, neuZeichnen) {
 
 // ---- Fenster mit einer Umfrage ----
 
-function oeffneUmfrage(id, opt) {
+// Auch von „Für dich“ auf dem Start benutzt (11.4)
+export function oeffneUmfrage(id, opt) {
   const inhalt = el('div');
   let fenster = null;
 
