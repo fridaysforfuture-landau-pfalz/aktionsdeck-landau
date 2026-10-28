@@ -64,6 +64,11 @@ export function bereinige(roh) {
   return liste;
 }
 
+// Seit 0.33.12 (Schritt 11.10): Wer veranstaltet? Ohne Eintrag die Gruppe, die den Termin eingetragen hat.
+export function veranstalterVon(t) {
+  return t.veranstalter || t.gruppe;
+}
+
 function tagKurz(tag) {
   return WOCHENTAGE_KURZ[wochentagNr(tag)] + ', ' + datumText(tag);
 }
@@ -113,10 +118,7 @@ export function terminKarte(t) {
     el('span', { class: 'oeff-datum', text: datumsText(t) }),
     el('strong', { text: t.titel }),
     info ? el('span', { class: 'oeff-info', text: info }) : null,
-    el('span', {
-      class: 'oeff-info',
-      text: t.veranstalter ? 'Veranstalter: ' + t.veranstalter : t.gruppe
-    })
+    el('span', { class: 'oeff-info', text: 'Veranstalter: ' + veranstalterVon(t) })
   );
   k.style.background = t.farbe;
   k.style.color = schriftfarbe(t.farbe);
@@ -134,7 +136,7 @@ export function terminKachel(t, beiKlick, anheften) {
     el('strong', { text: t.titel || leer }),
     el('span', { text: zeitText(t) || leer }),
     el('span', { text: t.ort || leer }),
-    el('span', { text: t.gruppe || leer })
+    el('span', { text: veranstalterVon(t) || leer })
   );
   const k = el('div', { class: 'oeff-kachel-box' }, haupt);
   if (anheften) {
@@ -171,7 +173,7 @@ async function anheften(t, session, ctx) {
   const zeile1 = terminZeile(t);
   const weitere = eigen
     ? [t.url].filter(Boolean)
-    : ['Veranstalter: ' + (t.veranstalter || t.gruppe), t.url].filter(Boolean);
+    : ['Veranstalter: ' + veranstalterVon(t), t.url].filter(Boolean);
 
   let r;
   try {
@@ -268,7 +270,8 @@ export function zeigeTerminDetail(t, session, ctx) {
 
   const inhalt = el('div', null,
     el('p', { class: 'leise', text: info }),
-    el('p', { class: 'leise', text: 'Veranstalter: ' + (t.veranstalter || t.gruppe) }),
+    el('p', { class: 'leise', text: 'Veranstalter: ' + veranstalterVon(t) }),
+    t.veranstalter && t.gruppe ? el('p', { class: 'leise', text: 'Eingetragen von: ' + t.gruppe }) : null,
     t.beschreibung ? el('p', { class: 'notiz', text: t.beschreibung }) : null,
     t.url
       ? el('p', null, el('a', {
@@ -309,7 +312,13 @@ export function baueAktionskalender(session, ctx) {
   let alle = [];
 
   const status = el('p', { class: 'leise', text: 'Lade Termine …' });
-  const wahl = el('select', { class: 'feld', 'aria-label': 'Gruppe' });
+  // Seit 0.33.12: oben Auswahl nach Veranstalter und Sortierung, die Gruppe wählt man nur noch fürs Abo
+  const wahlVeranstalter = el('select', { class: 'feld', 'aria-label': 'Veranstalter' });
+  const sortierung = el('select', { class: 'feld', 'aria-label': 'Sortieren' },
+    el('option', { value: 'veranstalter', text: 'Nach Veranstalter' }),
+    el('option', { value: 'datum', text: 'Nach Datum' })
+  );
+  const wahl = el('select', { class: 'feld', 'aria-label': 'Gruppe für das Abo' });
   const liste = el('div');
   const aboLink = el('a', {
     class: 'knopf knopf-hell', target: '_blank', rel: 'noopener noreferrer',
@@ -329,7 +338,7 @@ export function baueAktionskalender(session, ctx) {
   });
 
   const box = el('div', null,
-    wahl,
+    el('div', { class: 'oeff-auswahl' }, wahlVeranstalter, sortierung),
     status,
     liste,
     el('section', { class: 'karte' },
@@ -339,6 +348,7 @@ export function baueAktionskalender(session, ctx) {
         text: 'Diese Adresse in Google Kalender, Outlook oder den Handy-Kalender kopieren ' +
           '(„Kalender per URL hinzufügen“). Neue Termine erscheinen dann von selbst.'
       }),
+      wahl,
       aboUrl,
       el('div', { class: 'abo-knoepfe' }, aboGoogle, aboApple, aboKopieren, aboLink),
       el('p', { class: 'leise', text: 'Google Kalender: am besten am PC öffnen, das Abo erscheint dann auch am Handy. ' +
@@ -370,35 +380,73 @@ export function baueAktionskalender(session, ctx) {
     });
     wahl.value = gruppen.some(function (g) { return g.kurz === alt; }) ? alt : '';
     wahl.hidden = gruppen.length < 2;
+
+    // Veranstalter: gleiche Namen (Groß- und Kleinschreibung, Leerzeichen egal) zählen als einer
+    const altV = wahlVeranstalter.value;
+    const namen = [];
+    alle.forEach(function (t) {
+      const n = veranstalterVon(t);
+      if (n && !namen.some(function (x) { return x.schluessel === norm(n); })) {
+        namen.push({ schluessel: norm(n), name: n });
+      }
+    });
+    namen.sort(function (a, b) { return a.name.localeCompare(b.name, 'de'); });
+    leeren(wahlVeranstalter);
+    wahlVeranstalter.append(el('option', { value: '', text: 'Alle Veranstalter' }));
+    namen.forEach(function (x) {
+      wahlVeranstalter.append(el('option', { value: x.schluessel, text: x.name }));
+    });
+    wahlVeranstalter.value = namen.some(function (x) { return x.schluessel === altV; }) ? altV : '';
+    wahlVeranstalter.hidden = namen.length < 2;
+  }
+
+  function kachel(t) {
+    return el('li', null, terminKachel(
+      t,
+      function (x) { zeigeTerminDetail(x, session, ctx); },
+      session ? {
+        text: istEigen(t, session) ? 'Als Mitteilung anheften' : 'An Pinnwand heften',
+        fn: function (x) { return anheften(x, session, ctx); }
+      } : null
+    ));
   }
 
   function zeichne() {
-    const k = wahl.value;
-    const zeilen = alle.filter(function (t) { return !k || t.kurz === k; });
+    const v = wahlVeranstalter.value;
+    const zeilen = alle.filter(function (t) { return !v || norm(veranstalterVon(t)) === v; });
     leeren(liste);
     if (!zeilen.length) {
       liste.append(el('p', {
         class: 'leise', text: 'Zurzeit sind keine öffentlichen Termine eingetragen.'
       }));
     }
-    let monat = '';
-    let ul = null;
+    // Überschrift je Veranstalter (A bis Z, darin nach Datum) oder je Monat
+    const nachVeranstalter = sortierung.value === 'veranstalter';
+    const reihe = zeilen.slice();
+    const anzeige = {};   // Schlüssel -> Name, so wie er beim frühesten Termin steht
     zeilen.forEach(function (t) {
-      const m = MONATE[Number(t.von.slice(5, 7)) - 1] + ' ' + t.von.slice(0, 4);
-      if (m !== monat) {
-        monat = m;
-        liste.append(el('h2', { class: 'teil-titel-klein', text: m }));
+      const n = norm(veranstalterVon(t));
+      if (!(n in anzeige)) anzeige[n] = veranstalterVon(t);
+    });
+    if (nachVeranstalter) {
+      reihe.sort(function (a, b) {
+        const x = norm(veranstalterVon(a)).localeCompare(norm(veranstalterVon(b)), 'de');
+        return x !== 0 ? x : zeilen.indexOf(a) - zeilen.indexOf(b);
+      });
+    }
+    let titel = null;
+    let ul = null;
+    reihe.forEach(function (t) {
+      const neu = nachVeranstalter
+        ? norm(veranstalterVon(t))
+        : MONATE[Number(t.von.slice(5, 7)) - 1] + ' ' + t.von.slice(0, 4);
+      if (neu !== titel) {
+        titel = neu;
+        liste.append(el('h2', { class: 'teil-titel-klein', text: nachVeranstalter ? anzeige[neu] : neu }));
         ul = el('ul', { class: 'oeff-liste oeff-gross' });
         liste.append(ul);
       }
-      ul.append(el('li', null, terminKachel(
-        t,
-        function (x) { zeigeTerminDetail(x, session, ctx); },
-        session ? {
-          text: istEigen(t, session) ? 'Als Mitteilung anheften' : 'An Pinnwand heften',
-          fn: function (x) { return anheften(x, session, ctx); }
-        } : null
-      )));
+      ul.append(kachel(t));
     });
     aboZeigen();
   }
@@ -427,7 +475,9 @@ export function baueAktionskalender(session, ctx) {
     }
   }
 
-  wahl.addEventListener('change', zeichne);
+  wahlVeranstalter.addEventListener('change', zeichne);
+  sortierung.addEventListener('change', zeichne);
+  wahl.addEventListener('change', aboZeigen);
   aboZeigen();
   return { el: box, laden: laden };
 }
