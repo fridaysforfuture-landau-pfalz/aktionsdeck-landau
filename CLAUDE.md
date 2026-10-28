@@ -2,8 +2,8 @@
 
 Diese Datei liest du (der Agent) zuerst. Sie gilt für jede Aufgabe in diesem Repo.
 Der aktuelle Projektstand steht in `docs/STAND.md`, der Plan für die laufende Etappe in `docs/PLAN-ETAPPE-<Nummer>.md`
-(zurzeit Etappe 11 „Komfort“: `docs/PLAN-ETAPPE-11.md`, Fassung 2 seit 0.33.0; Etappe 10 ist fertig und geprüft;
-Etappe 12 „Prüfung und Qualität“ in `docs/PLAN-ETAPPE-12.md`, Fassung 1, ist der letzte Schritt vor Version 1.0).
+(als Nächstes Etappe 12 „Prüfung und Qualität“: `docs/PLAN-ETAPPE-12.md`, Fassung 1, der letzte Schritt vor Version 1.0;
+Etappe 11 „Komfort“ in `docs/PLAN-ETAPPE-11.md` ist mit 0.33.10 fertig gebaut).
 
 ## 1. Worum es geht
 
@@ -68,7 +68,8 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
   öffentlich abrufbar, darum nichts Internes).
 - **PC (ab 960 px):** Seitenleiste links, Inhalt in der Mitte, Details rechts.
   **Handy:** untere Leiste (Start, Projekte, ToDos, Mobi, Mehr), Details als Vollbild.
-- **Reiter:** Start, Projekte, ToDos, Mobi, Material, Kalender, Dokumentation, Team, Wiki (am Handy die letzten fünf unter „Mehr").
+- **Reiter:** Start, Projekte, ToDos, Mobi, Material, Kalender, Dokumentation, Team, Wiki, Cloud (am Handy alle ab Material unter „Mehr").
+  Cloud erscheint nur, wenn die Gruppe einen Cloud-Link hat (`js/gruppeninfo.js`).
   Öffentlich ohne Login: `#/info/<seite>` (Impressum, Info, Datenschutz), `#/termine`, `#/wiki`.
 - **Schnittstelle:** Google Apps Script als Web-App, an das Google Sheet gebunden. Aufruf per POST mit JSON als
   `text/plain`. Das Feld für die Aktion heißt `aktion`. Antwort: `{ok, data, error, code}`.
@@ -83,7 +84,10 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
 - **Hilfsmodule, die du vor dem Neubauen suchst und wiederverwendest:** `js/ui/dom.js` (`el`, `leeren`), `js/ui/fenster.js`
   (`zeigeFenster`), `js/ui/form.js` (`baueFormular`), `js/ui/table.js` (`zeigeListe`), `js/ui/toast.js`,
   `js/ui/kommentare.js` (`baueKommentare`), `js/views/todos-rechnen.js`, `js/views/kalender-rechnen.js`,
-  `js/views/mobi-rechnen.js`, `js/wiki-format.js` (`zeichneText`, Textformat für Wiki und `texte/`), `js/views/wiki-rechnen.js`.
+  `js/views/mobi-rechnen.js`, `js/wiki-format.js` (`zeichneText`, Textformat für Wiki und `texte/`), `js/views/wiki-rechnen.js`,
+  `js/gruppeninfo.js` (Kontostand und Cloud-Link), `js/views/erinnerungen-rechnen.js` (Regeln für „Für dich“),
+  `js/views/uebersicht-rechnen.js` (Jahresübersicht), `js/ui/druck.js` (`drucke`), `js/ui/darstellung.js` (Dunkelmodus, `istDunkel`).
+  Farben: nur über die Variablen in `css/base.css`; jede neue Farbe braucht auch einen dunklen Wert (Block 0.33.8 in `css/components.css`).
   Lies die Datei, bevor du sie benutzt. Rate keine Signaturen.
 
 ## 6. Google Sheet (Tabs)

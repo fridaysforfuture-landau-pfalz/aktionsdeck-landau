@@ -2,7 +2,7 @@
 // Impressum, Info, Datenschutz: drei Seiten, ohne Login erreichbar.
 // Seit 0.32.1 (Schritt 10.2): Die Texte liegen in texte/<seite>.txt (Format wie im Wiki, js/wiki-format.js).
 // „Info“ zeigt dazu die Gruppen mit ihren Links (öffentliche Aktion "wiki", Liste der Gruppen) und die Version.
-// Seit 0.32.6 auch einen Link auf das öffentliche Wiki (#/wiki).
+// Seit 0.32.6 auch einen Link auf das öffentliche Wiki (#/wiki). Seit 0.33.10 Knopf „Wiki“ im Menü und Symbole an den Links.
 
 import { el, leeren } from '../ui/dom.js';
 import { balken } from '../ui/kopf.js';
@@ -11,6 +11,7 @@ import { getSession } from '../store.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { zeichneText } from '../wiki-format.js';
+import { signalKnoepfe } from '../ui/signal.js';
 import { sichereUrl } from './kalender-rechnen.js';
 
 async function ladeText(seite) {
@@ -19,9 +20,33 @@ async function ladeText(seite) {
   return antwort.text();
 }
 
-function linkZeile(text, url) {
+// Kleine Symbole (11.9) als SVG im Code, keine fremden Dateien. Farbe = Schriftfarbe des Links.
+const SVG = 'http://www.w3.org/2000/svg';
+const SYMBOLE = {
+  webseite: [['circle', { cx: 12, cy: 12, r: 9 }], ['ellipse', { cx: 12, cy: 12, rx: 4, ry: 9 }], ['path', { d: 'M3 12h18' }]],
+  instagram: [['rect', { x: 3, y: 3, width: 18, height: 18, rx: 5 }], ['circle', { cx: 12, cy: 12, r: 4 }], ['circle', { cx: 17.5, cy: 6.5, r: 1 }]]
+};
+
+function symbol(art) {
+  const s = document.createElementNS(SVG, 'svg');
+  s.setAttribute('viewBox', '0 0 24 24');
+  s.setAttribute('class', 'info-symbol');
+  s.setAttribute('aria-hidden', 'true');
+  (SYMBOLE[art] || []).forEach(function (teil) {
+    const e = document.createElementNS(SVG, teil[0]);
+    Object.keys(teil[1]).forEach(function (k) { e.setAttribute(k, teil[1][k]); });
+    s.append(e);
+  });
+  return s;
+}
+
+function linkZeile(text, url, art) {
   const u = sichereUrl(url);
-  return u ? el('a', { href: u, target: '_blank', rel: 'noopener noreferrer', text: text }) : null;
+  if (!u) return null;
+  return el('a', { href: u, target: '_blank', rel: 'noopener noreferrer' },
+    art ? symbol(art) : null,
+    el('span', { text: text })
+  );
 }
 
 // Gruppen mit Webseite, Instagram und weiteren Links
@@ -32,7 +57,7 @@ function zeigeGruppen(box, gruppen) {
   box.hidden = false;
   box.append(el('h2', { text: 'Die Gruppen' }));
   liste.forEach(function (g) {
-    const links = [linkZeile('Webseite', g.webseite), linkZeile('Instagram', g.instagram)]
+    const links = [linkZeile('Webseite', g.webseite, 'webseite'), linkZeile('Instagram', g.instagram, 'instagram')]
       .concat((Array.isArray(g.links) ? g.links : []).slice(0, 5).map(function (u) {
         return linkZeile(String(u).replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, ''), u);
       }))
@@ -58,7 +83,8 @@ export function render(container, ctx) {
       });
       if (o.id === aktiv.id) a.setAttribute('aria-current', 'page');
       return a;
-    })
+    }),
+    el('a', { class: 'knopf knopf-hell', href: '#/wiki', text: 'Wiki' })
   );
 
   const s = getSession();
@@ -87,7 +113,7 @@ export function render(container, ctx) {
   ladeText(aktiv.id).then(function (text) {
     if (!container.contains(karte)) return;
     leeren(textBox);
-    textBox.append(zeichneText(text));
+    textBox.append(signalKnoepfe(zeichneText(text)));
   }).catch(function () {
     if (!container.contains(karte)) return;
     leeren(textBox);

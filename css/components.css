@@ -3331,3 +3331,13 @@ a, .wiki-text a, .wiki-iv-knopf, .info-gruppe-links a { color: var(--link); }
 .darstellung-punkt .punkt-dunkel { background: #000000; }
 .darstellung-punkt[aria-pressed="true"] { background: var(--flaeche); border: 3px solid var(--gruppe); }
 .seiten-fuss .darstellung-punkt { flex: 0 0 44px; padding: 0; }
+
+/* ---- 0.33.10: Symbole an den Links der Gruppen (Info) ---- */
+.info-gruppe-links a { gap: 6px; }
+.info-symbol { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
+
+/* ---- 0.33.11: Signal-Knopf mit Rechenaufgabe ---- */
+.signal-knopf { margin: 4px 0; }
+.signal-form .signal-frage { font-size: 1.2em; font-weight: 600; margin: 12px 0 8px; }
+.signal-form .feld { max-width: 160px; }
+.signal-form .knopf { margin-top: 4px; }

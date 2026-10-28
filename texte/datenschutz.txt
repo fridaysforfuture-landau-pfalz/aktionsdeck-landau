@@ -51,8 +51,6 @@ Der PIN wird nicht im Klartext gespeichert, nur als Prüfwert. Nach vielen falsc
 Nur für die eigene Gruppe sichtbar sind zum Beispiel Projekte, ToDos, Material und Ausleihe, Mobi-Beiträge, Termine, Protokolle, Reden, Umfragen, Kommentare und Wiki-Seiten.
 Bei jedem Eintrag speichert die App den Anzeigenamen und die Zeit (wer hat angelegt, wer hat zuletzt geändert). Namen stehen auch dort, wo ihr sie selbst eintragt, zum Beispiel bei Verantwortlichen oder im Protokoll.
 
-> Tragt nur ein, was nötig ist. Keine Angaben zur Gesundheit, keine Telefonnummern oder Adressen von Personen ohne deren Zustimmung, keine Fotos von Personen im Wiki.
-
 ## Protokoll der Änderungen (Log)
 
 Bei jeder Änderung schreibt das Skript eine Zeile ins Log: Zeit, Gruppe, Art der Änderung, Tabelle, Nummer des Eintrags und Anzeigename.

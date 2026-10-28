@@ -15,6 +15,7 @@ import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { getSession } from '../store.js';
 import { zeichneText } from '../wiki-format.js';
+import { signalKnoepfe } from '../ui/signal.js';
 import { txt, nachThema, sortiereSeiten, findeSeite, anleitungListe, standText, BEREICHE } from './wiki-rechnen.js';
 
 const DATEI = /^[a-z0-9-]{1,40}$/;
@@ -154,7 +155,7 @@ export async function render(container, ctx) {
     inhalt.append(el('article', { class: 'karte wiki-artikel' },
       el('h1', { class: 'wiki-titel', text: titel }),
       el('p', { class: 'leise wiki-stand', text: 'AktionsDeck Landau' }),
-      zeichneText(text, { inhaltsverzeichnis: true, seiteFinden: function () { return ''; }, fehltAlsText: true })
+      signalKnoepfe(zeichneText(text, { inhaltsverzeichnis: true, seiteFinden: function () { return ''; }, fehltAlsText: true }))
     ));
   }
 

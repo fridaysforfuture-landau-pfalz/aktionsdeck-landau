@@ -56,6 +56,15 @@ Die App soll schneller, sicherer und für alle gut benutzbar werden. Neue Funkti
   In `docs/STAND.md` steht schon: Warnungen wegen Node 20, Versionen anheben (war für die Etappe „Komfort“ geplant, die jetzt Etappe 11 ist).
 - **Etappe „Komfort“** (OpenCollective-Kontostand, Erinnerungen, Sicherung, Übersicht und Export, Dunkelmodus, Feinschliff, Actions-Versionen): kommt jetzt **vorher** als Etappe 11 (`docs/PLAN-ETAPPE-11.md`).
 
+**Was Etappe 11 neu gebracht hat (Nachtrag aus Schritt 11.9, Version 0.33.10).** Das gehört mit in die Prüfung von 12.1:
+- **Skript:** neue Datei `apps-script/Konto.gs` mit Zeitauslöser (Montag früh) und Abruf von außen (`https://api.opencollective.com/graphql/v2`). Neue Aktionen `gruppeInfo` und `kontoAktualisieren` (mit Login). Kontostand und Cloud-Link stehen in Skripteigenschaften, nicht im Sheet.
+- **Neue Dateien in der App:** `js/gruppeninfo.js`, `js/views/cloud.js`, `js/views/erinnerungen-rechnen.js`, `js/views/uebersicht.js`, `js/views/uebersicht-rechnen.js`, `js/ui/druck.js`, `js/ui/darstellung.js`, `js/darstellung-start.js` (normales Skript im `<head>`, kein Modul; wichtig für eine Content-Security-Policy in 12.2).
+- **Neue Schlüssel im Gerät:** `aktionsdeck_darstellung`. Neue Zwischenspeicher: `<gruppe_id>:gruppeinfo`, `<gruppe_id>:startfuerdich`, `<gruppe_id>:uebersicht`.
+- **Zahl am App-Symbol** (`navigator.setAppBadge`) und **Drucken** (`@media print`, Block 0.33.6).
+- **Farben:** Alle festen Farben stehen seit 0.33.7 als Variablen in `css/base.css`. Dunkle Werte stehen in `css/components.css` (Blöcke 0.33.8 und 0.33.9). Für 12.4 (Barrierefreiheit) und 12.8 (CSS ordnen) gibt es also **zwei Modi**, die beide geprüft werden. In 11.8 und 11.8a hat der Agent den Kontrast aller Schriften in beiden Modi gemessen (Testdaten, Farbe von FFF).
+- **GitHub Actions** sind seit 11.2 auf aktuellen Versionen (checkout v7, configure-pages v6, upload-pages-artifact v5, deploy-pages v5). In 12.9 bleibt nur die Kontrolle.
+- **Offener Wunsch vor 1.0** (siehe `docs/STAND.md`, „Offen“): öffentliche Termine nach Veranstalter sortieren. Das ist eine neue Funktion und gehört nicht in die Prüfung. Die Person entscheidet, wann er kommt.
+
 ## 3. Entscheidungen
 
 Noch keine. Die Antworten auf Abschnitt 4 kommen in Fassung 2 hierher.
