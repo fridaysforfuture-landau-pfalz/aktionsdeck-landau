@@ -24,7 +24,7 @@ Unten „Name ändern“. Bist du im Team eingetragen, ändere den Namen auf dei
 
 ## Wie stelle ich die App dunkel?
 
-Unter „Darstellung“ wählst du „Wie das Gerät“, „Hell“ oder „Dunkel“. Am Handy steht das in „Mehr“ unter „Abmelden“, am PC unten in der Seitenleiste unter „Name ändern“ und „Abmelden“. Mit „Wie das Gerät“ (so ist es am Anfang) ist die App dunkel, wenn dein Handy oder PC auf dunkel steht. Die Einstellung gilt nur auf diesem Gerät, für alle Gruppen, und bleibt beim Abmelden erhalten. Gedruckt wird immer hell.
+Unter „Darstellung“ wählst du „Gerät“ (wie dein Gerät eingestellt ist), den weißen Punkt (hell) oder den schwarzen Punkt (dunkel). Am Handy steht das in „Mehr“ unter „Abmelden“, am PC unten in der Seitenleiste unter „Name ändern“ und „Abmelden“. Mit „Gerät“ (so ist es am Anfang) ist die App dunkel, wenn dein Handy oder PC auf dunkel steht. Die Einstellung gilt nur auf diesem Gerät, für alle Gruppen, und bleibt beim Abmelden erhalten. Gedruckt wird immer hell.
 
 ## Wer sieht meine Daten?
 
