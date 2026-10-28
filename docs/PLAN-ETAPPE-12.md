@@ -164,7 +164,7 @@ die Person löscht sie danach im Sheet (spätestens in 12.17). Nur ähnlicher Co
 
 **Prüfen:** Alle Reiter und öffentlichen Seiten laufen wie vorher.
 
-### 12.9 – Layout am PC und beim Rauszoomen (W8)
+### 12.9 – Layout am PC und beim Rauszoomen (W8) – erledigt (0.34.7)
 
 Version 0.34.7. Sheet und Skript bleiben unverändert.
 
@@ -247,7 +247,6 @@ Version 0.34.12. Sheet und Skript bleiben unverändert.
 Version 1.0.0. Sheet und Skript bleiben unverändert.
 
 1. Vorher von der Person: Testdaten im Sheet löschen (`testdatenListe` in `apps-script/Aufraeumen.gs`), auch die Testeinträge aus 12.3. Datenschutztext geprüft.
-   Falls noch nicht geschehen: Tabs `Posts`, `Projekt_Team`, `Vorlagen_ToDo`, `Einstellungen` und Spalten `ToDos.post_id`, `Projekte.kanaele` im Sheet gelöscht (aus 12.8).
 2. GitHub Actions kontrollieren (laufen grün, keine Warnungen).
 3. `docs/STAND.md`: Etappe 12 kurz zusammengefasst, dieser Plan eingearbeitet und gelöscht. `texte/entwicklung.txt`: Etappe 12 und Version 1.0; ab dann eine Zeile je Version.
 
@@ -267,7 +266,7 @@ Version 1.0.0. Sheet und Skript bleiben unverändert.
 | 12.6b | Zwischenspeicher im Skript | Bau | 0.34.5 | ja (Bereitstellung) |
 | 12.7 | Ungenutztes prüfen | Bericht | – | nein |
 | 12.8 | Ungenutztes löschen | Bau | 0.34.6 | ja (Bereitstellung), danach Tabs und Spalten löschen |
-| 12.9 | Layout am PC und beim Rauszoomen | Bau | 0.34.7 | nein |
+| 12.9 | Layout am PC und beim Rauszoomen – erledigt | Bau | 0.34.7 | nein |
 | 12.10 | Barrierefreiheit prüfen, Test mit Bildschirmleser | Bericht | – | nein |
 | 12.11 | Barrierefreiheit verbessern | Bau | 0.34.8 | nein |
 | 12.12 | App-Icon und Ladebildschirm | Bau | 0.34.9 | nein |

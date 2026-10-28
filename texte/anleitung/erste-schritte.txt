@@ -20,7 +20,7 @@ Danach öffnet sich die App wie eine normale App.
 ## Was ist wo?
 
 - Am Handy unten: Start, Projekte, ToDos, Mobi und „Mehr“ (Material, Kalender, Dokumentation, Team, Wiki).
-- Am PC links in der Seitenleiste.
+- Am PC links in der Seitenleiste. Ist das Fenster zu niedrig für alle Reiter, stehen die unteren unter „Mehr ▾“ zum Aufklappen.
 - Unten stehen „Name ändern“, „Abmelden“, die Darstellung (hell oder dunkel) und die Seiten Impressum, Info und Datenschutz.
 
 ## Was ist neu?

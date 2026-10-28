@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-- Version der App: **0.34.6** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **0.34.7** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
-- Nächster Schritt: **12.9 Layout am PC und beim Rauszoomen**.
+- Nächster Schritt: **12.10 Barrierefreiheit prüfen** (Bericht und Anleitung für den Test mit Bildschirmleser).
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -161,7 +161,10 @@ Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abw
   `js/` (app, config, api, store, cache, schema, vorlagen, kanaele, wiki-format, gruppeninfo, darstellung-start, ui/, views/),
   `texte/` (feste Texte im Wiki-Format, öffentlich abrufbar).
 - **PC (ab 960 px):** Seitenleiste links, Inhalt in der Mitte, Details rechts. Seitenleiste unten: „Name ändern“, „Abmelden“,
-  Schalter Hell/Dunkel, Links Impressum, Info, Datenschutz, Wiki.
+  Schalter Hell/Dunkel, Links Impressum, Info, Datenschutz, Wiki. Seit 0.34.7 ohne Grenze der Breite: Die App füllt den Bildschirm.
+  Ist die Seitenleiste zu niedrig, rutschen die unteren Reiter in „Mehr ▾“ zum Aufklappen (`js/ui/nav.js`, `mehrAmPc`, neu verteilt bei jeder Größenänderung).
+  Kacheln werden auf breiten Bildschirmen breiter, nicht mehr Spalten (Team-Karten höchstens 4, Mobi-Kanban-Spalten wachsen mit).
+  Lesetexte und Formulare bleiben schmal und mittig: Wiki-Seite 800 px, Formulare Protokoll und Wiki 1100 px, Berg im Team 1100 px.
   **Handy (bis 959 px):** untere Leiste (Start, Projekte, ToDos, Mobi, Mehr), Details als Vollbild.
 - **Reiter:** Start, Projekte, ToDos, Mobi, Material, Kalender, Dokumentation (Kennung `protokoll`), Team, Wiki, Cloud
   (am Handy alle ab Material unter „Mehr“). Cloud erscheint nur, wenn die Gruppe einen Cloud-Link hat (`js/gruppeninfo.js`).
@@ -224,7 +227,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
   12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2),
   12.5 Geschwindigkeitsbericht (nur im Chat) mit dem Editor-Werkzeug `messenSkript` (0.34.3),
   12.6 Geschwindigkeit verbessert (0.34.4 App, 0.34.5 Zwischenspeicher im Skript), 12.7 Bericht Ungenutztes (nur im Chat),
-  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6).
+  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6, Skript bereitgestellt, `testenRechte` ok), 12.9 Layout am PC (0.34.7).
 - Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
   Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
@@ -233,8 +236,6 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
 
 - **Für die Person vor 1.0:** Testdaten im Sheet löschen (in 12.17; `testdatenListe` in `apps-script/Aufraeumen.gs` zeigt sie mit Zeilennummern),
   auch Testeinträge aus der Sicherheitsprüfung 12.3. Datenschutztext von jemandem prüfen lassen, der sich auskennt.
-- **Für die Person nach 12.8 (spätestens in 12.17):** Wenn das Skript 0.34.6 bereitgestellt ist, im Sheet die Tabs `Posts`, `Projekt_Team`,
-  `Vorlagen_ToDo` und `Einstellungen` und die Spalten `ToDos.post_id` und `Projekte.kanaele` löschen (vorher prüfen, dass nichts Wichtiges darin steht).
 - **Möglich nach 1.0 (aus 12.7, D4):** Ähnlicher, aber nicht gleicher Code: `ideen.js` und `projekt-learnings.js` und das Muster „Liste mit
   Formular, Speichern, Löschen, Meldung bei Konflikt“ (auch `start-brett.js`, `start-umfragen.js`, `mobi-eintrag.js`) könnten einen
   gemeinsamen Baustein bekommen. Dazu kleine ähnliche Helfer (`zahl`, `euro`, `kopieren` u. a.). Nur mit Bildschirmfoto-Vergleich.
@@ -480,6 +481,9 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
     9 ungenutzte Einträge in `js/schema.js`, `txt()` nur noch in `js/ui/dom.js` (vorher in 31 Dateien). Skript: Aktion `bootstrap`,
     Tabs `Posts`, `Projekt_Team`, `Vorlagen_ToDo`, `Einstellungen`, Spalten `post_id` und `kanaele`, veraltete Editor-Tests;
     `textVon` und `textKlein` statt vier gleicher Helfer. Die Regel „neue CSS ans Ende“ gilt nicht mehr.
+    Die Person hat das Skript bereitgestellt und die alten Tabs und Spalten im Sheet gelöscht.
+  - 12.9 (0.34.7): Layout am PC: keine Grenze von 1400 px mehr, Reiter rutschen bei wenig Höhe in „Mehr ▾“, Kacheln werden breiter,
+    Lesetexte und Formulare schmal und mittig.
 
 ---
 

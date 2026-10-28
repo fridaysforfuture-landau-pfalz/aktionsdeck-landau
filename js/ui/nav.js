@@ -59,7 +59,8 @@ export function oeffentlicheLinks() {
 function eintrag(klasse, basis, t, aktiv, beiAktiv) {
   const a = el('a', {
     class: klasse + (t.id === aktiv ? ' aktiv' : ''),
-    href: basis + t.id
+    href: basis + t.id,
+    'data-tab': t.id
   },
     el('span', { class: 'nav-icon', text: t.icon, 'aria-hidden': 'true' }),
     el('span', { text: t.label })
@@ -75,18 +76,50 @@ function eintrag(klasse, basis, t, aktiv, beiAktiv) {
   return a;
 }
 
+// Seit 0.34.7: Ist die Seitenleiste am PC zu niedrig für alle Reiter, rutschen die unteren Reiter
+// in „Mehr ▾“ zum Ausklappen. Wird bei jeder Größenänderung des Fensters neu verteilt.
+let verteileAktuell = null;
+window.addEventListener('resize', function () { if (verteileAktuell) verteileAktuell(); });
+
+function mehrAmPc(leiste, links, aktiv) {
+  const innen = el('div', { class: 'nav-mehr-liste' });
+  const kopf = el('summary', { class: 'nav-link' },
+    el('span', { class: 'nav-icon', text: MEHR.icon, 'aria-hidden': 'true' }),
+    el('span', { text: 'Mehr' }),
+    el('span', { class: 'nav-mehr-pfeil', text: '▾', 'aria-hidden': 'true' })
+  );
+  const mehr = el('details', { class: 'nav-mehr', hidden: true }, kopf, innen);
+
+  function verteile() {
+    const offen = mehr.open;
+    mehr.open = false;
+    links.forEach(function (a) { mehr.before(a); });
+    mehr.hidden = true;
+    // Ohne Seitenleiste (Handy) ist die Höhe 0, dann bleibt alles, wie es ist
+    for (let i = links.length - 1; i > 0 && leiste.clientHeight && leiste.scrollHeight > leiste.clientHeight; i--) {
+      mehr.hidden = false;
+      innen.prepend(links[i]);
+    }
+    const drin = links.some(function (a) { return a.parentNode === innen && a.dataset.tab === aktiv; });
+    kopf.classList.toggle('aktiv', drin);
+    mehr.open = offen && !mehr.hidden;
+  }
+  return { mehr: mehr, verteile: verteile };
+}
+
 // Baut das Gerüst. Gibt { inhalt, detail } zurück.
 export function baueGeruest(container, ctx) {
   const basis = '#/g/' + encodeURIComponent(ctx.session.kurzname) + '/';
   const aktiv = ctx.tab;
   const tabs = sichtbareTabs();
 
+  const links = tabs.map(function (t) { return eintrag('nav-link', basis, t, aktiv, ctx.neuLaden); });
   const seitenleiste = el('nav', { class: 'seitenleiste', 'aria-label': 'Hauptmenü' },
     el('div', { class: 'seiten-kopf' },
       gruppenLogo(ctx.session.kurzname, 'seiten-logo'),
       el('span', { text: String(ctx.session.kurzname).toUpperCase() })
     ),
-    ...tabs.map(function (t) { return eintrag('nav-link', basis, t, aktiv, ctx.neuLaden); }),
+    ...links,
     el('div', { class: 'seiten-fuss' },
       el('span', { class: 'leise', text: 'Angemeldet als ' + (getName() || 'unbekannt') }),
       el('div', { class: 'seiten-fuss-knoepfe' },
@@ -108,7 +141,12 @@ export function baueGeruest(container, ctx) {
   const inhalt = el('main', { class: 'inhalt', id: 'inhalt' });
   const detail = el('aside', { class: 'detail', id: 'detail', 'aria-label': 'Details' });
 
+  const mehr = mehrAmPc(seitenleiste, links, aktiv);
+  links[links.length - 1].after(mehr.mehr);
+
   container.textContent = '';
   container.append(el('div', { class: 'huelle' }, seitenleiste, inhalt, detail, untenleiste));
+  verteileAktuell = mehr.verteile;
+  mehr.verteile();
   return { inhalt: inhalt, detail: detail };
 }
