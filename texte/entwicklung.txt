@@ -25,7 +25,7 @@ Jede Etappe beginnt mit einem Plan und Rückfragen. Nach jedem Schritt prüft ei
 
 ## Etappe 11: Komfort
 
-Version 0.33.0 bis 0.33.13, Pull Requests #60 bis #72.
+Version 0.33.0 bis 0.33.15, Pull Requests #60 bis #74.
 
 - **Kontostand:** Im Teil Finanzen der Projekte steht der Kontostand der Gruppe bei OpenCollective. Das Skript ruft ihn einmal pro Woche ab, dazu gibt es den Knopf „Jetzt abrufen“.
 - **Reiter Cloud:** ein Knopf zur Cloud der Gruppe (öffnet sich in einem neuen Tab).

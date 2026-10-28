@@ -56,7 +56,7 @@ Die App soll schneller, sicherer und für alle gut benutzbar werden. Neue Funkti
   In `docs/STAND.md` steht schon: Warnungen wegen Node 20, Versionen anheben (war für die Etappe „Komfort“ geplant, die jetzt Etappe 11 ist).
 - **Etappe „Komfort“** (OpenCollective-Kontostand, Erinnerungen, Sicherung, Übersicht und Export, Dunkelmodus, Feinschliff, Actions-Versionen): kommt jetzt **vorher** als Etappe 11 (`docs/PLAN-ETAPPE-11.md`).
 
-**Was Etappe 11 neu gebracht hat (Nachtrag aus Schritt 11.9 bis 11.11, Version 0.33.10 bis 0.33.13).** Das gehört mit in die Prüfung von 12.1:
+**Was Etappe 11 neu gebracht hat (Nachtrag aus Schritt 11.9 bis 11.12, Version 0.33.10 bis 0.33.15).** Das gehört mit in die Prüfung von 12.1:
 - **Skript:** neue Datei `apps-script/Konto.gs` mit Zeitauslöser (Montag früh) und Abruf von außen (`https://api.opencollective.com/graphql/v2`). Neue Aktionen `gruppeInfo` und `kontoAktualisieren` (mit Login). Kontostand und Cloud-Link stehen in Skripteigenschaften, nicht im Sheet.
 - **Neue Dateien in der App:** `js/gruppeninfo.js`, `js/views/cloud.js`, `js/views/erinnerungen-rechnen.js`, `js/views/uebersicht.js`, `js/views/uebersicht-rechnen.js`, `js/ui/druck.js`, `js/ui/darstellung.js`, `js/darstellung-start.js` (normales Skript im `<head>`, kein Modul; wichtig für eine Content-Security-Policy in 12.2).
 - **Neue Schlüssel im Gerät:** `aktionsdeck_darstellung`. Neue Zwischenspeicher: `<gruppe_id>:gruppeinfo`, `<gruppe_id>:startfuerdich`, `<gruppe_id>:uebersicht`.
