@@ -3185,3 +3185,8 @@ p.notiz.erledigt {
 .jahr-abschnitt .dash-zahlen { margin: 0; }
 .jahr-liste { margin: 6px 0 0; padding-left: 20px; }
 .jahr-liste li { margin: 2px 0; }
+
+/* ---- 0.33.5: Kachel „Für dich“ gelb (11.4a) ---- */
+.karte.fuer-dich { background: #fff6d1; border-color: #f0c64a; border-top-color: #e08a00; border-left-color: #e08a00; }
+.fuer-dich .dash-zeile { border-bottom-color: #f0d98a; }
+.fuer-dich .leise { color: #5c4a14; }
