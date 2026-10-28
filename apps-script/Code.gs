@@ -28,6 +28,7 @@ function verteile(p) {
   if (p.aktion === 'login') return aktionLogin(p);
   if (p.aktion === 'termine') return aktionTermine(p);
   if (p.aktion === 'wiki') return aktionWiki(p);
+  if (p.aktion === 'signal') return aktionSignal(p);     // Signal.gs, seit 0.33.13
 
   // Mit Login: Token, Gruppe und Zugang werden bei JEDEM Aufruf geprüft
   var ctx = tokenPruefen(p.token);

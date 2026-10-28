@@ -3346,3 +3346,6 @@ a, .wiki-text a, .wiki-iv-knopf, .info-gruppe-links a { color: var(--link); }
 .oeff-auswahl { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 .oeff-auswahl .feld { flex: 1 1 180px; width: auto; }
 .abo-knoepfe + .leise, .karte > select.feld { margin-bottom: 8px; }
+
+/* ---- 0.33.13: Signal-Link vom Skript ---- */
+.signal-form a.knopf { display: inline-flex; align-items: center; text-decoration: none; margin-top: 4px; }
