@@ -373,7 +373,7 @@ export async function render(container, ctx) {
       class: 'dash-zeile kal-zeile' + (grau ? ' kal-grau' : '') +
         (voll ? ' kal-voll' : '') + (frist ? ' kal-frist' : '') + (pink ? ' kal-mobi-nach' : '')
     }, knopf);
-    li.style.borderLeftColor = grau ? '#8a9490' : (ueber ? '#b3261e' : (pink ? '#d81b60' : t.farbe));
+    li.style.borderLeftColor = grau ? 'var(--grau-marke)' : (ueber ? 'var(--fehler)' : (pink ? 'var(--frist-rosa)' : t.farbe));
     if (voll) {
       li.style.background = t.farbe;
       li.style.color = schriftfarbe(t.farbe);
@@ -621,13 +621,13 @@ export async function render(container, ctx) {
         'aria-hidden': 'true',
         text: beschriftung
       });
-      b.style.borderTopColor = rosa ? '#d81b60' : (t.zu ? '#8a9490' : t.farbe);
+      b.style.borderTopColor = rosa ? 'var(--frist-rosa)' : (t.zu ? 'var(--grau-marke)' : t.farbe);
       streifen.push(b);
     }
 
     const punkte = el('span', { class: 'kal-punkte', 'aria-hidden': 'true' });
     const punktFarbe = function (t) {
-      return istUeberfaellig(t) ? '#b3261e' : (istGrau(t) ? '#8a9490' : t.farbe);
+      return istUeberfaellig(t) ? 'var(--fehler)' : (istGrau(t) ? 'var(--grau-marke)' : t.farbe);
     };
     // Veranstaltungen und Aktionen: Streifen über die ganze Breite des Tages
     normal.filter(function (t) { return rang(t) < 2; }).slice(0, 3).forEach(function (t) {
@@ -656,7 +656,7 @@ export async function render(container, ctx) {
         c.style.background = t.farbe;
         c.style.color = schriftfarbe(t.farbe);
       } else {
-        c.style.borderLeftColor = ueber ? '#b3261e' : (grau ? '#8a9490' : (istPink(t) ? '#d81b60' : t.farbe));
+        c.style.borderLeftColor = ueber ? 'var(--fehler)' : (grau ? 'var(--grau-marke)' : (istPink(t) ? 'var(--frist-rosa)' : t.farbe));
         if (istPink(t)) c.classList.add('kal-chip-pink');
       }
       chips.append(c);
@@ -853,7 +853,7 @@ export async function render(container, ctx) {
       c.style.background = t.farbe;
       c.style.color = schriftfarbe(t.farbe);
     } else {
-      c.style.borderLeftColor = ueber ? '#b3261e' : (grau ? '#8a9490' : (pink ? '#d81b60' : t.farbe));
+      c.style.borderLeftColor = ueber ? 'var(--fehler)' : (grau ? 'var(--grau-marke)' : (pink ? 'var(--frist-rosa)' : t.farbe));
     }
     return c;
   }
