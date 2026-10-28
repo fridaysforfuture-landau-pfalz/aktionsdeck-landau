@@ -8,7 +8,7 @@ import { normDatum, iso } from './views/todos-rechnen.js';
 
 // Standard-ToDos: werden beim Anlegen eines Projekts vorgeschlagen (mit Haken, abwählbar).
 // tage_vorher = so viele Tage VOR dem Aktionsdatum (ohne Aktionsdatum: kein Fälligkeitsdatum).
-// Alle Tage sind Platzhalter. Nachlesen: docs/STANDARD-TODOS.md (bei Änderung mitpflegen).
+// Alle Tage sind Platzhalter. Nachlesen: docs/STAND.md, Anhang A (bei Änderung mitpflegen).
 export const STANDARD_TODOS = [
   { text: 'Bühne?', tage_vorher: 21 },
   { text: 'Band?', tage_vorher: 21 },
