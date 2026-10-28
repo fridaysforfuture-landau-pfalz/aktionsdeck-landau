@@ -6,15 +6,11 @@
 //        ohneStelle (nur Kommentare ohne Absatz-Stelle, für Reden seit 0.30.12) }
 // Gibt { el, laden } zurück. Das Element lädt seine Kommentare selbst.
 
-import { el, leeren } from './dom.js';
+import { el, leeren, txt } from './dom.js';
 import { api } from '../api.js';
 import { toast } from './toast.js';
 import { istWahr } from '../schema.js';
 import { schriftfarbe } from '../views/kalender-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function farbeOk(f) {
   return /^#[0-9a-fA-F]{6}$/.test(txt(f));

@@ -18,7 +18,7 @@
 //        kannEntwurf (Skript kennt gemeinsame Entwürfe, aus protokollInfo), nachVerwerfen(),
 //        nachSpeichern(eintrag, ergebnis) -> ergebnis von protokollSpeichern, bei Ändern null }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { istWahr } from '../schema.js';
 import { api } from '../api.js';
 import { toast } from '../ui/toast.js';
@@ -33,10 +33,6 @@ import {
   angelegtLesen, angelegtText, topNummer, topHinzu, topEntfernen, textAufraeumen, stichpunktEnter, stichpunktTab, stichpunktRueck
 } from './protokoll-rechnen.js';
 import { baueMarken } from './protokoll-marken.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function kopieren(text, ok) {
   const fehlt = function () { toast('Kopieren hat nicht geklappt. Bitte den Text markieren.'); };

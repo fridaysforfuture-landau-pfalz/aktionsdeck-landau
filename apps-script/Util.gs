@@ -11,6 +11,16 @@ function fehler(code, text, data) {
   throw e;
 }
 
+// Wert als Text ohne Leerzeichen am Rand (undefined und null werden ''). Seit 0.34.6 für alle Skriptdateien.
+function textVon(v) {
+  return String(v === undefined || v === null ? '' : v).trim();
+}
+
+// Wie textVon, aber klein geschrieben (zum Vergleichen von Namen und Titeln).
+function textKlein(v) {
+  return textVon(v).toLowerCase();
+}
+
 function truthy(v) {
   return v === true || String(v).toUpperCase() === 'TRUE';
 }

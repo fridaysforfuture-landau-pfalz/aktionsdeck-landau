@@ -6,13 +6,10 @@
 import { istWahr } from '../schema.js';
 import { normDatum, datumText } from './todos-rechnen.js';
 import { naechsterWochentag, addTage, zeitNorm } from './kalender-rechnen.js';
+import { txt } from '../ui/dom.js';
 
 // Höchstlänge des Protokolltexts (wie MAX_TEXT_AUSNAHMEN in apps-script/Schema.gs)
 export const MAX_TEXT = 20000;
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 // Art des Protokolls: angezeigt groß, gespeichert klein (wie in js/schema.js)
 export const ARTEN = [
@@ -78,14 +75,6 @@ export function passtSuche(p, suche) {
   return [p.titel, p.text, p.teilnehmende].some(function (x) {
     return txt(x).toLowerCase().indexOf(s) >= 0;
   });
-}
-
-// Schlüssel für den Filter „Projekt oder Veranstaltung“: 'p:<id>' und 'v:<id>'
-export function bezugSchluessel(p) {
-  const l = [];
-  if (txt(p.projekt_id)) l.push('p:' + txt(p.projekt_id));
-  if (txt(p.veranstaltung_id)) l.push('v:' + txt(p.veranstaltung_id));
-  return l;
 }
 
 // Klartext zum Kopieren: Titel, Datum, Rollen, Anwesend, Protokolltext (auch für das Pad)
@@ -173,29 +162,6 @@ export function rollenText(rollen, reihenfolge) {
 // Gliederung für ein Plenum: je TOP Überschrift, ein Stichpunkt, Leerzeile (Wunsch 22.10.2026)
 export function plenumGliederung() {
   return '1. \n- \n\n2. \n- \n\nSonstiges\n- \n';
-}
-
-// „+ TOP“: nächste Nummer vor der Zeile „Sonstiges“ einfügen (ohne „Sonstiges“: am Ende).
-// Gibt { text, pos } zurück; pos = Cursor direkt hinter der neuen Nummer.
-export function topEinfuegen(text) {
-  const t = String(text === undefined || text === null ? '' : text);
-  let n = 0;
-  t.split('\n').forEach(function (z) {
-    const m = /^\s*(\d+)\.(\s|$)/.exec(z);
-    if (m) n = Math.max(n, Number(m[1]));
-  });
-  const neu = (n + 1) + '. ';
-  const m = /(^|\n)Sonstiges/i.exec(t);
-  if (m) {
-    const stelle = m.index + m[1].length;
-    const davor = t.slice(0, stelle);
-    const trenner = davor === '' || /\n\n$/.test(davor) ? '' : (/\n$/.test(davor) ? '\n' : '\n\n');
-    const vorn = davor + trenner + neu;
-    return { text: vorn + '\n\n' + t.slice(stelle), pos: vorn.length };
-  }
-  const trenner = t === '' || /\n\n$/.test(t) ? '' : (/\n$/.test(t) ? '\n' : '\n\n');
-  const vorn = t + trenner + neu;
-  return { text: vorn, pos: vorn.length };
 }
 
 // Nächstes Plenum nach dem Tag des Protokolls (der Tag selbst zählt nicht).

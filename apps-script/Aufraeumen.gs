@@ -83,24 +83,20 @@ function aufraeumen() {
   mitSperre(function () { aufraeumenLauf(true); });
 }
 
-// Listet Testdaten mit Zeilennummern, damit du sie im Sheet von Hand löschen kannst.
-function testzeilenAnzeigen() {
+// Im Editor ausführen: zeigt Einträge mit Zeilennummer, damit du Testdaten im Sheet von Hand löschen kannst.
+// Löscht nichts. Seit 0.34.6 auch Ausleihen der Person „Test“ und Projekte mit „test“ im Titel (vorher testzeilenAnzeigen).
+function testdatenListe() {
   var a = lies('Ausleihe').zeilen.filter(function (z) {
     return String(z.person).trim().toLowerCase() === 'test';
   });
-  Logger.log('Ausleihe, Person "Test": ' + a.length + ' Zeilen: ' +
+  Logger.log('== Ausleihe, Person "Test": ' + a.length + ' Zeilen: ' +
     a.map(function (z) { return z._zeile; }).join(', '));
-
   var p = lies('Projekte').zeilen.filter(function (z) {
     return !truthy(z.geloescht) && String(z.titel).toLowerCase().indexOf('test') >= 0;
   });
-  Logger.log('Projekte mit "test" im Titel: ' +
+  Logger.log('== Projekte mit "test" im Titel: ' +
     p.map(function (z) { return 'Zeile ' + z._zeile + ' (' + z.titel + ')'; }).join(', '));
-}
 
-// Im Editor ausführen: zeigt alle Einträge der Etappen 5 und 6 mit Zeilennummer, damit du
-// Testdaten im Sheet von Hand löschen kannst. Löscht nichts.
-function testdatenListe() {
   var felder = {
     Umfragen: 'frage', Umfrage_Antworten: 'person', Mitteilungen: 'titel', Kommentare: 'text',
     Ideen: 'titel', Veranstaltungen: 'titel', Termin_Vorlagen: 'name', Mobi_Plan: 'titel'

@@ -21,3 +21,8 @@ export function el(tag, eigenschaften, ...kinder) {
 export function leeren(container) {
   container.textContent = '';
 }
+
+// Wert als Text ohne Leerzeichen am Rand (undefined und null werden ''). Seit 0.34.6 nur noch hier.
+export function txt(v) {
+  return String(v === undefined || v === null ? '' : v).trim();
+}

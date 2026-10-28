@@ -39,11 +39,10 @@ function verteile(p) {
 }
 
 // 12.6: Aktionen mit Login, die nur lesen (alle anderen machen den Zwischenspeicher ungültig)
-var NUR_LESEN = ['bootstrap', 'list', 'listMehrere', 'protokollInfo', 'gruppeInfo'];
+var NUR_LESEN = ['list', 'listMehrere', 'protokollInfo', 'gruppeInfo'];
 
 function verteileMitLogin(ctx, p) {
   switch (p.aktion) {
-    case 'bootstrap':       return aktionBootstrap(ctx, p);
     case 'list':            return aktionList(ctx, p);
     case 'listMehrere':     return aktionListMehrere(ctx, p);
     case 'create':          return aktionCreate(ctx, p);
@@ -68,9 +67,4 @@ function fehlerAntwort(err) {
   }
   Logger.log(err && err.stack ? err.stack : String(err));
   return { ok: false, data: null, error: 'Interner Fehler. Bitte später noch einmal versuchen.', code: 'intern' };
-}
-
-// Testfunktion für den Editor (Schritt 1.2.7)
-function testen() {
-  Logger.log(JSON.stringify(verteile({ aktion: 'gruppen' })));
 }

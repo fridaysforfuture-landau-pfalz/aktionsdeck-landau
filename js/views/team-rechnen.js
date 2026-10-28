@@ -16,10 +16,7 @@ import { normDatum } from './todos-rechnen.js';
 import { addTage, wochentagNr } from './kalender-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
 import { istVeroeffentlicht } from './mobi-rechnen.js';
-
-export function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
+import { txt } from '../ui/dom.js';
 
 function key(v) {
   return txt(v).toLowerCase();

@@ -6,7 +6,7 @@
 // Tabs: Umfragen (frage, optionen, ablauf_am, mehrfach, beendet), Umfrage_Antworten (umfrage_id, person, auswahl).
 // opt: { ctx, token, holeDaten() -> { umfragen, antworten }, neuLaden() -> Promise }
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { fortschrittsBalken } from '../ui/balken.js';
@@ -18,10 +18,6 @@ import { normDatum, datumText, heuteIso } from './todos-rechnen.js';
 
 // Welche Umfragen im Archiv aufgeklappt sind (bleibt beim Neuzeichnen erhalten)
 const archivOffen = {};
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function optionenVon(u) {
   return txt(u.optionen)

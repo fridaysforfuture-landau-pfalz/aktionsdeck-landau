@@ -59,7 +59,7 @@ Löschen in der App ist zuerst nur Ausblenden: In der Zeile steht dann in der Sp
 
 Manche Einträge nehmen beim Löschen andere mit. Die musst du ebenfalls zurückholen, sonst fehlen sie:
 
-- **Projekt:** In den Tabs `Posts`, `ToDos`, `Meilensteine`, `Projekt_Team`, `Projekt_Material`, `Finanzen`, `Kommentare` und `Mobi_Plan` sind die Zeilen dieses Projekts mitgelöscht. Sie haben dieselbe `projekt_id` und meist denselben Zeitpunkt in `geaendert_am`.
+- **Projekt:** In den Tabs `ToDos`, `Meilensteine`, `Projekt_Material`, `Finanzen`, `Kommentare` und `Mobi_Plan` sind die Zeilen dieses Projekts mitgelöscht. Sie haben dieselbe `projekt_id` und meist denselben Zeitpunkt in `geaendert_am`.
 - **Veranstaltung:** Die Mobi-Beiträge dazu (Tab `Mobi_Plan`) sind mitgelöscht.
 - **Wiki-Seite:** Die Kommentare dazu (Tab `Kommentare`) sind mitgelöscht.
 

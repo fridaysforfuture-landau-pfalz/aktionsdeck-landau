@@ -33,14 +33,11 @@ var TABELLEN = {
   Personen: ['name', 'aktiv', 'rollen', 'notiz'],
   Material: ['name', 'kategorie', 'unterkategorie', 'anzahl', 'einheit', 'ort', 'foto_id', 'notiz', 'aktiv', 'typ'],
   Ausleihe: ['material_id', 'projekt_id', 'person', 'art', 'anzahl', 'datum', 'notiz'],
-  ToDos: ['projekt_id', 'post_id', 'text', 'verantwortlich', 'faellig_am', 'erledigt', 'erledigt_am', 'erledigt_von', 'prioritaet', 'sortierung', 'details', 'meilenstein_id', 'mobi_id'],
-  Projekte: ['titel', 'beschreibung', 'ort', 'status', 'start_datum', 'aktionsdatum', 'deadline', 'budget_geplant', 'aktionsart','zielgruppe', 'werbeart', 'kampagnenziel', 'handlungsaufruf', 'kanaele'],
+  ToDos: ['projekt_id', 'text', 'verantwortlich', 'faellig_am', 'erledigt', 'erledigt_am', 'erledigt_von', 'prioritaet', 'sortierung', 'details', 'meilenstein_id', 'mobi_id'],
+  Projekte: ['titel', 'beschreibung', 'ort', 'status', 'start_datum', 'aktionsdatum', 'deadline', 'budget_geplant', 'aktionsart','zielgruppe', 'werbeart', 'kampagnenziel', 'handlungsaufruf'],
   Meilensteine: ['projekt_id', 'titel', 'datum', 'verantwortlich', 'erledigt'],
-  Projekt_Team: ['projekt_id', 'person', 'zustaendigkeit'],
   Projekt_Material: ['projekt_id', 'material_id', 'name', 'kategorie', 'menge', 'beschaffung', 'beschafft', 'notiz'],
   Finanzen: ['projekt_id', 'projekt_material_id', 'posten', 'art', 'menge', 'einzelpreis', 'betrag_geplant', 'betrag_tatsaechlich', 'bezahlt', 'bezahlt_von', 'datum', 'beleg_id'],
-  Posts: ['projekt_id', 'titel', 'plattform', 'format', 'text', 'medien_id', 'veroeffentlichung_am', 'status', 'verantwortlich'],
-  Vorlagen_ToDo: ['vorlage_name', 'schritt_text', 'tage_vorher', 'verantwortlich'],
   Protokolle: ['projekt_id', 'datum', 'titel', 'teilnehmende', 'text',
                'art', 'veranstaltung_id', 'rollen', 'im_dokument', 'vorschlaege_erledigt', 'entwurf', 'angelegt'],
   Reden: ['projekt_id', 'veranstaltung_id', 'titel', 'redner', 'datum', 'aktionsart', 'link', 'status', 'notiz', 'text'],
@@ -68,7 +65,6 @@ var TABELLEN = {
 var SYSTEM = {
   Gruppen: ['gruppe_id', 'name', 'kurzname', 'farbe', 'sortierung', 'aktiv', 'webseite', 'instagram', 'weitere_links'],
   Zugang: ['zugang_id', 'gruppe_id', 'pin_salt', 'pin_hash', 'aktiv', 'gueltig_bis'],
-  Einstellungen: ['schluessel', 'wert'],
   Log: ['zeit', 'gruppe_id', 'aktion', 'tabelle', 'datensatz_id', 'anzeigename']
 };
 
@@ -95,7 +91,7 @@ function maxLaenge(tab, sp) {
 
 // Spaltentypen: alles andere ist Text
 var ZAHL_SPALTEN = ['anzahl', 'menge', 'einzelpreis', 'betrag_geplant',
-                    'betrag_tatsaechlich', 'budget_geplant', 'sortierung', 'tage_vorher', 'kapazitaet'];
+                    'betrag_tatsaechlich', 'budget_geplant', 'sortierung', 'kapazitaet'];
 var BOOL_SPALTEN = ['aktiv', 'geloescht', 'erledigt', 'beschafft', 'bezahlt', 'mehrfach', 'angeheftet', 'beendet', 'namentlich', 'oeffentlich',
                     'im_dokument', 'vorschlaege_erledigt', 'entwurf', 'gewaehlt'];
 
@@ -116,11 +112,6 @@ function spaltenListe(tab) {
 // Klappt ein Tab nicht, steht im Protokoll, welcher es war, und die übrigen Tabs werden trotzdem formatiert.
 function formatieren() {
   formatierenTabs(Object.keys(SYSTEM).concat(Object.keys(TABELLEN)));
-}
-
-// Nur den Tab Wiki formatieren (Schritt 10.1, seit 0.32.12)
-function formatierenWiki() {
-  formatierenTabs(['Wiki']);
 }
 
 function formatierenTabs(namen) {

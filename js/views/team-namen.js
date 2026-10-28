@@ -10,7 +10,8 @@
 
 import { api } from '../api.js';
 import { cacheGet } from '../cache.js';
-import { txt, istAktiv, rollenVon } from './team-rechnen.js';
+import { istAktiv, rollenVon } from './team-rechnen.js';
+import { txt } from '../ui/dom.js';
 
 let speicher = { gid: '', personen: [], rollen: [], kapazitaet: [], zeit: 0 };
 let laeuft = null;

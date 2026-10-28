@@ -6,13 +6,9 @@
 //
 // opt: { kurzname, projekt, holeDaten() -> { reden, kommentare }, offen, beiToggle(offen) }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { normDatum, datumText, kommentarZahlen, kommentarMarke } from './todos-rechnen.js';
 import { redeStatusText } from './rede-eintrag.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 export function baueRedenTeil(opt) {
   const pid = String(opt.projekt.id);

@@ -20,40 +20,32 @@ var TEAM_UMBENENNEN = {
   Umfrage_Antworten: 'person'
 };
 
-function teamTxt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
-
-function teamKey(v) {
-  return teamTxt(v).toLowerCase();
-}
-
 // "id1\nid2" -> ['id1', 'id2'] (Zeilenumbruch, Komma und Strichpunkt trennen)
 function teamListe(v) {
-  return teamTxt(v).split(/[\n,;]+/).map(function (s) { return s.trim(); })
+  return textVon(v).split(/[\n,;]+/).map(function (s) { return s.trim(); })
     .filter(function (s) { return s !== ''; });
 }
 
 // Namen in einem Feld "verantwortlich": Komma oder Strichpunkt trennen
 function teamNamen(v) {
-  return teamTxt(v).split(/[,;]/).map(function (s) { return s.trim(); })
+  return textVon(v).split(/[,;]/).map(function (s) { return s.trim(); })
     .filter(function (s) { return s !== ''; });
 }
 
 // Ersetzt den Namen alt durch neu (ganzer Name, Groß- und Kleinschreibung egal).
 // "Ben" ersetzt nicht "Bente". Doppelte Namen fallen weg. Gibt null zurück, wenn nichts zu ändern ist.
 function teamNamenErsetzen(text, alt, neu) {
-  var a = teamKey(alt);
+  var a = textKlein(alt);
   if (!a) return null;
   var treffer = false;
   var ergebnis = [];
   teamNamen(text).forEach(function (n) {
     var m = n;
-    if (teamKey(n) === a) {
+    if (textKlein(n) === a) {
       treffer = true;
-      m = teamTxt(neu);
+      m = textVon(neu);
     }
-    var schon = ergebnis.some(function (x) { return teamKey(x) === teamKey(m); });
+    var schon = ergebnis.some(function (x) { return textKlein(x) === textKlein(m); });
     if (m && !schon) ergebnis.push(m);
   });
   return treffer ? ergebnis.join(', ') : null;
@@ -66,7 +58,7 @@ function teamKapazitaetOk(v) {
 
 // "JJJJ-MM-TT" und ein echtes Datum (kein 30. Februar)
 function teamDatumOk(s) {
-  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(teamTxt(s));
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(textVon(s));
   if (!m) return false;
   var d = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
   return d.getUTCFullYear() === Number(m[1]) && d.getUTCMonth() === Number(m[2]) - 1 && d.getUTCDate() === Number(m[3]);
@@ -75,7 +67,7 @@ function teamDatumOk(s) {
 // Tage von a bis b (beide "JJJJ-MM-TT")
 function teamTage(a, b) {
   function ms(s) {
-    var t = teamTxt(s).split('-');
+    var t = textVon(s).split('-');
     return Date.UTC(Number(t[0]), Number(t[1]) - 1, Number(t[2]));
   }
   return Math.round((ms(b) - ms(a)) / 86400000);
@@ -83,10 +75,10 @@ function teamTage(a, b) {
 
 // Gibt es den Namen in der Gruppe schon (nicht gelöscht, andere ID)?
 function teamNameVergeben(zeilen, gid, name, ohneId) {
-  var k = teamKey(name);
+  var k = textKlein(name);
   return zeilen.some(function (z) {
     return String(z.gruppe_id) === String(gid) && !truthy(z.geloescht) &&
-      String(z.id) !== String(ohneId) && teamKey(z.name) === k;
+      String(z.id) !== String(ohneId) && textKlein(z.name) === k;
   });
 }
 
@@ -124,24 +116,24 @@ function teamPruefen(ctx, tab, d, id, cache, geaendert) {
     var tage = teamTage(d.gueltig_ab, d.gueltig_bis);
     if (tage < 0) fehler('ungueltig', '„Gilt bis“ liegt vor „gilt ab“.');
     if (tage > TEAM_MAX_TAGE) fehler('ungueltig', 'Eine Angabe gilt höchstens 6 Monate.');
-    var pid = teamTxt(d.person_id);
+    var pid = textVon(d.person_id);
     var da = pid && teamDerGruppe(teamTab(cache, 'Personen'), gid).some(function (z) { return String(z.id) === pid; });
     if (!da) fehler('nicht_gefunden', 'Person nicht gefunden (vielleicht wurde sie ausgetragen).');
     return;
   }
 
   // Personen und Gruppen_Rollen: Name Pflicht, in der Gruppe nur einmal
-  var name = teamTxt(d.name);
+  var name = textVon(d.name);
   if (hat('name')) {
     if (!name) fehler('ungueltig', 'Bitte einen Namen angeben.');
     var vergeben = teamNameVergeben(teamTab(cache, tab).zeilen, gid, name, id);
     var liste = cache['team_namen_' + tab] || (cache['team_namen_' + tab] = []);
-    if (vergeben || liste.indexOf(teamKey(name)) >= 0) {
+    if (vergeben || liste.indexOf(textKlein(name)) >= 0) {
       fehler('ungueltig', tab === 'Personen'
         ? 'Den Namen „' + name + '“ gibt es im Team schon. Nimm zum Beispiel einen Buchstaben vom Nachnamen dazu.'
         : 'Die Rolle „' + name + '“ gibt es schon.');
     }
-    liste.push(teamKey(name));
+    liste.push(textKlein(name));
   }
 
   if (tab === 'Gruppen_Rollen') {
@@ -173,7 +165,7 @@ function teamPruefen(ctx, tab, d, id, cache, geaendert) {
     var wer = andere.filter(function (p) { return teamListe(p.rollen).indexOf(rid) >= 0; })[0];
     if (wer || vergebenInListe[rid]) {
       fehler('ungueltig', 'Die Rolle „' + r.name + '“ ist gewählt und hat schon ' +
-        (wer ? teamTxt(wer.name) : 'jemand anderes') + '.');
+        (wer ? textVon(wer.name) : 'jemand anderes') + '.');
     }
     vergebenInListe[rid] = true;
   });
@@ -249,7 +241,7 @@ function teamUmbenennen(ctx, alt, neu, zeit, anzeige) {
     pruefeKopf(tab, t.kopf);
     var liste = teamDerGruppe(t, gid).filter(function (r) {
       var w = teamNamenErsetzen(r[sp], alt, neu);
-      if (w === null || w === teamTxt(r[sp])) return false;
+      if (w === null || w === textVon(r[sp])) return false;
       r._neu = { geaendert_am: zeit, geaendert_von: anzeige };
       r._neu[sp] = w;
       return true;

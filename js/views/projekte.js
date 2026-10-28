@@ -39,11 +39,9 @@ let merk = { token: '', offen: {}, teile: {} };
 const TEILE = [
   ['ToDos', 'ToDos'],
   ['Meilensteine', 'Meilensteine'],
-  ['Projekt_Team', 'Teammitglieder'],
   ['Projekt_Material', 'Material-Positionen'],
   ['Finanzen', 'Finanz-Posten'],
   ['Kommentare', 'Kommentare'],
-  ['Posts', 'Posts'],
   ['Mobi_Plan', 'Mobi-Beiträge']
 ];
 

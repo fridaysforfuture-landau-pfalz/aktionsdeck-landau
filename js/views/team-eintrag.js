@@ -12,7 +12,7 @@
 //                fertig(personId, modus 'lesen'|'bearbeiten'|'weg') -> Promise, beiZu() })
 // umbenennen({ ctx, token }, person, neuerName) -> Promise<Text für die Meldung>
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeDetail } from '../ui/detail.js';
 import { toast } from '../ui/toast.js';
@@ -21,7 +21,7 @@ import { istWahr } from '../schema.js';
 import { datumText, heuteIso } from './todos-rechnen.js';
 import { addTage } from './kalender-rechnen.js';
 import {
-  txt, istIch, istAktiv, rollenIds, sortiereRollen, kapazitaetText, verlauf, angabeJetzt, angabeZustand,
+  istIch, istAktiv, rollenIds, sortiereRollen, kapazitaetText, verlauf, angabeJetzt, angabeZustand,
   gewaehltVon, umbenanntText, kapazitaetFehler
 } from './team-rechnen.js';
 import { HINWEIS_ROLLEN } from './team-rollen.js';

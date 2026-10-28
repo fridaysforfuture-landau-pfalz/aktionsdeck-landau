@@ -11,7 +11,7 @@
 //        beiFertig(eintrag), beiAbbruch(), beiLoeschen() (nur beim Bearbeiten, gibt ein Promise mit true/false) }
 // Seit 0.32.14: Knopf „Löschen“ beim Bearbeiten; Enter in einer Liste („- “ oder „1. “) beginnt den nächsten Punkt.
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { toast } from '../ui/toast.js';
 import { zeigeFenster } from '../ui/fenster.js';
@@ -20,7 +20,7 @@ import { istWahr } from '../schema.js';
 import { getWikiEntwurf, setWikiEntwurf, loescheWikiEntwurf } from '../store.js';
 import { zeichneText } from '../wiki-format.js';
 import { sichereUrl } from './kalender-rechnen.js';
-import { txt, THEMEN, MAX_TITEL, MAX_TEXT, adresseAus, adresseOk, eindeutigeAdresse, findeSeite, standText } from './wiki-rechnen.js';
+import { THEMEN, MAX_TITEL, MAX_TEXT, adresseAus, adresseOk, eindeutigeAdresse, findeSeite, standText } from './wiki-rechnen.js';
 
 const WARNUNG_OEFFENTLICH = 'Diese Seite ist dann für alle im Internet lesbar. Schreib keine Namen, Telefonnummern, Adressen oder Fotos von Personen hinein.';
 const HINWEIS_BILD = 'Auf dem Bild sind keine Personen und keine persönlichen Daten (zum Beispiel Namen, Adressen, Kennzeichen).';

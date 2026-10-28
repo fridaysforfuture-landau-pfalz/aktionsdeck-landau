@@ -133,9 +133,9 @@ export function sortiereErledigte(liste) {
 
 // ---- Zuordnung und Zahlen ----
 
-// Allgemeines ToDo = gehört zu keinem Projekt und keinem Post
+// Allgemeines ToDo = gehört zu keinem Projekt
 export function istAllgemein(t) {
-  return !String(t.projekt_id || '').trim() && !String(t.post_id || '').trim();
+  return !String(t.projekt_id || '').trim();
 }
 
 export function istMeins(t, name) {

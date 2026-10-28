@@ -11,6 +11,8 @@
 //   anleitungListe('team | Team\n# Kommentar\nerste-schritte | Erste Schritte | oeffentlich')
 //     -> [{ datei:'team', titel:'Team', oeffentlich:false }, { datei:'erste-schritte', titel:'Erste Schritte', oeffentlich:true }]
 
+import { txt } from '../ui/dom.js';
+
 // Feste Themen im Skillshare (Antwort A der Person). In der App nicht bearbeitbar.
 // „Sonstiges“ steht immer zuletzt, die übrigen nach dem Alphabet.
 export const THEMEN = [
@@ -27,10 +29,6 @@ export const BEREICHE = [
 
 export const MAX_TITEL = 80;
 export const MAX_TEXT = 20000;
-
-export function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function key(v) {
   return txt(v).toLowerCase();

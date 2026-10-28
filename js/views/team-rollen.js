@@ -10,13 +10,13 @@
 //
 // baueRollen({ ctx, token, kurzname, daten() -> { personen, rollen }, neuLaden() -> Promise }) -> { el, zeichne() }
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { SCHEMA, istWahr } from '../schema.js';
-import { txt, sortiereRollen, passtRolle, rollenIds, istAktiv } from './team-rechnen.js';
+import { sortiereRollen, passtRolle, rollenIds, istAktiv } from './team-rechnen.js';
 
 export const HINWEIS_ROLLEN = 'Eine Gruppen-Rolle heißt nicht, dass du dich allein kümmern musst. Du kannst jederzeit Unterstützung bekommen.';
 

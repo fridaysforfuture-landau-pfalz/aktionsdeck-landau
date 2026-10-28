@@ -11,7 +11,7 @@
 //
 // baueReden(container, ctx) -> Promise<{ neu(vorgabe), oeffne(id), bearbeite(id), laden(), weg() }>
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { zeigeDetail, schliesseDetail } from '../ui/detail.js';
@@ -23,10 +23,6 @@ import { sichereUrl } from './kalender-rechnen.js';
 import { REDE_STATI, redeStatusText, naechsterStatus, baueRedeFormular } from './rede-eintrag.js';
 import { absaetze, stelleLesen } from './rede-text.js';
 import { getRedeEntwurf, loescheRedeEntwurf } from '../store.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function datumVon(r) {
   return normDatum(r.datum) || normDatum(txt(r.erstellt_am).slice(0, 10));

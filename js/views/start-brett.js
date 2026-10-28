@@ -3,7 +3,7 @@
 // Nicht angeheftete stehen im Archiv (mit Suche und Anheften). Tab Mitteilungen: titel, text, angeheftet.
 // opt: { ctx, token, mitteilungen, neuLaden() -> Promise }
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { baueFormular } from '../ui/form.js';
@@ -12,10 +12,6 @@ import { SCHEMA, istWahr } from '../schema.js';
 import { datumText } from './todos-rechnen.js';
 import { pastell } from './kalender-rechnen.js';
 import { istDunkel } from '../ui/darstellung.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function norm(v) {
   return txt(v).replace(/\s+/g, ' ').toLowerCase();

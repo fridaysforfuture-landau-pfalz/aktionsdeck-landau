@@ -14,6 +14,7 @@ import { istWahr } from '../schema.js';
 import { normDatum, iso, heuteIso, kurz, datumText, istMeins } from './todos-rechnen.js';
 import { istAbgeschlossen, meilensteinStand } from './projekt-rechnen.js';
 import { kanalInfo } from '../kanaele.js';
+import { txt } from '../ui/dom.js';
 
 export const WOCHENTAGE = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 export const WOCHENTAGE_KURZ = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
@@ -21,10 +22,6 @@ export const MONATE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Ju
   'September', 'Oktober', 'November', 'Dezember'];
 
 const STANDARD_FARBE = '#368469';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function farbeOk(f) {
   return /^#[0-9a-fA-F]{6}$/.test(txt(f));

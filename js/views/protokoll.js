@@ -10,7 +10,7 @@
 // solange nicht im Dokument: „Bearbeiten“ und „Ins Dokument übernehmen“.
 // Fertige Protokolle werden nur von Hand gelöscht (Knopf „Löschen“, 8.8, weich; das Dokument bleibt, wie es ist). Umschalter „Reden“: Reden-Archiv (js/views/reden.js, 8.6).
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { zeigeDetail, schliesseDetail } from '../ui/detail.js';
@@ -37,10 +37,6 @@ let ansicht = 'protokolle';
 // Offenes Formular über Reiterwechsel hinweg (8.4a): { gruppe, id } (id leer = neues Protokoll)
 let offenMerk = null;
 let aktivesFormular = null;
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function kopieren(text) {
   const fehlt = function () { toast('Kopieren hat nicht geklappt. Bitte den Text markieren.'); };

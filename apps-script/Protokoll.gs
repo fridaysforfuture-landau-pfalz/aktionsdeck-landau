@@ -14,13 +14,9 @@
 var PK_MARKE = '[[NEUE PROTOKOLLE HIER]]';
 var PK_ARTEN = ['plenum', 'ag', 'aktion', 'sonstiges'];
 
-function pkTxt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
-
 // "2026-10-22" -> "22.10.2026", sonst unverändert
 function pkDatum(d) {
-  var s = pkTxt(d);
+  var s = textVon(d);
   var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
   return m ? m[3] + '.' + m[2] + '.' + m[1] : s;
 }
@@ -31,7 +27,7 @@ function pkDatum(d) {
 // (projekt_id prüft schon bezugPruefen in Daten.gs.) cache = {} wird beim ersten Gebrauch gefüllt.
 function protokollBezugPruefen(ctx, tab, veranstaltungId, cache) {
   if (tab !== 'Protokolle' && tab !== 'Reden') return;
-  var vid = pkTxt(veranstaltungId);
+  var vid = textVon(veranstaltungId);
   if (!vid) return;
   if (!cache.veranstaltungen) {
     cache.veranstaltungen = lies('Veranstaltungen');
@@ -48,14 +44,14 @@ function protokollBezugPruefen(ctx, tab, veranstaltungId, cache) {
 
 // Nimmt die ID oder (aus Versehen eingefügt) die ganze Adresse des Dokuments: dann zählt der Teil nach /d/
 function protokollDokId(gid) {
-  var wert = pkTxt(PropertiesService.getScriptProperties().getProperty('PROTOKOLL_DOK_' + gid));
+  var wert = textVon(PropertiesService.getScriptProperties().getProperty('PROTOKOLL_DOK_' + gid));
   var m = /\/d\/([A-Za-z0-9_-]+)/.exec(wert);
   return m ? m[1] : wert;
 }
 
 // Nur https://-Adressen ohne Leerzeichen, sonst ''
 function protokollLinkExtern(gid) {
-  var link = pkTxt(PropertiesService.getScriptProperties().getProperty('PROTOKOLL_LINK_' + gid));
+  var link = textVon(PropertiesService.getScriptProperties().getProperty('PROTOKOLL_LINK_' + gid));
   return /^https:\/\/[^\s]+$/i.test(link) ? link : '';
 }
 
@@ -95,7 +91,7 @@ var PK_STIL = {
 // Farbe der Gruppe aus dem Tab Gruppen (#rrggbb), sonst schwarz
 function protokollFarbe(gid) {
   var g = lies('Gruppen').zeilen.filter(function (z) { return String(z.gruppe_id) === String(gid); })[0];
-  var f = g ? pkTxt(g.farbe) : '';
+  var f = g ? textVon(g.farbe) : '';
   return /^#[0-9a-fA-F]{6}$/.test(f) ? f : '#000000';
 }
 
@@ -125,15 +121,15 @@ function protokollEinfuegen(doc, o, farbe) {
   var body = doc.getBody();
   var marke = protokollMarkeIndex(body);
   if (marke < 0) return { ok: false, hinweis: 'Markierung fehlt im Dokument (' + PK_MARKE + ').' };
-  var topFarbe = /^#[0-9a-fA-F]{6}$/.test(pkTxt(farbe)) ? pkTxt(farbe) : '#000000';
+  var topFarbe = /^#[0-9a-fA-F]{6}$/.test(textVon(farbe)) ? textVon(farbe) : '#000000';
 
   var idx = marke + 1;
-  pkAbsatz(body, idx++, pkTxt(o.titel) || 'Protokoll', 'titel');
-  if (pkTxt(o.datum)) pkAbsatz(body, idx++, 'Datum: ' + pkDatum(o.datum), 'normal');
-  pkTxt(o.rollen).split(/\r?\n/).forEach(function (z) {
-    if (pkTxt(z)) pkAbsatz(body, idx++, pkTxt(z), 'normal');
+  pkAbsatz(body, idx++, textVon(o.titel) || 'Protokoll', 'titel');
+  if (textVon(o.datum)) pkAbsatz(body, idx++, 'Datum: ' + pkDatum(o.datum), 'normal');
+  textVon(o.rollen).split(/\r?\n/).forEach(function (z) {
+    if (textVon(z)) pkAbsatz(body, idx++, textVon(z), 'normal');
   });
-  if (pkTxt(o.teilnehmende)) pkAbsatz(body, idx++, 'Anwesend: ' + pkTxt(o.teilnehmende), 'normal');
+  if (textVon(o.teilnehmende)) pkAbsatz(body, idx++, 'Anwesend: ' + textVon(o.teilnehmende), 'normal');
   pkAbsatz(body, idx++, '', 'normal');
 
   // Protokolltext: TOP-Zeilen werden Überschriften, Zeilen mit "- " Stichpunkte (Tabs davor = Ebene)
@@ -202,8 +198,8 @@ function aktionProtokollSpeichern(ctx, p) {
   var anzeige = anzeigename(p);
   var daten = p.daten;
   pruefeFelder(tab, daten);
-  if (!pkTxt(daten.titel)) fehler('ungueltig', 'Bitte einen Titel angeben.');
-  var art = pkTxt(daten.art).toLowerCase();
+  if (!textVon(daten.titel)) fehler('ungueltig', 'Bitte einen Titel angeben.');
+  var art = textVon(daten.art).toLowerCase();
   if (art && PK_ARTEN.indexOf(art) < 0) fehler('ungueltig', 'Unbekannte Art des Protokolls.');
   var alsEntwurf = p.entwurf === true;
 

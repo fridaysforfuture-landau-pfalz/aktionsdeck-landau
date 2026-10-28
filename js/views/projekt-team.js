@@ -2,13 +2,13 @@
 // Teil „Team“ im Projekt (Etappe 9, Schritt 9.7), aufgebaut wie der Teil „Reden“:
 // Wer hat in diesem Projekt Hüte (offene ToDos, Meilensteine, Mobi-Beiträge mit Namen)? Je Name die Zahl der Hüte
 // und die Gruppen-Rollen. Mit Team-Karte führt ein Klick in den Reiter Team (#/g/<kurz>/team/<person-id>).
-// Darunter die Zahl der offenen Aufgaben ohne Verantwortliche. Nichts wird gespeichert, Projekt_Team bleibt ungenutzt.
+// Darunter die Zahl der offenen Aufgaben ohne Verantwortliche. Nichts wird gespeichert.
 //
 // opt: { kurzname, projekt, holeDaten() -> { todos, meilensteine, mobi, projekte }, team() -> { personen, rollen },
 //        offen, beiToggle(offen) }
 
-import { el } from '../ui/dom.js';
-import { txt, alleHuete, rollenVon } from './team-rechnen.js';
+import { el, txt } from '../ui/dom.js';
+import { alleHuete, rollenVon } from './team-rechnen.js';
 
 export function baueTeamTeil(opt) {
   const pid = String(opt.projekt.id);

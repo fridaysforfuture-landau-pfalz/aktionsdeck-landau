@@ -15,7 +15,7 @@ function tPad(n) {
 
 // "2026-09-12", "12.09.2026" oder "12.09.26" -> "2026-09-12", sonst ''
 function tDatum(s) {
-  var t = String(s === undefined || s === null ? '' : s).trim();
+  var t = textVon(s);
   var m = t.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (m) return m[1] + '-' + m[2] + '-' + m[3];
   m = t.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2}|\d{4})/);
@@ -33,19 +33,19 @@ function tZeit(s) {
 }
 
 function tFarbe(f) {
-  var t = String(f === undefined || f === null ? '' : f).trim();
+  var t = textVon(f);
   return /^#[0-9a-fA-F]{6}$/.test(t) ? t : '';
 }
 
 // Nur http(s)-Links
 function tLink(u) {
-  var t = String(u === undefined || u === null ? '' : u).trim();
+  var t = textVon(u);
   return /^https?:\/\/\S+$/i.test(t) ? t : '';
 }
 
 // Instagram: ganzer Link oder nur der Name (mit oder ohne @)
 function tInstagram(s) {
-  var t = String(s === undefined || s === null ? '' : s).trim();
+  var t = textVon(s);
   if (tLink(t)) return t;
   t = t.replace(/^@/, '');
   return /^[A-Za-z0-9._]{1,30}$/.test(t) ? 'https://www.instagram.com/' + t : '';

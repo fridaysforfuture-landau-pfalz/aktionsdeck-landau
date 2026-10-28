@@ -49,7 +49,7 @@ function bAusgeliehenProjekt(zeilen, gid) {
   zeilen.forEach(function (a) {
     if (String(a.gruppe_id) !== String(gid) || truthy(a.geloescht)) return;
     var id = String(a.material_id);
-    var pid = String(a.projekt_id === undefined || a.projekt_id === null ? '' : a.projekt_id).trim();
+    var pid = textVon(a.projekt_id);
     var n = Number(a.anzahl);
     if (isNaN(n)) n = 0;
     var d;
@@ -224,93 +224,4 @@ function aktionBuchen(ctx, p) {
     }
     return { eintraege: eintraege, material: geaendert };
   });
-}
-
-// ---- Tests für den Editor (Funktion auswählen, dann "Ausführen") ----
-
-function testMaterial() {
-  var g = lies('Gruppen').zeilen[0];
-  var m = lies('Material').zeilen.filter(function (z) {
-    return String(z.gruppe_id) === String(g.gruppe_id) && !truthy(z.geloescht) && Number(z.anzahl) >= 1;
-  })[0];
-  return { ctx: { gruppe_id: g.gruppe_id }, m: m };
-}
-
-// Bucht 1 Stück mit und gleich wieder zurück. Ergebnis steht im Ausführungsprotokoll.
-function testenBuchen() {
-  var t = testMaterial();
-  if (!t.m) { Logger.log('Kein Material mit Anzahl ab 1 in der ersten Gruppe gefunden.'); return; }
-  var r1 = aktionBuchen(t.ctx, {
-    art: 'mitgenommen', person: 'Test', anzeigename: 'Test (Editor)',
-    positionen: [{ material_id: t.m.id, anzahl: 1 }]
-  });
-  Logger.log('Mitnahme ' + t.m.name + ': ' + r1.eintraege.length + ' Zeile(n), Anzahl geändert: ' + JSON.stringify(r1.material));
-  var r2 = aktionBuchen(t.ctx, {
-    art: 'zurueck', person: 'Test', anzeigename: 'Test (Editor)',
-    positionen: [{ material_id: t.m.id, anzahl: 1 }]
-  });
-  Logger.log('Rückgabe ' + t.m.name + ': ' + r2.eintraege.length + ' Zeile(n), Anzahl geändert: ' + JSON.stringify(r2.material));
-}
-
-// Versucht viel zu viel mitzunehmen. Es muss eine Fehlermeldung kommen.
-function testenBuchenZuViel() {
-  var t = testMaterial();
-  if (!t.m) { Logger.log('Kein Material mit Anzahl ab 1 in der ersten Gruppe gefunden.'); return; }
-  try {
-    aktionBuchen(t.ctx, {
-      art: 'mitgenommen', person: 'Test', anzeigename: 'Test (Editor)',
-      positionen: [{ material_id: t.m.id, anzahl: 999999 }]
-    });
-    Logger.log('FEHLER: Die Buchung wurde nicht abgelehnt!');
-  } catch (e) {
-    Logger.log('Gut, abgelehnt mit: ' + e.message);
-  }
-}
-
-// Mit Projekt: 1 Stück festes Material für das erste Projekt der Gruppe mitnehmen,
-// Rückgabe "ohne Projekt" muss abgelehnt werden, Rückgabe fürs Projekt muss klappen.
-function testenBuchenProjekt() {
-  var g = lies('Gruppen').zeilen[0];
-  var ctx = { gruppe_id: g.gruppe_id };
-  var m = lies('Material').zeilen.filter(function (z) {
-    return String(z.gruppe_id) === String(g.gruppe_id) && !truthy(z.geloescht) &&
-      bTyp(z) === 'fest' && Number(z.anzahl) >= 1 && String(z.aktiv).toUpperCase() !== 'FALSE';
-  })[0];
-  if (!m) { Logger.log('Kein festes Material mit Anzahl ab 1 in der ersten Gruppe gefunden.'); return; }
-  var pr = lies('Projekte').zeilen.filter(function (z) {
-    return String(z.gruppe_id) === String(g.gruppe_id) && !truthy(z.geloescht) &&
-      ['erledigt', 'archiviert'].indexOf(String(z.status).trim()) < 0;
-  })[0];
-  if (!pr) { Logger.log('Kein offenes Projekt in der ersten Gruppe gefunden (z. B. ptest1 im Tab Projekte).'); return; }
-
-  try {
-    aktionBuchen(ctx, {
-      art: 'mitgenommen', person: 'Test', anzeigename: 'Test (Editor)', projekt_id: pr.id,
-      positionen: [{ material_id: m.id, anzahl: 1 }]
-    });
-    Logger.log('1) Mitnahme ' + m.name + ' für Projekt ' + pr.titel + ': OK');
-  } catch (e) {
-    Logger.log('1) FEHLER bei der Mitnahme: ' + e.message);
-    return;
-  }
-
-  try {
-    aktionBuchen(ctx, {
-      art: 'zurueck', person: 'Test', anzeigename: 'Test (Editor)',
-      positionen: [{ material_id: m.id, anzahl: 1 }]
-    });
-    Logger.log('2) FEHLER: Rückgabe ohne Projekt wurde nicht abgelehnt!');
-  } catch (e2) {
-    Logger.log('2) Gut, abgelehnt mit: ' + e2.message);
-  }
-
-  try {
-    aktionBuchen(ctx, {
-      art: 'zurueck', person: 'Test', anzeigename: 'Test (Editor)',
-      positionen: [{ material_id: m.id, anzahl: 1, projekt_id: pr.id }]
-    });
-    Logger.log('3) Rückgabe fürs Projekt: OK');
-  } catch (e3) {
-    Logger.log('3) FEHLER bei der Rückgabe fürs Projekt: ' + e3.message);
-  }
 }

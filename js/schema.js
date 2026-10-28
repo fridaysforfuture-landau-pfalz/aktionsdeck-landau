@@ -1,6 +1,7 @@
 // js/schema.js
-// Beschreibung der Tabs für die Oberfläche. Gegenstück zu Schema.gs.
-// Neue Tabelle = nur einen Eintrag in SCHEMA ergänzen.
+// Formularfelder der Tabs, deren Formular die App mit baueFormular (ui/form.js) baut. Gegenstück zu Schema.gs.
+// Tabs mit eigenem Formular (Ausleihe, Protokolle, Reden, TOPs, Kommentare, Personen, Kapazitaet, Wiki) stehen
+// nicht hier (seit 0.34.6). Alle Spalten aller Tabs stehen in apps-script/Schema.gs.
 
 export const SCHEMA = {
   Material: {
@@ -16,18 +17,6 @@ export const SCHEMA = {
       { name: 'foto_id', label: 'Foto', typ: 'foto' },
       { name: 'notiz', label: 'Notiz', typ: 'langtext' },
       { name: 'aktiv', label: 'Aktiv', typ: 'bool' }
-    ]
-  },
-  Ausleihe: {
-    titel: 'Ausleihe',
-    felder: [
-      { name: 'material_id', label: 'Material', typ: 'text', pflicht: true },
-      { name: 'projekt_id', label: 'Projekt', typ: 'text' },
-      { name: 'person', label: 'Person', typ: 'text' },
-      { name: 'art', label: 'Art', typ: 'auswahl', optionen: ['mitgenommen', 'zurueck', 'defekt'] },
-      { name: 'anzahl', label: 'Anzahl', typ: 'zahl', pflicht: true },
-      { name: 'datum', label: 'Datum', typ: 'text' },
-      { name: 'notiz', label: 'Notiz', typ: 'langtext' }
     ]
   },
   ToDos: {
@@ -62,13 +51,6 @@ export const SCHEMA = {
       { name: 'verantwortlich', label: 'Verantwortlich', typ: 'text' }
     ]
   },
-  Projekt_Team: {
-    titel: 'Team',
-    felder: [
-      { name: 'person', label: 'Person', typ: 'text', pflicht: true },
-      { name: 'zustaendigkeit', label: 'Hut (Zuständigkeit)', typ: 'text' }
-    ]
-  },
   Projekt_Material: {
     titel: 'Material im Projekt',
     felder: [
@@ -93,60 +75,11 @@ export const SCHEMA = {
       { name: 'beleg_id', label: 'Beleg / Hinweis (z. B. Link, keine Kontonummern)', typ: 'text' }
     ]
   },
-  // Protokolle: Rollen, Projekt oder Veranstaltung und „Nächstes Plenum“ baut das Protokoll-Formular selbst (8.3).
-  // im_dokument und vorschlaege_erledigt setzt nur die App bzw. das Skript (kein Formularfeld).
-  Protokolle: {
-    titel: 'Protokoll',
-    felder: [
-      { name: 'datum', label: 'Datum', typ: 'datum' },
-      { name: 'titel', label: 'Titel', typ: 'text', pflicht: true },
-      // Angezeigt groß, gespeichert klein
-      { name: 'art', label: 'Art', typ: 'auswahl', optionen: [
-        { wert: 'plenum', label: 'Plenum' }, { wert: 'ag', label: 'AG' },
-        { wert: 'aktion', label: 'Aktion' }, { wert: 'sonstiges', label: 'Sonstiges' }
-      ] },
-      { name: 'teilnehmende', label: 'Anwesend', typ: 'text' },
-      // Grenze wie in apps-script/Schema.gs (MAX_TEXT_AUSNAHMEN)
-      { name: 'text', label: 'Protokolltext (höchstens 20 000 Zeichen)', typ: 'langtext', max: 20000 }
-    ]
-  },
-  // TOPs: Sammlung fürs nächste Plenum (js/views/tops.js). protokoll_id setzt das Protokoll-Formular.
-  TOPs: {
-    titel: 'TOPs',
-    felder: [
-      { name: 'titel', label: 'TOP', typ: 'text', pflicht: true },
-      { name: 'notiz', label: 'Notiz', typ: 'langtext' }
-    ]
-  },
-  // Reden: Projekt oder Veranstaltung baut das Reden-Formular selbst (8.6). Löschen nur von Hand (8.8).
-  Reden: {
-    titel: 'Reden',
-    felder: [
-      { name: 'titel', label: 'Titel', typ: 'text', pflicht: true },
-      { name: 'redner', label: 'Redner', typ: 'text' },
-      { name: 'datum', label: 'Datum', typ: 'datum' },
-      { name: 'aktionsart', label: 'Aktionsart (z. B. Demo, Infostand)', typ: 'text' },
-      { name: 'text', label: 'Redetext', typ: 'langtext' },
-      { name: 'link', label: 'Link (freiwillig, https://…)', typ: 'text' },
-      // Angezeigt groß, gespeichert klein
-      { name: 'status', label: 'Status', typ: 'auswahl', optionen: [
-        { wert: 'entwurf', label: 'Entwurf' }, { wert: 'probelesen', label: 'Probelesen' },
-        { wert: 'fertig', label: 'Fertig' }, { wert: 'gehalten', label: 'Gehalten' }
-      ] },
-      { name: 'notiz', label: 'Notiz', typ: 'langtext' }
-    ]
-  },
   Learnings: {
     titel: 'Learnings',
     felder: [
       { name: 'aktionsart', label: 'Aktionsart (z. B. Demo, Infostand)', typ: 'text', pflicht: true },
       { name: 'text', label: 'Learning', typ: 'langtext', pflicht: true }
-    ]
-  },
-  Kommentare: {
-    titel: 'Kommentare',
-    felder: [
-      { name: 'text', label: 'Kommentar', typ: 'langtext', pflicht: true }
     ]
   },
   Umfragen: {
@@ -231,16 +164,6 @@ export const SCHEMA = {
       { name: 'notiz', label: 'Notiz', typ: 'langtext' }
     ]
   },
-  // Team (seit 0.31.0). Die Rollen einer Person (Personen.rollen, IDs je Zeile) und die Kapazitäts-Knöpfe
-  // baut das Team-Formular selbst. Personen.aktiv: beim Anlegen TRUE schicken (leer wird FALSE = Pause).
-  Personen: {
-    titel: 'Team',
-    felder: [
-      { name: 'name', label: 'Name (wie dein Anzeigename)', typ: 'text', pflicht: true },
-      { name: 'aktiv', label: 'Dabei (aus = Pause)', typ: 'bool' },
-      { name: 'notiz', label: 'Notiz (freiwillig, kurz)', typ: 'text' }
-    ]
-  },
   Gruppen_Rollen: {
     titel: 'Gruppen-Rollen',
     felder: [
@@ -248,28 +171,6 @@ export const SCHEMA = {
       { name: 'beschreibung', label: 'Beschreibung (freiwillig)', typ: 'langtext', max: 300 },
       { name: 'gewaehlt', label: 'Fest gewählt (höchstens eine Person)', typ: 'bool' },
       { name: 'sortierung', label: 'Reihenfolge', typ: 'zahl' }
-    ]
-  },
-  Kapazitaet: {
-    titel: 'Kapazität',
-    felder: [
-      { name: 'kapazitaet', label: 'Kapazität (1 bis 10)', typ: 'zahl', pflicht: true },
-      { name: 'gueltig_ab', label: 'Gilt ab', typ: 'datum', pflicht: true },
-      { name: 'gueltig_bis', label: 'Gilt bis', typ: 'datum', pflicht: true },
-      { name: 'notiz', label: 'Notiz (freiwillig, kurz)', typ: 'text' }
-    ]
-  },
-  // Wiki (seit 0.32.0). bereich = skillshare | anleitung. thema aus der festen Liste der App (nur Skillshare).
-  // adresse = Teil des öffentlichen Links (a-z, 0-9, Bindestrich), macht die App aus dem Titel. Das Wiki-Formular baut der Reiter selbst.
-  Wiki: {
-    titel: 'Wiki',
-    felder: [
-      { name: 'bereich', label: 'Bereich', typ: 'auswahl', optionen: ['skillshare', 'anleitung'], pflicht: true },
-      { name: 'thema', label: 'Thema', typ: 'text' },
-      { name: 'titel', label: 'Titel', typ: 'text', pflicht: true },
-      { name: 'adresse', label: 'Adresse (für den Link)', typ: 'text', pflicht: true },
-      { name: 'text', label: 'Text', typ: 'langtext', max: 20000 },
-      { name: 'oeffentlich', label: 'Öffentlich (für alle im Internet lesbar)', typ: 'bool' }
     ]
   }
 };
