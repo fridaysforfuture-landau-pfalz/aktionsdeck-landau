@@ -3311,3 +3311,23 @@ p.notiz.erledigt {
 /* Am PC in der schmalen Seitenleiste: alle drei Knöpfe in einer Reihe */
 .seiten-fuss .darstellung-knoepfe { flex-wrap: nowrap; gap: 4px; }
 .seiten-fuss .darstellung-knopf { flex: 1 1 auto; padding: 0 6px; font-size: 13px; white-space: nowrap; }
+
+/* ---- 0.33.9: Anmerkungen zum Dunkelmodus (11.8a) ---- */
+/* Links: hell etwas dunkleres Grün (besser lesbar), dunkel wie bisher */
+:root { --link: #276650; }
+@media screen {
+  :root.dunkel {
+    --link: #6cc4a1;
+    /* Hintergrund heller und grauer, damit sich die dunklen Kacheln abheben. Kacheln (--flaeche) bleiben. */
+    --hintergrund: #343a38;
+  }
+}
+a, .wiki-text a, .wiki-iv-knopf, .info-gruppe-links a { color: var(--link); }
+
+/* Schalter: „Gerät“ als Wort, Hell und Dunkel als Punkt mit Rahmen */
+.darstellung-punkt { width: 44px; min-width: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.darstellung-punkt span { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--grau-marke); }
+.darstellung-punkt .punkt-hell { background: #ffffff; }
+.darstellung-punkt .punkt-dunkel { background: #000000; }
+.darstellung-punkt[aria-pressed="true"] { background: var(--flaeche); border: 3px solid var(--gruppe); }
+.seiten-fuss .darstellung-punkt { flex: 0 0 44px; padding: 0; }

@@ -1,5 +1,5 @@
 // js/ui/darstellung.js
-// Dunkelmodus (11.8): Klasse „dunkel“ am <html>, Farbe der Browserleiste, Schalter „Wie das Gerät | Hell | Dunkel“.
+// Dunkelmodus (11.8): Klasse „dunkel“ am <html>, Farbe der Browserleiste, Schalter „Gerät | ○ | ●“ (Wie das Gerät, Hell, Dunkel).
 // Die dunklen Farben stehen in css/components.css (Block 0.33.8). Die Einstellung steht in js/store.js.
 // Der Schalter steht am Handy in „Mehr“ und am PC unten in der Seitenleiste.
 
@@ -9,10 +9,11 @@ import { getDarstellung, setDarstellung } from '../store.js';
 const LEISTE_HELL = '#368469';
 const LEISTE_DUNKEL = '#0b0f0e';
 
+// 11.8a: „Gerät“ als Wort, Hell und Dunkel nur als weißer und schwarzer Punkt (Name für Vorlesen und Hinweis beim Zeigen)
 const WAHLEN = [
-  { wert: 'geraet', text: 'Wie das Gerät' },
-  { wert: 'hell', text: 'Hell' },
-  { wert: 'dunkel', text: 'Dunkel' }
+  { wert: 'geraet', text: 'Gerät', name: 'Wie das Gerät' },
+  { wert: 'hell', punkt: 'hell', name: 'Hell' },
+  { wert: 'dunkel', punkt: 'dunkel', name: 'Dunkel' }
 ];
 
 function geraetDunkel() {
@@ -53,14 +54,17 @@ export function darstellungSchalter(beiWechsel) {
     el('div', { class: 'darstellung-knoepfe', role: 'group', 'aria-label': 'Darstellung' },
       ...WAHLEN.map(function (w) {
         return el('button', {
-          class: 'darstellung-knopf', type: 'button', text: w.text,
+          class: 'darstellung-knopf' + (w.punkt ? ' darstellung-punkt' : ''), type: 'button',
+          'aria-label': w.name, title: w.name,
           'aria-pressed': w.wert === jetzt ? 'true' : 'false',
           onclick: function () {
             setDarstellung(w.wert);
             darstellungAnwenden();
             if (beiWechsel) beiWechsel();
           }
-        });
+        }, w.punkt
+          ? el('span', { class: 'punkt-' + w.punkt, 'aria-hidden': 'true' })
+          : el('span', { text: w.text }));
       })
     )
   );
