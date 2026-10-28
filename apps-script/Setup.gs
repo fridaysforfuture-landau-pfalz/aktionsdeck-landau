@@ -33,6 +33,7 @@ function setupPins() {
   var ui = SpreadsheetApp.getUi();
   try {
     setupPinsLauf_(ui);
+    merkenVergessen();   // 12.6: neuer PIN gilt sofort (Zwischenspeicher des Skripts leeren)
   } catch (e) {
     ui.alert('FEHLER: ' + e.message + '\n\nBitte diesen Text kopieren und mir schicken.');
   }

@@ -32,6 +32,16 @@ function verteile(p) {
 
   // Mit Login: Token, Gruppe und Zugang werden bei JEDEM Aufruf geprüft
   var ctx = tokenPruefen(p.token);
+  if (NUR_LESEN.indexOf(p.aktion) >= 0) return verteileMitLogin(ctx, p);
+  // 12.6: Nach jeder Aktion, die schreiben kann, gilt der Zwischenspeicher nicht mehr (auch ohne mitSperre)
+  try { return verteileMitLogin(ctx, p); }
+  finally { merkenVergessen(); }
+}
+
+// 12.6: Aktionen mit Login, die nur lesen (alle anderen machen den Zwischenspeicher ungültig)
+var NUR_LESEN = ['bootstrap', 'list', 'listMehrere', 'protokollInfo', 'gruppeInfo'];
+
+function verteileMitLogin(ctx, p) {
   switch (p.aktion) {
     case 'bootstrap':       return aktionBootstrap(ctx, p);
     case 'list':            return aktionList(ctx, p);

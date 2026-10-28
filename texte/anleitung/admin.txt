@@ -2,7 +2,7 @@
 
 ## Was dürfen Admins, was die App nicht kann?
 
-In der App dürfen alle mit dem Gruppen-PIN alles anlegen, ändern und löschen. Einige Dinge gehen aber nur direkt im Google Sheet oder im Apps-Script-Editor: einen PIN ändern oder sperren, Gelöschtes zurückholen und Einträge endgültig entfernen. Arbeite im Sheet immer vorsichtig. Ändere nie die erste Zeile (die Spaltenköpfe) und nie die Spalte `id`.
+In der App dürfen alle mit dem Gruppen-PIN alles anlegen, ändern und löschen. Was du direkt im Sheet änderst, zeigt die App nach höchstens 2 Minuten (das Skript merkt sich gelesene Tabs kurz, damit die App schneller ist). Einige Dinge gehen aber nur direkt im Google Sheet oder im Apps-Script-Editor: einen PIN ändern oder sperren, Gelöschtes zurückholen und Einträge endgültig entfernen. Arbeite im Sheet immer vorsichtig. Ändere nie die erste Zeile (die Spaltenköpfe) und nie die Spalte `id`.
 
 ## Eine neue Gruppe anlegen
 
@@ -55,7 +55,7 @@ Löschen in der App ist zuerst nur Ausblenden: In der Zeile steht dann in der Sp
 1. Öffne das Google Sheet und den passenden Tab, zum Beispiel `ToDos`, `Projekte` oder `Wiki`.
 2. Suche die Zeile. Hilfreich sind die Spalten `geaendert_am` (Zeitpunkt des Löschens) und `geaendert_von` (wer gelöscht hat). Der Tab `Log` zeigt alle Löschungen mit Zeit, Tabelle und Namen.
 3. Setze in der Spalte `geloescht` den Wert `FALSE`.
-4. In der App die Seite neu laden. Der Eintrag ist wieder da.
+4. In der App die Seite neu laden. Der Eintrag ist wieder da. Das Skript merkt sich gelesene Tabs bis zu 2 Minuten. Erscheint er nicht gleich, warte kurz und lade noch einmal.
 
 Manche Einträge nehmen beim Löschen andere mit. Die musst du ebenfalls zurückholen, sonst fehlen sie:
 

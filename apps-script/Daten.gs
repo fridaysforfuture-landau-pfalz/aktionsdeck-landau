@@ -144,7 +144,7 @@ function schreibeSpalten(t, zeilen, felder) {
 // ---- Lesen ----
 
 function listeFuerGruppe(tab, gid, seit) {
-  return lies(tab).zeilen.filter(function (z) {
+  return liesGemerkt(tab).zeilen.filter(function (z) {   // 12.6: aus dem Zwischenspeicher (2 Minuten)
     if (String(z.gruppe_id) !== String(gid)) return false;
     if (seit) return String(z.geaendert_am) >= seit;   // inkl. gelöschter, damit die App sie entfernen kann
     return !truthy(z.geloescht);
@@ -158,7 +158,7 @@ function aktionBootstrap(ctx, p) {
     zugang_id: ctx.zugang_id,
     serverzeit: zeit,
     personen: listeFuerGruppe('Personen', ctx.gruppe_id, ''),
-    einstellungen: lies('Einstellungen').zeilen.map(sauber)
+    einstellungen: liesGemerkt('Einstellungen').zeilen.map(sauber)
   };
 }
 
