@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-- Version der App: **0.34.3** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **0.34.4** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
-- Nächster Schritt: **12.6 Geschwindigkeit verbessern** (nach Freigabe des Berichts 12.5 und dem Protokoll von `messenSkript`).
+- Nächster Schritt: **12.6 Rest:** Zwischenspeicher im Skript (Nr. 7 aus dem Bericht), nur wenn das Protokoll von `messenSkript` es zeigt; danach **12.7 Ungenutztes prüfen**.
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -138,7 +138,8 @@ Sheet und Skript bleiben unverändert.   (oder: Abschnitt „Von Hand zu erledig
 1. ...
 ```
 
-Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abwarten, die Seite zweimal neu laden, unter „Info“ die Version prüfen.
+Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abwarten, die Seite neu laden, bei „Neue Version da“ auf „Jetzt neu laden“ tippen
+(ab 0.34.4; vorher zweimal neu laden), unter „Info“ die Version prüfen.
 
 ### 1.8 Was du nicht tust
 
@@ -221,7 +222,8 @@ Eine neue Tabelle oder Spalte ist nur ein Eintrag in `Schema.gs` und in `js/sche
   ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
 - Etappe 12 läuft: 12.1 Plan Fassung 2 (0.33.16, #75), 12.2 Plan Fassung 3 und diese eine Doku-Datei (0.34.0),
   12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2),
-  12.5 Geschwindigkeitsbericht (nur im Chat) mit dem Editor-Werkzeug `messenSkript` (0.34.3).
+  12.5 Geschwindigkeitsbericht (nur im Chat) mit dem Editor-Werkzeug `messenSkript` (0.34.3),
+  12.6 Geschwindigkeit verbessert (0.34.4).
 - Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
   Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
@@ -383,6 +385,13 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
   Abmelden löscht Sitzung und Zwischenspeicher, eine Anmeldung bei einer anderen Gruppe löscht den Zwischenspeicher auch; der Knopf „Abmelden“ löscht außerdem die Entwürfe (vorher Warnung). Die Darstellung bleibt.
 - **Service Worker** (`sw.js`): App-Dateien zuerst aus dem Netz, sonst Zwischenspeicher (`aktionsdeck-<VERSION>`). Daten nicht im Service Worker.
   Nur Dateien im App-Ordner, gespeichert ohne `?…`; offline gibt es `index.html` nur für Seitenaufrufe.
+  **Seit 0.34.4 zuerst Zwischenspeicher:** Eine neue Version (neue `VERSION`) lädt beim Installieren alles frisch (`cache: 'reload'`)
+  und wartet. Die App zeigt „Neue Version da“ (`neueVersionZeigen` in `js/app.js`); der Knopf schickt `weiter`, dann `skipWaiting` und Neuladen.
+  Darum: **Jede geänderte Datei braucht eine neue VERSION**, sonst bekommen Geräte sie nicht. Neue Dateien gehören in `HUELLE`.
+  Der Service Worker wird erst nach dem Laden der Seite angemeldet.
+- **Reiter Start:** holt seine Daten in einer Anfrage (`paketHolen` in `js/views/start.js`, 10 Tabs; `listMehrere` erlaubt höchstens 12).
+  Fehlt ein Tab, laden die Teile einzeln (`ausPaket`). Team (`ladeTeamKlein`) und „Was ist neu?“ bleiben eigene Anfragen.
+- **Gruppenlogos:** bekannte Logos stehen in `LOGOS` in `js/ui/logo.js`. Neues Logo in `icons/gruppen/` → dort eintragen.
 - Version 0.32.13 wurde übersprungen (war kurz auf `main`).
 
 ### 5.1 Gruppen und Farben
@@ -454,6 +463,8 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
     Kalender-Datei mit `\r`, Content-Security-Policy, Service Worker nur im App-Ordner, Gruppenwechsel leert den Zwischenspeicher, Editor-Test `testenRechte`.
   - 0.34.2: Nachbesserung: Content-Security-Policy erlaubt Bilder von allen `https:`-Adressen (Fotos wurden blockiert).
   - 12.5 (0.34.3): Geschwindigkeitsbericht (nur im Chat); neues Editor-Werkzeug `messenSkript` in `Werkzeuge.gs`.
+  - 12.6 (0.34.4): Service Worker zuerst Zwischenspeicher mit Hinweis „Neue Version da“, Start mit 5 statt 12 Anfragen
+    (beim Neuladen 2 statt 9), Kalender lädt gleichzeitig, Logo ohne vergebliche Anfrage, Service Worker nach dem Laden.
 
 ---
 

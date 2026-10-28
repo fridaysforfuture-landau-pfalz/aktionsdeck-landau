@@ -138,7 +138,7 @@ Version 0.34.3, nur für das Werkzeug. Skript-Datei neu, **keine neue Bereitstel
 
 **Ergebnis:** `pruefung/geschwindigkeit-bericht.md`. Die Person gibt frei.
 
-### 12.6 – Geschwindigkeit verbessern (W1)
+### 12.6 – Geschwindigkeit verbessern (W1) – App-Teil erledigt (0.34.4), Skript-Teil wartet auf `messenSkript`
 
 Version 0.34.4. Mit Skript-Änderung nur, wenn der Bericht es zeigt und die Person es freigibt.
 

@@ -27,7 +27,8 @@ function zeitKurz(iso) {
 }
 
 // Gibt { items, stand } zurück. stand = Serverzeit, wird beim Schließen als "gelesen bis" gespeichert.
-export async function holeNeu(token, gruppeId, kurzname) {
+// projekteHolen (freiwillig, seit 12.6): Funktion, die die Projekte liefert (spart eine Anfrage), sonst null.
+export async function holeNeu(token, gruppeId, kurzname, projekteHolen) {
   const alt = getLetzterBesuch(gruppeId);
   const seit = alt || new Date().toISOString();
   const r = await api('listMehrere', {
@@ -46,8 +47,8 @@ export async function holeNeu(token, gruppeId, kurzname) {
   // Projekttitel aller Projekte (die Liste oben enthält nur geänderte)
   const titel = {};
   try {
-    const pr = await api('list', { tabelle: 'Projekte' }, token);
-    pr.zeilen.forEach(function (p) { titel[String(p.id)] = String(p.titel); });
+    const zeilen = projekteHolen ? await projekteHolen() : (await api('list', { tabelle: 'Projekte' }, token)).zeilen;
+    zeilen.forEach(function (p) { titel[String(p.id)] = String(p.titel); });
   } catch (e) {
     if (e && e.code === 'auth') throw e;
   }

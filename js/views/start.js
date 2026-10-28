@@ -92,6 +92,42 @@ export async function render(container, ctx) {
   let offline = false;
   const arbeitet = {};
 
+  // 12.6: Beim Öffnen und beim Neuladen kommen die Daten des Starts in einer Anfrage (statt acht einzelner).
+  // Die Teile unten nehmen sich ihre Tabs daraus. Klappt das Paket nicht (zum Beispiel fehlt ein Tab), laden sie einzeln wie früher.
+  const PAKET_TABS = ['ToDos', 'Projekte', 'Mobi_Plan', 'Umfragen', 'Umfrage_Antworten', 'Mitteilungen',
+    'Ausleihe', 'Material', 'TOPs', 'Kommentare'];
+  let paket = null;   // laufende Paket-Anfrage, sonst null
+
+  function paketHolen() {
+    const p = api('listMehrere', { tabellen: PAKET_TABS }, s.token).then(function (r) {
+      return (r && r.tabellen) || {};
+    });
+    paket = p;
+    const fertig = function () { if (paket === p) paket = null; };
+    p.then(fertig, fertig);
+    return p;
+  }
+
+  // Gibt die Zeilen der Tabs zurück (Liste von Listen, gleiche Reihenfolge wie tabs)
+  async function ausPaket(p, tabs) {
+    if (p) {
+      try {
+        const t = await p;
+        return tabs.map(function (n) { return t[n] || []; });
+      } catch (e) {
+        if (e && (e.code === 'auth' || e.code === 'netz')) throw e;
+      }
+    }
+    if (tabs.length === 1) {
+      const r = await api('list', { tabelle: tabs[0] }, s.token);
+      return [r.zeilen || []];
+    }
+    const r = await api('listMehrere', { tabellen: tabs }, s.token);
+    const t = (r && r.tabellen) || {};
+    return tabs.map(function (n) { return t[n] || []; });
+  }
+  const erstesPaket = paketHolen();
+
   const zahlen = el('p', { class: 'dash-zahlen', text: 'Lade ToDos …' });
   const erledigteCb = el('input', { type: 'checkbox' });
   const filter = el('label', { class: 'formfeld-bool' },
@@ -242,6 +278,10 @@ export async function render(container, ctx) {
   const pinnwand = baueKommentare({
     ctx: ctx,
     token: s.token,
+    // 12.6: Kommentare aus dem Paket, wenn gerade eins läuft
+    holeZeilen: function () {
+      return paket ? ausPaket(paket, ['Kommentare']).then(function (x) { return x[0]; }) : null;
+    },
     art: 'pinnwand',
     bezugId: '',
     projektId: '',
@@ -472,13 +512,13 @@ export async function render(container, ctx) {
     }
   }
 
-  async function ladeMobi(zuerstCache) {
+  async function ladeMobi(zuerstCache, p) {
     try {
       await ladeMitCache(
         s.gruppe_id + ':startmobi',
         async function () {
-          const r = await api('list', { tabelle: 'Mobi_Plan' }, s.token);
-          return { mobi: r.zeilen };
+          const x = await ausPaket(p, ['Mobi_Plan']);
+          return { mobi: x[0] };
         },
         function (daten) {
           mobiDaten = daten;
@@ -492,13 +532,13 @@ export async function render(container, ctx) {
     }
   }
 
-  async function ladeProjekte(zuerstCache) {
+  async function ladeProjekte(zuerstCache, p) {
     try {
       await ladeMitCache(
         s.gruppe_id + ':projekteliste',
         async function () {
-          const r = await api('list', { tabelle: 'Projekte' }, s.token);
-          return { projekte: r.zeilen };
+          const x = await ausPaket(p, ['Projekte']);
+          return { projekte: x[0] };
         },
         function (daten) {
           projektDaten = daten;
@@ -516,14 +556,13 @@ export async function render(container, ctx) {
   }
 
   // Material für „Für dich“: Ausleihen und Namen des Materials
-  async function ladeFuerDich(zuerstCache) {
+  async function ladeFuerDich(zuerstCache, p) {
     try {
       await ladeMitCache(
         s.gruppe_id + ':startfuerdich',
         async function () {
-          const r = await api('listMehrere', { tabellen: ['Ausleihe', 'Material'] }, s.token);
-          const t = (r && r.tabellen) || {};
-          return { ausleihe: t.Ausleihe || [], material: t.Material || [] };
+          const x = await ausPaket(p, ['Ausleihe', 'Material']);
+          return { ausleihe: x[0], material: x[1] };
         },
         function (daten) {
           ausleihDaten = daten;
@@ -579,20 +618,13 @@ export async function render(container, ctx) {
     if (!archivBox.hidden) archivZeichnen();
   }
 
-  async function ladeExtra(zuerstCache) {
+  async function ladeExtra(zuerstCache, p) {
     try {
       await ladeMitCache(
         s.gruppe_id + ':startextra',
         async function () {
-          const r = await api('listMehrere', {
-            tabellen: ['Umfragen', 'Umfrage_Antworten', 'Mitteilungen']
-          }, s.token);
-          const t = (r && r.tabellen) || {};
-          return {
-            umfragen: t.Umfragen || [],
-            antworten: t.Umfrage_Antworten || [],
-            mitteilungen: t.Mitteilungen || []
-          };
+          const x = await ausPaket(p, ['Umfragen', 'Umfrage_Antworten', 'Mitteilungen']);
+          return { umfragen: x[0], antworten: x[1], mitteilungen: x[2] };
         },
         function (daten) {
           extraDaten = daten;
@@ -759,13 +791,13 @@ export async function render(container, ctx) {
     zeichne();
   }
 
-  async function laden(zuerstCache) {
+  async function laden(zuerstCache, p) {
     try {
       const ok = await ladeMitCache(
         cacheKey,
         async function () {
-          const r = await api('list', { tabelle: 'ToDos' }, s.token);
-          return { todos: r.zeilen };
+          const x = await ausPaket(p, ['ToDos']);
+          return { todos: x[0] };
         },
         zeigen,
         zuerstCache
@@ -802,7 +834,11 @@ export async function render(container, ctx) {
 
   async function ladeNeuSeit(automatisch) {
     try {
-      const r = await holeNeu(s.token, s.gruppe_id, s.kurzname);
+      // 12.6: Projekttitel aus dem Paket, wenn gerade eins läuft (sonst holt holeNeu sie selbst)
+      const p = paket;
+      const r = await holeNeu(s.token, s.gruppe_id, s.kurzname, p ? function () {
+        return ausPaket(p, ['Projekte']).then(function (x) { return x[0]; });
+      } : null);
       neuStand = r;
       neuAnzeige();
       if (automatisch && !neuAutoGezeigt && r.items.length) {
@@ -817,13 +853,13 @@ export async function render(container, ctx) {
   erledigteCb.addEventListener('change', zeichne);
   // Während ein Häkchen noch gespeichert wird, wird nicht aktualisiert
   // TOPs getrennt laden: Fehlt der Tab noch, bleibt der Start nutzbar
-  async function ladeTops(zuerstCache) {
+  async function ladeTops(zuerstCache, p) {
     try {
       await ladeMitCache(
         s.gruppe_id + ':tops',
         async function () {
-          const r = await api('list', { tabelle: 'TOPs' }, s.token);
-          return { tops: r.zeilen || [] };
+          const x = await ausPaket(p, ['TOPs']);
+          return { tops: x[0] };
         },
         function (d) {
           topDaten = d.tops || [];
@@ -842,8 +878,11 @@ export async function render(container, ctx) {
 
   ctx.setzeRefresh(function () {
     if (Object.keys(arbeitet).length) return Promise.resolve();
-    return Promise.all([laden(false), ladeProjekte(false), ladeMobi(false), ladeExtra(false), ladeFuerDich(false), pinnwand.laden(), ladeNeuSeit(false), ladeTops(false)]);
+    const p = paketHolen();
+    return Promise.all([laden(false, p), ladeProjekte(false, p), ladeMobi(false, p), ladeExtra(false, p), ladeFuerDich(false, p),
+      pinnwand.laden(), ladeNeuSeit(false), ladeTops(false, p)]);
   });
-  await Promise.all([laden(true), ladeProjekte(true), ladeMobi(true), ladeExtra(true), ladeFuerDich(true), ladeNeuSeit(true), ladeTops(true)]);
+  await Promise.all([laden(true, erstesPaket), ladeProjekte(true, erstesPaket), ladeMobi(true, erstesPaket),
+    ladeExtra(true, erstesPaket), ladeFuerDich(true, erstesPaket), ladeNeuSeit(true), ladeTops(true, erstesPaket)]);
   hoehePruefen();
 }

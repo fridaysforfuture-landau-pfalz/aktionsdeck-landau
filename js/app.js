@@ -11,6 +11,7 @@ import { gruppenInfoAusCache, gruppenInfoLaden, gruppenInfoVergessen, cloudLinkS
 import { baueGeruest, sichtbareTabs, tabLabel } from './ui/nav.js';
 import { frageName } from './ui/modal.js';
 import { toast } from './ui/toast.js';
+import { el } from './ui/dom.js';
 import { darstellungAnwenden, darstellungBeobachten } from './ui/darstellung.js';
 import * as gruppenView from './views/gruppen.js';
 import * as loginView from './views/login.js';
@@ -252,12 +253,49 @@ async function route() {
   gruppenView.render(container, ctx);
 }
 
+// 0.34.4: Die App öffnet aus dem Zwischenspeicher. Eine neue Version lädt der Service Worker im Hintergrund;
+// dann erscheint unten „Neue Version da“. Erst der Knopf schaltet um und lädt neu.
+let umschalten = false;   // true, sobald jemand „Jetzt neu laden“ getippt hat
+
+function neueVersionZeigen(wartend) {
+  if (!wartend || document.querySelector('.neue-version')) return;
+  const knopf = el('button', { type: 'button', class: 'knopf', text: 'Jetzt neu laden' });
+  knopf.addEventListener('click', function () {
+    knopf.disabled = true;
+    umschalten = true;
+    wartend.postMessage('weiter');
+  });
+  document.body.append(el('div', { class: 'neue-version', role: 'status' },
+    el('span', { text: 'Neue Version da.' }), knopf));
+}
+
 function serviceWorkerAnmelden() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(function (e) {
-      console.warn('Service Worker nicht angemeldet:', e);
+  if (!('serviceWorker' in navigator)) return;
+  // Nur nach dem Knopf neu laden (beim allerersten Besuch übernimmt der Service Worker ohne Neuladen)
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    if (!umschalten) return;
+    umschalten = false;
+    location.reload();
+  });
+  navigator.serviceWorker.register('sw.js').then(function (reg) {
+    if (reg.waiting && navigator.serviceWorker.controller) neueVersionZeigen(reg.waiting);
+    reg.addEventListener('updatefound', function () {
+      const neu = reg.installing;
+      if (!neu) return;
+      neu.addEventListener('statechange', function () {
+        if (neu.state === 'installed' && navigator.serviceWorker.controller) neueVersionZeigen(neu);
+      });
     });
-  }
+    // Bleibt die App lange offen: beim Zurückkommen höchstens alle 30 Minuten nach einer neuen Version fragen
+    let zuletzt = Date.now();
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState !== 'visible' || Date.now() - zuletzt < 30 * 60 * 1000) return;
+      zuletzt = Date.now();
+      reg.update().catch(function () { return null; });
+    });
+  }).catch(function (e) {
+    console.warn('Service Worker nicht angemeldet:', e);
+  });
 }
 
 // Offene Seiten laden regelmäßig neu (nur wenn sichtbar und online)
@@ -269,4 +307,6 @@ darstellungAnwenden();
 darstellungBeobachten(function () { route(); });
 window.addEventListener('hashchange', route);
 route();
-serviceWorkerAnmelden();
+// 12.6: Erst nach dem Laden der Seite anmelden, damit das Vorladen der App die erste Seite nicht bremst
+if (document.readyState === 'complete') serviceWorkerAnmelden();
+else window.addEventListener('load', serviceWorkerAnmelden);

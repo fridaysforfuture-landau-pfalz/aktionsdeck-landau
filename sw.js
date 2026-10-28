@@ -1,8 +1,9 @@
 // sw.js
-// Lädt die App-Hülle vor. Dateien der App: zuerst Netz, sonst Zwischenspeicher.
+// Lädt die App-Hülle vor. Seit 0.34.4: Dateien der App zuerst aus dem Zwischenspeicher (schnelles Öffnen).
+// Eine neue Version lädt im Hintergrund und wartet, bis die App „Jetzt neu laden“ schickt (js/app.js).
 // Daten der API liegen nicht hier, sondern in IndexedDB (js/cache.js).
 
-const VERSION = '0.34.3';
+const VERSION = '0.34.4';
 const CACHE = 'aktionsdeck-' + VERSION;
 
 const HUELLE = [
@@ -129,9 +130,16 @@ const HUELLE = [
 
 self.addEventListener('install', function (event) {
   event.waitUntil(
-    caches.open(CACHE).then(function (c) { return c.addAll(HUELLE); })
-      .then(function () { return self.skipWaiting(); })
+    // cache: 'reload' = am Browser-Zwischenspeicher vorbei, sonst kämen kurz nach einem Update noch alte Dateien
+    caches.open(CACHE).then(function (c) {
+      return c.addAll(HUELLE.map(function (u) { return new Request(u, { cache: 'reload' }); }));
+    })
   );
+});
+
+// Die App schickt "weiter", wenn jemand auf „Jetzt neu laden“ tippt.
+self.addEventListener('message', function (event) {
+  if (event.data === 'weiter') self.skipWaiting();
 });
 
 self.addEventListener('activate', function (event) {
@@ -154,18 +162,20 @@ self.addEventListener('fetch', function (event) {
   // 12.4: Gespeichert wird ohne Anhang nach "?" (sonst wächst der Zwischenspeicher mit jedem ?v=…).
   const schluessel = url.origin + url.pathname;
 
+  // 0.34.4: Zuerst Zwischenspeicher. Nur was fehlt, kommt aus dem Netz und wird gemerkt.
+  // Nicht im Hintergrund auffrischen: Sonst mischen sich Dateien zweier Versionen.
   event.respondWith(
-    fetch(req).then(function (antwort) {
-      if (antwort.ok) {
-        const kopie = antwort.clone();
-        caches.open(CACHE).then(function (c) { c.put(schluessel, kopie); });
-      }
-      return antwort;
-    }).catch(function () {
-      return caches.match(schluessel).then(function (treffer) {
-        if (treffer) return treffer;
+    caches.open(CACHE).then(function (c) { return c.match(schluessel); }).then(function (treffer) {
+      if (treffer) return treffer;
+      return fetch(req).then(function (antwort) {
+        if (antwort.ok) {
+          const kopie = antwort.clone();
+          caches.open(CACHE).then(function (c) { c.put(schluessel, kopie); });
+        }
+        return antwort;
+      }).catch(function () {
         // 12.4: Die Startseite nur für Seitenaufrufe, nicht für fehlende Skripte oder Bilder.
-        if (req.mode === 'navigate') return caches.match('index.html');
+        if (req.mode === 'navigate') return caches.open(CACHE).then(function (c) { return c.match('index.html'); });
         return Response.error();
       });
     })

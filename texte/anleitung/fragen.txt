@@ -8,7 +8,7 @@ Zwei Personen haben denselben Eintrag gleichzeitig bearbeitet. Die App überschr
 
 ## Warum zeigt die App einen alten Stand?
 
-Lade die Seite neu. Nach einem Update der App hilft es, die Seite zweimal neu zu laden. Die Version steht unter „Info“.
+Lade die Seite neu. Die App öffnet aus dem Speicher deines Geräts, damit sie schnell da ist. Gibt es eine neue Version, lädt sie im Hintergrund, und unten erscheint „Neue Version da“. Tipp auf „Jetzt neu laden“, dann läuft die neue Version. Die Version steht unter „Info“.
 
 ## Was geht ohne Netz?
 
