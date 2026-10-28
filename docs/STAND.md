@@ -4,7 +4,7 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-- Version der App: **0.34.1** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **0.34.2** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
@@ -185,7 +185,8 @@ Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abw
 - **Anzeigename:** „Wer bist du?“ wird nur im Gerät gespeichert und landet im Log. Das Skript entfernt Steuerzeichen und vorne `= + - @` (höchstens 60 Zeichen).
 - **Schutz vor Formeln:** Jeder Text, der ins Sheet geht, läuft durch `schuetzen` (Util.gs), auch beim Zurückschreiben ganzer Blöcke
   (`schreibeSpalten`, `teamZellenSchreiben`). Neue Schreibstellen immer mit `schuetzen`.
-- **Content-Security-Policy** als `<meta>` in `index.html`: Skripte und Stile nur von der eigenen Seite, Bilder auch von Drive und `googleusercontent.com`,
+- **Content-Security-Policy** als `<meta>` in `index.html`: Skripte und Stile nur von der eigenen Seite, Bilder von allen `https:`-Adressen (Google leitet Drive-Vorschaubilder auf wechselnde Adressen um; nur Drive und
+  `googleusercontent.com` blockierte die Fotos in 0.34.1),
   Verbindungen nur zum Skript. Neue Adressen nach außen hier eintragen, sonst blockiert der Browser sie. Kein Inline-Skript, kein `style="…"` im HTML.
 - **Gleichzeitiges Arbeiten:** Beim Ändern schickt die App den bekannten Wert `geaendert_am` als `bekannt` mit.
   Weicht er ab, zeigt sie einen Hinweis statt zu überschreiben. Löschen ist weich (`geloescht = TRUE`).
@@ -219,7 +220,7 @@ Eine neue Tabelle oder Spalte ist nur ein Eintrag in `Schema.gs` und in `js/sche
 - Etappen 0 bis 11 sind fertig und von der Person geprüft (bis 0.33.15, 28.10.2026). Kurzfassung in Abschnitt 8,
   ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
 - Etappe 12 läuft: 12.1 Plan Fassung 2 (0.33.16, #75), 12.2 Plan Fassung 3 und diese eine Doku-Datei (0.34.0),
-  12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1).
+  12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2).
 - Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
   Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
@@ -450,6 +451,7 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 12.3: Sicherheitsbericht (nur im Chat): keine schwere Lücke, zwei Funde im Skript, Hinweise zu Service Worker und App.
   - 12.4 (0.34.1): Schutz vor Formeln beim Block-Schreiben, Anzeigename bereinigt, neuer PIN meldet alte Geräte ab, Zahlen strenger,
     Kalender-Datei mit `\r`, Content-Security-Policy, Service Worker nur im App-Ordner, Gruppenwechsel leert den Zwischenspeicher, Editor-Test `testenRechte`.
+  - 0.34.2: Nachbesserung: Content-Security-Policy erlaubt Bilder von allen `https:`-Adressen (Fotos wurden blockiert).
 
 ---
 
