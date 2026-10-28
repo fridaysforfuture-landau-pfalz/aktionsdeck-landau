@@ -15,14 +15,14 @@
 .knopf:disabled { opacity: 0.5; cursor: default; }
 
 .knopf-hell {
-  background: #fff;
+  background: var(--flaeche);
   color: var(--text);
   border: 1px solid var(--gruppe);
 }
 
 .knopf-gefahr {
-  background: #fff;
-  color: #b3261e;
+  background: var(--flaeche);
+  color: var(--fehler);
   border: 1px solid var(--rand);
 }
 
@@ -42,14 +42,14 @@
   border: 1px solid var(--rand);
   border-radius: var(--radius);
   font: inherit;
-  background: #fff;
+  background: var(--flaeche);
 }
 
 textarea.feld { min-height: 96px; resize: vertical; }
 
 .leise { color: var(--text-leise); }
 
-.fehler { color: #b3261e; min-height: 1.4em; }
+.fehler { color: var(--fehler); min-height: 1.4em; }
 
 .gruppe-karte {
   display: flex;
@@ -78,7 +78,7 @@ textarea.feld { min-height: 96px; resize: vertical; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.45);
+  background: var(--abdunkeln);
   z-index: 2000;
 }
 
@@ -100,8 +100,8 @@ textarea.feld { min-height: 96px; resize: vertical; }
   max-width: 90%;
   padding: 12px 18px;
   border-radius: var(--radius);
-  background: #1a1e20;
-  color: #fff;
+  background: var(--balken);
+  color: var(--balken-text);
   z-index: 3000;
 }
 
@@ -286,7 +286,7 @@ textarea.feld { min-height: 96px; resize: vertical; }
 .platzhalter-kachel {
   min-height: 64px;
   border-radius: var(--radius);
-  background: #e3ebe8;
+  background: var(--spur);
   animation: platzhalter-puls 1.4s ease-in-out infinite;
 }
 
@@ -344,10 +344,10 @@ textarea.feld { min-height: 96px; resize: vertical; }
 /* ---- Z3: Balken, Kacheln, Anmeldung, Info ---- */
 
 .app-balken {
-  background: #1a1e20;
-  color: #fff;
+  background: var(--balken);
+  color: var(--balken-text);
   /* Balken über die ganze Breite, auch wenn die App schmaler ist */
-  box-shadow: 0 0 0 100vmax #1a1e20;
+  box-shadow: 0 0 0 100vmax var(--balken);
   clip-path: inset(0 -100vmax);
 }
 
@@ -357,7 +357,7 @@ textarea.feld { min-height: 96px; resize: vertical; }
   justify-content: center;
   gap: 14px;
   padding: 14px var(--abstand);
-  color: #fff;
+  color: var(--balken-text);
   text-decoration: none;
 }
 
@@ -368,7 +368,7 @@ textarea.feld { min-height: 96px; resize: vertical; }
   flex: none;
   padding: 4px;
   border-radius: 10px;
-  background: #fff;
+  background: var(--logo-grund);
 }
 
 .balken-logo img {
@@ -544,7 +544,7 @@ a.knopf {
   background: var(--flaeche);
   border: 2px solid var(--gruppe);
   border-radius: var(--radius);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 2px 10px var(--schatten);
 }
 
 .auswahl-leiste[hidden] { display: none; }
@@ -670,7 +670,7 @@ a.knopf {
   font-size: 18px;
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 24px var(--schatten-gross);
   pointer-events: none;
   animation: toast-ein 0.2s ease-out;
 }
@@ -704,7 +704,7 @@ a.knopf {
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.85);
+  background: var(--lightbox-grund);
   cursor: zoom-out;
 }
 
@@ -715,7 +715,7 @@ a.knopf {
   border-radius: var(--radius);
 }
 
-.lightbox-fehler { color: #fff; font-size: 18px; }
+.lightbox-fehler { color: var(--auf-farbe); font-size: 18px; }
 
 .lightbox-zu {
   position: absolute;
@@ -725,7 +725,7 @@ a.knopf {
   height: 48px;
   border: 0;
   border-radius: 50%;
-  background: #fff;
+  background: var(--flaeche);
   color: var(--text);
   font-size: 22px;
   cursor: pointer;
@@ -737,10 +737,10 @@ a.knopf {
 .tabelle tr.erledigt td {
   color: var(--text-leise);
   text-decoration: line-through;
-  background: #f6f8f7;
+  background: var(--flaeche-leise);
 }
 
-.karte.erledigt { background: #f6f8f7; }
+.karte.erledigt { background: var(--flaeche-leise); }
 
 .karte.erledigt .karten-text,
 .karte.erledigt .karten-text p {
@@ -767,13 +767,13 @@ p.notiz.erledigt {
 }
 
 /* Überfällig = rot, heute fällig = orange (zusätzlich steht es im Text) */
-.tabelle tr.ueberfaellig td { color: #b3261e; font-weight: 600; }
-.tabelle tr.ueberfaellig td:first-child { box-shadow: inset 6px 0 0 #b3261e; }
-.tabelle tr.heute td:first-child { box-shadow: inset 6px 0 0 #c77c00; }
-.tabelle tr.heute td { background: #fff7e8; }
+.tabelle tr.ueberfaellig td { color: var(--fehler); font-weight: 600; }
+.tabelle tr.ueberfaellig td:first-child { box-shadow: inset 6px 0 0 var(--fehler); }
+.tabelle tr.heute td:first-child { box-shadow: inset 6px 0 0 var(--warnung); }
+.tabelle tr.heute td { background: var(--warn-flaeche); }
 
-.karte.ueberfaellig { border-left: 6px solid #b3261e; }
-.karte.heute { border-left: 6px solid #c77c00; background: #fff7e8; }
+.karte.ueberfaellig { border-left: 6px solid var(--fehler); }
+.karte.heute { border-left: 6px solid var(--warnung); background: var(--warn-flaeche); }
 
 /* ---- Etappe 3.4: Start-Kachel ToDos ---- */
 
@@ -796,14 +796,14 @@ p.notiz.erledigt {
 
 .dash-todo:hover { background: var(--gruen-hell); }
 
-.dash-todo.ueberfaellig { border-left-color: #b3261e; }
-.dash-todo.heute { border-left-color: #c77c00; background: #fff7e8; }
+.dash-todo.ueberfaellig { border-left-color: var(--fehler); }
+.dash-todo.heute { border-left-color: var(--warnung); background: var(--warn-flaeche); }
 
 .dash-todo.erledigt,
 .dash-todo.erledigt span {
   color: var(--text-leise);
   text-decoration: line-through;
-  background: #f6f8f7;
+  background: var(--flaeche-leise);
 }
 
 /* ---- Etappe 3.5: ToDos Archiv, Start-Kachel ---- */
@@ -811,13 +811,13 @@ p.notiz.erledigt {
 /* Abgehakte Kästchen in Grau */
 .tabelle tr.erledigt .auswahl-box,
 .karte.erledigt .auswahl-box,
-.dash-zeile.erledigt .auswahl-box { accent-color: #8a9490; }
+.dash-zeile.erledigt .auswahl-box { accent-color: var(--grau-marke); }
 
 .kopf-knoepfe { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* Eigene Tabelle "Erledigt": graue Kopfzeile */
 .liste-titel { margin: 28px 0 8px; font-size: 18px; color: var(--text-leise); }
-.liste-erledigt .tabelle th { background: #5f6a66; color: #fff; }
+.liste-erledigt .tabelle th { background: var(--tabellenkopf-grau); color: var(--auf-farbe); }
 
 /* Start-Kachel ToDos: halbe Breite am PC, Kopfzeile mit Link und Schalter */
 .dash-todos { grid-column: auto; }
@@ -872,7 +872,7 @@ p.notiz.erledigt {
 .fortschritt-spur {
   height: 12px;
   border-radius: 6px;
-  background: #e3ebe8;
+  background: var(--spur);
   overflow: hidden;
 }
 
@@ -971,7 +971,7 @@ p.notiz.erledigt {
   display: inline-block;
   padding: 2px 10px;
   border-radius: 999px;
-  background: #e3ebe8;
+  background: var(--spur);
   color: var(--text);
   font-size: 13px;
   font-weight: 600;
@@ -979,7 +979,7 @@ p.notiz.erledigt {
 
 .status-aktiv { background: var(--gruen-hell); box-shadow: inset 0 0 0 1px var(--gruen); }
 .status-erledigt,
-.status-archiviert { background: #eceeed; color: var(--text-leise); }
+.status-archiviert { background: var(--flaeche-grau); color: var(--text-leise); }
 
 /* Start-Kachel Projekte */
 .dash-projekt-liste { display: grid; margin-top: 8px; }
@@ -1057,9 +1057,9 @@ p.notiz.erledigt {
   border-radius: var(--radius);
 }
 
-.meilenstein.erreicht { background: #f6f8f7; border-left-color: #8a9490; }
-.meilenstein.ueberfaellig { border-left-color: #b3261e; }
-.meilenstein.heute { border-left-color: #c77c00; }
+.meilenstein.erreicht { background: var(--flaeche-leise); border-left-color: var(--grau-marke); }
+.meilenstein.ueberfaellig { border-left-color: var(--fehler); }
+.meilenstein.heute { border-left-color: var(--warnung); }
 
 .meilenstein-kopf {
   display: flex;
@@ -1078,7 +1078,7 @@ p.notiz.erledigt {
 
 .meilenstein .auswahl-box { flex: none; }
 .meilenstein.erreicht .meilenstein-titel strong { color: var(--text-leise); }
-.meilenstein.ueberfaellig .meilenstein-titel .leise { color: #b3261e; font-weight: 600; }
+.meilenstein.ueberfaellig .meilenstein-titel .leise { color: var(--fehler); font-weight: 600; }
 
 /* ToDo-Zeile im Projekt: Text ist ein Knopf (öffnet das Bearbeiten-Fenster) */
 .pt-todo {
@@ -1137,7 +1137,7 @@ p.notiz.erledigt {
   border-top: 3px dashed var(--rand);
 }
 
-.status-planung { background: #fff7e8; box-shadow: inset 0 0 0 1px #c77c00; }
+.status-planung { background: var(--warn-flaeche); box-shadow: inset 0 0 0 1px var(--warnung); }
 
 /* Start-Kachel: Titel mit Marke, Schalter mit Pfeil */
 .dash-projekt-titel {
@@ -1201,7 +1201,7 @@ p.notiz.erledigt {
   border-radius: var(--radius);
 }
 
-.hut.frei { border-left-color: #c77c00; background: #fff7e8; }
+.hut.frei { border-left-color: var(--warnung); background: var(--warn-flaeche); }
 
 .hut-titel {
   display: flex;
@@ -1228,7 +1228,7 @@ p.notiz.erledigt {
   min-width: 160px;
 }
 
-.hut-zahlen.ueber { color: #b3261e; font-weight: 600; }
+.hut-zahlen.ueber { color: var(--fehler); font-weight: 600; }
 
 .hut-knoepfe { display: flex; gap: 8px; flex-wrap: wrap; }
 
@@ -1285,14 +1285,14 @@ p.notiz.erledigt {
 }
 
 .hut-toggler {
-  background: #fdecea;
-  border-color: #e3b1ab;
-  border-left: 6px solid #b3261e;
+  background: var(--fehler-flaeche);
+  border-color: var(--fehler-rand);
+  border-left: 6px solid var(--fehler);
 }
 
-.hut-toggler > summary strong { color: #b3261e; }
-.hut-toggler .projekt-teil-body { background: #fdecea; border-top-color: #e3b1ab; }
-.hut-toggler .dash-zeile { border-bottom-color: #e3b1ab; }
+.hut-toggler > summary strong { color: var(--fehler); }
+.hut-toggler .projekt-teil-body { background: var(--fehler-flaeche); border-top-color: var(--fehler-rand); }
+.hut-toggler .dash-zeile { border-bottom-color: var(--fehler-rand); }
 
 /* ---- 0.21.6: dunklerer Hintergrund, kleine Knöpfe, rote Überfällig-Zeile ---- */
 :root { --hintergrund: #dfe8e4; }
@@ -1307,20 +1307,20 @@ p.notiz.erledigt {
 
 /* Überfällige ToDos: Infozeile (mit "Fällig … (überfällig)") rot */
 .dash-todo.ueberfaellig .leise {
-  color: #b3261e;
+  color: var(--fehler);
   font-weight: 600;
 }
 
 /* ---- 0.25.0: Planung optisch getrennt ---- */
 .projekt-teil.projekt-gruppe-planung {
   margin-top: 40px;
-  border: 2px dashed #c77c00;
-  background: #fff7e8;
+  border: 2px dashed var(--warnung);
+  background: var(--warn-flaeche);
 }
 
-.projekt-gruppe-planung > summary strong { color: #8a5600; }
-.projekt-gruppe-planung > .projekt-teil-body { background: #fff7e8; border-top-color: #c77c00; }
-.projekt-gruppe-planung .projekt-block { border-top-color: #c77c00; }
+.projekt-gruppe-planung > summary strong { color: var(--planung-text); }
+.projekt-gruppe-planung > .projekt-teil-body { background: var(--warn-flaeche); border-top-color: var(--warnung); }
+.projekt-gruppe-planung .projekt-block { border-top-color: var(--warnung); }
 
 /* ---- 0.26.0: Etappe 5 (Start als Zentrale) und 4.7.1 ---- */
 
@@ -1429,8 +1429,8 @@ p.notiz.erledigt {
 .dash-kopf .kopf-knoepfe { margin-left: auto; }
 
 /* Umfragen: Frist wie bei ToDos (heute = orange, vorbei = rot) */
-.umfrage-frist.ueberfaellig { color: #b3261e; font-weight: 600; }
-.umfrage-frist.heute { color: #c77c00; font-weight: 600; }
+.umfrage-frist.ueberfaellig { color: var(--fehler); font-weight: 600; }
+.umfrage-frist.heute { color: var(--warnung); font-weight: 600; }
 .umfrage-frage { margin: 0 0 8px; }
 
 /* Kommentare im Detail und im Fenster: mit Trennstrich und Farbe abgesetzt */
@@ -1474,15 +1474,15 @@ p.notiz.erledigt {
 }
 
 .umfrage-zeile.heute {
-  background: #fff7e8;
-  border-color: #e8c98a;
-  border-left-color: #c77c00;
+  background: var(--warn-flaeche);
+  border-color: var(--warn-rand);
+  border-left-color: var(--warnung);
 }
 
 .umfrage-zeile.ueberfaellig {
-  background: #fdecea;
-  border-color: #e3b1ab;
-  border-left-color: #b3261e;
+  background: var(--fehler-flaeche);
+  border-color: var(--fehler-rand);
+  border-left-color: var(--fehler);
 }
 
 .umfrage-zeile .dash-todo { background: none; }
@@ -1523,7 +1523,7 @@ p.notiz.erledigt {
   font-size: 11px;
   font-weight: 700;
   line-height: 0;
-  color: #b3261e;
+  color: var(--fehler);
 }
 .neu-titel { margin: 18px 0 4px; font-size: 16px; }
 .neu-titel a { color: var(--text); }
@@ -1638,7 +1638,7 @@ p.notiz.erledigt {
   text-overflow: ellipsis;
 }
 
-.kal-chip.ueber { color: #b3261e; font-weight: 600; }
+.kal-chip.ueber { color: var(--fehler); font-weight: 600; }
 .kal-chip-mehr { font-size: 12px; }
 
 .kal-tagesliste { margin-top: 16px; }
@@ -1664,7 +1664,7 @@ p.notiz.erledigt {
   margin: 0;
   border: 2px solid var(--gruppe);
   border-radius: 7px;
-  background: #fff;
+  background: var(--flaeche);
   cursor: pointer;
 }
 
@@ -1733,7 +1733,7 @@ p.notiz.erledigt {
 .kal-voll .kal-link { color: inherit; }
 .kal-voll .leise,
 .kal-voll .kal-marke { color: inherit; opacity: 0.85; }
-.kal-voll .dash-todo:hover { background: rgba(0, 0, 0, 0.12); }
+.kal-voll .dash-todo:hover { background: var(--hover-dunkel); }
 
 /* Deadlines: Pastell, dicker Rand, fett */
 .kal-frist {
@@ -1744,10 +1744,10 @@ p.notiz.erledigt {
 }
 
 .kal-frist strong { font-weight: 800; }
-.kal-frist .dash-todo:hover { background: rgba(255, 255, 255, 0.55); }
+.kal-frist .dash-todo:hover { background: var(--hover-hell); }
 
 /* Vorbei oder abgeschlossenes Projekt: grau */
-.kal-grau { margin: 6px 0; border-radius: var(--radius); border-bottom: 0; background: #eceeed; }
+.kal-grau { margin: 6px 0; border-radius: var(--radius); border-bottom: 0; background: var(--flaeche-grau); }
 .kal-grau .dash-todo { background: none; }
 .kal-grau strong,
 .kal-grau .leise { color: var(--text-leise); }
@@ -1759,7 +1759,7 @@ p.notiz.erledigt {
   padding: 2px;
   border: 1px solid var(--rand);
   border-radius: var(--radius);
-  background: #fff;
+  background: var(--flaeche);
   cursor: pointer;
 }
 
@@ -1829,8 +1829,8 @@ p.notiz.erledigt {
 
 /* Deadline-Tag: pink */
 .kal-frist-tag {
-  background: #fbd5e3;
-  color: #7a0b34;
+  background: var(--frist-flaeche);
+  color: var(--frist-text);
   font-weight: 700;
 }
 
@@ -1839,8 +1839,8 @@ p.notiz.erledigt {
 
 /* Vorbei oder abgeschlossenes Projekt: grau */
 .kal-chip-grau {
-  border-left-color: #8a9490;
-  background: #eceeed;
+  border-left-color: var(--grau-marke);
+  background: var(--flaeche-grau);
   color: var(--text-leise);
 }
 /* ---- 0.28.6: Kopfzeile Monat, Datumswahl, großes Tagesfenster ---- */
@@ -1969,7 +1969,7 @@ p.notiz.erledigt {
   padding: 0;
   border: 1px solid var(--gruppe);
   border-radius: var(--radius);
-  background: #fff;
+  background: var(--flaeche);
   color: var(--text);
   font-size: 28px;
   line-height: 1;
@@ -2150,7 +2150,7 @@ p.notiz.erledigt {
 /* ---- 0.28.13: Seitenleiste grau, Kalender-Zeilen, ✕ im Fenster, Anheften auf Kachel ---- */
 
 /* Strich der Terminleiste: AktionsDeck-Dunkelgrau wie der Balken oben */
-.start-termine { border-top: 5px solid #1a1e20; }
+.start-termine { border-top: 5px solid var(--balken); }
 
 /* ✕ oben rechts in jedem Fenster */
 .modal-box { position: relative; }
@@ -2237,7 +2237,7 @@ p.notiz.erledigt {
 /* ---- 0.29.2: Mobi ---- */
 .mobi-punkt { width: 14px; height: 14px; flex: none; margin-left: 4px; border-radius: 50%; }
 .mobi-zaehler { font-size: 13px; }
-.mobi-zaehler.ueber { color: #b3261e; font-weight: 600; }
+.mobi-zaehler.ueber { color: var(--fehler); font-weight: 600; }
 .mobi-analyse dd { white-space: pre-wrap; }
 
 /* ---- 0.29.3: Reiter Mobi ---- */
@@ -2288,8 +2288,8 @@ p.notiz.erledigt {
 }
 
 .kanban-titel:focus-visible { outline: 2px solid var(--gruppe); }
-.kanban-karte .ueberfaellig { color: #b3261e; font-weight: 600; }
-.kanban-karte .heute { color: #c77c00; font-weight: 600; }
+.kanban-karte .ueberfaellig { color: var(--fehler); font-weight: 600; }
+.kanban-karte .heute { color: var(--warnung); font-weight: 600; }
 .kanban-knoepfe { display: flex; justify-content: space-between; gap: 6px; }
 
 @media (min-width: 960px) {
@@ -2305,9 +2305,9 @@ p.notiz.erledigt {
 .mobi-kanal-zahl { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; vertical-align: middle; }
 .mobi-kanaele .mobi-punkt { width: 10px; height: 10px; margin-left: 0; }
 .mobi-titel-ueberfaellig,
-.tabelle td.mobi-titel-ueberfaellig { color: #b3261e; font-weight: 700; }
+.tabelle td.mobi-titel-ueberfaellig { color: var(--fehler); font-weight: 700; }
 .mobi-titel-heute,
-.tabelle td.mobi-titel-heute { color: #c77c00; font-weight: 700; }
+.tabelle td.mobi-titel-heute { color: var(--warnung); font-weight: 700; }
 
 /* ---- 0.29.6: Mobi Kacheln in Spalten, Kanban je Kanal ---- */
 .mobi-spalten { display: grid; gap: 16px; }
@@ -2352,8 +2352,8 @@ p.notiz.erledigt {
 .mobi-kachel-text:focus-visible { outline: 2px solid var(--gruppe); }
 .mobi-kachel-kanal { display: flex; align-items: center; gap: 6px; font-size: 13px; }
 .mobi-kachel-kanal .mobi-punkt { width: 10px; height: 10px; margin-left: 0; }
-.mobi-kachel .mobi-datum-ueberfaellig { color: #b3261e; font-weight: 600; }
-.mobi-kachel .mobi-datum-heute { color: #c77c00; font-weight: 600; }
+.mobi-kachel .mobi-datum-ueberfaellig { color: var(--fehler); font-weight: 600; }
+.mobi-kachel .mobi-datum-heute { color: var(--warnung); font-weight: 600; }
 .mobi-kachel.erledigt .mobi-kachel-text,
 .mobi-kachel.erledigt .mobi-kachel-text span { color: var(--text-leise); }
 .mobi-kacheln-flaeche { margin-top: 8px; }
@@ -2369,9 +2369,9 @@ p.notiz.erledigt {
 .mobi-sammlung .vorlage-liste { margin-bottom: 8px; }
 .mobi-hinweis {
   padding: 8px 10px;
-  border-left: 4px solid #c77c00;
+  border-left: 4px solid var(--warnung);
   border-radius: var(--radius);
-  background: #fff7e8;
+  background: var(--warn-flaeche);
 }
 .mobi-vorschau .vorlage-text { flex: 1; min-width: 0; }
 .mobi-vorschau-felder { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -2404,10 +2404,10 @@ p.notiz.erledigt {
 /* Leiste zum Verschieben direkt über den Spalten (läuft mit dem Kanban mit) */
 .kanban-leiste { display: none; overflow-x: auto; overflow-y: hidden; margin-bottom: 4px; }
 .kanban-leiste-innen { height: 1px; }
-.kanban-leiste { scrollbar-width: auto; scrollbar-color: #8a9490 var(--gruen-hell); }
+.kanban-leiste { scrollbar-width: auto; scrollbar-color: var(--grau-marke) var(--gruen-hell); }
 .kanban-leiste::-webkit-scrollbar { height: 12px; }
 .kanban-leiste::-webkit-scrollbar-track { border-radius: 6px; background: var(--gruen-hell); }
-.kanban-leiste::-webkit-scrollbar-thumb { border-radius: 6px; background: #8a9490; }
+.kanban-leiste::-webkit-scrollbar-thumb { border-radius: 6px; background: var(--grau-marke); }
 
 @media (min-width: 960px) {
   /* Wieder eine Reihe (statt Raster aus 0.29.7); die untere Leiste ist ausgeblendet, die obere bleibt */
@@ -2435,8 +2435,8 @@ p.notiz.erledigt {
 .dash-projekt-spalten.mit-mobi { grid-template-columns: repeat(3, 1fr); }
 
 /* Mobi-Beitrag nach der Aktion (außer Danke/Rückblick): pink */
-.kal-zeile.kal-mobi-nach { background: #fde7ef; }
-.kal-chip-pink { background: #fde7ef; }
+.kal-zeile.kal-mobi-nach { background: var(--rosa-flaeche); }
+.kal-chip-pink { background: var(--rosa-flaeche); }
 
 /* Wochenansicht: Handy untereinander, PC 7 Spalten */
 .kal-woche { display: grid; gap: 8px; }
@@ -2469,9 +2469,9 @@ p.notiz.erledigt {
   overflow-wrap: anywhere;
 }
 .kal-wchip .leise { font-size: 12px; }
-.kal-wchip.ueber strong { color: #b3261e; }
-.kal-wchip.kal-chip-pink { background: #fde7ef; }
-.kal-wchip.kal-chip-grau { background: #eceeed; color: var(--text-leise); }
+.kal-wchip.ueber strong { color: var(--fehler); }
+.kal-wchip.kal-chip-pink { background: var(--rosa-flaeche); }
+.kal-wchip.kal-chip-grau { background: var(--flaeche-grau); color: var(--text-leise); }
 .kal-wchip:focus-visible { outline: 2px solid var(--gruppe); }
 .kal-wneu { justify-self: start; }
 
@@ -2498,9 +2498,9 @@ p.notiz.erledigt {
   gap: 8px;
   margin-bottom: 12px;
   padding: 8px 10px;
-  border-left: 4px solid #d6249f;
+  border-left: 4px solid var(--pink);
   border-radius: var(--radius);
-  background: #fbe4f3;
+  background: var(--pink-flaeche);
 }
 .kal-mobi-leiste[hidden] { display: none; }
 .kal-mobi-knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -2512,9 +2512,9 @@ p.notiz.erledigt {
 .mobi-warnung {
   margin: 0 0 6px;
   padding: 6px 10px;
-  border-left: 4px solid #c77c00;
+  border-left: 4px solid var(--warnung);
   border-radius: var(--radius);
-  background: #fff7e8;
+  background: var(--warn-flaeche);
   font-size: 14px;
 }
 .mobi-warnung-link {
@@ -2535,10 +2535,10 @@ p.notiz.erledigt {
 .mz-bahn { position: relative; height: 30px; margin: 0 12px; border-bottom: 1px solid var(--rand); }
 .mz-achse { height: 18px; border-bottom: 0; font-size: 12px; color: var(--text-leise); }
 .mz-datum { position: absolute; top: 0; white-space: nowrap; }
-.mz-aktion-text { transform: translateX(-50%); color: #368469; font-weight: 600; }
+.mz-aktion-text { transform: translateX(-50%); color: var(--gruen); font-weight: 600; }
 .mz-linie { position: absolute; top: 0; bottom: 0; width: 0; }
-.mz-aktion { border-left: 2px solid #368469; }
-.mz-heute { border-left: 2px dashed #8a9490; }
+.mz-aktion { border-left: 2px solid var(--gruen); }
+.mz-heute { border-left: 2px dashed var(--grau-marke); }
 .mz-punkt {
   position: absolute;
   top: 50%;
@@ -2546,22 +2546,22 @@ p.notiz.erledigt {
   height: 18px;
   min-height: 0;
   padding: 0;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--flaeche);
   border-radius: 50%;
-  background: #b8c0bc;
-  color: #ffffff;
+  background: var(--grau-hell);
+  color: var(--auf-farbe);
   font-size: 10px;
   font-weight: 700;
   line-height: 14px;
   text-align: center;
   transform: translate(-50%, -50%);
   cursor: pointer;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 1px var(--schatten-ring);
 }
 /* Unsichtbar größere Tippfläche (44 px) um den kleinen Punkt */
 .mz-punkt::after { content: ''; position: absolute; inset: -13px; }
-.mz-punkt.mz-ueber { border-color: #b3261e; }
-.mz-punkt.mz-fertig { background: #b8c0bc; }
+.mz-punkt.mz-ueber { border-color: var(--fehler); }
+.mz-punkt.mz-fertig { background: var(--grau-hell); }
 .mz-punkt:focus-visible { outline: 2px solid var(--gruppe); outline-offset: 2px; }
 .mz-legende { margin: 4px 0 0; font-size: 12px; }
 
@@ -2577,9 +2577,9 @@ p.notiz.erledigt {
 .mz-datum { transform: translateX(-50%); font-size: 12px; }
 .mz-heute-text { color: var(--text-leise); font-weight: 600; }
 .mz-achse { height: 30px; }
-.mz-strich { position: absolute; bottom: 0; width: 1px; height: 5px; background: #b8c0bc; }
-.mz-strich-mo { height: 10px; background: #8a9490; }
-.mz-woche { border-left: 1px solid #e2e7e4; }
+.mz-strich { position: absolute; bottom: 0; width: 1px; height: 5px; background: var(--grau-hell); }
+.mz-strich-mo { height: 10px; background: var(--grau-marke); }
+.mz-woche { border-left: 1px solid var(--linie-zart); }
 .mobi-zeit-gruppe { margin-bottom: 20px; }
 .mobi-zeit-gruppe .teil-titel-klein { margin-bottom: 4px; }
 
@@ -2589,14 +2589,14 @@ p.notiz.erledigt {
   position: relative;
   height: 16px;
   border-radius: 8px;
-  background: #e7ece9;
+  background: var(--spur-zart);
   overflow: hidden;
 }
-.mzb-abschnitt { position: absolute; top: 0; bottom: 0; min-width: 4px; background: #b8c0bc; }
-.mzb-abschnitt.mzb-fertig { background: #b8c0bc; }
+.mzb-abschnitt { position: absolute; top: 0; bottom: 0; min-width: 4px; background: var(--grau-hell); }
+.mzb-abschnitt.mzb-fertig { background: var(--grau-hell); }
 .mzb-linie { position: absolute; top: 0; bottom: 0; width: 0; }
-.mzb-aktion { border-left: 3px solid #368469; }
-.mzb-heute { border-left: 2px dashed #1a1e20; }
+.mzb-aktion { border-left: 3px solid var(--gruen); }
+.mzb-heute { border-left: 2px dashed var(--text); }
 .mzb-achse { position: relative; height: 18px; margin-top: 2px; color: var(--text-leise); }
 .mz-mo-text { color: var(--text-leise); }
 @media (max-width: 599px) {
@@ -2614,13 +2614,13 @@ p.notiz.erledigt {
   font-size: 12px;
   font-weight: 600;
 }
-.protokoll-ok { background: var(--gruen-hell); color: #1f5e48; }
-.protokoll-warn { background: #fff3dc; color: #8a5200; }
+.protokoll-ok { background: var(--gruen-hell); color: var(--gruen-text); }
+.protokoll-warn { background: var(--hinweis-flaeche); color: var(--hinweis-text); }
 .protokoll-text {
   padding: 10px 12px;
   border: 1px solid var(--rand);
   border-radius: var(--radius);
-  background: #fbfcfb;
+  background: var(--flaeche-zart);
   overflow-wrap: anywhere;
 }
 .protokoll-knoepfe { flex-wrap: wrap; margin-top: 12px; }
@@ -2651,7 +2651,7 @@ p.notiz.erledigt {
   padding: 0 12px;
   border: 1px solid var(--rand);
   border-radius: 999px;
-  background: #fff;
+  background: var(--flaeche);
   color: var(--text);
   font: inherit;
   font-size: 14px;
@@ -2712,7 +2712,7 @@ p.notiz.erledigt {
   .doku-kopf { grid-template-columns: 1fr 1fr; }
 }
 
-.protokoll-entwurf { background: #eef1fb; color: #2f3f8f; }
+.protokoll-entwurf { background: var(--blau-flaeche); color: var(--blau-text); }
 
 /* Protokolltext wie im Dokument */
 .pk-ansicht { white-space: normal; }
@@ -2780,12 +2780,12 @@ p.notiz.erledigt {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
-  background: #eceeed;
+  background: var(--flaeche-grau);
   color: var(--text-leise);
 }
-.rede-probelesen { background: #fff3dc; color: #8a5200; }
-.rede-fertig { background: var(--gruen-hell); color: #1f5e48; }
-.rede-gehalten { background: #e3e7f6; color: #2f3f8f; }
+.rede-probelesen { background: var(--hinweis-flaeche); color: var(--hinweis-text); }
+.rede-fertig { background: var(--gruen-hell); color: var(--gruen-text); }
+.rede-gehalten { background: var(--blau-flaeche-kraeftig); color: var(--blau-text); }
 
 /* ---- 0.30.12: Redetext mit Kommentaren je Absatz (im Formular) ---- */
 .rede-text { display: grid; gap: 0.75rem; }
@@ -2798,8 +2798,8 @@ p.notiz.erledigt {
   gap: 0.25rem;
   align-content: start;
 }
-.rede-reihe-mit .rede-kommentar-spalte { border-left-color: #e0a030; }
-.rede-reihe-mit .rede-absatz-feld { border-color: #e0a030; }
+.rede-reihe-mit .rede-kommentar-spalte { border-left-color: var(--kommentar-rand); }
+.rede-reihe-mit .rede-absatz-feld { border-color: var(--kommentar-rand); }
 .rede-kommentar-spalte .kommentar-liste { margin: 0; }
 .rede-absatz-knopf { min-height: 44px; justify-self: start; }
 .rede-schreibplatz:empty { display: none; }
@@ -2836,7 +2836,7 @@ p.notiz.erledigt {
   font-size: 12px;
   padding: 1px 8px;
   border-radius: 999px;
-  background: #eceeed;
+  background: var(--flaeche-grau);
   color: var(--text-leise);
 }
 .team-marke-du { background: var(--gruppe); color: var(--gruppe-text); }
@@ -2851,9 +2851,9 @@ p.notiz.erledigt {
 .team-rolle-gewaehlt { border-color: var(--gruppe); font-weight: 600; }
 .team-kapazitaet { display: grid; gap: 4px; }
 .team-balken { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; max-width: 240px; }
-.team-kaestchen { height: 12px; border-radius: 3px; background: #e4e9e7; }
+.team-kaestchen { height: 12px; border-radius: 3px; background: var(--kaestchen); }
 .team-kaestchen.voll { background: var(--gruppe); }
-.team-balken-grau .team-kaestchen.voll { background: #b9c2bf; }
+.team-balken-grau .team-kaestchen.voll { background: var(--kaestchen-voll); }
 .team-kap-text { font-size: 14px; }
 .team-notiz { font-size: 14px; }
 .team-hinweis, .leer-karte { border-style: dashed; }
@@ -2930,8 +2930,8 @@ p.notiz.erledigt {
 .team-hut-liste li:first-child { border-top: 0; }
 .team-hut { display: grid; gap: 2px; color: inherit; text-decoration: none; min-height: 44px; align-content: center; }
 .team-hut:hover .team-hut-titel { text-decoration: underline; }
-.team-hut.ueberfaellig .team-hut-titel { color: #b3261e; font-weight: 700; }
-.team-hut.heute .team-hut-titel { color: #c77c00; font-weight: 700; }
+.team-hut.ueberfaellig .team-hut-titel { color: var(--fehler); font-weight: 700; }
+.team-hut.heute .team-hut-titel { color: var(--warnung); font-weight: 700; }
 .team-ohne { margin-top: 12px; }
 @media (min-width: 960px) {
   .team-frei .team-hut-liste li { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
@@ -2949,14 +2949,14 @@ p.notiz.erledigt {
 .team-berg { display: grid; gap: 8px; }
 .team-berg-bild { width: 100%; }
 .team-berg-svg { display: block; width: 100%; height: auto; touch-action: manipulation; }
-.berg-gitter { stroke: #e4e9e7; stroke-width: 1; }
-.berg-achse { stroke: #b9c2bf; stroke-width: 1; }
+.berg-gitter { stroke: var(--kaestchen); stroke-width: 1; }
+.berg-achse { stroke: var(--kaestchen-voll); stroke-width: 1; }
 .berg-skala { font-size: 11px; fill: var(--text-leise); }
 .berg-titel { font-size: 12px; font-weight: 600; fill: var(--text); }
 .berg-schicht { stroke: var(--flaeche); stroke-width: 2; stroke-linejoin: round; }
-.berg-hut { fill: #8a9591; }
-.berg-hut.berg-eng { fill: #c77c00; }
-.berg-aktion { stroke: #1b7340; stroke-width: 2; }
+.berg-hut { fill: var(--berg-hut-alt); }
+.berg-hut.berg-eng { fill: var(--warnung); }
+.berg-aktion { stroke: var(--gruen-aktion); stroke-width: 2; }
 .berg-heute { stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 4 3; }
 .berg-wahl { fill: var(--gruen-hell); opacity: 0.7; }
 .berg-treffer { fill: transparent; cursor: pointer; }
@@ -2964,23 +2964,23 @@ p.notiz.erledigt {
 .team-berg-legende { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
 .berg-eintrag { display: inline-flex; align-items: center; gap: 6px; }
 .berg-punkt { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
-.berg-strich-aktion { width: 3px; height: 14px; background: #1b7340; display: inline-block; }
+.berg-strich-aktion { width: 3px; height: 14px; background: var(--gruen-aktion); display: inline-block; }
 .berg-strich-heute { width: 0; height: 14px; border-left: 2px dashed var(--text); display: inline-block; }
 .team-berg-zahlen > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 .team-berg-tabelle-wrap { overflow-x: auto; }
 .team-berg-tabelle { font-size: 13px; }
 .team-berg-tabelle td, .team-berg-tabelle th { padding: 4px 8px; text-align: left; vertical-align: top; }
 .berg-zeile-heute td { font-weight: 600; }
-.berg-punkt-eng { background: #c77c00; }
+.berg-punkt-eng { background: var(--warnung); }
 
 /* ---- 0.31.6: Anpassungen 9.6a (offene Aufgaben im Hüte-Balken) ---- */
 .berg-hut, .berg-frei { stroke: var(--flaeche); stroke-width: 2; }
 /* Farben geprüft (Farbsehschwächen, Kontrast): Grau mit Verantwortlichen, Blau offen, Orange eng */
-.berg-hut { fill: #4f5a56; }
-.berg-hut.berg-eng { fill: #c77c00; }
-.berg-frei { fill: #5a96df; }
-.berg-punkt-hut { background: #4f5a56; }
-.berg-punkt-frei { background: #5a96df; }
+.berg-hut { fill: var(--berg-hut); }
+.berg-hut.berg-eng { fill: var(--warnung); }
+.berg-frei { fill: var(--berg-frei); }
+.berg-punkt-hut { background: var(--berg-hut); }
+.berg-punkt-frei { background: var(--berg-frei); }
 
 /* ---- 0.31.6: Verknüpfungen Team (Start-Zeile) ---- */
 .start-team-zeile {
@@ -3009,7 +3009,7 @@ p.notiz.erledigt {
 .team-hilfe-link a { display: inline-flex; align-items: center; min-height: 44px; }
 
 /* ---- 0.31.9: Anpassungen 9.8a (Gruppen-Rollen: wer hat sie, offene Rollen) ---- */
-.team-marke-offen { background: #fff3dc; color: #8a5200; }
+.team-marke-offen { background: var(--hinweis-flaeche); color: var(--hinweis-text); }
 .team-rollen-wer .team-rollen-wahl { margin-top: 4px; }
 
 /* ---- 0.32.1: Wiki-Text (Textformat, Impressum, Info, Datenschutz) ---- */
@@ -3045,9 +3045,9 @@ p.notiz.erledigt {
   min-height: 48px; padding: 6px 8px; border: 1px solid var(--rand); border-radius: var(--radius);
   font: inherit; font-weight: 600; color: var(--text); cursor: pointer; line-height: 1.2;
 }
-.wiki-bereich-skillshare { background: #e6f1ed; }
-.wiki-bereich-anleitung { background: #e8eef6; }
-.wiki-bereich-entwicklung { background: #f3eee5; }
+.wiki-bereich-skillshare { background: var(--gruen-hell); }
+.wiki-bereich-anleitung { background: var(--wiki-anleitung); }
+.wiki-bereich-entwicklung { background: var(--wiki-entwicklung); }
 .wiki-bereich.aktiv { border: 2px solid var(--text); }
 .wiki-bereich:focus-visible { outline: 2px solid var(--gruppe); outline-offset: 2px; }
 .wiki-filter { grid-template-columns: 1fr; }
@@ -3078,8 +3078,8 @@ p.notiz.erledigt {
 .wiki-zaehler { margin: 4px 0 8px; font-size: 14px; text-align: right; }
 .wiki-vorschau { min-height: 120px; overflow-wrap: anywhere; }
 .wiki-vorschau-titel { margin: 0 0 6px; font-size: 14px; }
-.wiki-warnung { margin: 0; padding: 8px 12px; border-radius: var(--radius); background: #fff3dc; color: #6b4100; }
-.wiki-konflikt, .wiki-entwurf { padding: 10px 12px; border-radius: var(--radius); background: #fff3dc; border: 1px solid #e0b25c; }
+.wiki-warnung { margin: 0; padding: 8px 12px; border-radius: var(--radius); background: var(--hinweis-flaeche); color: var(--warnung-text); }
+.wiki-konflikt, .wiki-entwurf { padding: 10px 12px; border-radius: var(--radius); background: var(--hinweis-flaeche); border: 1px solid var(--hinweis-rand); }
 .wiki-konflikt p, .wiki-entwurf p { margin: 0 0 8px; }
 .wiki-formathilfe > summary, .wiki-mehr > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 .wiki-formathilfe ul { margin: 0 0 8px; padding-left: 1.2rem; font-size: 14px; }
@@ -3187,9 +3187,9 @@ p.notiz.erledigt {
 .jahr-liste li { margin: 2px 0; }
 
 /* ---- 0.33.5: Kachel „Für dich“ gelb (11.4a) ---- */
-.karte.fuer-dich { background: #fff6d1; border-color: #f0c64a; border-top-color: #e08a00; border-left-color: #e08a00; }
-.fuer-dich .dash-zeile { border-bottom-color: #f0d98a; }
-.fuer-dich .leise { color: #5c4a14; }
+.karte.fuer-dich { background: var(--fuer-dich-flaeche); border-color: var(--fuer-dich-rand); border-top-color: var(--fuer-dich-akzent); border-left-color: var(--fuer-dich-akzent); }
+.fuer-dich .dash-zeile { border-bottom-color: var(--fuer-dich-linie); }
+.fuer-dich .leise { color: var(--fuer-dich-text); }
 
 /* ---- 0.33.6: Drucken ---- */
 /* Druckblatt (js/ui/druck.js): am Bildschirm unsichtbar, beim Drucken das Einzige auf dem Blatt. */

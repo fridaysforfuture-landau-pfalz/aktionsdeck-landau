@@ -10,6 +10,72 @@
   --rand: #d3deda;
   --radius: 10px;
   --abstand: 16px;
+
+  /* 0.33.7: alle festen Farben als Variablen (Vorbereitung Dunkelmodus, Schritt 11.7). Werte wie vorher. */
+  /* Flächen und Linien */
+  --flaeche-leise: #f6f8f7;
+  --flaeche-grau: #eceeed;
+  --flaeche-zart: #fbfcfb;
+  --spur: #e3ebe8;
+  --spur-zart: #e7ece9;
+  --linie-zart: #e2e7e4;
+  --kaestchen: #e4e9e7;
+  --kaestchen-voll: #b9c2bf;
+  --grau-marke: #8a9490;
+  --grau-hell: #b8c0bc;
+  --tabellenkopf-grau: #5f6a66;
+  --logo-grund: #ffffff;
+  --auf-farbe: #ffffff;
+  /* Dunkler Balken oben und Hinweis-Leiste unten */
+  --balken: #1a1e20;
+  --balken-text: #ffffff;
+  /* Rot: Fehler, überfällig */
+  --fehler: #b3261e;
+  --fehler-flaeche: #fdecea;
+  --fehler-rand: #e3b1ab;
+  /* Orange: heute, Planung, Warnung */
+  --warnung: #c77c00;
+  --warn-flaeche: #fff7e8;
+  --warn-rand: #e8c98a;
+  --warnung-text: #6b4100;
+  --planung-text: #8a5600;
+  --hinweis-flaeche: #fff3dc;
+  --hinweis-text: #8a5200;
+  --hinweis-rand: #e0b25c;
+  --kommentar-rand: #e0a030;
+  /* Kachel „Für dich“ (gelb) */
+  --fuer-dich-flaeche: #fff6d1;
+  --fuer-dich-rand: #f0c64a;
+  --fuer-dich-akzent: #e08a00;
+  --fuer-dich-linie: #f0d98a;
+  --fuer-dich-text: #5c4a14;
+  /* Grün, Blau, Rosa */
+  --gruen-text: #1f5e48;
+  --gruen-aktion: #1b7340;
+  --blau-text: #2f3f8f;
+  --blau-flaeche: #eef1fb;
+  --blau-flaeche-kraeftig: #e3e7f6;
+  --pink: #d6249f;
+  --pink-flaeche: #fbe4f3;
+  --rosa-flaeche: #fde7ef;
+  --frist-rosa: #d81b60;
+  --frist-flaeche: #fbd5e3;
+  --frist-text: #7a0b34;
+  /* Wiki-Bereiche */
+  --wiki-anleitung: #e8eef6;
+  --wiki-entwicklung: #f3eee5;
+  /* Team-Berg */
+  --berg-hut: #4f5a56;
+  --berg-hut-alt: #8a9591;
+  --berg-frei: #5a96df;
+  /* Schatten und Abdunkeln */
+  --schatten: rgba(0, 0, 0, 0.18);
+  --schatten-gross: rgba(0, 0, 0, 0.35);
+  --schatten-ring: rgba(0, 0, 0, 0.15);
+  --abdunkeln: rgba(0, 0, 0, 0.45);
+  --lightbox-grund: rgba(0, 0, 0, 0.85);
+  --hover-dunkel: rgba(0, 0, 0, 0.12);
+  --hover-hell: rgba(255, 255, 255, 0.55);
 }
 
 * { box-sizing: border-box; }

@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.33.6 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.33.7 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-11.md (Etappe 11 Komfort, Fassung 2 seit 0.33.0). Etappe 10 (docs/PLAN-ETAPPE-10.md) ist fertig und geprüft (27.10.2026). Danach docs/PLAN-ETAPPE-12.md (Etappe 12 Prüfung und Qualität, Fassung 1, letzter Schritt vor 1.0). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
@@ -278,7 +278,8 @@ Plan und Entscheidungen: docs/PLAN-ETAPPE-11.md (Fassung 2).
 - 11.4a (0.33.5): Wunsch der Person: Kachel „Für dich“ auffälliger. Gelber Hintergrund, oranger Rand oben und links (CSS-Block 0.33.5). Kein Rot, weil Rot für Fehler und Überfälliges steht. Die folgenden Schritte rücken eine Version weiter (11.6 = 0.33.6, 11.7 = 0.33.7, 11.8 = 0.33.8, 11.9 = 0.33.9).
 - 11.4a gemergt (Pull Request #65).
 - 11.6 (0.33.6): Drucken. Neue Datei js/ui/druck.js (drucke: baut ein Druckblatt #druckblatt, Klasse druckt am body, window.print(), nach afterprint wieder weg). Knopf „🖨 Drucken“ im Teil Material (Packliste, leere Kästchen, Menge, Ort) und im Teil ToDos (je Meilenstein, erledigte angekreuzt) eines Projekts. CSS-Block 0.33.6 mit @media print: Druckblatt allein auf dem Blatt; auf allen anderen Seiten fallen Leisten, Knöpfe, Meldungen und Fenster weg, weiß statt Hintergrundfarbe. Anleitung projekte.txt: Abschnitt „Drucken“.
-- Nächster Schritt: 11.7 Dunkelmodus Teil 1, Farben als Variablen (0.33.7).
+- 11.7 (0.33.7): Dunkelmodus Teil 1. Alle festen Farben in css/components.css (außer dem Druckblock @media print) stehen jetzt als Variablen in css/base.css (:root, Block „0.33.7“, gleiche Werte wie vorher). Auch die Kalender-Farben in js/views/kalender.js (grau, rot, rosa) sind Variablen (--grau-marke, --fehler, --frist-rosa). Nicht umgestellt, weil es Daten oder Standardwerte sind: Gruppenfarbe #368469 als Ersatzwert, Kanalfarben (js/kanaele.js), Berg-Farben (team-rechnen.js), Schriftfarbe auf Terminfarbe (kalender-rechnen.js, app.js), Foto-Hintergrund (bild.js). Hinweis für 11.8: css/components.css Zeile „:root { --hintergrund: #dfe8e4; }“ (Block 0.21.6) überschreibt den Hintergrund aus base.css. Geprüft: Bildschirmfotos aller Reiter und öffentlichen Seiten vorher und nachher (390 und 1280 px) sind gleich, außer der Versionsnummer.
+- Nächster Schritt: 11.8 Dunkelmodus Teil 2, dunkle Farben und Schalter (0.33.8).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -370,7 +371,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 
 ## Dateiübersicht
 - docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (abgeschlossen), PLAN-ETAPPE-10.md (Fassung 2, seit 0.32.0, fertig und geprüft), PLAN-ETAPPE-11.md (Komfort, Fassung 2, seit 0.33.0), PLAN-ETAPPE-12.md (Prüfung und Qualität, Fassung 1, seit 0.32.10 als Plan 11, umbenannt in 0.32.11), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.33.6 am Ende)
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base mit allen Farb-Variablen seit 0.33.7, layout, components; Blöcke bis 0.33.6 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs, Wiki.gs (seit 0.32.0), Konto.gs (seit 0.33.0), Setup.gs (setupGeheimnis, setupPins; seit 27.10.2026 auch im Repo, von der Person hochgeladen)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js, wiki-format.js (seit 0.32.1), gruppeninfo.js (seit 0.33.2)
 - texte/ (seit 0.32.1): impressum.txt, info.txt, datenschutz.txt, entwicklung.txt (seit 0.32.2), anleitung/ (liste.txt, team.txt, zustaendig.txt seit 0.32.2; erste-schritte, start, projekte, todos, material, mobi, kalender, dokumentation, wiki, fragen seit 0.32.5; admin seit 0.32.14; cloud seit 0.33.2). Format wie im Wiki, auf GitHub direkt änderbar.
