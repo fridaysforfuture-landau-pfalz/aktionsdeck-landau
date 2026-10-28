@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.33.0 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.33.1 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-11.md (Etappe 11 Komfort, Fassung 2 seit 0.33.0). Etappe 10 (docs/PLAN-ETAPPE-10.md) ist fertig und geprüft (27.10.2026). Danach docs/PLAN-ETAPPE-12.md (Etappe 12 Prüfung und Qualität, Fassung 1, letzter Schritt vor 1.0). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
@@ -265,7 +265,9 @@ Plan und Entscheidungen: docs/PLAN-ETAPPE-10.md. Prüfung durch die Person steht
 ## Etappe 11 (Komfort), begonnen mit 0.33.0
 Plan und Entscheidungen: docs/PLAN-ETAPPE-11.md (Fassung 2).
 - 11.1 (0.33.0): Plan Fassung 2 mit den Antworten vom 28.10.2026 (Abschnitt 3) und drei kleinen offenen Fragen (Abschnitt 4: Name und Verhalten des Reiters Cloud, Dunkelmodus „per Gruppe“, Schalter am PC). Neue Datei apps-script/Konto.gs: Kontostand und Cloud-Link stehen in Skripteigenschaften, nicht im Sheet (OC_KONTO_<gruppe_id>, KONTO_STAND_<gruppe_id> nur vom Skript, CLOUD_LINK_<gruppe_id>). Abruf über https://api.opencollective.com/graphql/v2 (nur Kontostand und Währung). Editor: kontoTesten, kontoAbrufen (Zeitauslöser), kontoAusloeserEinrichten (Montag 6 bis 7 Uhr, kein doppelter). Aktionen mit Login: gruppeInfo (Konto und Cloud-Link der eigenen Gruppe) und kontoAktualisieren (höchstens einmal pro Stunde ein echter Abruf, sonst gemerkter Stand mit frisch: true; Log „konto“). Code.gs verteilt beide. Am Sheet ändert sich nichts. texte/datenschutz.txt: Absatz Kontostand. texte/anleitung/admin.txt: Versionsverlauf, Kontostand und Cloud. docs/PLAN-ETAPPE-12.md: Rückfrage 11a „Was könnte kaputt gehen?“ und Punkt 4 in 12.2. CLAUDE.md zeigt auf Etappe 11. Muss von Hand bereitgestellt werden.
-- Nächster Schritt: Die Person stellt 11.1 bereit und meldet das Ergebnis von kontoTesten. Danach 11.2 (GitHub Actions) und 11.3 (Kontostand in den Finanzen, Reiter Cloud).
+- 11.1 gemergt (Pull Request #60).
+- 11.2 (0.33.1): .github/workflows/jekyll-gh-pages.yml auf die aktuellen Versionen der Actions (Node 24): actions/checkout v4 → v7, actions/configure-pages v5 → v6, actions/upload-pages-artifact v3 → v5. actions/deploy-pages war schon v5. actions/jekyll-build-pages bleibt v1 (läuft als Docker, nicht mit Node). Punkt „GitHub Actions“ unter „Offen“ gestrichen.
+- Nächster Schritt: Die Person stellt 11.1 bereit und meldet das Ergebnis von kontoTesten. Danach 11.3 (Kontostand in den Finanzen, Reiter Cloud).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -349,7 +351,6 @@ Geplant: Wiki statt Hilfe (Etappe 10). (Etappe 8 brachte den Reiter "Dokumentati
 
 ## Offen (mit Zeitpunkt)
 Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
-- **Etappe 11 (Komfort, Schritt 11.3 im Plan)**, früher nur, wenn die Actions rot werden: GitHub Actions zeigen Warnungen (Node 20 veraltet), ubuntu-latest ist seit 19.10.2026 Ubuntu 26. Läuft. Action-Versionen in .github/workflows anheben (steht im Plan für Etappe 11, Rückfrage 30). Zeitpunkt ist ein Vorschlag.
 - **Vor 1.0 (Wunsch der Person, 27.10.2026)**: Öffentliche Termine (#/termine, Aktionskalender, Seitenleiste der Gruppenwahl) sind nach der Gruppe sortiert, die veröffentlicht hat. Sie sollen nach dem Veranstalter sortiert bzw. gruppiert werden.
 - **Etappe 10 (Kalender-Abo)**: Die Person testet das Abo in Google Kalender und Apple Kalender (Anleitung in Pull Request #45) und meldet das Ergebnis. Klappt es nicht, wird neu entschieden (kein Ausweg über GitHub Actions, Entscheidung 30).
 - **Aufräumen vor dem Update auf 1.0**: Alte, nicht mehr genutzte CSS-Regeln (.kal-pfeil, .kal-nav, .kal-datum, .kal-monat-kopf, .modal-vollbild, .dash-rechts-teil, seit 0.32.2 auch .hilfe-abschnitt, .hilfe-teil, .hilfe-text) und die ungenutzte Funktion topEinfuegen in protokoll-rechnen.js entfernen. Stören bis dahin nicht.
