@@ -23,6 +23,18 @@ Den Code schreibt die KI Claude (von Anthropic) nach den Wünschen und Entscheid
 
 Jede Etappe beginnt mit einem Plan und Rückfragen. Nach jedem Schritt prüft eine Person die neue Version am Handy und am PC und meldet Anmerkungen. Änderungen an der Tabelle und am Google-Skript werden von Hand eingespielt.
 
+## Etappe 11: Komfort
+
+Version 0.33.0 bis 0.33.10, Pull Requests #60 bis #70.
+
+- **Kontostand:** Im Teil Finanzen der Projekte steht der Kontostand der Gruppe bei OpenCollective. Das Skript ruft ihn einmal pro Woche ab, dazu gibt es den Knopf „Jetzt abrufen“.
+- **Reiter Cloud:** ein Knopf zur Cloud der Gruppe (öffnet sich in einem neuen Tab).
+- **„Für dich“** auf dem Start: Umfragen, bei denen du noch nicht abgestimmt hast, Material, das nach einer Aktion noch zurück muss, und deine abgelaufene Kapazität. Die Zahl steht auch am App-Symbol.
+- **Jahresübersicht** im Archiv der Projekte: was die Gruppe in einem Jahr gemacht hat, auch als Text zum Kopieren.
+- **Drucken:** Packliste (Material) und ToDos eines Projekts, auch als PDF.
+- **Dunkelmodus:** Die App folgt dem Gerät oder ist fest hell oder dunkel.
+- GitHub Actions auf neue Versionen gehoben.
+
 ## Etappe 10: Wiki und öffentliche Seiten
 
 Version 0.31.10 bis 0.32.9, Pull Requests #37 bis #47.

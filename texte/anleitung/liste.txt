@@ -13,4 +13,5 @@ wiki | Wiki
 cloud | Cloud
 fragen | Häufige Fragen
 zustaendig | Zuständig für die App
+neue-gruppe | Neue Gruppe anlegen | oeffentlich
 admin | Für Admins

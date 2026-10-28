@@ -4,6 +4,18 @@
 
 In der App dürfen alle mit dem Gruppen-PIN alles anlegen, ändern und löschen. Einige Dinge gehen aber nur direkt im Google Sheet oder im Apps-Script-Editor: einen PIN ändern oder sperren, Gelöschtes zurückholen und Einträge endgültig entfernen. Arbeite im Sheet immer vorsichtig. Ändere nie die erste Zeile (die Spaltenköpfe) und nie die Spalte `id`.
 
+## Eine neue Gruppe anlegen
+
+Was die Gruppe euch schicken soll, steht unter [[Neue Gruppe anlegen]]. So legst du sie an:
+
+1. **Im Sheet, Tab `Gruppen`:** eine neue Zeile am Ende. `gruppe_id` ist die nächste freie Nummer (zum Beispiel `g4`, nie eine alte wiederverwenden). `name` wie er in der App stehen soll. `kurzname` in kleinen Buchstaben ohne Leerzeichen (kommt in die Adresse, zum Beispiel `fff`). `farbe` als Farbcode mit `#` und sechs Zeichen (zum Beispiel `#1da64a`). `sortierung` ist die Reihenfolge auf der Startseite. `aktiv` = `TRUE`. Freiwillig `webseite`, `instagram` und `weitere_links` (beginnen mit `https://`, erscheinen unter „Info“).
+2. **PIN setzen:** im Apps-Script-Editor `setupPins` ausführen (siehe unten „Einen neuen PIN setzen“). Bei den anderen Gruppen auf „Abbrechen“ klicken.
+3. **Logo:** auf GitHub im Ordner `icons/gruppen/` → „Add file“ → „Upload files“ eine Datei `<kurzname>.png` oder `<kurzname>.svg` hochladen (zum Beispiel `fff.png`). Ohne Logo zeigt die App das AktionsDeck-Logo.
+4. **Freiwillig, in den Skripteigenschaften** (Projekteinstellungen → Skripteigenschaften): `FOTO_ORDNER_<gruppe_id>` (Ordner für Fotos von Material und Wiki), `PROTOKOLL_DOK_<gruppe_id>` oder `PROTOKOLL_LINK_<gruppe_id>` (Protokolle), `OC_KONTO_<gruppe_id>` (Kontostand) und `CLOUD_LINK_<gruppe_id>` (Reiter Cloud).
+5. App neu laden: Die Gruppe steht auf der Startseite. Den PIN gibst du persönlich oder auf einem sicheren Weg an die Ansprechperson der Gruppe.
+
+Für eine neue Gruppe muss das Skript nicht neu bereitgestellt werden.
+
 ## Einen PIN ändern oder sperren
 
 Die PINs stehen nirgends im Klartext. Im Tab `Zugang` steht je Gruppe eine Zeile mit `zugang_id`, `gruppe_id`, `pin_salt`, `pin_hash`, `aktiv` und `gueltig_bis`. Die App vergleicht den eingegebenen PIN mit `pin_salt` und `pin_hash`.
