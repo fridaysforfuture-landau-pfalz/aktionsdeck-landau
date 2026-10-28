@@ -22,7 +22,7 @@ Die PINs stehen nirgends im Klartext. Im Tab `Zugang` steht je Gruppe eine Zeile
 
 - **Zugang sperren:** In der Zeile `aktiv` auf `FALSE` setzen. Alle, die mit diesem Zugang angemeldet sind, fliegen beim nächsten Aufruf raus. Mit `TRUE` geht der Zugang wieder.
 - **Zugang nur bis zu einem Datum:** In `gueltig_bis` ein Datum eintragen (zum Beispiel `2026-12-31`). Danach gilt der Zugang nicht mehr. Leer heißt: ohne Ende.
-- Der PIN hat mindestens 6 Zeichen. Gib ihn nur persönlich oder auf einem sicheren Weg weiter, nie in einer öffentlichen Gruppe.
+- Der PIN hat mindestens 6 Zeichen. Besser sind 8 oder mehr Zeichen aus Buchstaben und Ziffern, zum Beispiel `wiese7linde3`. Gib ihn nur persönlich oder auf einem sicheren Weg weiter, nie in einer öffentlichen Gruppe.
 
 ## Einen neuen PIN setzen
 
@@ -34,11 +34,19 @@ Dafür gibt es im Apps-Script-Editor die Datei `Setup.gs` mit der Funktion `setu
 4. Für die Gruppe, die einen neuen PIN bekommt, den PIN eintippen und „OK“ klicken. Bei allen anderen Gruppen auf „Abbrechen“ klicken. Dann bleibt ihr PIN, wie er ist.
 5. Am Ende steht, für welche Gruppen der PIN gesetzt wurde.
 
-Der alte PIN gilt danach nicht mehr. Geräte, die schon angemeldet sind, bleiben aber angemeldet, bis ihre Anmeldung abläuft (höchstens 14 Tage). Sollen alle sofort raus, zum Beispiel weil der PIN an die falschen Leute gegangen ist: In den Projekteinstellungen (Zahnrad links im Editor) unter „Skripteigenschaften“ die Eigenschaft `TOKEN_GEHEIMNIS` löschen und danach `setupGeheimnis` einmal ausführen. Dann müssen sich alle Gruppen neu anmelden.
+Der alte PIN gilt danach nicht mehr. Alle Geräte dieser Gruppe sind sofort abgemeldet und müssen sich mit dem neuen PIN anmelden. Die anderen Gruppen merken davon nichts. Sollen alle Gruppen sofort raus, zum Beispiel weil der PIN an die falschen Leute gegangen ist: In den Projekteinstellungen (Zahnrad links im Editor) unter „Skripteigenschaften“ die Eigenschaft `TOKEN_GEHEIMNIS` löschen und danach `setupGeheimnis` einmal ausführen. Dann müssen sich alle Gruppen neu anmelden.
 
 ## Zu viele Fehlversuche
 
 Nach 8 falschen PINs in 15 Minuten ist die Anmeldung für die ganze Gruppe 15 Minuten gesperrt. Das geht von selbst vorbei. Warte einfach 15 Minuten.
+
+**Notfall: Die Anmeldung ist immer wieder gesperrt.** Zum Beispiel, weil jemand absichtlich falsche PINs eingibt. Wer schon angemeldet ist, kann weiterarbeiten. So hebst du die Sperre sofort auf:
+
+1. Im Apps-Script-Editor links auf das Zahnrad (Projekteinstellungen) klicken.
+2. Unten unter „Skripteigenschaften“ die Eigenschaften `sperre_<gruppe_id>` und `fail_<gruppe_id>` der Gruppe löschen. Für `<gruppe_id>` steht dort die Kennung der Gruppe aus dem Tab `Gruppen`, Spalte `gruppe_id`.
+3. Speichern. Die Anmeldung geht sofort wieder.
+
+Passiert das oft, melde es den Zuständigen für die App. Dann kommt eine stärkere Sperre.
 
 ## Gelöschtes zurückholen
 
@@ -97,7 +105,7 @@ Die Funktion `testdatenListe` im Editor zeigt Einträge aus Umfragen, Mitteilung
 
 ## Prüfen, ob alles läuft
 
-Im Editor gibt es Testfunktionen, die nichts verändern, zum Beispiel `testenFotoOrdner` (Foto-Ordner der Gruppen erreichbar?), `testenFotoSchreiben` (kann das Skript dort Dateien anlegen? legt eine Testdatei an und wirft sie gleich in den Papierkorb), `testenTermine` und `testenWiki`. Achte im Protokoll auf Wörter wie „FEHLER“, „FEHLT“ oder „nicht erreichbar“. Fehler der App findest du links im Editor unter „Ausführungen“.
+Im Editor gibt es Testfunktionen, die nichts verändern, zum Beispiel `testenFotoOrdner` (Foto-Ordner der Gruppen erreichbar?), `testenFotoSchreiben` (kann das Skript dort Dateien anlegen? legt eine Testdatei an und wirft sie gleich in den Papierkorb), `testenTermine`, `testenWiki` und `testenRechte` (sieht jede Gruppe nur ihre eigenen Daten? werden gefälschte und alte Anmeldungen abgelehnt? Am Ende muss „Fertig, alles ok.“ stehen). Achte im Protokoll auf Wörter wie „FEHLER“, „FEHLT“ oder „nicht erreichbar“. Fehler der App findest du links im Editor unter „Ausführungen“.
 
 ## Nach einer Änderung am Skript
 

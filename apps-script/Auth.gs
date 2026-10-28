@@ -92,7 +92,7 @@ function aktionLogin(p) {
     PropertiesService.getScriptProperties().deleteProperty('fail_' + g.gruppe_id);
     protokoll(ctx, 'login', '', [''], anzeige);
     return {
-      token: tokenAusstellen(g.gruppe_id, z.zugang_id),
+      token: tokenAusstellen(g.gruppe_id, z.zugang_id, zugangStand(z)),
       gruppe: gruppeOeffentlich(g),
       zugang_id: z.zugang_id
     };
@@ -101,13 +101,19 @@ function aktionLogin(p) {
 
 // ---- Token (HMAC-signiert, 14 Tage) ----
 
-function tokenAusstellen(gid, zid) {
-  var daten = { g: gid, z: zid, exp: Date.now() + TOKEN_TAGE * 86400000 };
+function tokenAusstellen(gid, zid, stand) {
+  var daten = { g: gid, z: zid, v: stand, exp: Date.now() + TOKEN_TAGE * 86400000 };
   var teil = Utilities.base64EncodeWebSafe(JSON.stringify(daten));
   return teil + '.' + signiere(teil);
 }
 
-// Prüft Signatur, Ablauf, Gruppe und Zugang. Gibt {gruppe, gruppe_id, zugang_id} zurück.
+// 12.4: Kurzer Fingerabdruck des aktuellen PINs (aus Salt und Hash, verrät beides nicht).
+// Steht in jedem Token. Ein neuer PIN ändert ihn, dann gelten alte Anmeldungen nicht mehr.
+function zugangStand(z) {
+  return signiere('zugang|' + String(z.pin_salt) + '|' + String(z.pin_hash)).slice(0, 16);
+}
+
+// Prüft Signatur, Ablauf, Gruppe, Zugang und PIN-Stand. Gibt {gruppe, gruppe_id, zugang_id} zurück.
 function tokenPruefen(token) {
   var weg = 'Bitte neu anmelden.';
   if (typeof token !== 'string') fehler('auth', weg);
@@ -124,9 +130,78 @@ function tokenPruefen(token) {
   var zeilen = lies('Zugang').zeilen;
   for (var i = 0; i < zeilen.length; i++) {
     var z = zeilen[i];
-    if (String(z.zugang_id) === String(d.z) && String(z.gruppe_id) === String(g.gruppe_id) && zugangGueltig(z)) {
+    if (String(z.zugang_id) === String(d.z) && String(z.gruppe_id) === String(g.gruppe_id) && zugangGueltig(z) &&
+        typeof d.v === 'string' && gleich(zugangStand(z), d.v)) {
       return { gruppe: g, gruppe_id: g.gruppe_id, zugang_id: z.zugang_id };
     }
   }
   fehler('auth', weg);
+}
+
+// ---- Editor-Test (12.4): Rechte je Gruppe. Schreibt nichts ins Sheet. ----
+// Im Editor oben "testenRechte" wählen und "Ausführen". Im Protokoll darf kein "FEHLER" stehen.
+function testenRechte() {
+  var fehlerZahl = 0;
+  var nr = 0;
+  function pruefe(text, gut) {
+    nr++;
+    if (!gut) fehlerZahl++;
+    Logger.log(nr + ') ' + (gut ? 'ok' : 'FEHLER') + ': ' + text);
+  }
+  // Erwartet, dass fn mit einem Fehler (code) abbricht
+  function wirft(fn, code) {
+    try { fn(); return false; } catch (e) { return !code || e.code === code; }
+  }
+
+  var gruppen = lies('Gruppen').zeilen.filter(function (g) { return truthy(g.aktiv); });
+  var zugaenge = lies('Zugang').zeilen;
+  var anmeldung = {};
+  gruppen.forEach(function (g) {
+    var z = zugaenge.filter(function (x) { return String(x.gruppe_id) === String(g.gruppe_id) && zugangGueltig(x); })[0];
+    if (z) anmeldung[g.gruppe_id] = tokenAusstellen(g.gruppe_id, z.zugang_id, zugangStand(z));
+  });
+  var ids = Object.keys(anmeldung);
+  if (ids.length < 2) { Logger.log('Für den Test braucht es mindestens zwei aktive Gruppen mit Zugang.'); return; }
+
+  ids.forEach(function (gid) {
+    var token = anmeldung[gid];
+    var ctx = tokenPruefen(token);
+    pruefe(gid + ': Anmeldung gilt', ctx.gruppe_id === gid);
+
+    // Jede Liste enthält nur Zeilen der eigenen Gruppe
+    Object.keys(TABELLEN).forEach(function (tab) {
+      var zeilen = aktionList(ctx, { tabelle: tab }).zeilen;
+      var fremd = zeilen.filter(function (z) { return String(z.gruppe_id) !== String(gid); }).length;
+      pruefe(gid + ': ' + tab + ' nur eigene Zeilen (' + zeilen.length + ')', fremd === 0);
+    });
+
+    // System-Tabs sind nicht lesbar
+    ['Zugang', 'Gruppen', 'Einstellungen', 'Log', '__proto__'].forEach(function (tab) {
+      pruefe(gid + ': Tab ' + tab + ' gesperrt', wirft(function () { aktionList(ctx, { tabelle: tab }); }, 'ungueltig'));
+    });
+
+    // Ein Eintrag einer anderen Gruppe wird nicht gefunden (für Ändern und Löschen)
+    var andere = ids.filter(function (x) { return x !== gid; })[0];
+    var gefunden = false;
+    Object.keys(TABELLEN).some(function (tab) {
+      var t = lies(tab);
+      var fremd = t.zeilen.filter(function (z) { return String(z.gruppe_id) === String(andere) && !truthy(z.geloescht); })[0];
+      if (!fremd) return false;
+      gefunden = true;
+      pruefe(gid + ': Eintrag von ' + andere + ' in ' + tab + ' nicht erreichbar',
+        wirft(function () { eintragFinden(t, ctx, fremd.id); }, 'nicht_gefunden'));
+      return true;
+    });
+    if (!gefunden) Logger.log(gid + ': keine Daten von ' + andere + ' zum Gegentest (übersprungen)');
+
+    // Gefälschte Anmeldungen
+    var teile = token.split('.');
+    var d = JSON.parse(Utilities.newBlob(Utilities.base64DecodeWebSafe(teile[0])).getDataAsString());
+    var umgebaut = Utilities.base64EncodeWebSafe(JSON.stringify({ g: andere, z: d.z, v: d.v, exp: d.exp }));
+    pruefe(gid + ': andere Gruppe ins Token geschrieben wird abgelehnt', wirft(function () { tokenPruefen(umgebaut + '.' + teile[1]); }, 'auth'));
+    pruefe(gid + ': alter PIN-Stand wird abgelehnt', wirft(function () { tokenPruefen(tokenAusstellen(gid, d.z, 'alt')); }, 'auth'));
+    pruefe(gid + ': Token ohne PIN-Stand wird abgelehnt', wirft(function () { tokenPruefen(tokenAusstellen(gid, d.z)); }, 'auth'));
+  });
+
+  Logger.log(fehlerZahl ? 'Fertig, ' + fehlerZahl + ' FEHLER (siehe oben).' : 'Fertig, alles ok.');
 }

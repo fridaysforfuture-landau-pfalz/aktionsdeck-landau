@@ -3,7 +3,8 @@
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
-import { setSession } from '../store.js';
+import { setSession, getSession } from '../store.js';
+import { cacheLeeren } from '../cache.js';
 import { balken } from '../ui/kopf.js';
 import { gruppenLogo } from '../ui/logo.js';
 
@@ -83,6 +84,9 @@ export function render(container, ctx) {
       // Das Skript erwartet das Feld "gruppe" (gruppe_id oder kurzname)
       const daten = await api('login', { gruppe: g.gruppe_id, pin: pin.value });
       if (!daten || !daten.token) throw new Error('Keine Anmeldung erhalten.');
+      // 12.4: Wechsel zu einer anderen Gruppe ohne Abmelden: Daten der alten Gruppe aus dem Gerät löschen
+      const alt = getSession();
+      if (alt && alt.gruppe_id !== g.gruppe_id) await cacheLeeren();
       setSession({
         token: daten.token,
         gruppe_id: g.gruppe_id,

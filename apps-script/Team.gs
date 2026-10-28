@@ -198,8 +198,10 @@ function teamZellenSchreiben(t, liste) {
     var bereich = t.sh.getRange(min, spalte, anz, 1);
     var werte = bereich.getValues();
     liste.forEach(function (r) {
-      if (r._neu.hasOwnProperty(sp)) werte[r._zeile - min][0] = schuetzen(r._neu[sp]);
+      if (r._neu.hasOwnProperty(sp)) werte[r._zeile - min][0] = r._neu[sp];
     });
+    // 12.4: Alle Zeilen des Blocks schützen, auch die dazwischen (sonst würde aus "=…" eine Formel).
+    werte.forEach(function (w) { w[0] = schuetzen(w[0]); });
     bereich.setValues(werte);
   });
 }

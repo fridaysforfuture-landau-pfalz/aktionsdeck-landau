@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-- Version der App: **0.34.0** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **0.34.1** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
-- Nächster Schritt: **12.3 Sicherheit prüfen** (Bericht im Chat, keine Änderung an der App).
+- Nächster Schritt: **12.5 Geschwindigkeit prüfen** (Bericht im Chat; neues Editor-Werkzeug `messenSkript`).
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -178,10 +178,15 @@ Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abw
   Ohne Login: `gruppen`, `termine` (auch als GET, mit `format=ics`), `wiki` (nur öffentliche Daten, keine Namen), `signal`
   (Rechenaufgabe, danach der Signal-Link aus der Skripteigenschaft `SIGNAL_LINK`).
 - **Zugang:** Ein PIN pro Gruppe (mindestens 6 Zeichen), kein Admin-PIN, keine Einzelkonten. Das Skript prüft den PIN
-  (SHA-256 mit Salt, Hash im Tab `Zugang`) und gibt ein signiertes Token (HMAC, 14 Tage) mit `gruppe_id` und `zugang_id`.
+  (SHA-256 mit Salt, Hash im Tab `Zugang`) und gibt ein signiertes Token (HMAC, 14 Tage) mit `gruppe_id`, `zugang_id` und `v` (Stand des PINs, aus Salt und Hash).
+  Ein neuer PIN macht damit alle alten Anmeldungen der Gruppe ungültig.
   Geheimnis nur in den Skripteigenschaften (`TOKEN_GEHEIMNIS`). Jeder Aufruf prüft Token, Gruppe und ob der Zugang aktiv ist.
   Ein Token sieht nur Daten seiner Gruppe. Sperre pro Gruppe: 8 Fehlversuche in 15 Minuten → 15 Minuten gesperrt.
-- **Anzeigename:** „Wer bist du?“ wird nur im Gerät gespeichert und landet im Log.
+- **Anzeigename:** „Wer bist du?“ wird nur im Gerät gespeichert und landet im Log. Das Skript entfernt Steuerzeichen und vorne `= + - @` (höchstens 60 Zeichen).
+- **Schutz vor Formeln:** Jeder Text, der ins Sheet geht, läuft durch `schuetzen` (Util.gs), auch beim Zurückschreiben ganzer Blöcke
+  (`schreibeSpalten`, `teamZellenSchreiben`). Neue Schreibstellen immer mit `schuetzen`.
+- **Content-Security-Policy** als `<meta>` in `index.html`: Skripte und Stile nur von der eigenen Seite, Bilder auch von Drive und `googleusercontent.com`,
+  Verbindungen nur zum Skript. Neue Adressen nach außen hier eintragen, sonst blockiert der Browser sie. Kein Inline-Skript, kein `style="…"` im HTML.
 - **Gleichzeitiges Arbeiten:** Beim Ändern schickt die App den bekannten Wert `geaendert_am` als `bekannt` mit.
   Weicht er ab, zeigt sie einen Hinweis statt zu überschreiben. Löschen ist weich (`geloescht = TRUE`).
   Offene Seiten laden alle 30 bis 60 Sekunden neu. Zwischenspeicher: IndexedDB (`js/cache.js`, `ladeMitCache`).
@@ -213,7 +218,8 @@ Eine neue Tabelle oder Spalte ist nur ein Eintrag in `Schema.gs` und in `js/sche
 
 - Etappen 0 bis 11 sind fertig und von der Person geprüft (bis 0.33.15, 28.10.2026). Kurzfassung in Abschnitt 8,
   ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
-- Etappe 12 läuft: 12.1 Plan Fassung 2 (0.33.16, #75), 12.2 Plan Fassung 3 und diese eine Doku-Datei (0.34.0).
+- Etappe 12 läuft: 12.1 Plan Fassung 2 (0.33.16, #75), 12.2 Plan Fassung 3 und diese eine Doku-Datei (0.34.0),
+  12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1).
 - Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
   Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
@@ -224,6 +230,10 @@ Eine neue Tabelle oder Spalte ist nur ein Eintrag in `Schema.gs` und in `js/sche
   auch Testeinträge aus der Sicherheitsprüfung 12.3. Datenschutztext von jemandem prüfen lassen, der sich auskennt.
 - **Für den Agenten (12.8):** ungenutzte CSS-Regeln `.kal-pfeil`, `.kal-nav`, `.kal-datum`, `.kal-monat-kopf`, `.modal-vollbild`,
   `.dash-rechts-teil`, `.hilfe-abschnitt`, `.hilfe-teil`, `.hilfe-text`; ungenutzte Funktion `topEinfuegen` in `js/views/protokoll-rechnen.js`.
+- **Für die Person nach 12.4:** die fünf geänderten Skriptdateien bereitstellen, `testenRechte` ausführen. Danach müssen sich alle Geräte neu anmelden.
+  Foto-Ordner im Drive von „Jeder mit Link = Mitarbeiter“ auf „Betrachter“ stellen (Link bleibt gleich), dann `testenFotoSchreiben`.
+- **Bewusst offen aus 12.3:** Mit falschen PINs kann jemand, der den Gruppennamen kennt, die Anmeldung immer wieder 15 Minuten sperren
+  (Notweg in der Admin-Anleitung). Der Service Worker gilt nur für den App-Ordner; die Hauptseite auf derselben Adresse lädt nur OpenCollective-Daten (nach 1.0 ansehen).
 - Der alte Signal-Link steht noch in der Geschichte des Repos (0.33.11). Der aktuelle Link steht nur in der Skripteigenschaft.
 - Wenn `formatieren` wieder mit „Ein unbekannter Fehler ist aufgetreten“ abbricht: Pull Request #52 (nicht übernommen) enthält einen fertigen Notweg.
 
@@ -362,14 +372,15 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - **Editor-Funktionen:** `formatieren`, `formatierenWiki` (Schema.gs); `aufraeumenTesten`, `aufraeumen` (löscht `geloescht=TRUE` älter als 90 Tage,
   Log älter als 180 Tage, alte Kapazitäten), `testzeilenAnzeigen`, `testdatenListe` (Aufraeumen.gs); `setupGeheimnis`, `setupPins` (Setup.gs);
   Tests `testenTermine`, `testenTermineSicher`, `testenProtokollDok`, `testenProtokollAnhaengen`, `testenTeam`, `testenWiki`, `testenWikiSicher`,
-  `testenFotoOrdner`, `testenFotoSchreiben`, `kontoTesten`, `kontoAbrufen`, `kontoAusloeserEinrichten`.
+  `testenFotoOrdner`, `testenFotoSchreiben`, `testenRechte` (Auth.gs, Rechte je Gruppe und Token), `kontoTesten`, `kontoAbrufen`, `kontoAusloeserEinrichten`.
 - **Zwischenspeicher (IndexedDB)** `ladeMitCache(key, ladeFn, anzeigen, zuerstCache)`, Schlüssel `<gruppe_id>:<name>`: todos, projekteliste, startextra,
   startmobi, startfuerdich, projekte, kalender, protokoll, reden, team, wiki, gruppeinfo, uebersicht. Öffentlich: `oeffentlich:termine`,
   `oeffentlich:wiki`, `oeffentlich:wiki:<gruppe>:<adresse>`. Ältere Zwischenspeicher können neue Felder noch nicht enthalten: in `zeigen()` Fehlendes ergänzen.
 - **Im Gerät (localStorage, `js/store.js`):** `aktionsdeck_session`, `aktionsdeck_name`, `aktionsdeck_gruppen`, `aktionsdeck_besuch_…` (Was ist neu?), `aktionsdeck_name_vorher`, `aktionsdeck_teamhinweis_<gruppe_id>`,
   `aktionsdeck_darstellung`, Entwürfe `aktionsdeck_entwurf_protokoll_<gruppe_id>`, `…_rede_<gruppe_id>`, `…_wiki_<gruppe_id>`.
-  Abmelden löscht Sitzung und Zwischenspeicher; der Knopf „Abmelden“ löscht außerdem die Entwürfe (vorher Warnung). Die Darstellung bleibt.
+  Abmelden löscht Sitzung und Zwischenspeicher, eine Anmeldung bei einer anderen Gruppe löscht den Zwischenspeicher auch; der Knopf „Abmelden“ löscht außerdem die Entwürfe (vorher Warnung). Die Darstellung bleibt.
 - **Service Worker** (`sw.js`): App-Dateien zuerst aus dem Netz, sonst Zwischenspeicher (`aktionsdeck-<VERSION>`). Daten nicht im Service Worker.
+  Nur Dateien im App-Ordner, gespeichert ohne `?…`; offline gibt es `index.html` nur für Seitenaufrufe.
 - Version 0.32.13 wurde übersprungen (war kurz auf `main`).
 
 ### 5.1 Gruppen und Farben
@@ -436,6 +447,9 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 12.2 (0.34.0): Plan Fassung 3. Eine Doku-Datei: `docs/STAND.md` enthält jetzt Regeln, Stand, Festlegungen und Pläne; `CLAUDE.md` zeigt nur hierher.
     Gelöscht: Pläne 7 bis 11, `STANDARD-TODOS.md` und `MOBI-STANDARD-BEITRAEGE.md` (jetzt Anhang A und B), vier Bildschirmfotos im Hauptordner.
     `[Kontakt]` in `texte/anleitung/zustaendig.txt` entfernt (Signal-Knopf reicht).
+  - 12.3: Sicherheitsbericht (nur im Chat): keine schwere Lücke, zwei Funde im Skript, Hinweise zu Service Worker und App.
+  - 12.4 (0.34.1): Schutz vor Formeln beim Block-Schreiben, Anzeigename bereinigt, neuer PIN meldet alte Geräte ab, Zahlen strenger,
+    Kalender-Datei mit `\r`, Content-Security-Policy, Service Worker nur im App-Ordner, Gruppenwechsel leert den Zwischenspeicher, Editor-Test `testenRechte`.
 
 ---
 

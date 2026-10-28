@@ -2,7 +2,7 @@
 // Lädt die App-Hülle vor. Dateien der App: zuerst Netz, sonst Zwischenspeicher.
 // Daten der API liegen nicht hier, sondern in IndexedDB (js/cache.js).
 
-const VERSION = '0.34.0';
+const VERSION = '0.34.1';
 const CACHE = 'aktionsdeck-' + VERSION;
 
 const HUELLE = [
@@ -147,18 +147,26 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('fetch', function (event) {
   const req = event.request;
   if (req.method !== 'GET') return;
-  if (new URL(req.url).origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  // 12.4: Nur Dateien im Ordner der App (nicht die Hauptwebseite auf derselben Adresse).
+  if (req.url.indexOf(self.registration.scope) !== 0) return;
+  // 12.4: Gespeichert wird ohne Anhang nach "?" (sonst wächst der Zwischenspeicher mit jedem ?v=…).
+  const schluessel = url.origin + url.pathname;
 
   event.respondWith(
     fetch(req).then(function (antwort) {
       if (antwort.ok) {
         const kopie = antwort.clone();
-        caches.open(CACHE).then(function (c) { c.put(req, kopie); });
+        caches.open(CACHE).then(function (c) { c.put(schluessel, kopie); });
       }
       return antwort;
     }).catch(function () {
-      return caches.match(req).then(function (treffer) {
-        return treffer || caches.match('index.html');
+      return caches.match(schluessel).then(function (treffer) {
+        if (treffer) return treffer;
+        // 12.4: Die Startseite nur für Seitenaufrufe, nicht für fehlende Skripte oder Bilder.
+        if (req.mode === 'navigate') return caches.match('index.html');
+        return Response.error();
       });
     })
   );
