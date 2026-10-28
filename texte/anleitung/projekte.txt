@@ -16,6 +16,22 @@ Beim Material merkst du Dinge aus dem Bestand für das Projekt vor, leihst sie a
 
 Ist die Aktion vorbei, setzt du den Status auf „erledigt“. Ist noch festes Material für das Projekt draußen, geht das nicht. Das Material muss zuerst zurückgegeben werden. Offene ToDos und noch nicht beschafftes Material zeigt dir die App vorher als Warnung.
 
+## Jahresübersicht
+
+Im Archiv steht oben der Knopf „📊 Jahresübersicht →“. Er öffnet eine Seite mit dem, was die Gruppe in einem Jahr gemacht hat. Das hilft zum Beispiel beim Jahresbericht, bei einem Förderantrag oder bei einem Rückblick im Plenum. Das laufende Jahr steht immer offen oben. Frühere Jahre klappst du darunter auf.
+
+Je Jahr stehen dort:
+
+- **Projekte:** wie viele abgeschlossen, aktiv und in Planung sind, dazu die abgeschlossenen mit Datum und Aktionsart.
+- **Veranstaltungen:** wie viele interne und externe Veranstaltungen es gab, dazu die externen.
+- **Mobi:** die veröffentlichten Beiträge je Kanal.
+- **ToDos:** wie viele erledigt sind und wie viele davon zu Projekten gehören.
+- **Geld:** die geplanten und tatsächlichen Ausgaben je Projekt und die Summe.
+- **Material:** was am häufigsten mitgenommen wurde.
+- **Dokumentation:** Protokolle, gehaltene Reden und Learnings.
+
+Ein Projekt zählt zum Jahr seines Aktionsdatums (sonst Deadline, Start oder Anlegedatum). Alles andere zählt nach seinem eigenen Datum, zum Beispiel ein ToDo nach dem Tag, an dem es erledigt wurde. Termine, die nur aus Vorlagen berechnet werden (zum Beispiel jedes Plenum), zählen nicht. Mit „Als Text kopieren“ nimmst du ein Jahr als Text mit, zum Beispiel in eine E-Mail oder ein Dokument.
+
 ## Aktionsideen
 
 Ideen für spätere Aktionen sammelt ihr im Aufklapper „Aktionsideen“. Mit „Als Projekt starten“ wird aus einer Idee ein neues Projekt in Planung. Die Idee bleibt trotzdem in der Liste stehen.

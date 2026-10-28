@@ -3172,3 +3172,16 @@ p.notiz.erledigt {
 .fuer-dich .dash-kachel-titel { margin-bottom: 4px; }
 .fuer-dich-zeile a.dash-todo { color: inherit; text-decoration: none; }
 .fuer-dich-zeile a.dash-todo:hover strong { text-decoration: underline; }
+
+/* ---- 0.33.4: Jahresübersicht ---- */
+.jahr-knopf { display: flex; width: 100%; margin: 0 0 12px; }
+.jahr-karte { margin-bottom: 12px; }
+.jahr-karte > summary { min-height: 44px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; cursor: pointer; list-style: none; }
+.jahr-karte > summary::-webkit-details-marker { display: none; }
+.jahr-karte[open] > summary .teil-pfeil { transform: rotate(90deg); }
+.jahr-inhalt { margin-top: 8px; }
+.jahr-abschnitt { padding: 10px 0; border-top: 1px solid var(--rand); }
+.jahr-abschnitt h3 { margin: 0 0 4px; font-size: 17px; }
+.jahr-abschnitt .dash-zahlen { margin: 0; }
+.jahr-liste { margin: 6px 0 0; padding-left: 20px; }
+.jahr-liste li { margin: 2px 0; }
