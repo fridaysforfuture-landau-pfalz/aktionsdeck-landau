@@ -11,6 +11,7 @@ import { getSession } from '../store.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { zeichneText } from '../wiki-format.js';
+import { signalKnoepfe } from '../ui/signal.js';
 import { sichereUrl } from './kalender-rechnen.js';
 
 async function ladeText(seite) {
@@ -112,7 +113,7 @@ export function render(container, ctx) {
   ladeText(aktiv.id).then(function (text) {
     if (!container.contains(karte)) return;
     leeren(textBox);
-    textBox.append(zeichneText(text));
+    textBox.append(signalKnoepfe(zeichneText(text)));
   }).catch(function () {
     if (!container.contains(karte)) return;
     leeren(textBox);

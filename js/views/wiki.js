@@ -20,6 +20,7 @@ import { toast } from '../ui/toast.js';
 import { schliesseDetail } from '../ui/detail.js';
 import { istWahr } from '../schema.js';
 import { zeichneText } from '../wiki-format.js';
+import { signalKnoepfe } from '../ui/signal.js';
 import { zeigeEintrag } from './wiki-eintrag.js';
 import { baueKommentare } from '../ui/kommentare.js';
 import { kommentarZahlen, kommentarMarke } from './todos-rechnen.js';
@@ -289,7 +290,7 @@ export async function render(container, ctx) {
     if (txt(zustaendig)) {
       listeBox.append(el('section', { class: 'karte' },
         el('h2', { text: 'Zuständig für die App' }),
-        zeichneText(zustaendig, { seiteFinden: seiteFinden })));
+        signalKnoepfe(zeichneText(zustaendig, { seiteFinden: seiteFinden }))));
     }
   }
 
@@ -319,7 +320,7 @@ export async function render(container, ctx) {
       el('article', { class: 'karte wiki-artikel' },
         el('h2', { class: 'wiki-titel', text: a.titel }),
         el('p', { class: 'leise wiki-stand', text: 'Anleitung der App' + (a.oeffentlich ? ' · 🌐 öffentlich' : '') }),
-        zeichneText(text, { seiteFinden: seiteFinden, inhaltsverzeichnis: true })
+        signalKnoepfe(zeichneText(text, { seiteFinden: seiteFinden, inhaltsverzeichnis: true }))
       )
     );
   }

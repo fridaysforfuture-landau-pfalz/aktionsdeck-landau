@@ -19,3 +19,4 @@ Mehr zur Entwicklung steht unter „Entwicklung App“.
 
 - PIN vergessen oder neuer PIN: [Kontakt]
 - Fehler in der App: [Kontakt]
+- [Signal]
