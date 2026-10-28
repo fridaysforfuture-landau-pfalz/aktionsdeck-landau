@@ -103,6 +103,9 @@ Jede Frage hat einen Vorschlag. Antworte gern mit „wie Vorschlag“ oder mit d
     *Vorschlag:* Ja, in Schritt 12.2. Vorher teste ich alle Reiter, damit nichts gesperrt wird.
 11. **Fotos „für alle mit Link“:** Das ist nötig, damit Bilder ohne Google-Anmeldung erscheinen (auch im öffentlichen Wiki).
     *Vorschlag:* So lassen. Der Hinweis „keine Personen“ bleibt. Im Bericht steht, was das bedeutet.
+11a. **Was könnte kaputt gehen? (neu seit 0.33.0, Entscheidung 17 in `docs/PLAN-ETAPPE-11.md`)** Es gibt keine eigene Sicherung des Sheets, nur den Versionsverlauf von Google.
+    *Vorschlag:* Schritt 12.2 prüft als eigenen Punkt, wo Daten verloren gehen können (zum Beispiel Löschen mit Mitlöschen, Aufräumen nach 90 Tagen, Überschreiben bei gleichzeitigem Arbeiten,
+    falsche Handarbeit im Sheet, abgelaufene Skript-Bereitstellung) und ob man jeweils von Hand zurückkommt (Anleitung „Für Admins“). Ergebnis als Liste im Prüfbericht.
 
 ### CSS
 
@@ -199,6 +202,7 @@ Version: 0.34.1. Je nach Funden mit Sheet- oder Skript-Änderung (dann „Von Ha
 1. Funde aus dem Bericht beheben.
 2. Content-Security-Policy in `index.html` (Rückfrage 10).
 3. Editor-Test für die Rechte je Gruppe (eine Gruppe kann keine Daten einer anderen lesen oder ändern).
+4. Prüfung „Was könnte kaputt gehen?“ (Rückfrage 11a): Liste der Stellen mit Datenverlust und wie man von Hand zurückkommt.
 
 **Prüfen:** Alle Reiter, öffentliche Seiten, Bilder und Kalender-Abo laufen wie vorher.
 
