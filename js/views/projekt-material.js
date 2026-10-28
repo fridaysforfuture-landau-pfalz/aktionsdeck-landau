@@ -17,7 +17,8 @@ import {
 } from './material-rechnen.js';
 import { zeigeBuchenDialog } from './material-buchen.js';
 import { zeigeVormerkDialog } from './material-vormerken.js';
-import { istAbgeschlossen } from './projekt-rechnen.js';
+import { istAbgeschlossen, terminText } from './projekt-rechnen.js';
+import { drucke } from '../ui/druck.js';
 
 function nachName(a, b) {
   return String(a.name).localeCompare(String(b.name), 'de');
@@ -310,6 +311,30 @@ export function baueMaterialTeil(opt) {
     buchDialog('zurueck', items);
   }
 
+  // ---- Packliste drucken (11.6): alle Positionen mit leerem Kästchen zum Abhaken beim Packen ----
+
+  function packlisteDrucken() {
+    drucke({
+      titel: 'Packliste: ' + String(opt.projekt.titel || 'Projekt'),
+      unterzeile: terminText(opt.projekt),
+      abschnitte: [{
+        titel: '',
+        zeilen: zeilen.map(function (r) {
+          const m = r.material_id ? matById[String(r.material_id)] : null;
+          return {
+            text: String(r.name),
+            info: [
+              'Menge: ' + r.menge + (m && m.einheit ? ' ' + m.einheit : ''),
+              r.beschaffung,
+              m && m.ort ? 'Ort: ' + m.ort : '',
+              r.notiz ? String(r.notiz).slice(0, 100) : ''
+            ].filter(Boolean).join(' · ')
+          };
+        })
+      }]
+    });
+  }
+
   // ---- Zeichnen ----
 
   function zeile(r) {
@@ -358,7 +383,8 @@ export function baueMaterialTeil(opt) {
     ),
     el('div', { class: 'teil-aktionen' },
       zu ? null : knopf('Ausleihen', true, ausleihen),
-      knopf('Zurückgeben', true, zurueck)
+      knopf('Zurückgeben', true, zurueck),
+      zeilen.length ? knopf('🖨 Drucken', true, packlisteDrucken) : null
     )
   );
   if (!zeilen.length) {

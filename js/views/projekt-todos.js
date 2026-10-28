@@ -23,8 +23,9 @@ import {
   kommentarZahlen, kommentarMarke
 } from './todos-rechnen.js';
 import {
-  fortschritt, meilensteinStand, sortiereMeilensteine, meilensteinFaellig
+  fortschritt, meilensteinStand, sortiereMeilensteine, meilensteinFaellig, terminText
 } from './projekt-rechnen.js';
+import { drucke } from '../ui/druck.js';
 import { huetKnoepfe, istOffenerHut } from './todos-hut.js';
 import { sammelTodos, istSammel, sammelInfo, oeffneSammel } from './mobi-todo.js';
 import { namenMitRollen } from './team-namen.js';
@@ -561,6 +562,29 @@ export function baueTodoTeil(opt) {
     return !meilensteinIds[String(t.meilenstein_id || '').trim()];
   });
 
+  // ToDos drucken (11.6): je Meilenstein ein Abschnitt, erledigte angekreuzt
+  function todosDrucken() {
+    const druckZeile = function (t) {
+      return {
+        text: String(t.text || ''),
+        info: [
+          t.verantwortlich ? 'Wer: ' + t.verantwortlich : 'Noch niemand',
+          t.faellig_am ? 'Fällig ' + datumText(t.faellig_am) : '',
+          prioText(t.prioritaet) && t.prioritaet !== 'normal' ? 'Priorität ' + prioText(t.prioritaet) : ''
+        ].filter(Boolean).join(' · '),
+        fertig: istWahr(t.erledigt)
+      };
+    };
+    const abschnitte = ms.map(function (m) {
+      return {
+        titel: String(m.titel || 'Meilenstein') + (m.datum ? ' (' + datumText(m.datum) + ')' : ''),
+        zeilen: sortieren(alle.filter(function (t) { return String(t.meilenstein_id || '').trim() === String(m.id); })).map(druckZeile)
+      };
+    });
+    abschnitte.push({ titel: ms.length ? 'Ohne Meilenstein' : '', zeilen: sortieren(ohne).map(druckZeile) });
+    drucke({ titel: 'ToDos: ' + String(opt.projekt.titel || 'Projekt'), unterzeile: terminText(opt.projekt), abschnitte: abschnitte });
+  }
+
   const body = el('div', { class: 'projekt-teil-body' },
     el('div', { class: 'teil-aktionen' },
       el('button', {
@@ -570,7 +594,10 @@ export function baueTodoTeil(opt) {
       el('button', {
         class: 'knopf knopf-hell', type: 'button', text: '+ Meilenstein',
         onclick: function () { meilensteinFormZeigen(null); }
-      })
+      }),
+      alle.length ? el('button', {
+        class: 'knopf knopf-hell', type: 'button', text: '🖨 Drucken', onclick: todosDrucken
+      }) : null
     )
   );
   
