@@ -2,7 +2,7 @@
 
 ## Ansichten
 
-Die Liste zeigt die kommenden Termine nach Monaten. Im Monat siehst du einen ganzen Monat auf einen Blick. Tippst du auf einen Tag, zeigt die App alle Termine dieses Tages. Die Woche zeigt Montag bis Sonntag. Am Handy stehen die Knöpfe für Liste, Monat und Woche direkt über dem Kalender. Der Aktionskalender zeigt die öffentlichen Termine aller Gruppen. Mit dem Filter-Symbol neben der Suche blendest du einzelne Arten von Terminen ein und aus.
+Die Liste zeigt die kommenden Termine nach Monaten. Im Monat siehst du einen ganzen Monat auf einen Blick. Tippst du auf einen Tag, zeigt die App alle Termine dieses Tages. Die Woche zeigt Montag bis Sonntag. Am Handy stehen die Knöpfe für Liste, Monat und Woche direkt über dem Kalender. Der Aktionskalender zeigt die öffentlichen Termine aller Gruppen. Oben wählst du einen Veranstalter und ob die Termine nach Veranstalter oder nach Datum sortiert sind. Mit dem Filter-Symbol neben der Suche blendest du einzelne Arten von Terminen ein und aus.
 
 ## Veranstaltungen
 
@@ -12,7 +12,7 @@ Für Termine, die oft wiederkommen, wie das Plenum, gibt es Vorlagen. Bei einer 
 
 ## Kalender abonnieren
 
-Die öffentlichen Termine kannst du in deinem eigenen Kalender abonnieren. Unten im Aktionskalender und auf der Seite „Öffentliche Termine“ steht dafür „Im eigenen Kalender abonnieren“. Wähle zuerst, ob du die Termine aller Gruppen willst oder nur von einer.
+Die öffentlichen Termine kannst du in deinem eigenen Kalender abonnieren. Unten im Aktionskalender und auf der Seite „Öffentliche Termine“ steht dafür „Im eigenen Kalender abonnieren“. Wähle dort, ob du die Termine aller Gruppen willst oder nur die, die eine Gruppe eingetragen hat.
 
 „In Google Kalender öffnen“ führt zu Google Kalender mit der Frage, ob du den Kalender hinzufügen willst. Das geht am besten am PC. Danach erscheint das Abo auch in der Google-Kalender-App am Handy. „In Apple Kalender öffnen“ fragt am iPhone oder Mac direkt, ob du abonnieren willst. Mit „Adresse kopieren“ nimmst du die Adresse für andere Kalender mit, zum Beispiel Outlook.
 

@@ -3,7 +3,7 @@
 Diese Datei liest du (der Agent) zuerst. Sie gilt für jede Aufgabe in diesem Repo.
 Der aktuelle Projektstand steht in `docs/STAND.md`, der Plan für die laufende Etappe in `docs/PLAN-ETAPPE-<Nummer>.md`
 (als Nächstes Etappe 12 „Prüfung und Qualität“: `docs/PLAN-ETAPPE-12.md`, Fassung 1, der letzte Schritt vor Version 1.0;
-Etappe 11 „Komfort“ in `docs/PLAN-ETAPPE-11.md` ist mit 0.33.10 fertig gebaut).
+Etappe 11 „Komfort“ in `docs/PLAN-ETAPPE-11.md` ist mit 0.33.12 fertig gebaut).
 
 ## 1. Worum es geht
 

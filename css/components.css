@@ -3341,3 +3341,8 @@ a, .wiki-text a, .wiki-iv-knopf, .info-gruppe-links a { color: var(--link); }
 .signal-form .signal-frage { font-size: 1.2em; font-weight: 600; margin: 12px 0 8px; }
 .signal-form .feld { max-width: 160px; }
 .signal-form .knopf { margin-top: 4px; }
+
+/* ---- 0.33.12: Öffentliche Termine nach Veranstalter ---- */
+.oeff-auswahl { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.oeff-auswahl .feld { flex: 1 1 180px; width: auto; }
+.abo-knoepfe + .leise, .karte > select.feld { margin-bottom: 8px; }
