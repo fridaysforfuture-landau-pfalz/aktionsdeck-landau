@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.33.4 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.33.5 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-11.md (Etappe 11 Komfort, Fassung 2 seit 0.33.0). Etappe 10 (docs/PLAN-ETAPPE-10.md) ist fertig und geprüft (27.10.2026). Danach docs/PLAN-ETAPPE-12.md (Etappe 12 Prüfung und Qualität, Fassung 1, letzter Schritt vor 1.0). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
@@ -274,7 +274,9 @@ Plan und Entscheidungen: docs/PLAN-ETAPPE-11.md (Fassung 2).
 - 11.4 (0.33.3): Neue Datei js/views/erinnerungen-rechnen.js mit allen Regeln für „Für dich“ (umfragenOffen, aktionVorbei, materialOffen, kapazitaetOffen). Kachel „Für dich (n)“ ganz oben auf dem Start (js/views/start.js), nur wenn es etwas gibt: laufende Umfrage ohne eigene Stimme (Klick öffnet die Umfrage, oeffneUmfrage aus start-umfragen.js jetzt exportiert), Material, das man selbst (Anzeigename = person) für ein Projekt mitgenommen hat, wenn die Aktion vorbei ist (Aktionsdatum, sonst Deadline vor heute, sonst Projekt abgeschlossen) und je Material und Projekt noch etwas draußen ist (Link zum Reiter Material), und die Kapazität (vorher eigene Zeile seit 9.7, ✕ blendet weiter 7 Tage aus). Neuer Zwischenspeicher <gruppe_id>:startfuerdich (Ausleihe, Material). Zahl am App-Symbol über navigator.setAppBadge, nur auf dem Start neu berechnet, beim Abmelden gelöscht (app.js). Keine Frage nach Mitteilungen. Anleitung start.txt: Abschnitt „Für dich“.
 - 11.4 gemergt (Pull Request #63). 11.3 geprüft: Kontostand und Reiter Cloud klappen, nachdem die Person Code.gs noch einmal kopiert hat (die bereitgestellte Fassung kannte gruppeInfo noch nicht).
 - 11.5 (0.33.4): Jahresübersicht. Neue Dateien js/views/uebersicht.js (Seite, Adresse #/g/<kurzname>/projekte/uebersicht, projekte.js leitet bei ctx.unter = 'uebersicht' dorthin) und js/views/uebersicht-rechnen.js (jahreAus, jahresZahlen, alsText). Knopf „📊 Jahresübersicht →“ über die volle Breite im Archiv der Projekte. Laufendes Jahr offen oben, frühere Jahre als Aufklapper, je Jahr „Als Text kopieren“. Inhalt: Projekte (Jahr des Aktionsdatums, sonst Deadline, Start, angelegt), Veranstaltungen intern/extern (nur gespeicherte, keine aus Vorlagen), Mobi veröffentlicht je Kanal, ToDos erledigt (davon in Projekten), Geld je Projekt (Datum des Postens, sonst Jahr des Projekts), Material Top 5 mitgenommen, Protokolle je Art, gehaltene Reden, Learnings je Aktionsart. Zwischenspeicher <gruppe_id>:uebersicht. Anleitung projekte.txt: Abschnitt „Jahresübersicht“.
-- Nächster Schritt: 11.6 Drucken (0.33.5).
+- 11.5 gemergt (Pull Request #64). 11.1 bis 11.4 von der Person geprüft (28.10.2026).
+- 11.4a (0.33.5): Wunsch der Person: Kachel „Für dich“ auffälliger. Gelber Hintergrund, oranger Rand oben und links (CSS-Block 0.33.5). Kein Rot, weil Rot für Fehler und Überfälliges steht. Die folgenden Schritte rücken eine Version weiter (11.6 = 0.33.6, 11.7 = 0.33.7, 11.8 = 0.33.8, 11.9 = 0.33.9).
+- Nächster Schritt: 11.6 Drucken (0.33.6).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -366,7 +368,7 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 
 ## Dateiübersicht
 - docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (abgeschlossen), PLAN-ETAPPE-10.md (Fassung 2, seit 0.32.0, fertig und geprüft), PLAN-ETAPPE-11.md (Komfort, Fassung 2, seit 0.33.0), PLAN-ETAPPE-12.md (Prüfung und Qualität, Fassung 1, seit 0.32.10 als Plan 11, umbenannt in 0.32.11), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.33.4 am Ende)
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.33.5 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs, Wiki.gs (seit 0.32.0), Konto.gs (seit 0.33.0), Setup.gs (setupGeheimnis, setupPins; seit 27.10.2026 auch im Repo, von der Person hochgeladen)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js, wiki-format.js (seit 0.32.1), gruppeninfo.js (seit 0.33.2)
 - texte/ (seit 0.32.1): impressum.txt, info.txt, datenschutz.txt, entwicklung.txt (seit 0.32.2), anleitung/ (liste.txt, team.txt, zustaendig.txt seit 0.32.2; erste-schritte, start, projekte, todos, material, mobi, kalender, dokumentation, wiki, fragen seit 0.32.5; admin seit 0.32.14; cloud seit 0.33.2). Format wie im Wiki, auf GitHub direkt änderbar.
