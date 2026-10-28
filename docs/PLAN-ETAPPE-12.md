@@ -130,7 +130,7 @@ Version 0.34.1. Je nach Funden mit Skript-Änderung (dann „Von Hand zu erledig
 
 ### 12.5 – Geschwindigkeit prüfen (Bericht, W1)
 
-Version 0.34.2, nur für das Werkzeug. Skript-Datei neu, **keine neue Bereitstellung nötig**.
+Version 0.34.3, nur für das Werkzeug. Skript-Datei neu, **keine neue Bereitstellung nötig**.
 
 1. Neue Datei `apps-script/Werkzeuge.gs` mit dem Editor-Test `messenSkript` (misst die Laufzeit der wichtigsten Aktionen, schreibt nichts). Die Person führt ihn aus und schickt das Protokoll.
 2. Messung im Testbrowser mit gedrosseltem Netz (Handy und PC): Ladezeit erstes und zweites Öffnen, Reiterwechsel, Zahl der Anfragen je Reiter, Größe der Dateien.
@@ -140,7 +140,7 @@ Version 0.34.2, nur für das Werkzeug. Skript-Datei neu, **keine neue Bereitstel
 
 ### 12.6 – Geschwindigkeit verbessern (W1)
 
-Version 0.34.3. Mit Skript-Änderung nur, wenn der Bericht es zeigt und die Person es freigibt.
+Version 0.34.4. Mit Skript-Änderung nur, wenn der Bericht es zeigt und die Person es freigibt.
 
 1. Freigegebene Funde (zum Beispiel weniger doppelte Anfragen, weniger Neuzeichnen, Zwischenspeicher im Skript).
 2. Wenn freigegeben: Service Worker „zuerst Zwischenspeicher“ mit Hinweis „Neue Version da – jetzt neu laden“.
@@ -158,13 +158,13 @@ Keine Änderung an der App, kein Pull Request.
 
 ### 12.8 – Ungenutztes löschen (W4)
 
-Version 0.34.4. Sheet bleibt unverändert; Skript nur, wenn Skript-Funktionen freigegeben sind (dann „Von Hand zu erledigen“).
+Version 0.34.5. Sheet bleibt unverändert; Skript nur, wenn Skript-Funktionen freigegeben sind (dann „Von Hand zu erledigen“).
 
 **Prüfen:** Alle Reiter und öffentlichen Seiten laufen wie vorher.
 
 ### 12.9 – Layout am PC und beim Rauszoomen (W8)
 
-Version 0.34.5. Sheet und Skript bleiben unverändert.
+Version 0.34.6. Sheet und Skript bleiben unverändert.
 
 1. `css/layout.css`: Grenze von 1400 px fällt weg. Seitenleiste und Inhalt füllen den Bildschirm. Kacheln werden breiter, nicht mehr Spalten (Entscheidung 15). Lesetexte und Formulare bleiben schmal und mittig (Entscheidung 16).
 2. `js/ui/nav.js`: Reiter, die in der Seitenleiste keinen Platz mehr haben, rutschen in „Mehr ▾“ zum Ausklappen.
@@ -184,7 +184,7 @@ Keine Änderung an der App, kein Pull Request.
 
 ### 12.11 – Barrierefreiheit verbessern (W7)
 
-Version 0.34.6. Sheet und Skript bleiben unverändert.
+Version 0.34.7. Sheet und Skript bleiben unverändert.
 
 1. Freigegebene Funde aus dem Bericht.
 2. `texte/anleitung/fragen.txt`: kurzer Abschnitt zur Bedienung mit Bildschirmleser, wenn sinnvoll.
@@ -193,7 +193,7 @@ Version 0.34.6. Sheet und Skript bleiben unverändert.
 
 ### 12.12 – App-Icon und Ladebildschirm (W9)
 
-Version 0.34.7. Sheet und Skript bleiben unverändert.
+Version 0.34.8. Sheet und Skript bleiben unverändert.
 
 1. Neue Dateien `icons/icon-maskable.svg`, `icons/icon-maskable-192.png`, `icons/icon-maskable-512.png`, neues `icons/apple-touch-icon.png` (Entscheidung 17). Vorschau im Pull Request.
 2. `manifest.webmanifest`: maskable Icons, `background_color` `#1a1e20`.
@@ -204,7 +204,7 @@ Version 0.34.7. Sheet und Skript bleiben unverändert.
 
 ### 12.13 – Fehlerseite „Seite nicht gefunden“ (W10)
 
-Version 0.34.8. Sheet und Skript bleiben unverändert.
+Version 0.34.9. Sheet und Skript bleiben unverändert.
 
 1. Neue Datei `404.html` im Aussehen der App, auf Deutsch, mit Logo und Knopf „Zur Startseite“.
 2. `js/app.js`: Unbekannte Adressen zeigen „Seite nicht gefunden“ mit Knopf „Zur Startseite“.
@@ -213,7 +213,7 @@ Version 0.34.8. Sheet und Skript bleiben unverändert.
 
 ### 12.14 – Tabs im Sheet sortieren (W6)
 
-Version 0.34.9. Skript-Datei geändert, **keine neue Bereitstellung nötig**.
+Version 0.34.10. Skript-Datei geändert, **keine neue Bereitstellung nötig**.
 
 1. `apps-script/Werkzeuge.gs` ergänzt: `tabsSortieren` (nach Wichtigkeit: `Gruppen`, `Zugang`, `Einstellungen`, `Log`, dann die Daten in der Reihenfolge der Reiter, ganz hinten `Posts` und `Projekt_Team`), `tabsSortierenAZ` (nach dem Alphabet), Farben je Bereich. Unbekannte Tabs kommen ans Ende. Daten und Spaltenköpfe ändern sich nicht.
 
@@ -230,7 +230,7 @@ Keine Änderung an der App, kein Pull Request.
 
 ### 12.16 – CSS ordnen (W3)
 
-Version 0.34.10. Sheet und Skript bleiben unverändert.
+Version 0.34.11. Sheet und Skript bleiben unverändert.
 
 1. `css/components.css` in einer Datei mit klaren Abschnitten, ohne Doppelungen (Entscheidung 21).
 2. Vergleich von Bildschirmfotos vorher und nachher (alle Reiter und Seiten, Handy und PC, hell und dunkel, Druck).
@@ -256,18 +256,19 @@ Version 1.0.0. Sheet und Skript bleiben unverändert.
 | 12.2 | Plan Fassung 3, eine Doku-Datei | Doku | 0.34.0 | nein |
 | 12.3 | Sicherheit prüfen | Bericht | – | Tests gegen echtes Skript |
 | 12.4 | Sicherheit beheben, Content-Security-Policy | Bau | 0.34.1 | vielleicht |
-| 12.5 | Geschwindigkeit prüfen (`messenSkript`) | Bericht | 0.34.2 | `Werkzeuge.gs` neu, keine Bereitstellung |
-| 12.6 | Geschwindigkeit verbessern | Bau | 0.34.3 | vielleicht |
+| 12.4b | Nachbesserung: Fotos (CSP) | Bau | 0.34.2 | nein |
+| 12.5 | Geschwindigkeit prüfen (`messenSkript`) | Bericht | 0.34.3 | `Werkzeuge.gs` neu, keine Bereitstellung |
+| 12.6 | Geschwindigkeit verbessern | Bau | 0.34.4 | vielleicht |
 | 12.7 | Ungenutztes prüfen | Bericht | – | nein |
-| 12.8 | Ungenutztes löschen | Bau | 0.34.4 | vielleicht |
-| 12.9 | Layout am PC und beim Rauszoomen | Bau | 0.34.5 | nein |
+| 12.8 | Ungenutztes löschen | Bau | 0.34.5 | vielleicht |
+| 12.9 | Layout am PC und beim Rauszoomen | Bau | 0.34.6 | nein |
 | 12.10 | Barrierefreiheit prüfen, Test mit Bildschirmleser | Bericht | – | nein |
-| 12.11 | Barrierefreiheit verbessern | Bau | 0.34.6 | nein |
-| 12.12 | App-Icon und Ladebildschirm | Bau | 0.34.7 | nein |
-| 12.13 | Fehlerseite | Bau | 0.34.8 | nein |
-| 12.14 | Tabs im Sheet sortieren | Bau | 0.34.9 | `Werkzeuge.gs`, keine Bereitstellung |
+| 12.11 | Barrierefreiheit verbessern | Bau | 0.34.7 | nein |
+| 12.12 | App-Icon und Ladebildschirm | Bau | 0.34.8 | nein |
+| 12.13 | Fehlerseite | Bau | 0.34.9 | nein |
+| 12.14 | Tabs im Sheet sortieren | Bau | 0.34.10 | `Werkzeuge.gs`, keine Bereitstellung |
 | 12.15 | CSS prüfen | Bericht | – | nein |
-| 12.16 | CSS ordnen | Bau | 0.34.10 | nein |
+| 12.16 | CSS ordnen | Bau | 0.34.11 | nein |
 | 12.17 | Abschluss | Doku | 1.0.0 | nein |
 
 Nachbesserungen zählen die Version hoch, dann verschieben sich die folgenden Nummern.
