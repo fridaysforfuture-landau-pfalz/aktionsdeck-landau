@@ -3190,3 +3190,28 @@ p.notiz.erledigt {
 .karte.fuer-dich { background: #fff6d1; border-color: #f0c64a; border-top-color: #e08a00; border-left-color: #e08a00; }
 .fuer-dich .dash-zeile { border-bottom-color: #f0d98a; }
 .fuer-dich .leise { color: #5c4a14; }
+
+/* ---- 0.33.6: Drucken ---- */
+/* Druckblatt (js/ui/druck.js): am Bildschirm unsichtbar, beim Drucken das Einzige auf dem Blatt. */
+.druckblatt { display: none; }
+@media print {
+  html, body { background: #fff !important; color: #000 !important; }
+  /* Alle Seiten: Leisten, Knöpfe, Meldungen und Fenster fallen weg */
+  .seitenleiste, .untenleiste, .detail, .toast, .modal, .knopf, .kopf-knoepfe, .teil-aktionen { display: none !important; }
+  .huelle, .inhalt { display: block !important; margin: 0 !important; padding: 0 !important; }
+  .karte { background: #fff !important; border-color: #999 !important; box-shadow: none !important; }
+  a { color: #000 !important; }
+  /* Druckblatt */
+  body.druckt > *:not(.druckblatt) { display: none !important; }
+  body.druckt .druckblatt { display: block !important; font-size: 12pt; line-height: 1.35; }
+  .druckblatt h1 { font-size: 18pt; margin: 0 0 4pt; }
+  .druckblatt h2 { font-size: 13pt; margin: 14pt 0 4pt; border-bottom: 1px solid #000; }
+  .druck-unter { margin: 0 0 10pt; }
+  .druck-liste { list-style: none; margin: 0; padding: 0; }
+  .druck-liste li { display: flex; gap: 8pt; padding: 4pt 0; border-bottom: 1px solid #ccc; break-inside: avoid; }
+  .druck-box { font-size: 16pt; line-height: 1; }
+  .druck-text { display: flex; flex-direction: column; }
+  .druck-info { font-size: 10pt; }
+  .druck-liste li.fertig strong { text-decoration: line-through; }
+  .druck-fuss { margin-top: 16pt; font-size: 9pt; }
+}

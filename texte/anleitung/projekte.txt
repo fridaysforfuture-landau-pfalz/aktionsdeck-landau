@@ -12,6 +12,13 @@ Klappst du ein Projekt auf, siehst du seine Teile. Bei den ToDos und Meilenstein
 
 Beim Material merkst du Dinge aus dem Bestand für das Projekt vor, leihst sie aus oder trägst eigene Positionen ein, die noch besorgt werden müssen. Bei den Finanzen stehen die Posten mit geplanten und echten Beträgen und einem Haken für „bezahlt“. Hat eure Gruppe ein Konto bei OpenCollective, steht oben bei den Finanzen auch der Kontostand mit Datum. Er wird jeden Montag von selbst abgerufen. Mit „Jetzt abrufen“ holst du ihn sofort, höchstens einmal pro Stunde. Das ist nur zum Anschauen: Das Geld selbst läuft weiter über OpenCollective. Im Teil Mobi plant ihr die Beiträge für Social Media und Presse. Bei den Learnings haltet ihr fest, was ihr beim nächsten Mal anders machen wollt. Dazu kommen die Reden zum Projekt und ein Überblick, wer im Team welche Hüte hat.
 
+## Drucken
+
+In den Teilen „ToDos“ und „Material“ eines Projekts gibt es den Knopf „🖨 Drucken“. Er öffnet den Druckdialog deines Geräts mit einem schlichten Blatt, schwarz auf weiß und ohne Leisten und Knöpfe. Statt zu drucken kannst du dort auch „Als PDF speichern“ wählen.
+
+- **Material** druckt eine Packliste: alle Positionen mit Menge, Ort im Lager und einem leeren Kästchen zum Abhaken beim Packen.
+- **ToDos** druckt alle ToDos des Projekts, geordnet nach Meilensteinen, mit Verantwortlichen und Fälligkeit. Erledigte sind angekreuzt und durchgestrichen.
+
 ## Ein Projekt abschließen
 
 Ist die Aktion vorbei, setzt du den Status auf „erledigt“. Ist noch festes Material für das Projekt draußen, geht das nicht. Das Material muss zuerst zurückgegeben werden. Offene ToDos und noch nicht beschafftes Material zeigt dir die App vorher als Warnung.

@@ -1,6 +1,6 @@
 # STAND – AktionsDeck Landau
 
-Version der App: 0.33.5 (gleich in js/config.js und sw.js: beide Dateien prüfen)
+Version der App: 0.33.6 (gleich in js/config.js und sw.js: beide Dateien prüfen)
 Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 Plan der laufenden Etappe: docs/PLAN-ETAPPE-11.md (Etappe 11 Komfort, Fassung 2 seit 0.33.0). Etappe 10 (docs/PLAN-ETAPPE-10.md) ist fertig und geprüft (27.10.2026). Danach docs/PLAN-ETAPPE-12.md (Etappe 12 Prüfung und Qualität, Fassung 1, letzter Schritt vor 1.0). Etappe 7, 8 und 9: docs/PLAN-ETAPPE-7.md, docs/PLAN-ETAPPE-8.md und docs/PLAN-ETAPPE-9.md, abgeschlossen, bleiben als Nachweis.
@@ -276,7 +276,9 @@ Plan und Entscheidungen: docs/PLAN-ETAPPE-11.md (Fassung 2).
 - 11.5 (0.33.4): Jahresübersicht. Neue Dateien js/views/uebersicht.js (Seite, Adresse #/g/<kurzname>/projekte/uebersicht, projekte.js leitet bei ctx.unter = 'uebersicht' dorthin) und js/views/uebersicht-rechnen.js (jahreAus, jahresZahlen, alsText). Knopf „📊 Jahresübersicht →“ über die volle Breite im Archiv der Projekte. Laufendes Jahr offen oben, frühere Jahre als Aufklapper, je Jahr „Als Text kopieren“. Inhalt: Projekte (Jahr des Aktionsdatums, sonst Deadline, Start, angelegt), Veranstaltungen intern/extern (nur gespeicherte, keine aus Vorlagen), Mobi veröffentlicht je Kanal, ToDos erledigt (davon in Projekten), Geld je Projekt (Datum des Postens, sonst Jahr des Projekts), Material Top 5 mitgenommen, Protokolle je Art, gehaltene Reden, Learnings je Aktionsart. Zwischenspeicher <gruppe_id>:uebersicht. Anleitung projekte.txt: Abschnitt „Jahresübersicht“.
 - 11.5 gemergt (Pull Request #64). 11.1 bis 11.4 von der Person geprüft (28.10.2026).
 - 11.4a (0.33.5): Wunsch der Person: Kachel „Für dich“ auffälliger. Gelber Hintergrund, oranger Rand oben und links (CSS-Block 0.33.5). Kein Rot, weil Rot für Fehler und Überfälliges steht. Die folgenden Schritte rücken eine Version weiter (11.6 = 0.33.6, 11.7 = 0.33.7, 11.8 = 0.33.8, 11.9 = 0.33.9).
-- Nächster Schritt: 11.6 Drucken (0.33.6).
+- 11.4a gemergt (Pull Request #65).
+- 11.6 (0.33.6): Drucken. Neue Datei js/ui/druck.js (drucke: baut ein Druckblatt #druckblatt, Klasse druckt am body, window.print(), nach afterprint wieder weg). Knopf „🖨 Drucken“ im Teil Material (Packliste, leere Kästchen, Menge, Ort) und im Teil ToDos (je Meilenstein, erledigte angekreuzt) eines Projekts. CSS-Block 0.33.6 mit @media print: Druckblatt allein auf dem Blatt; auf allen anderen Seiten fallen Leisten, Knöpfe, Meldungen und Fenster weg, weiß statt Hintergrundfarbe. Anleitung projekte.txt: Abschnitt „Drucken“.
+- Nächster Schritt: 11.7 Dunkelmodus Teil 1, Farben als Variablen (0.33.7).
 
 ## Etappe 6 (Veranstaltungen und Kalender), Stand 0.28.13
 - Tabs und Spalten: Veranstaltungen (titel, art intern|extern, datum, datum_ende, zeit_von, zeit_bis, ort, beschreibung, veranstalter, link, oeffentlich, farbe), Termin_Vorlagen (name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung). Neue Spalte farbe in Kommentare und Mitteilungen (für angeheftete Veranstaltungen). Neue Spalten im Tab Gruppen: webseite, instagram, weitere_links (öffentlich; weitere_links durch Leerzeichen getrennt, höchstens 5). Schema.gs und js/schema.js sind angepasst. Feldtypen "zeit" und "farbe" in js/ui/form.js.
@@ -368,11 +370,11 @@ Gepflegt am 21.10.2026 mit der Person. Erledigte Punkte werden gelöscht.
 
 ## Dateiübersicht
 - docs/: STAND.md, PLAN-ETAPPE-7.md (abgeschlossen), PLAN-ETAPPE-8.md (abgeschlossen), PLAN-ETAPPE-9.md (abgeschlossen), PLAN-ETAPPE-10.md (Fassung 2, seit 0.32.0, fertig und geprüft), PLAN-ETAPPE-11.md (Komfort, Fassung 2, seit 0.33.0), PLAN-ETAPPE-12.md (Prüfung und Qualität, Fassung 1, seit 0.32.10 als Plan 11, umbenannt in 0.32.11), STANDARD-TODOS.md, MOBI-STANDARD-BEITRAEGE.md
-- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.33.5 am Ende)
+- index.html, manifest.webmanifest, sw.js, icons/, css/ (base, layout, components; Blöcke bis 0.33.6 am Ende)
 - apps-script/: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs, Team.gs, Wiki.gs (seit 0.32.0), Konto.gs (seit 0.33.0), Setup.gs (setupGeheimnis, setupPins; seit 27.10.2026 auch im Repo, von der Person hochgeladen)
 - js/: app.js, config.js, api.js, store.js, cache.js, schema.js, vorlagen.js, kanaele.js, wiki-format.js (seit 0.32.1), gruppeninfo.js (seit 0.33.2)
 - texte/ (seit 0.32.1): impressum.txt, info.txt, datenschutz.txt, entwicklung.txt (seit 0.32.2), anleitung/ (liste.txt, team.txt, zustaendig.txt seit 0.32.2; erste-schritte, start, projekte, todos, material, mobi, kalender, dokumentation, wiki, fragen seit 0.32.5; admin seit 0.32.14; cloud seit 0.33.2). Format wie im Wiki, auf GitHub direkt änderbar.
-- js/ui/: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
+- js/ui/: druck (seit 0.33.6), dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit
 - js/views/: cloud (seit 0.33.2), erinnerungen-rechnen (seit 0.33.3), uebersicht und uebersicht-rechnen (seit 0.33.4), wiki, wiki-rechnen (seit 0.32.2), wiki-eintrag (seit 0.32.3), wiki-oeffentlich (seit 0.32.6), team, team-rechnen (seit 0.31.1), team-rollen (seit 0.31.2), team-eintrag (seit 0.31.3), team-berg (seit 0.31.5), team-namen und projekt-team (seit 0.31.6), gruppen, login, start, start-umfragen, start-brett, mehr, info, platzhalter, material, material-detail, material-rechnen, material-buchen, material-vormerken, todos, todos-rechnen, todos-abhaken, todos-hut, projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, ideen, kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste, mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl, protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text, projekt-reden
 - Reiter Wiki seit 0.32.2 (wiki, wiki-rechnen; Tab Wiki und Wiki.gs seit 0.32.0), Reiter Hilfe entfällt (hilfe.js gelöscht). Reiter Team seit 0.31.1 (Eintragen seit 0.31.3, Berg seit 0.31.5, Hilfe dazu seit 0.31.7). Reiter Dokumentation (protokoll) seit 0.30.1, Schreiben seit 0.30.2, Reden seit 0.30.10.
 
