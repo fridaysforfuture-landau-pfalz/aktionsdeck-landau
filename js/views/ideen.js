@@ -6,17 +6,13 @@
 // opt: { ctx, token, holeDaten() -> { ideen, learnings }, offen, beiToggle(offen), neuLaden() -> Promise,
 //        springe(projektId), projektAnlegen(vorgabe) }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { SCHEMA } from '../schema.js';
 import { kurz } from './todos-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function neuesteZuerst(liste) {
   return liste.slice().sort(function (a, b) {

@@ -13,7 +13,7 @@
 // „Link kopieren“ bei öffentlichen Seiten (öffentliche Adresse #/wiki/<gruppe>/<adresse>).
 // Zwischenspeicher gruppe_id:wiki (ladeMitCache).
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { ladeMitCache, cacheSet } from '../cache.js';
 import { toast } from '../ui/toast.js';
@@ -25,7 +25,7 @@ import { zeigeEintrag } from './wiki-eintrag.js';
 import { baueKommentare } from '../ui/kommentare.js';
 import { kommentarZahlen, kommentarMarke } from './todos-rechnen.js';
 import {
-  txt, BEREICHE, themaVon, sortiereSeiten, seitenIn, nachThema, findeSeite, passtSuche, ausschnitt,
+  BEREICHE, themaVon, sortiereSeiten, seitenIn, nachThema, findeSeite, passtSuche, ausschnitt,
   anleitungListe, standText
 } from './wiki-rechnen.js';
 

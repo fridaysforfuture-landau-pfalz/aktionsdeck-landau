@@ -6,16 +6,12 @@
 // opt: { ctx, token, projekt (nur Teil), holeDaten() -> { learnings, projekte },
 //        offen, beiToggle(offen), neuLaden() -> Promise }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { SCHEMA } from '../schema.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function neuesteZuerst(liste) {
   return liste.slice().sort(function (a, b) {

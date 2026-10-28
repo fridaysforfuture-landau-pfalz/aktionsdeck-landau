@@ -1,11 +1,10 @@
 // js/views/start.js
 // Start-Reiter: Dashboard. Kachel Projekte zeigt die laufenden Projekte (Aktiv zuerst, dann Planung)
 // mit Fortschrittsbalken (Klick = ins Projekt) und je Projekt einen Schalter "ToDos (n offen)".
-// Kachel ToDos zeigt die offenen, allgemeinen ToDos (ohne Projekt und Post).
+// Kachel ToDos zeigt die offenen, allgemeinen ToDos (ohne Projekt).
 // In den Projekt-Blöcken gibt es neben "ToDos" und "Hüte" den Schalter "Mobi" mit den Sammel-ToDos
 // aus Mobi (js/views/mobi-todo.js, ohne Kästchen). Sie zählen nicht bei "ToDos".
 // Erledigte (nur die der letzten 2 Wochen) per Schalter oben rechts. ToDos haben ein Kästchen zum Abhaken.
-// Die anderen Kacheln sind noch Platzhalter (Posts/Kalender Etappe 5).
 // Rechts unter den ToDos steht die Kachel TOPs (js/views/tops.js, seit 0.30.3). ToDos und TOPs sind zusammen
 // so hoch wie die Kachel Projekte; ist eine abgeschnitten, gibt es unten in der Kachel „▸ Alle anzeigen“.
 // Ganz oben steht seit 11.4 die Kachel „Für dich“ (Regeln in js/views/erinnerungen-rechnen.js), nur wenn es etwas gibt.

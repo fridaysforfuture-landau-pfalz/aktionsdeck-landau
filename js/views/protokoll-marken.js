@@ -16,16 +16,12 @@
 //        projektVorgabe() -> Projekt-ID des Protokolls oder '', herkunft() -> 'Aus dem Protokoll vom …',
 //        einfuegen({ text, pos }) (setzt den Text und merkt die Änderung), beiAngelegt(tabelle, id) }
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { toast } from '../ui/toast.js';
 import { istWahr } from '../schema.js';
 import { datumText, heuteIso } from './todos-rechnen.js';
 import { MARKEN, leseMarkierungen, markenUebersicht, markenDatumText, zeileEinfuegen } from './protokoll-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 // Eingaben werden zu einer Zeile ohne Umbrüche
 function einzeilig(v) {

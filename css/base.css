@@ -5,7 +5,7 @@
   --gruppe-text: #ffffff;
   --text: #1a1e20;
   --text-leise: #596360;
-  --hintergrund: #f3f7f5;
+  --hintergrund: #dfe8e4;
   --flaeche: #ffffff;
   --rand: #d3deda;
   --radius: 10px;
@@ -76,6 +76,7 @@
   --lightbox-grund: rgba(0, 0, 0, 0.85);
   --hover-dunkel: rgba(0, 0, 0, 0.12);
   --hover-hell: rgba(255, 255, 255, 0.55);
+  --link: #276650;
 }
 
 * { box-sizing: border-box; }
@@ -97,7 +98,6 @@ body {
 }
 
 h1, h2, h3 { line-height: 1.2; margin: 0 0 var(--abstand); }
-a { color: var(--gruen); }
 
 .laden {
   text-align: center;

@@ -6,10 +6,7 @@
 import { istWahr } from '../schema.js';
 import { normDatum, datumText } from './todos-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
+import { txt } from '../ui/dom.js';
 
 function zahl(v) {
   const n = Number(String(v === undefined || v === null ? '' : v).replace(',', '.'));

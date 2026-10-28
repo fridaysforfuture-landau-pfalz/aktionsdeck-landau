@@ -10,10 +10,7 @@ import { kanalInfo, KANALGRUPPEN } from '../kanaele.js';
 import { istVeroeffentlicht } from './mobi-rechnen.js';
 import { normDatum, heuteIso } from './todos-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
+import { txt } from '../ui/dom.js';
 
 export function istSammel(t) {
   return !!(t && t._sammel);

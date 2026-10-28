@@ -18,7 +18,6 @@
 //   opt.fehltAlsText: true = eine fehlende Seite steht als einfacher Text da, ohne „(fehlt)“ (öffentliches Wiki, seit 0.32.6).
 //   opt.bildUrl(id) -> Adresse des Bildes (Standard: Vorschaubild von Google Drive).
 //   opt.inhaltsverzeichnis: true = ab 3 Überschriften oben ein Inhaltsverzeichnis.
-// ueberschriften(text) -> [{ ebene: 2|3, text }]
 //
 // Beispiele (mit node geprüft):
 //   bloecke('## Hallo\n- a\n- b')      -> [{ art:'h2', zeilen:['Hallo'] }, { art:'ul', zeilen:['a','b'] }]
@@ -73,11 +72,6 @@ export function bloecke(text) {
     }
   });
   return liste;
-}
-
-export function ueberschriften(text) {
-  return bloecke(text).filter(function (b) { return b.art === 'h2' || b.art === 'h3'; })
-    .map(function (b) { return { ebene: b.art === 'h3' ? 3 : 2, text: ohneSterne(b.zeilen[0]) }; });
 }
 
 function ohneSterne(s) {

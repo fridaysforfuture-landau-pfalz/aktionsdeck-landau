@@ -8,17 +8,13 @@
 // baueVorschlaege(opt) -> Element
 // opt: { ctx, token, protokoll, daten: { projekte, veranstaltungen, vorlagen }, namen, beiFertig(), beiZu() }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { toast } from '../ui/toast.js';
 import { normDatum, datumText } from './todos-rechnen.js';
 import { zeitNorm } from './kalender-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
 import { leseMarkierungen } from './protokoll-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 // Wie viele Vorschläge hat dieses Protokoll? (ohne Fehlerzeilen und ohne ✔)
 export function vorschlagZahl(p, projekte) {

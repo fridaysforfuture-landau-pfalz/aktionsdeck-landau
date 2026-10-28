@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-- Version der App: **0.34.5** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **0.34.6** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
-- Nächster Schritt: **12.7 Ungenutztes prüfen** (Bericht im Chat).
+- Nächster Schritt: **12.9 Layout am PC und beim Rauszoomen**.
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -65,10 +65,10 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
 - **Texte aus Daten nur mit `textContent`** (oder dem `el()`-Helfer mit `text:`) anzeigen. Nie `innerHTML` mit Daten.
 - **Links aus Daten** (zum Beispiel Canva-Link) nur öffnen, wenn sie mit `https://` oder `http://` beginnen (`sichereUrl`).
 - **CSS:** Alle Regeln stehen in `css/components.css` (dazu `css/base.css` für Variablen und `css/layout.css` für das Gerüst).
-  **Bis Schritt 12.16** hängst du neue Regeln ans Ende von `css/components.css` an und beginnst mit einem Kommentar
-  `/* ---- <Version>: <Thema> ---- */`. **Ab 12.16** (CSS geordnet) kommen neue Regeln in den passenden Abschnitt, mit Kommentar
-  und Version; doppelte Regeln für dieselbe Klasse vermeidest du, du änderst die vorhandene. Den Abschnitt musst du der Person
-  nicht eigens nennen; sie fragt, wenn sie es wissen will. Bestehende Regeln änderst du nur, wenn es nicht anders geht, und sagst es im PR.
+  **Seit 0.34.6** (Wunsch der Person) gilt nicht mehr „neue Regeln ans Ende“: Neue Regeln kommen in den passenden Abschnitt, mit Kommentar
+  und Version. Gibt es für dieselbe Klasse schon eine Regel, änderst du die vorhandene, statt eine zweite anzulegen. Bevor du Regeln
+  zusammenlegst oder verschiebst: Bildschirmfotos und berechnete Stile vorher und nachher vergleichen, denn die Reihenfolge entscheidet,
+  welche Angabe gilt. Den Abschnitt musst du der Person nicht eigens nennen; sie fragt, wenn sie es wissen will.
 - **Farben:** nur über die Variablen in `css/base.css`; jede neue Farbe braucht auch einen dunklen Wert (Dunkelmodus, Block 0.33.8 in `css/components.css`).
 - **Kein Build, keine Pakete, kein Framework.** Reines HTML, CSS und JavaScript mit ES-Modulen. Relative Pfade.
   Keine externen Skripte oder Schriften laden.
@@ -174,7 +174,7 @@ Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abw
 
 - Google Apps Script als Web-App (Ausführen als Besitzer, Zugriff: Jeder), an das Google Sheet gebunden. Aufruf per POST mit JSON als
   `text/plain`. Das Feld für die Aktion heißt `aktion`. Antwort: `{ok, data, error, code}`.
-- Aktionen mit Login: `login`, `bootstrap`, `list` (mit `seit`), `listMehrere`, `create`, `update`, `delete` (weich), `batchCreate`,
+- Aktionen mit Login: `login`, `list` (mit `seit`), `listMehrere`, `create`, `update`, `delete` (weich), `batchCreate`,
   `uploadImage`, `buchen`, `projektLoeschen`, `protokollSpeichern`, `protokollInsDokument`, `protokollInfo`, `gruppeInfo`, `kontoAktualisieren`.
   Ohne Login: `gruppen`, `termine` (auch als GET, mit `format=ics`), `wiki` (nur öffentliche Daten, keine Namen), `signal`
   (Rechenaufgabe, danach der Signal-Link aus der Skripteigenschaft `SIGNAL_LINK`).
@@ -198,17 +198,17 @@ Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abw
 
 Alle Daten-Tabs haben zusätzlich: `id, gruppe_id, erstellt_am, erstellt_von, geaendert_am, geaendert_von, geloescht`.
 Die erste Zeile enthält die Spaltenköpfe (klein, ohne Umlaute). Die Schreibweise `gruppe_id` ist genau so richtig.
-Die Tabs und Spalten stehen in `apps-script/Schema.gs` und `js/schema.js`. **Beide müssen zusammenpassen.**
-Eine neue Tabelle oder Spalte ist nur ein Eintrag in `Schema.gs` und in `js/schema.js`.
+Alle Tabs und Spalten stehen in `apps-script/Schema.gs`. `js/schema.js` enthält nur die Formularfelder der Tabs, deren Formular
+die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.gs`, und in `js/schema.js`, wenn sie ins Formular gehört.
 
 - System-Tabs: `Gruppen` (gruppe_id, name, kurzname, farbe, sortierung, aktiv, webseite, instagram, weitere_links),
-  `Zugang` (zugang_id, gruppe_id, pin_salt, pin_hash, aktiv, gueltig_bis), `Einstellungen` (schluessel, wert),
+  `Zugang` (zugang_id, gruppe_id, pin_salt, pin_hash, aktiv, gueltig_bis),
   `Log` (zeit, gruppe_id, aktion, tabelle, datensatz_id, anzeigename).
 - Daten-Tabs (Spalten siehe `Schema.gs`): Personen, Material, Ausleihe, ToDos, Projekte, Meilensteine, Projekt_Material, Finanzen,
-  Vorlagen_ToDo, Protokolle, Reden, TOPs, Kommentare, Learnings, Umfragen, Umfrage_Antworten, Mitteilungen, Ideen,
+  Protokolle, Reden, TOPs, Kommentare, Learnings, Umfragen, Umfrage_Antworten, Mitteilungen, Ideen,
   Veranstaltungen, Termin_Vorlagen, Mobi_Plan, Gruppen_Rollen, Kapazitaet, Wiki.
-- Ungenutzt, bleiben im Sheet: `Posts` (ersetzt durch Mobi_Plan), `Projekt_Team`, Spalte `Projekte.kanaele`. Das Skript räumt
-  `Posts` und `Projekt_Team` beim Löschen eines Projekts noch mit auf.
+- Seit 0.34.6 nicht mehr im Skript (waren ungenutzt): Tabs `Posts`, `Projekt_Team`, `Vorlagen_ToDo`, `Einstellungen`, Spalten
+  `ToDos.post_id` und `Projekte.kanaele`. Die Person löscht sie im Sheet (siehe 3.2). Das Skript braucht sie nicht, auch solange sie noch da sind.
 - Höchstlänge für Textfelder 5000 Zeichen, Ausnahmen 20 000 (`MAX_TEXT`, `MAX_TEXT_AUSNAHMEN` in `Schema.gs`).
   `NIE_LOESCHEN`: fertige Protokolle und Reden nur mit `vonHand: true`.
 
@@ -223,7 +223,8 @@ Eine neue Tabelle oder Spalte ist nur ein Eintrag in `Schema.gs` und in `js/sche
 - Etappe 12 läuft: 12.1 Plan Fassung 2 (0.33.16, #75), 12.2 Plan Fassung 3 und diese eine Doku-Datei (0.34.0),
   12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2),
   12.5 Geschwindigkeitsbericht (nur im Chat) mit dem Editor-Werkzeug `messenSkript` (0.34.3),
-  12.6 Geschwindigkeit verbessert (0.34.4 App, 0.34.5 Zwischenspeicher im Skript).
+  12.6 Geschwindigkeit verbessert (0.34.4 App, 0.34.5 Zwischenspeicher im Skript), 12.7 Bericht Ungenutztes (nur im Chat),
+  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6).
 - Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
   Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
@@ -232,10 +233,11 @@ Eine neue Tabelle oder Spalte ist nur ein Eintrag in `Schema.gs` und in `js/sche
 
 - **Für die Person vor 1.0:** Testdaten im Sheet löschen (in 12.17; `testdatenListe` in `apps-script/Aufraeumen.gs` zeigt sie mit Zeilennummern),
   auch Testeinträge aus der Sicherheitsprüfung 12.3. Datenschutztext von jemandem prüfen lassen, der sich auskennt.
-- **Für den Agenten (12.8):** ungenutzte CSS-Regeln `.kal-pfeil`, `.kal-nav`, `.kal-datum`, `.kal-monat-kopf`, `.modal-vollbild`,
-  `.dash-rechts-teil`, `.hilfe-abschnitt`, `.hilfe-teil`, `.hilfe-text`; ungenutzte Funktion `topEinfuegen` in `js/views/protokoll-rechnen.js`.
-- **Für die Person nach 12.4:** die fünf geänderten Skriptdateien bereitstellen, `testenRechte` ausführen. Danach müssen sich alle Geräte neu anmelden.
-  Foto-Ordner im Drive von „Jeder mit Link = Mitarbeiter“ auf „Betrachter“ stellen (Link bleibt gleich), dann `testenFotoSchreiben`.
+- **Für die Person nach 12.8 (spätestens in 12.17):** Wenn das Skript 0.34.6 bereitgestellt ist, im Sheet die Tabs `Posts`, `Projekt_Team`,
+  `Vorlagen_ToDo` und `Einstellungen` und die Spalten `ToDos.post_id` und `Projekte.kanaele` löschen (vorher prüfen, dass nichts Wichtiges darin steht).
+- **Möglich nach 1.0 (aus 12.7, D4):** Ähnlicher, aber nicht gleicher Code: `ideen.js` und `projekt-learnings.js` und das Muster „Liste mit
+  Formular, Speichern, Löschen, Meldung bei Konflikt“ (auch `start-brett.js`, `start-umfragen.js`, `mobi-eintrag.js`) könnten einen
+  gemeinsamen Baustein bekommen. Dazu kleine ähnliche Helfer (`zahl`, `euro`, `kopieren` u. a.). Nur mit Bildschirmfoto-Vergleich.
 - **Bewusst offen aus 12.3:** Mit falschen PINs kann jemand, der den Gruppennamen kennt, die Anmeldung immer wieder 15 Minuten sperren
   (Notweg in der Admin-Anleitung). Der Service Worker gilt nur für den App-Ordner; die Hauptseite auf derselben Adresse lädt nur OpenCollective-Daten (nach 1.0 ansehen).
 - Der alte Signal-Link steht noch in der Geschichte des Repos (0.33.11). Der aktuelle Link steht nur in der Skripteigenschaft.
@@ -360,7 +362,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 
 ## 5. Technik-Merkzettel
 
-- **Hilfsmodule, die du vor dem Neubauen suchst und wiederverwendest:** `js/ui/dom.js` (`el`, `leeren`), `js/ui/fenster.js` (`zeigeFenster`),
+- **Hilfsmodule, die du vor dem Neubauen suchst und wiederverwendest:** `js/ui/dom.js` (`el`, `leeren`, `txt`; seit 0.34.6 `txt` nur noch dort), `js/ui/fenster.js` (`zeigeFenster`),
   `js/ui/form.js` (`baueFormular`; Feldtypen text, zahl, datum, zeit, farbe, langtext, auswahl, bool, foto; Vorschlag darf `{ wert, label }` sein),
   `js/ui/table.js` (`zeigeListe`), `js/ui/toast.js`, `js/ui/kommentare.js` (`baueKommentare`), `js/views/todos-rechnen.js`,
   `js/views/kalender-rechnen.js`, `js/views/mobi-rechnen.js`, `js/wiki-format.js` (`zeichneText`), `js/views/wiki-rechnen.js`,
@@ -371,10 +373,11 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
   Dann zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern prüfen, vor allem `});` und `}, s.token);`.
 - **Skript:** In `Util.gs` gibt es `aus()`: in neuen Skriptdateien keine Variable so nennen. Vorsilben: `Termine.gs` t/ics, `Team.gs` team,
   `Wiki.gs` wiki (benutzt `tLink`, `tInstagram`, `tLinks`, `tFarbe` aus `Termine.gs`). Keine `appsscript.json` im Repo.
+  Text aus einem Wert: `textVon(v)`, zum Vergleichen `textKlein(v)` (beide `Util.gs`, seit 0.34.6); nicht in jeder Datei neu schreiben.
 - **Skripteigenschaften** (nur im Editor): `TOKEN_GEHEIMNIS`, `FOTO_ORDNER_g1/g2/g3`, `PROTOKOLL_DOK_g1`, `PROTOKOLL_DOK_g2`,
   freiwillig `PROTOKOLL_LINK_<gruppe_id>`, `OC_KONTO_<gruppe_id>`, `KONTO_STAND_<gruppe_id>` (nur vom Skript), `CLOUD_LINK_<gruppe_id>`, `SIGNAL_LINK`.
-- **Editor-Funktionen:** `formatieren`, `formatierenWiki` (Schema.gs); `aufraeumenTesten`, `aufraeumen` (löscht `geloescht=TRUE` älter als 90 Tage,
-  Log älter als 180 Tage, alte Kapazitäten), `testzeilenAnzeigen`, `testdatenListe` (Aufraeumen.gs); `setupGeheimnis`, `setupPins` (Setup.gs);
+- **Editor-Funktionen:** `formatieren` (Schema.gs); `aufraeumenTesten`, `aufraeumen` (löscht `geloescht=TRUE` älter als 90 Tage,
+  Log älter als 180 Tage, alte Kapazitäten), `testdatenListe` (Aufraeumen.gs); `setupGeheimnis`, `setupPins` (Setup.gs);
   Tests `testenTermine`, `testenTermineSicher`, `testenProtokollDok`, `testenProtokollAnhaengen`, `testenTeam`, `testenWiki`, `testenWikiSicher`,
   `testenFotoOrdner`, `testenFotoSchreiben`, `testenRechte` (Auth.gs, Rechte je Gruppe und Token), `messenSkript` (Werkzeuge.gs, misst Laufzeiten, schreibt nichts), `kontoTesten`, `kontoAbrufen`, `kontoAusloeserEinrichten`.
 - **Zwischenspeicher (IndexedDB)** `ladeMitCache(key, ladeFn, anzeigen, zuerstCache)`, Schlüssel `<gruppe_id>:<name>`: todos, projekteliste, startextra,
@@ -395,7 +398,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - **Zwischenspeicher im Skript (0.34.5):** Ein Tab lesen kostet bei Google 0,2 bis 0,35 s (gemessen mit `messenSkript`).
   `liesGemerkt(name)` (Util.gs) merkt Tabs 2 Minuten in `CacheService` (nur bis 45 000 Zeichen je Tab), Schlüssel mit „Stand“.
   `merkenVergessen()` setzt einen neuen Stand: in `mitSperre`, in `verteile` nach jeder Aktion außer `NUR_LESEN` (Code.gs) und nach `setupPins`.
-  Benutzt in `tokenPruefen`, `zugangFinden`, `gruppeSuchen`, `aktionGruppen`, `listeFuerGruppe`, `bootstrap`.
+  Benutzt in `tokenPruefen`, `zugangFinden`, `gruppeSuchen`, `aktionGruppen`, `listeFuerGruppe`.
   **Regel:** Wer schreibt, liest mit `lies()` (Zeilennummern), nie mit `liesGemerkt`. Neue Aktion, die nur liest? In `NUR_LESEN` eintragen.
   Änderungen direkt im Sheet zeigt die App nach höchstens 2 Minuten.
 - Version 0.32.13 wurde übersprungen (war kurz auf `main`).
@@ -414,7 +417,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - Hauptordner: `index.html`, `manifest.webmanifest`, `sw.js`, `README.md`, `LICENSE`, `CLAUDE.md` (zeigt nur hierher).
 - `docs/`: `STAND.md` (diese Datei), bis zum Ende von Etappe 12 `PLAN-ETAPPE-12.md`.
 - `icons/`: `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`, `logo.svg`, `gruppen/`.
-- `css/`: `base.css` (alle Farb-Variablen), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, Blöcke je Version).
+- `css/`: `base.css` (alle Farb-Variablen), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, nach Themen).
 - `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
   Team.gs, Wiki.gs, Konto.gs, Signal.gs, Setup.gs, Werkzeuge.gs (nur Editor-Werkzeuge, keine Bereitstellung nötig).
 - `js/`: app, config, api, store, cache, schema, vorlagen, kanaele, wiki-format, gruppeninfo, darstellung-start (normales Skript).
@@ -472,6 +475,11 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 12.6 (0.34.4): Service Worker zuerst Zwischenspeicher mit Hinweis „Neue Version da“, Start mit 5 statt 12 Anfragen
     (beim Neuladen 2 statt 9), Kalender lädt gleichzeitig, Logo ohne vergebliche Anfrage, Service Worker nach dem Laden.
   - 12.6b (0.34.5): Zwischenspeicher im Skript (`liesGemerkt`, 2 Minuten): Anmeldung und Listen ohne erneutes Lesen des Sheets.
+  - 12.7: Bericht Ungenutztes und Doppeltes (nur im Chat).
+  - 12.8 (0.34.6): Aufgeräumt: 4 tote Funktionen, 27 CSS-Klassen, alle überschriebenen CSS-Angaben, 56 doppelte CSS-Selektoren zusammengelegt,
+    9 ungenutzte Einträge in `js/schema.js`, `txt()` nur noch in `js/ui/dom.js` (vorher in 31 Dateien). Skript: Aktion `bootstrap`,
+    Tabs `Posts`, `Projekt_Team`, `Vorlagen_ToDo`, `Einstellungen`, Spalten `post_id` und `kanaele`, veraltete Editor-Tests;
+    `textVon` und `textKlein` statt vier gleicher Helfer. Die Regel „neue CSS ans Ende“ gilt nicht mehr.
 
 ---
 

@@ -3,7 +3,7 @@
 // Anheften, Seitenleiste und der "Aktionskalender" (Seite #/termine und Ansicht im Reiter Kalender).
 // Die Termine kommen ohne Login vom Skript (Aktion "termine") und liegen im Zwischenspeicher.
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { API_URL } from '../config.js';
 import { ladeMitCache } from '../cache.js';
@@ -13,10 +13,6 @@ import { normDatum, datumText, heuteIso } from './todos-rechnen.js';
 import {
   schriftfarbe, sichereUrl, WOCHENTAGE_KURZ, wochentagNr, MONATE
 } from './kalender-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function norm(v) {
   return txt(v).replace(/\s+/g, ' ').toLowerCase();

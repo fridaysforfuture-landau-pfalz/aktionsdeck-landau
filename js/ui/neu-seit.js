@@ -7,16 +7,12 @@
 // Seit 0.32.4 führen Kommentare zu Wiki-Seiten zur Seite (kein eigener Abschnitt „Wiki“).
 // Der Zeitpunkt des letzten Besuchs liegt im Gerät (store.js), pro Gruppe.
 
-import { el } from './dom.js';
+import { el, txt } from './dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from './fenster.js';
 import { getName, getLetzterBesuch, setLetzterBesuch } from '../store.js';
 import { istWahr } from '../schema.js';
 import { kurz, normDatum, heuteIso } from '../views/todos-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function zeitKurz(iso) {
   const d = new Date(iso);

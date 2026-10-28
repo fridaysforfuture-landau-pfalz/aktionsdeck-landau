@@ -3,7 +3,7 @@
 // opt: { ctx, token, kurzname, projektId, veranstaltungId, personen() -> Namensliste,
 //        neuLaden() -> Promise, beiFertig() -> Promise }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { baueFormular } from '../ui/form.js';
@@ -15,10 +15,6 @@ import { statusText, statiFuer } from './mobi-rechnen.js';
 import { normDatum } from './todos-rechnen.js';
 import { zeitNorm, sichereUrl } from './kalender-rechnen.js';
 import { namenMitRollen } from './team-namen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function fehlerFuer(opt, e) {
   if (e.code === 'konflikt') {

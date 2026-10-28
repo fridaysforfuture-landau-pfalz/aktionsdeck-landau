@@ -9,17 +9,13 @@
 //        vorhandene: Beiträge dieses Projekts oder dieser Veranstaltung,
 //        beiFertig() -> Promise }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { toast } from '../ui/toast.js';
 import { KANALGRUPPEN, kanaeleDerGruppe, kanaeleFuer, kanalInfo, STANDARD_BEITRAEGE, FORMAT_TEXT } from '../kanaele.js';
 import { faelligAus } from '../vorlagen.js';
 import { normDatum, datumText } from './todos-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function schluessel(kanalName, titel) {
   return txt(kanalName).toLowerCase() + '|' + txt(titel).toLowerCase();

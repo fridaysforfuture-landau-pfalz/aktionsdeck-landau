@@ -6,7 +6,7 @@
 //        auswahl: { gewaehlt(b), umschalten(b, wert) } oder null  (Kästchen "auswählen"),
 //        haken: { umschalten(b, wert) } oder null                 (Kästchen "veröffentlicht") }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { kanalInfo, FORMAT_TEXT } from '../kanaele.js';
 import { istVeroeffentlicht, faelligStatus, sortiereBeitraege, datumZeile, statusText } from './mobi-rechnen.js';
 import { kommentarMarke } from './todos-rechnen.js';
@@ -18,10 +18,6 @@ export const KACHEL_SPALTEN = [
   { id: 'print', name: 'Print' },
   { id: 'sonstiges', name: 'Sonstiges' }
 ];
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 export function spalteVon(b) {
   const g = kanalInfo(b.kanal).gruppe;

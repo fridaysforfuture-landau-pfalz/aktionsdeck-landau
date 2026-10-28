@@ -26,7 +26,7 @@ function messenSkript() {
   // 1) Größe der Tabs und Zeit für das Lesen eines ganzen Tabs
   Logger.log('');
   Logger.log('== 1. Tabs lesen (lies) ==');
-  var tabs = ['Gruppen', 'Zugang', 'Einstellungen', 'Log'].concat(Object.keys(TABELLEN));
+  var tabs = ['Gruppen', 'Zugang', 'Log'].concat(Object.keys(TABELLEN));
   var summeLesen = 0;
   tabs.forEach(function (tab) {
     var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(tab);
@@ -50,7 +50,6 @@ function messenSkript() {
   // Dritter Wert: true = gehört zum Öffnen des Reiters Start (die App schickt diese Anfragen gleichzeitig)
   var aufrufe = [
     ['gruppen', { aktion: 'gruppen' }, false],
-    ['bootstrap', { aktion: 'bootstrap' }, false],
     ['gruppeInfo', { aktion: 'gruppeInfo' }, true],
     ['list ToDos', { aktion: 'list', tabelle: 'ToDos' }, true],
     ['list Projekte', { aktion: 'list', tabelle: 'Projekte' }, true],

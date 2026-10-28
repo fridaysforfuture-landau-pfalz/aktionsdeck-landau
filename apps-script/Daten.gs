@@ -1,14 +1,13 @@
-// Daten.gs – bootstrap, list, listMehrere, create, update, delete, batchCreate, projektLoeschen.
+// Daten.gs – list, listMehrere, create, update, delete, batchCreate, projektLoeschen.
 // Jeder Schreibzugriff läuft in einer Sperre. Es sieht nur Daten der eigenen Gruppe.
 
 // Diese Tabs brauchen immer ein Projekt (projekt_id darf nicht leer sein)
 // (Protokolle seit 0.30.0 nicht mehr: Projekt freiwillig, siehe protokollBezugPruefen in Protokoll.gs)
-var PROJEKT_PFLICHT = ['Meilensteine', 'Projekt_Team', 'Projekt_Material', 'Finanzen'];
+var PROJEKT_PFLICHT = ['Meilensteine', 'Projekt_Material', 'Finanzen'];
 
-// Diese Tabs werden beim Löschen eines Projekts mitgelöscht (Posts zuerst, wegen der ToDos zu Posts).
+// Diese Tabs werden beim Löschen eines Projekts mitgelöscht.
 // Protokolle und Reden bleiben erhalten (sie werden nur von Hand einzeln gelöscht, seit 0.30.12).
-var PROJEKT_ABHAENGIG = ['Posts', 'ToDos', 'Meilensteine', 'Projekt_Team', 'Projekt_Material',
-                         'Finanzen', 'Kommentare', 'Mobi_Plan'];
+var PROJEKT_ABHAENGIG = ['ToDos', 'Meilensteine', 'Projekt_Material', 'Finanzen', 'Kommentare', 'Mobi_Plan'];
 
 function tabelleCheck(name) {
   if (typeof name !== 'string' || !TABELLEN.hasOwnProperty(name)) fehler('ungueltig', 'Unbekannte Tabelle.');
@@ -71,7 +70,7 @@ function konfliktPruefen(z, bekannt) {
 
 // t = gelesener Tab Projekte. Gibt die Projekt-Zeile zurück, sonst Fehler.
 function projektAus(t, ctx, id) {
-  var k = String(id === undefined || id === null ? '' : id).trim();
+  var k = textVon(id);
   if (!k) fehler('ungueltig', 'Bitte ein Projekt angeben.');
   for (var i = 0; i < t.zeilen.length; i++) {
     var z = t.zeilen[i];
@@ -82,8 +81,8 @@ function projektAus(t, ctx, id) {
 
 // Prüft projekt_id (und bei ToDos meilenstein_id). cache = {} wird beim ersten Gebrauch gefüllt.
 function bezugPruefen(ctx, tab, projektId, meilensteinId, cache) {
-  var pid = String(projektId === undefined || projektId === null ? '' : projektId).trim();
-  var mid = String(meilensteinId === undefined || meilensteinId === null ? '' : meilensteinId).trim();
+  var pid = textVon(projektId);
+  var mid = textVon(meilensteinId);
   if (!pid) {
     if (PROJEKT_PFLICHT.indexOf(tab) >= 0) fehler('ungueltig', 'Bitte ein Projekt angeben.');
     if (tab === 'ToDos' && mid) fehler('ungueltig', 'Ein Meilenstein gehört immer zu einem Projekt.');
@@ -149,17 +148,6 @@ function listeFuerGruppe(tab, gid, seit) {
     if (seit) return String(z.geaendert_am) >= seit;   // inkl. gelöschter, damit die App sie entfernen kann
     return !truthy(z.geloescht);
   }).map(sauber);
-}
-
-function aktionBootstrap(ctx, p) {
-  var zeit = jetzt();
-  return {
-    gruppe: gruppeOeffentlich(ctx.gruppe),
-    zugang_id: ctx.zugang_id,
-    serverzeit: zeit,
-    personen: listeFuerGruppe('Personen', ctx.gruppe_id, ''),
-    einstellungen: liesGemerkt('Einstellungen').zeilen.map(sauber)
-  };
 }
 
 function aktionList(ctx, p) {
@@ -398,18 +386,13 @@ function aktionProjektLoeschen(ctx, p) {
       tabs[tab] = t;
     });
 
-    // 3) Treffer sammeln (Posts zuerst: ToDos zu diesen Posts werden mitgelöscht)
-    var postIds = {};
+    // 3) Treffer sammeln
     var treffer = {};
     PROJEKT_ABHAENGIG.forEach(function (tab) {
       treffer[tab] = tabs[tab].zeilen.filter(function (r) {
         if (String(r.gruppe_id) !== String(ctx.gruppe_id) || truthy(r.geloescht)) return false;
-        if (String(r.projekt_id) === projektId) return true;
-        return tab === 'ToDos' && String(r.post_id || '') !== '' && postIds[String(r.post_id)] === true;
+        return String(r.projekt_id) === projektId;
       });
-      if (tab === 'Posts') {
-        treffer[tab].forEach(function (r) { postIds[String(r.id)] = true; });
-      }
     });
 
     // 4) Schreiben

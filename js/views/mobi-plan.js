@@ -5,7 +5,7 @@
 // opt: { ctx, token, projekt, holeDaten() -> { mobi, todos }, arbeitet (Objekt),
 //        offen, beiToggle(offen), neuZeichnen(), neuLaden() -> Promise, merken() }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { baueFormular } from '../ui/form.js';
@@ -29,10 +29,6 @@ const ANALYSE = [
   { name: 'kampagnenziel', label: 'Kampagnenziel (was soll erreicht werden?)', typ: 'langtext' },
   { name: 'handlungsaufruf', label: 'Aufruf zum Handeln (was sollen die Leute tun?)', typ: 'langtext' }
 ];
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 export function baueMobiTeil(opt) {
   const ctx = opt.ctx;

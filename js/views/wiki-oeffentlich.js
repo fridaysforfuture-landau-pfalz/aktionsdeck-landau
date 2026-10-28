@@ -9,14 +9,14 @@
 // Daten: Aktion "wiki" ohne Token. Zwischenspeicher oeffentlich:wiki (Liste) und oeffentlich:wiki:<gruppe>:<adresse>.
 // Keine Namen, keine Kommentare. Links [[Titel]] führen nur auf andere öffentliche Seiten derselben Gruppe.
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { balken } from '../ui/kopf.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { getSession } from '../store.js';
 import { zeichneText } from '../wiki-format.js';
 import { signalKnoepfe } from '../ui/signal.js';
-import { txt, nachThema, sortiereSeiten, findeSeite, anleitungListe, standText, BEREICHE } from './wiki-rechnen.js';
+import { nachThema, sortiereSeiten, findeSeite, anleitungListe, standText, BEREICHE } from './wiki-rechnen.js';
 
 const DATEI = /^[a-z0-9-]{1,40}$/;
 const GRUPPE = /^[a-z0-9_-]{1,30}$/;

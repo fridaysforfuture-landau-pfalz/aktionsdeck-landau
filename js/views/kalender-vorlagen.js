@@ -4,7 +4,7 @@
 // Tab Termin_Vorlagen: name, art, wochentag, zeit_von, zeit_bis, ort, beschreibung.
 // opt: { ctx, token, kurzname, neueAusVorlage(vorgabe) }
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { baueFormular } from '../ui/form.js';
@@ -24,10 +24,6 @@ export const STANDARD = {
     zeit_von: '19:00', zeit_bis: '', ort: 'KHG, Moltkestraße 9, Landau', beschreibung: ''
   }
 };
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function infoText(v) {
   const zeit = zeitNorm(v.zeit_von)

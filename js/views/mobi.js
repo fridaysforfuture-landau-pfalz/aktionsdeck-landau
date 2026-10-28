@@ -5,7 +5,7 @@
 // Filter, Sammelbearbeitung (Status, Verantwortliche), Archiv, Zählzeile mit Wochenzahl.
 // Die Ansicht bleibt beim Reiterwechsel erhalten (Merker außerhalb von render).
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { ladeMitCache, cacheSet } from '../cache.js';
 import { zeigeListe } from '../ui/table.js';
@@ -33,10 +33,6 @@ import { namenMitRollen, ladeTeamKlein } from './team-namen.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = zurückgesetzt.
 let merk = { token: '', ansicht: 'liste' };
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 export async function render(container, ctx) {
   const s = ctx.session;

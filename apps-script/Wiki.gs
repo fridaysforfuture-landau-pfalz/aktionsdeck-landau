@@ -17,14 +17,6 @@
 var WIKI_BEREICHE = ['skillshare', 'anleitung'];
 var WIKI_CACHE_SEK = 120;
 
-function wikiTxt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
-
-function wikiKey(v) {
-  return wikiTxt(v).toLowerCase();
-}
-
 // "demo-anmelden": nur a-z und 0-9, Bindestrich nur zwischen zwei Zeichen, höchstens 60 Zeichen
 function wikiAdresseOk(s) {
   var t = String(s === undefined || s === null ? '' : s);
@@ -33,10 +25,10 @@ function wikiAdresseOk(s) {
 
 // Gibt es den Wert (titel oder adresse) in der Gruppe schon (nicht gelöscht, andere ID)?
 function wikiVergeben(zeilen, gid, sp, wert, ohneId) {
-  var k = wikiKey(wert);
+  var k = textKlein(wert);
   return zeilen.some(function (z) {
     return String(z.gruppe_id) === String(gid) && !truthy(z.geloescht) &&
-      String(z.id) !== String(ohneId) && wikiKey(z[sp]) === k;
+      String(z.id) !== String(ohneId) && textKlein(z[sp]) === k;
   });
 }
 
@@ -58,15 +50,15 @@ function wikiPruefen(ctx, tab, d, id, cache, geaendert) {
   }
   function eindeutig(sp, wert, text) {
     var liste = cache['wiki_' + sp] || (cache['wiki_' + sp] = []);
-    if (wikiVergeben(tabelle().zeilen, gid, sp, wert, id) || liste.indexOf(wikiKey(wert)) >= 0) fehler('ungueltig', text);
-    liste.push(wikiKey(wert));
+    if (wikiVergeben(tabelle().zeilen, gid, sp, wert, id) || liste.indexOf(textKlein(wert)) >= 0) fehler('ungueltig', text);
+    liste.push(textKlein(wert));
   }
 
-  if (hat('bereich') && WIKI_BEREICHE.indexOf(wikiTxt(d.bereich)) < 0) {
+  if (hat('bereich') && WIKI_BEREICHE.indexOf(textVon(d.bereich)) < 0) {
     fehler('ungueltig', 'Der Bereich muss „skillshare“ oder „anleitung“ sein.');
   }
   if (hat('titel')) {
-    if (!wikiTxt(d.titel)) fehler('ungueltig', 'Bitte einen Titel angeben.');
+    if (!textVon(d.titel)) fehler('ungueltig', 'Bitte einen Titel angeben.');
     eindeutig('titel', d.titel, 'Eine Seite mit diesem Titel gibt es schon.');
   }
   if (hat('adresse')) {

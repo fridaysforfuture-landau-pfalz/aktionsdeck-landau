@@ -12,7 +12,7 @@
 //        vorgabe ({ projekt_id, veranstaltung_id }, freiwillig), entwurf (aus getRedeEntwurf, freiwillig),
 //        beiZu(), nachSpeichern(eintrag) }
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { toast } from '../ui/toast.js';
 import { getName, setRedeEntwurf, loescheRedeEntwurf } from '../store.js';
@@ -22,10 +22,6 @@ import { normDatum, datumText, heuteIso } from './todos-rechnen.js';
 import { addTage, sichereUrl } from './kalender-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
 import { istWahr } from '../schema.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 // Status einer Rede: gespeichert klein, angezeigt groß. Reihenfolge = Weiterschalten.
 export const REDE_STATI = [

@@ -11,10 +11,7 @@ import { normDatum } from './todos-rechnen.js';
 import { istIch, angabeJetzt } from './team-rechnen.js';
 import { istAbgeschlossen } from './projekt-rechnen.js';
 import { zahl, runden } from './material-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
+import { txt } from '../ui/dom.js';
 
 function gleicherName(a, b) {
   return txt(a).toLowerCase() === txt(b).toLowerCase();

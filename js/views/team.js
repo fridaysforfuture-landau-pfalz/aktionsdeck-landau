@@ -15,7 +15,7 @@
 // Seit 9.7: Adressen #/g/<kurz>/team/<person-id> (öffnet die Karte) und team/ich (eigene Karte zum Bearbeiten,
 // vom Start). Die geladenen Personen, Rollen und Kapazitäten gehen an team-namen.js (Vorschläge in anderen Reitern).
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { zeigeDetail, schliesseDetail } from '../ui/detail.js';
@@ -30,7 +30,7 @@ import { datumText, heuteIso, kurz, normDatum } from './todos-rechnen.js';
 import { huetKnoepfe } from './todos-hut.js';
 import { oeffneMobiAnsicht } from './mobi-todo.js';
 import {
-  txt, istAktiv, rollenVon, sortiereRollen, kapazitaetText, angabeJetzt, angabeZustand, verlauf,
+  istAktiv, rollenVon, sortiereRollen, kapazitaetText, angabeJetzt, angabeZustand, verlauf,
   sortierePersonen, passtSuche, passtRolle, istIch, darfBearbeiten, fuerJemandenEingetragen,
   alleHuete, hueteVon, projekteAus, faelligKlasse, namenOhneKarte, freieHuete, bergDaten
 } from './team-rechnen.js';

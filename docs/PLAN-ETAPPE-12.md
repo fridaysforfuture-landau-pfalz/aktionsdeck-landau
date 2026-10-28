@@ -32,7 +32,7 @@ Die Befunde aus Fassung 2 gelten weiter. Kurz:
 
 - **Erledigt vor Etappe 12:** GitHub Actions auf aktuellen Versionen (11.2). Alte Prüfpunkte 0.26.3 und 0.28.9 bis 0.28.13 bestätigt (27.10.2026). Impressum, Datenschutz und Entwicklung App ausgefüllt.
 - **Noch offen für die Person:** Testdaten im Sheet löschen (in 12.17), Datenschutztext prüfen lassen.
-- **Noch offen für den Agenten:** ungenutzte CSS-Regeln (`.kal-pfeil`, `.kal-nav`, `.kal-datum`, `.kal-monat-kopf`, `.modal-vollbild`, `.dash-rechts-teil`, `.hilfe-abschnitt`, `.hilfe-teil`, `.hilfe-text`) und `topEinfuegen` in `js/views/protokoll-rechnen.js` (in 12.8).
+- **Erledigt in 12.8 (0.34.6):** ungenutzte CSS-Regeln (`.kal-pfeil`, `.kal-nav`, `.kal-datum`, `.kal-monat-kopf`, `.modal-vollbild`, `.dash-rechts-teil`, `.hilfe-abschnitt`, `.hilfe-teil`, `.hilfe-text` und weitere) und `topEinfuegen` in `js/views/protokoll-rechnen.js`.
 - **Layout:** `#app` ist in `css/layout.css` auf 1400 px begrenzt. Grenze Handy/PC bei 960 px.
 - **Icon:** kein „maskable“ Icon im Manifest; `background_color` ist fast weiß (`#f3f7f5`).
 - **Fehlerseite:** Unbekannte Adressen in der App springen still zum Start (`js/app.js`, `route`). Auf dem Server zeigt GitHub seine englische 404-Seite.
@@ -147,7 +147,7 @@ Version 0.34.4. Mit Skript-Änderung nur, wenn der Bericht es zeigt und die Pers
 
 **Prüfen:** Zweites Öffnen am Handy fühlt sich schneller an. Im Flugmodus sind alle Reiter wie vorher lesbar. Nach einem Update erscheint der Hinweis.
 
-### 12.7 – Ungenutztes prüfen (Bericht, W4)
+### 12.7 – Ungenutztes prüfen (Bericht, W4) – erledigt
 
 Keine Änderung an der App, kein Pull Request.
 
@@ -156,9 +156,11 @@ Keine Änderung an der App, kein Pull Request.
 
 **Ergebnis:** `pruefung/ungenutzt-bericht.md`. Die Person gibt frei.
 
-### 12.8 – Ungenutztes löschen (W4)
+### 12.8 – Ungenutztes löschen (W4) – erledigt (0.34.6)
 
-Version 0.34.6. Sheet bleibt unverändert; Skript nur, wenn Skript-Funktionen freigegeben sind (dann „Von Hand zu erledigen“).
+Version 0.34.6. Mit Skript-Änderung („Von Hand zu erledigen“). Die Person hat freigegeben (28.10.2026): jetzt aufräumen, was geht, nicht erst nach 1.0.
+CSS zusammenlegen erlaubt (die Regel „neue CSS ans Ende“ gilt nicht mehr). Ungenutzte Tabs und Spalten nimmt das Skript heraus;
+die Person löscht sie danach im Sheet (spätestens in 12.17). Nur ähnlicher Code (D4) bleibt, als Aufgabe nach 1.0 in `docs/STAND.md`.
 
 **Prüfen:** Alle Reiter und öffentlichen Seiten laufen wie vorher.
 
@@ -232,7 +234,9 @@ Keine Änderung an der App, kein Pull Request.
 
 Version 0.34.12. Sheet und Skript bleiben unverändert.
 
-1. `css/components.css` in einer Datei mit klaren Abschnitten, ohne Doppelungen (Entscheidung 21).
+1. `css/components.css` in einer Datei mit klaren Abschnitten, ohne Doppelungen (Entscheidung 21). Seit 12.8 sind fast alle Doppelungen weg;
+   7 Selektoren stehen noch zweimal, weil die Reihenfolge zu anderen Regeln zählt: `.kal-tag`, `.kal-gewaehlt`, `.start-termine`,
+   in `@media (min-width: 600px)` `.kal-ansicht .knopf` und `.kal-kopf`, in `@media (min-width: 960px)` `.start-zwei` und `.start-termine`.
 2. Vergleich von Bildschirmfotos vorher und nachher (alle Reiter und Seiten, Handy und PC, hell und dunkel, Druck).
 3. Neue CSS-Regel in `docs/STAND.md` (Entscheidung 22).
 
@@ -243,6 +247,7 @@ Version 0.34.12. Sheet und Skript bleiben unverändert.
 Version 1.0.0. Sheet und Skript bleiben unverändert.
 
 1. Vorher von der Person: Testdaten im Sheet löschen (`testdatenListe` in `apps-script/Aufraeumen.gs`), auch die Testeinträge aus 12.3. Datenschutztext geprüft.
+   Falls noch nicht geschehen: Tabs `Posts`, `Projekt_Team`, `Vorlagen_ToDo`, `Einstellungen` und Spalten `ToDos.post_id`, `Projekte.kanaele` im Sheet gelöscht (aus 12.8).
 2. GitHub Actions kontrollieren (laufen grün, keine Warnungen).
 3. `docs/STAND.md`: Etappe 12 kurz zusammengefasst, dieser Plan eingearbeitet und gelöscht. `texte/entwicklung.txt`: Etappe 12 und Version 1.0; ab dann eine Zeile je Version.
 
@@ -261,7 +266,7 @@ Version 1.0.0. Sheet und Skript bleiben unverändert.
 | 12.6 | Geschwindigkeit verbessern | Bau | 0.34.4 | vielleicht |
 | 12.6b | Zwischenspeicher im Skript | Bau | 0.34.5 | ja (Bereitstellung) |
 | 12.7 | Ungenutztes prüfen | Bericht | – | nein |
-| 12.8 | Ungenutztes löschen | Bau | 0.34.6 | vielleicht |
+| 12.8 | Ungenutztes löschen | Bau | 0.34.6 | ja (Bereitstellung), danach Tabs und Spalten löschen |
 | 12.9 | Layout am PC und beim Rauszoomen | Bau | 0.34.7 | nein |
 | 12.10 | Barrierefreiheit prüfen, Test mit Bildschirmleser | Bericht | – | nein |
 | 12.11 | Barrierefreiheit verbessern | Bau | 0.34.8 | nein |

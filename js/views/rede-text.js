@@ -11,13 +11,9 @@
 // opt: { ctx, token, rede (null = neu), text (Starttext), kommentare (alle geladenen Kommentare),
 //        beiKommentar() (nach neuem oder gelöschtem Kommentar, freiwillig) }
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { toast } from '../ui/toast.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 function zeitKurz(iso) {
   const d = new Date(iso);

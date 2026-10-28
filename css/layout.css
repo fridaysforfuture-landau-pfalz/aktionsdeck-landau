@@ -83,6 +83,7 @@
     padding: 16px 12px;
     background: var(--flaeche);
     border-right: 1px solid var(--rand);
+    overflow-y: auto;
   }
 
   .seiten-kopf {

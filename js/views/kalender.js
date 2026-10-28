@@ -5,7 +5,7 @@
 // Die Termine werden in kalender-rechnen.js berechnet, hier wird nur angezeigt und gespeichert.
 // Die Filter bleiben beim Reiterwechsel erhalten (Merker außerhalb von render).
 
-import { el, leeren } from '../ui/dom.js';
+import { el, leeren, txt } from '../ui/dom.js';
 import { api } from '../api.js';
 import { ladeMitCache } from '../cache.js';
 import { zeigeFenster } from '../ui/fenster.js';
@@ -33,8 +33,6 @@ let merk = {
   ansicht: 'monat', archiv: false, filterAuf: false, jahr: 0, monat: 0, tag: ''
 };
 
-const MAX_VERGANGEN = 30;
-
 // Schalter in der Filterleiste: [Schlüssel im Filter, Text]
 const SCHALTER = [
   ['intern', 'Intern'],
@@ -48,10 +46,6 @@ const SCHALTER = [
   ['archivProjekte', 'Archiv-Projekte'],
   ['oeffentlich', 'Öffentliche Termine anderer Gruppen']
 ];
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 // Gruppeneigene externe Veranstaltung (Veranstalter leer) = Mitteilung am Schwarzen Brett.
 // Intern oder von anderen = Kommentar an der Pinnwand.

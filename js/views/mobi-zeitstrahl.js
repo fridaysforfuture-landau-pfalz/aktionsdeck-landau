@@ -7,16 +7,12 @@
 // - baueZeitbalken: ein einzelner Balken für den Teil „Mobi“ im Projekt: Abschnitte mit Beiträgen
 //   in Kanalfarbe (grau, wenn veröffentlicht), Linien für Aktion und Heute.
 
-import { el } from '../ui/dom.js';
+import { el, txt } from '../ui/dom.js';
 import { zeigeFenster } from '../ui/fenster.js';
 import { kanalInfo, KANAELE } from '../kanaele.js';
 import { istVeroeffentlicht, faelligStatus, sortiereBeitraege, beitragInfo } from './mobi-rechnen.js';
 import { normDatum, datumText, heuteIso } from './todos-rechnen.js';
 import { addTage, tageZwischen, wochentagNr } from './kalender-rechnen.js';
-
-function txt(v) {
-  return String(v === undefined || v === null ? '' : v).trim();
-}
 
 // Schmaler Bildschirm (Handy): Beschriftungen brauchen mehr Abstand
 function schmal() {
