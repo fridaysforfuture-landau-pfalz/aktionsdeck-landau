@@ -29,6 +29,7 @@ import { ladeTeamKlein, teamKlein } from './team-namen.js';
 import { baueIdeenTeil } from './ideen.js';
 import { baueMobiTeil } from './mobi-plan.js';
 import { STANDARD_TODOS, faelligAus } from '../vorlagen.js';
+import * as jahresUebersicht from './uebersicht.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = leer.
 // offen: aufgeklappte Projekte. teile: aufgeklappte Teile ("<id>:todos", "<id>:team").
@@ -69,6 +70,8 @@ function istPlanung(p) {
 
 export async function render(container, ctx) {
   const s = ctx.session;
+  // Jahresübersicht (11.5): #/g/<kurzname>/projekte/uebersicht
+  if (ctx.unter === 'uebersicht') return jahresUebersicht.render(container, ctx);
   ladeTeamKlein(s);   // Team-Namen für den Teil „Team“ und die Vorschläge bei „Verantwortlich“ (9.7)
   leeren(container);
 
@@ -265,6 +268,13 @@ export async function render(container, ctx) {
     const liste = archivModus ? alle : alle.filter(function (p) { return !istPlanung(p); });
     leeren(uebersicht);
     uebersicht.append(el('h2', { text: archivModus ? 'Archiv' : 'Laufende Projekte' }));
+    // Im Archiv: Knopf zur Jahresübersicht (11.5)
+    if (archivModus) {
+      uebersicht.append(el('a', {
+        class: 'knopf knopf-hell jahr-knopf', href: '#/g/' + encodeURIComponent(s.kurzname) + '/projekte/uebersicht',
+        text: '📊 Jahresübersicht →'
+      }));
+    }
     if (!liste.length) {
       let t = 'Noch kein Projekt angelegt. Mit „+ Neu“ geht es los.';
       if (daten.projekte.length) t = archivModus ? 'Das Archiv ist leer.' : 'Keine laufenden Projekte.';
