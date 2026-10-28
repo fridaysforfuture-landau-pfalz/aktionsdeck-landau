@@ -45,6 +45,8 @@ function verteile(p) {
     case 'protokollSpeichern':   return aktionProtokollSpeichern(ctx, p);
     case 'protokollInsDokument': return aktionProtokollInsDokument(ctx, p);
     case 'protokollInfo':        return aktionProtokollInfo(ctx, p);
+    case 'gruppeInfo':           return aktionGruppeInfo(ctx, p);          // Konto.gs, seit 0.33.0
+    case 'kontoAktualisieren':   return aktionKontoAktualisieren(ctx, p);  // Konto.gs, seit 0.33.0
     default: fehler('ungueltig', 'Unbekannte Aktion.');
   }
 }

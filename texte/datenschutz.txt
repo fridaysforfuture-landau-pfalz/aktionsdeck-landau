@@ -24,6 +24,8 @@ Dabei erhält Google deine IP-Adresse. Das gilt auch für öffentliche Seiten wi
 Fotos von Material und Bilder im Wiki liegen in Google Drive. Wer den Link kennt, kann sie ansehen. Beim Ansehen lädt dein Browser das Bild direkt von Google.
 Datenschutzerklärung von Google: https://policies.google.com/privacy
 
+Für Gruppen mit einem Konto bei OpenCollective ruft das Skript etwa einmal pro Woche den Kontostand ab (oder wenn jemand „Jetzt abrufen“ drückt). Abgerufen werden nur Kontostand und Währung, keine Buchungen und keine Namen. Den Abruf macht das Skript, nicht dein Gerät. Anbieter ist Open Collective (https://opencollective.com/privacypolicy).
+
 GitHub und Google sind nach dem Datenschutzrahmen zwischen der EU und den USA (EU-U.S. Data Privacy Framework) zertifiziert.
 
 ## Was in deinem Gerät gespeichert wird

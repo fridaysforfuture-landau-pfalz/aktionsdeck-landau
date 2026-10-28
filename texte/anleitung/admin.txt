@@ -50,7 +50,26 @@ Gelöschte Zeilen bleiben im Sheet, bis jemand aufräumt. Das Aufräumen läuft 
 1. Im Editor die Funktion `aufraeumenTesten` auswählen und auf „Ausführen“ klicken. Das zählt nur und löscht nichts. Im Protokoll steht, wie viele Zeilen entfernt würden.
 2. Passt das, die Funktion `aufraeumen` ausführen. Sie entfernt gelöschte Zeilen, die älter als 90 Tage sind, Log-Einträge älter als 180 Tage und alte Kapazitäts-Angaben im Team.
 
-Was einmal endgültig entfernt ist, lässt sich nicht zurückholen. Einen einzelnen Eintrag sofort endgültig loswerden: im Sheet die ganze Zeile löschen (Rechtsklick auf die Zeilennummer → „Zeile löschen“). Nie nur einzelne Zellen leeren.
+Was einmal endgültig entfernt ist, steht nur noch im Versionsverlauf des Sheets (siehe unten). Einen einzelnen Eintrag sofort endgültig loswerden: im Sheet die ganze Zeile löschen (Rechtsklick auf die Zeilennummer → „Zeile löschen“). Nie nur einzelne Zellen leeren.
+
+## Einen älteren Stand zurückholen (Versionsverlauf)
+
+Google merkt sich frühere Stände des Sheets. Eine eigene Sicherung macht die App nicht. So holst du etwas zurück, das im Sheet fehlt oder kaputt ist:
+
+1. Im Sheet: Datei → Versionsverlauf → Versionsverlauf ansehen.
+2. Rechts einen Zeitpunkt wählen, an dem noch alles stimmte. Das Sheet zeigt dann diesen Stand (nur zum Ansehen).
+3. Am sichersten: Oben „Kopie erstellen“ wählen. In der Kopie die fehlenden Zeilen markieren, kopieren und im echten Sheet am Ende des Tabs einfügen. Die erste Zeile (Spaltenköpfe) nie mitkopieren.
+4. Nur wenn das ganze Sheet kaputt ist: „Diese Version wiederherstellen“. Dann ist aber alles weg, was seitdem in der App eingetragen wurde.
+
+## Kontostand und Cloud
+
+Diese Angaben stehen nicht im Sheet, sondern im Apps-Script-Editor unter Projekteinstellungen (Zahnrad) → Skripteigenschaften:
+
+- `OC_KONTO_<gruppe_id>`: der Name des Kontos bei OpenCollective, zum Beispiel `klimastreik-landau`. Nur Gruppen mit diesem Eintrag sehen einen Kontostand.
+- `CLOUD_LINK_<gruppe_id>`: die Adresse der Cloud der Gruppe (beginnt mit `https://`). Nur Gruppen mit diesem Eintrag sehen den Reiter Cloud.
+- `KONTO_STAND_<gruppe_id>` schreibt das Skript selbst. Nicht ändern.
+
+Der Kontostand wird jeden Montag früh von selbst abgerufen. Dafür muss die Funktion `kontoAusloeserEinrichten` einmal im Editor gelaufen sein. Ob der Abruf klappt, zeigt `kontoTesten`.
 
 ## Testdaten finden
 
