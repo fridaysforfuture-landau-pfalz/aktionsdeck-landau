@@ -3,7 +3,7 @@
 // Eine neue Version lädt im Hintergrund und wartet, bis die App „Jetzt neu laden“ schickt (js/app.js).
 // Daten der API liegen nicht hier, sondern in IndexedDB (js/cache.js).
 
-const VERSION = '0.34.10';
+const VERSION = '0.34.11';
 const CACHE = 'aktionsdeck-' + VERSION;
 
 const HUELLE = [
