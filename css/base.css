@@ -99,8 +99,22 @@ body {
 
 h1, h2, h3 { line-height: 1.2; margin: 0 0 var(--abstand); }
 
+/* Ladebildschirm beim Start (seit 0.34.9): dunkelgrau mit Logo, bis die App ihre erste Seite zeigt */
+.ladebild {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--balken);
+}
+
+.ladebild img { width: 160px; height: 160px; }
+
 .laden {
+  margin: 0;
   text-align: center;
-  color: var(--text-leise);
-  margin-top: 30vh;
+  color: var(--balken-text);
 }

@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-- Version der App: **0.34.8** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **0.34.9** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
-- Nächster Schritt: **12.12 App-Icon und Ladebildschirm**. Offen aus 12.10: Test der Person mit Bildschirmleser (Anleitung im Bericht) und ihre Anmerkungen am PC zu 12.9.
+- Nächster Schritt: **12.13 Fehlerseite „Seite nicht gefunden“**.
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -227,7 +227,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
   12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2),
   12.5 Geschwindigkeitsbericht (nur im Chat) mit dem Editor-Werkzeug `messenSkript` (0.34.3),
   12.6 Geschwindigkeit verbessert (0.34.4 App, 0.34.5 Zwischenspeicher im Skript), 12.7 Bericht Ungenutztes (nur im Chat),
-  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6, Skript bereitgestellt, `testenRechte` ok), 12.9 Layout am PC (0.34.7), 12.10 Bericht Barrierefreiheit (nur im Chat), 12.11 Barrierefreiheit verbessert (0.34.8).
+  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6, Skript bereitgestellt, `testenRechte` ok), 12.9 Layout am PC (0.34.7), 12.10 Bericht Barrierefreiheit (nur im Chat), 12.11 Barrierefreiheit verbessert (0.34.8), 12.12 App-Icon und Ladebildschirm (0.34.9).
 - Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
   Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
@@ -428,7 +428,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 
 - Hauptordner: `index.html`, `manifest.webmanifest`, `sw.js`, `README.md`, `LICENSE`, `CLAUDE.md` (zeigt nur hierher).
 - `docs/`: `STAND.md` (diese Datei), bis zum Ende von Etappe 12 `PLAN-ETAPPE-12.md`.
-- `icons/`: `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`, `logo.svg`, `gruppen/`.
+- `icons/`: `icon.svg` (Favicon, Ladebildschirm), `icon-192.png`, `icon-512.png`, `icon-maskable.svg`, `icon-maskable-192.png`, `icon-maskable-512.png` (vollflächig für Android, seit 0.34.9), `apple-touch-icon.png` (iPhone, vollflächig), `logo.svg`, `gruppen/`.
 - `css/`: `base.css` (alle Farb-Variablen), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, nach Themen).
 - `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
   Team.gs, Wiki.gs, Konto.gs, Signal.gs, Setup.gs, Werkzeuge.gs (nur Editor-Werkzeuge, keine Bereitstellung nötig).
@@ -496,9 +496,12 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 12.9 (0.34.7): Layout am PC: keine Grenze von 1400 px mehr, Reiter rutschen bei wenig Höhe in „Mehr ▾“, Kacheln werden breiter,
     Lesetexte und Formulare schmal und mittig.
   - 12.10: Bericht Barrierefreiheit mit Anleitung für den Test mit Bildschirmleser (nur im Chat). Die Person gab alles frei außer Farben.
+    Den Test mit Bildschirmleser macht die Person nicht (29.10.2026: „Es reicht so.“).
   - 12.11 (0.34.8): Seitentitel und Fokus nach Seitenwechsel, Sprung-Link „Zum Inhalt springen“, Fokus bleibt in Fenstern, Fokus und Esc
     im Detailbereich, Projekt-Knöpfe aus der Kopfzeile in den aufgeklappten Teil, Beschriftung Protokolltext, `main` und `h1` auf öffentlichen
     Seiten, Überschriften im Mobi, nichts ragt bei 320 px über den Rand, Knöpfe unten in der Seitenleiste bei großer Schrift untereinander.
+  - 12.12 (0.34.9): App-Icon vollflächig dunkelgrau (`icons/icon-maskable*.svg/png`, neues `apple-touch-icon.png`), Manifest mit
+    maskable Icons und `background_color` `#1a1e20`, Ladebildschirm in `index.html` (dunkelgrau mit Logo). Keine iPhone-Startbilder.
 
 ---
 
