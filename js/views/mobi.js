@@ -659,7 +659,7 @@ export async function render(container, ctx) {
       if (!l.length) karten.append(el('p', { class: 'leise', text: 'Nichts in dieser Spalte.' }));
       l.forEach(function (b) { karten.append(kanbanKarte(b)); });
       wrap.append(el('section', { class: 'kanban-spalte', 'aria-label': statusText(st) },
-        el('h3', { class: 'kanban-kopf', text: statusText(st) + ' (' + l.length + ')' }),
+        el('h2', { class: 'kanban-kopf', text: statusText(st) + ' (' + l.length + ')' }),
         karten
       ));
     });
@@ -819,7 +819,7 @@ export async function render(container, ctx) {
       if (!strahl) return;
       gezeigt += 1;
       boxZeit.append(el('section', { class: 'mobi-zeit-gruppe' },
-        el('h3', { class: 'teil-titel-klein', text: istProjekt ? (projektTitel[id] || 'Projekt') : '📅 ' + (veranstTitel[id] || 'Veranstaltung') }),
+        el('h2', { class: 'teil-titel-klein', text: istProjekt ? (projektTitel[id] || 'Projekt') : '📅 ' + (veranstTitel[id] || 'Veranstaltung') }),
         strahl
       ));
     });

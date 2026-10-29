@@ -138,14 +138,20 @@ export function baueGeruest(container, ctx) {
     eintrag('nav-unten', basis, MEHR, mehrAktiv, aktiv === 'mehr' ? ctx.neuLaden : null)
   );
 
-  const inhalt = el('main', { class: 'inhalt', id: 'inhalt' });
+  const inhalt = el('main', { class: 'inhalt fokus-still', id: 'inhalt', tabindex: '-1' });
+  // Seit 0.34.8: Sprung-Link als erster Tab-Stopp (nur sichtbar mit Fokus). Kein normaler Link, weil # die Adresse ändern würde.
+  const sprung = el('a', { class: 'sprung-link', href: '#inhalt', text: 'Zum Inhalt springen' });
+  sprung.addEventListener('click', function (ev) {
+    ev.preventDefault();
+    inhalt.focus();
+  });
   const detail = el('aside', { class: 'detail', id: 'detail', 'aria-label': 'Details' });
 
   const mehr = mehrAmPc(seitenleiste, links, aktiv);
   links[links.length - 1].after(mehr.mehr);
 
   container.textContent = '';
-  container.append(el('div', { class: 'huelle' }, seitenleiste, inhalt, detail, untenleiste));
+  container.append(el('div', { class: 'huelle' }, sprung, seitenleiste, inhalt, detail, untenleiste));
   verteileAktuell = mehr.verteile;
   mehr.verteile();
   return { inhalt: inhalt, detail: detail };

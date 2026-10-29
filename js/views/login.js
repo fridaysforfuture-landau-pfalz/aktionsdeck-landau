@@ -105,7 +105,7 @@ export function render(container, ctx) {
   const zurueck = el('a', { href: '#/', text: '← Andere Gruppe' });
   container.append(
     balken(),
-    el('div', { class: 'mitte' },
+    el('main', { class: 'mitte' },
       el('div', { class: 'login-kopf' },
         gruppenLogo(g.kurzname, 'gruppen-logo'),
         el('h1', { text: g.name })

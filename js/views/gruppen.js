@@ -46,7 +46,8 @@ export async function render(container, ctx) {
 
   container.append(
     balken(),
-    el('div', { class: 'start-seite start-breit' }, zwei, infoKnoepfe())
+    el('main', { class: 'start-seite start-breit' },
+      el('h1', { class: 'nur-leser', text: 'AktionsDeck Landau: Gruppe wählen' }), zwei, infoKnoepfe())
   );
 
   // Öffentliche Termine (ohne Login). Klappt etwas nicht, bleibt die Seitenleiste einfach weg.

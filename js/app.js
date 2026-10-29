@@ -8,11 +8,12 @@ import {
 } from './store.js';
 import { cacheLeeren } from './cache.js';
 import { gruppenInfoAusCache, gruppenInfoLaden, gruppenInfoVergessen, cloudLinkSofort } from './gruppeninfo.js';
-import { baueGeruest, sichtbareTabs, tabLabel } from './ui/nav.js';
+import { baueGeruest, sichtbareTabs, tabLabel, OEFFENTLICH } from './ui/nav.js';
 import { frageName } from './ui/modal.js';
 import { toast } from './ui/toast.js';
 import { el } from './ui/dom.js';
 import { darstellungAnwenden, darstellungBeobachten } from './ui/darstellung.js';
+import { fokusImFensterHalten } from './ui/fokus.js';
 import * as gruppenView from './views/gruppen.js';
 import * as loginView from './views/login.js';
 import * as infoView from './views/info.js';
@@ -132,6 +133,22 @@ async function nameSicherstellen() {
   nameFrageOffen = false;
 }
 
+// Seit 0.34.8 (Barrierefreiheit): Titel im Browser-Tab je Seite. Nach einem Wechsel der Seite springt der Fokus
+// auf die Hauptüberschrift, damit Bildschirmleser ansagen, wo man ist (nicht beim ersten Aufruf und nicht beim Neuaufbau derselben Seite).
+let letzteSeite = null;
+function seiteFertig(nummer, schluessel, titel, bereich) {
+  if (nummer !== laufNummer) return;
+  document.title = titel ? titel + ' – AktionsDeck Landau' : 'AktionsDeck Landau';
+  const wechsel = letzteSeite !== null && letzteSeite !== schluessel;
+  letzteSeite = schluessel;
+  if (!wechsel) return;
+  const h1 = bereich && bereich.querySelector('h1');
+  if (!h1) return;
+  h1.setAttribute('tabindex', '-1');
+  h1.classList.add('fokus-still');
+  h1.focus({ preventScroll: true });
+}
+
 async function route() {
   const nummer = ++laufNummer;
   refreshFn = null;
@@ -154,6 +171,8 @@ async function route() {
     setzeFarbe('');
     ctx.seite = teile[1] || 'info';
     infoView.render(container, ctx);
+    const o = OEFFENTLICH.find(function (x) { return x.id === ctx.seite; });
+    seiteFertig(nummer, 'info/' + ctx.seite, o ? o.label : 'Info', container);
     return;
   }
 
@@ -168,6 +187,7 @@ async function route() {
     } catch (e) {
       container.textContent = 'Das Wiki konnte nicht geladen werden.';
     }
+    seiteFertig(nummer, 'wiki/' + ctx.wikiTeile.join('/'), 'Wiki', container);
     return;
   }
 
@@ -181,6 +201,7 @@ async function route() {
     } catch (e) {
       container.textContent = 'Die Termine konnten nicht geladen werden.';
     }
+    seiteFertig(nummer, 'termine', 'Termine', container);
     return;
   }
 
@@ -212,6 +233,7 @@ async function route() {
     if (!s || s.gruppe_id !== g.gruppe_id) {
       ctx.gruppe = g;
       loginView.render(container, ctx);
+      seiteFertig(nummer, 'login/' + g.kurzname, 'Anmelden – ' + g.name, container);
       return;
     }
 
@@ -246,11 +268,13 @@ async function route() {
     } catch (e) {
       if (!behandleFehler(e)) geruest.inhalt.textContent = 'Fehler: ' + e.message;
     }
+    seiteFertig(nummer, 'g/' + s.kurzname + '/' + ctx.tab, ctx.tabLabel + ' – ' + String(s.kurzname).toUpperCase(), geruest.inhalt);
     return;
   }
 
   setzeFarbe('');
-  gruppenView.render(container, ctx);
+  await gruppenView.render(container, ctx);
+  seiteFertig(nummer, 'gruppen', '', container);
 }
 
 // 0.34.4: Die App öffnet aus dem Zwischenspeicher. Eine neue Version lädt der Service Worker im Hintergrund;
@@ -304,6 +328,7 @@ setInterval(function () {
 }, REFRESH_SEKUNDEN * 1000);
 
 darstellungAnwenden();
+fokusImFensterHalten();
 darstellungBeobachten(function () { route(); });
 window.addEventListener('hashchange', route);
 route();

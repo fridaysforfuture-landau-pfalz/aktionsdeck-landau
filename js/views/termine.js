@@ -18,7 +18,7 @@ export async function render(container, ctx) {
 
   container.append(
     balken(),
-    el('div', { class: 'start-seite' },
+    el('main', { class: 'start-seite' },
       el('h1', { text: 'Öffentliche Termine' }),
       el('p', {
         class: 'leise',

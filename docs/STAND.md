@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-- Version der App: **0.34.7** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **0.34.8** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
-- Nächster Schritt: **12.10 Barrierefreiheit prüfen** (Bericht und Anleitung für den Test mit Bildschirmleser).
+- Nächster Schritt: **12.12 App-Icon und Ladebildschirm**. Offen aus 12.10: Test der Person mit Bildschirmleser (Anleitung im Bericht) und ihre Anmerkungen am PC zu 12.9.
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -227,7 +227,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
   12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2),
   12.5 Geschwindigkeitsbericht (nur im Chat) mit dem Editor-Werkzeug `messenSkript` (0.34.3),
   12.6 Geschwindigkeit verbessert (0.34.4 App, 0.34.5 Zwischenspeicher im Skript), 12.7 Bericht Ungenutztes (nur im Chat),
-  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6, Skript bereitgestellt, `testenRechte` ok), 12.9 Layout am PC (0.34.7).
+  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6, Skript bereitgestellt, `testenRechte` ok), 12.9 Layout am PC (0.34.7), 12.10 Bericht Barrierefreiheit (nur im Chat), 12.11 Barrierefreiheit verbessert (0.34.8).
 - Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
   Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
@@ -236,6 +236,10 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
 
 - **Für die Person vor 1.0:** Testdaten im Sheet löschen (in 12.17; `testdatenListe` in `apps-script/Aufraeumen.gs` zeigt sie mit Zeilennummern),
   auch Testeinträge aus der Sicherheitsprüfung 12.3. Datenschutztext von jemandem prüfen lassen, der sich auskennt.
+- **Möglich nach 1.0 (aus 12.10, B19):** Schriftgrößen in `rem` statt `px`, damit auch die Einstellung „Schriftgröße“ im PC-Browser wirkt
+  (Zoom geht schon). Viel Arbeit, nur mit Bildschirmfoto-Vergleich.
+- **Bewusst nicht geändert (12.10, Wunsch der Person):** Farben mit zu wenig Kontrast (B9 bis B13 im Bericht: Orange „heute“, Uhrzeit in
+  farbigen Wochen-Terminen, TOP-Überschriften im dunklen Protokoll, Zeitstrahl-Beschriftung, Tage anderer Monate). Nur ändern, wenn die Person es will.
 - **Möglich nach 1.0 (aus 12.7, D4):** Ähnlicher, aber nicht gleicher Code: `ideen.js` und `projekt-learnings.js` und das Muster „Liste mit
   Formular, Speichern, Löschen, Meldung bei Konflikt“ (auch `start-brett.js`, `start-umfragen.js`, `mobi-eintrag.js`) könnten einen
   gemeinsamen Baustein bekommen. Dazu kleine ähnliche Helfer (`zahl`, `euro`, `kopieren` u. a.). Nur mit Bildschirmfoto-Vergleich.
@@ -370,6 +374,13 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
   `js/gruppeninfo.js` (Kontostand und Cloud-Link), `js/views/erinnerungen-rechnen.js`, `js/views/uebersicht-rechnen.js`,
   `js/ui/druck.js` (`drucke`), `js/ui/darstellung.js` (`istDunkel`), `js/views/team-namen.js` (Namen mit Rollen für andere Reiter).
   Lies die Datei, bevor du sie benutzt. Rate keine Signaturen.
+- **Barrierefreiheit (seit 0.34.8), beim Bauen beachten:**
+  - Jede Seite hat genau eine `h1`. `app.js` (`seiteFertig`) setzt den Titel im Browser-Tab und nach einem Seitenwechsel den Fokus auf die `h1`.
+  - Fenster immer mit `role="dialog"` und `aria-modal="true"`: Dann hält `js/ui/fokus.js` den Fokus darin.
+  - Details nur über `zeigeDetail` (`js/ui/detail.js`): Es setzt den Fokus auf die Überschrift, Esc schließt, danach geht der Fokus zurück.
+  - Keine Knöpfe in `summary`. Jedes Feld braucht eine Beschriftung (`label` oder `aria-labelledby`). Überschriften ohne Sprung (h1 → h2 → h3).
+  - Fokus nur zum Vorlesen (Überschrift, `main`): Klasse `fokus-still`, dann ohne Rahmen.
+  - Bei 100 % am Handy soll nichts umbrechen, was vorher nicht umbrach. Umbruch nur bei Platzmangel (`flex-wrap`) oder unter 360 px.
 - **Ein Syntaxfehler** in einer Datei lässt den Reiter auf „Dieser Reiter ist noch in Arbeit“ zurückfallen (`app.js` lädt jeden Reiter als Modul).
   Dann zuerst die zuletzt geänderten Dateien auf fehlende oder doppelte Klammern prüfen, vor allem `});` und `}, s.token);`.
 - **Skript:** In `Util.gs` gibt es `aus()`: in neuen Skriptdateien keine Variable so nennen. Vorsilben: `Termine.gs` t/ics, `Team.gs` team,
@@ -484,6 +495,10 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
     Die Person hat das Skript bereitgestellt und die alten Tabs und Spalten im Sheet gelöscht.
   - 12.9 (0.34.7): Layout am PC: keine Grenze von 1400 px mehr, Reiter rutschen bei wenig Höhe in „Mehr ▾“, Kacheln werden breiter,
     Lesetexte und Formulare schmal und mittig.
+  - 12.10: Bericht Barrierefreiheit mit Anleitung für den Test mit Bildschirmleser (nur im Chat). Die Person gab alles frei außer Farben.
+  - 12.11 (0.34.8): Seitentitel und Fokus nach Seitenwechsel, Sprung-Link „Zum Inhalt springen“, Fokus bleibt in Fenstern, Fokus und Esc
+    im Detailbereich, Projekt-Knöpfe aus der Kopfzeile in den aufgeklappten Teil, Beschriftung Protokolltext, `main` und `h1` auf öffentlichen
+    Seiten, Überschriften im Mobi, nichts ragt bei 320 px über den Rand, Knöpfe unten in der Seitenleiste bei großer Schrift untereinander.
 
 ---
 

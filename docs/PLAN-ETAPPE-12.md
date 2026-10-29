@@ -174,7 +174,7 @@ Version 0.34.7. Sheet und Skript bleiben unverändert.
 
 **Prüfen:** Am PC auf 67 %, 50 % und 33 % rauszoomen: kein leerer Rand, Kacheln breiter. Fenster niedrig ziehen oder auf 200 % zoomen: „Mehr ▾“ erscheint. Handy unverändert.
 
-### 12.10 – Barrierefreiheit prüfen (Bericht, W7)
+### 12.10 – Barrierefreiheit prüfen (Bericht, W7) – erledigt (Test mit Bildschirmleser durch die Person steht noch aus)
 
 Keine Änderung an der App, kein Pull Request.
 
@@ -184,7 +184,7 @@ Keine Änderung an der App, kein Pull Request.
 
 **Ergebnis:** `pruefung/barrierefreiheit-bericht.md` (Liste „Problem, wo, wer betroffen, Lösung, Aufwand“). Die Person gibt frei.
 
-### 12.11 – Barrierefreiheit verbessern (W7)
+### 12.11 – Barrierefreiheit verbessern (W7) – erledigt (0.34.8, ohne Farben auf Wunsch der Person)
 
 Version 0.34.8. Sheet und Skript bleiben unverändert.
 
@@ -267,8 +267,8 @@ Version 1.0.0. Sheet und Skript bleiben unverändert.
 | 12.7 | Ungenutztes prüfen | Bericht | – | nein |
 | 12.8 | Ungenutztes löschen | Bau | 0.34.6 | ja (Bereitstellung), danach Tabs und Spalten löschen |
 | 12.9 | Layout am PC und beim Rauszoomen – erledigt | Bau | 0.34.7 | nein |
-| 12.10 | Barrierefreiheit prüfen, Test mit Bildschirmleser | Bericht | – | nein |
-| 12.11 | Barrierefreiheit verbessern | Bau | 0.34.8 | nein |
+| 12.10 | Barrierefreiheit prüfen, Test mit Bildschirmleser – erledigt | Bericht | – | nein |
+| 12.11 | Barrierefreiheit verbessern – erledigt | Bau | 0.34.8 | nein |
 | 12.12 | App-Icon und Ladebildschirm | Bau | 0.34.9 | nein |
 | 12.13 | Fehlerseite | Bau | 0.34.10 | nein |
 | 12.14 | Tabs im Sheet sortieren | Bau | 0.34.11 | `Werkzeuge.gs`, keine Bereitstellung |

@@ -401,31 +401,31 @@ export async function render(container, ctx) {
         el('span', { class: 'projekt-titel-zeile' },
           el('span', { class: 'projekt-pfeil', 'aria-hidden': 'true', text: '▸' }),
           el('span', { class: 'projekt-titel', text: String(p.titel) }),
-          el('span', { class: 'status-marke status-' + st, text: statusText(p.status) }),
-          el('span', { class: 'projekt-aktionen' },
-            el('button', {
-              class: 'knopf knopf-hell knopf-klein', type: 'button',
-              text: istAbgeschlossen(p) ? 'Wieder öffnen' : 'Abschließen',
-              onclick: function (ev) {
-                ev.preventDefault(); ev.stopPropagation();
-                if (istAbgeschlossen(p)) statusSetzen(p, 'aktiv', 'Projekt wieder geöffnet.');
-                else abschliessen(p);
-              }
-            }),
-            el('button', {
-              class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Bearbeiten',
-              onclick: function (ev) { ev.preventDefault(); ev.stopPropagation(); formZeigen(p); }
-            }),
-            el('button', {
-              class: 'knopf knopf-gefahr knopf-klein', type: 'button', text: 'Löschen',
-              onclick: function (ev) { ev.preventDefault(); ev.stopPropagation(); loeschen(p); }
-            })
-          )
+          el('span', { class: 'status-marke status-' + st, text: statusText(p.status) })
         ),
         termine ? el('span', { class: 'leise', text: termine }) : null,
         fortschrittsBalken(f.prozent, fortschrittText(f))
       ),
       el('div', { class: 'projekt-body' },
+        // Seit 0.34.8 nicht mehr in der Kopfzeile (summary): Knöpfe darin liest kein Bildschirmleser richtig vor
+        el('div', { class: 'projekt-aktionen' },
+          el('button', {
+            class: 'knopf knopf-hell knopf-klein', type: 'button',
+            text: istAbgeschlossen(p) ? 'Wieder öffnen' : 'Abschließen',
+            onclick: function () {
+              if (istAbgeschlossen(p)) statusSetzen(p, 'aktiv', 'Projekt wieder geöffnet.');
+              else abschliessen(p);
+            }
+          }),
+          el('button', {
+            class: 'knopf knopf-hell knopf-klein', type: 'button', text: 'Bearbeiten',
+            onclick: function () { formZeigen(p); }
+          }),
+          el('button', {
+            class: 'knopf knopf-gefahr knopf-klein', type: 'button', text: 'Löschen',
+            onclick: function () { loeschen(p); }
+          })
+        ),
         p.beschreibung ? el('p', { class: 'notiz', text: String(p.beschreibung) }) : null,
         el('div', { class: 'projekt-info-zwei' },
           paare([
