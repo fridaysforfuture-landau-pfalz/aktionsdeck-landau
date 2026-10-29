@@ -193,7 +193,7 @@ Version 0.34.8. Sheet und Skript bleiben unverändert.
 
 **Prüfen:** Dieselben Aufgaben aus der Anleitung zum Bildschirmleser noch einmal, große Schrift am Handy, nur Tastatur am PC.
 
-### 12.12 – App-Icon und Ladebildschirm (W9)
+### 12.12 – App-Icon und Ladebildschirm (W9) – erledigt (0.34.9)
 
 Version 0.34.9. Sheet und Skript bleiben unverändert.
 
@@ -269,7 +269,7 @@ Version 1.0.0. Sheet und Skript bleiben unverändert.
 | 12.9 | Layout am PC und beim Rauszoomen – erledigt | Bau | 0.34.7 | nein |
 | 12.10 | Barrierefreiheit prüfen, Test mit Bildschirmleser – erledigt | Bericht | – | nein |
 | 12.11 | Barrierefreiheit verbessern – erledigt | Bau | 0.34.8 | nein |
-| 12.12 | App-Icon und Ladebildschirm | Bau | 0.34.9 | nein |
+| 12.12 | App-Icon und Ladebildschirm – erledigt | Bau | 0.34.9 | nein |
 | 12.13 | Fehlerseite | Bau | 0.34.10 | nein |
 | 12.14 | Tabs im Sheet sortieren | Bau | 0.34.11 | `Werkzeuge.gs`, keine Bereitstellung |
 | 12.15 | CSS prüfen | Bericht | – | nein |
