@@ -107,7 +107,7 @@ export function render(container, ctx) {
 
   container.append(
     balken(),
-    el('div', { class: 'start-seite' }, menue, karte, el('p', null, zurueck))
+    el('main', { class: 'start-seite' }, menue, karte, el('p', null, zurueck))
   );
 
   ladeText(aktiv.id).then(function (text) {

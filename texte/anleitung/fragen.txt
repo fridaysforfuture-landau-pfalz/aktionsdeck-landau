@@ -26,6 +26,10 @@ Unten „Name ändern“. Bist du im Team eingetragen, ändere den Namen auf dei
 
 Unter „Darstellung“ wählst du „Gerät“ (wie dein Gerät eingestellt ist), den weißen Punkt (hell) oder den schwarzen Punkt (dunkel). Am Handy steht das in „Mehr“ unter „Abmelden“, am PC unten in der Seitenleiste unter „Name ändern“ und „Abmelden“. Mit „Gerät“ (so ist es am Anfang) ist die App dunkel, wenn dein Handy oder PC auf dunkel steht. Die Einstellung gilt nur auf diesem Gerät, für alle Gruppen, und bleibt beim Abmelden erhalten. Gedruckt wird immer hell.
 
+## Kann ich die App mit Tastatur oder Bildschirmleser bedienen?
+
+Ja. Am PC springt der erste Druck auf Tab zu „Zum Inhalt springen“. Damit überspringst du die Seitenleiste. Mit Tab und Umschalt+Tab gehst du von Knopf zu Knopf, Enter oder Leertaste drückt. Esc schließt Fenster und den Bereich rechts. Bildschirmleser (VoiceOver am iPhone, TalkBack bei Android) sagen beim Wechsel des Reiters an, wo du bist.
+
 ## Wer sieht meine Daten?
 
 Nur deine Gruppe (mit dem PIN). Öffentlich sind nur veröffentlichte Termine und öffentliche Wiki-Seiten. Mehr steht im Datenschutz.

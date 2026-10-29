@@ -85,7 +85,7 @@ export function baueSpalten(liste, opt) {
     if (!l.length) karten.append(el('p', { class: 'leise', text: 'Keine Beiträge.' }));
     l.forEach(function (b) { karten.append(baueKachel(b, opt)); });
     wrap.append(el('section', { class: 'mobi-spalte' + (l.length ? '' : ' leer'), 'aria-label': sp.name },
-      el('h3', { class: 'mobi-spalte-kopf', text: sp.name + ' (' + l.length + ')' }),
+      el('h2', { class: 'mobi-spalte-kopf', text: sp.name + ' (' + l.length + ')' }),
       karten
     ));
   });

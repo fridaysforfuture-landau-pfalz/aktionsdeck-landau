@@ -46,7 +46,7 @@ export async function render(container, ctx) {
     ? el('a', { href: '#/g/' + encodeURIComponent(sitzung.kurzname) + '/wiki', text: '← Zurück zur App' })
     : el('a', { href: '#/', text: '← Zur Gruppenwahl' });
   const inhalt = el('div', { class: 'wiki-oeffentlich' });
-  const seite = el('div', { class: 'start-seite' }, inhalt, el('p', null, zurueck));
+  const seite = el('main', { class: 'start-seite' }, inhalt, el('p', null, zurueck));
   container.append(balken(), seite);
 
   let liste = { seiten: [], gruppen: [] };

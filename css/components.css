@@ -115,6 +115,10 @@ textarea.feld { min-height: 96px; resize: vertical; }
 }
 
 .kopfzeile h1 { margin: 0; }
+/* Seit 0.34.8: Sehr schmal (kleines Handy oder Zoom): Knöpfe rutschen unter die Überschrift statt über den Rand */
+@media (max-width: 359px) {
+  .kopfzeile { flex-wrap: wrap; }
+}
 
 .filterzeile {
   display: grid;
@@ -513,6 +517,23 @@ a.knopf {
 .karten-text { flex: 1; min-width: 0; }
 
 .gesperrt { opacity: 0.45; cursor: default; }
+
+/* Seit 0.34.8 (Barrierefreiheit): Sprung-Link „Zum Inhalt springen“, nur sichtbar mit Fokus */
+.sprung-link {
+  position: absolute;
+  left: 8px;
+  top: -200px;
+  z-index: 3000;
+  padding: 10px 14px;
+  border: 2px solid var(--gruppe);
+  border-radius: var(--radius);
+  background: var(--flaeche);
+  color: var(--text);
+  font-weight: 600;
+}
+.sprung-link:focus { top: 8px; }
+/* Überschriften und Hauptbereich, die den Fokus nur zum Vorlesen bekommen: ohne Rahmen */
+.fokus-still:focus { outline: none; }
 
 .nur-leser {
   position: absolute;
@@ -1131,15 +1152,15 @@ p.notiz.erledigt {
   gap: 0 8px;
 }
 
-/* ---- 0.21.5: Projekt-Knöpfe in der Titelzeile, roter Hut-Toggler ---- */
+/* ---- 0.21.5: Projekt-Knöpfe, roter Hut-Toggler ---- */
 
+/* Seit 0.34.8 oben im aufgeklappten Teil (nicht mehr in der Kopfzeile), am PC rechts */
 .projekt-aktionen {
   display: flex;
+  justify-content: flex-end;
   gap: 6px;
-  margin-left: auto;
+  margin-bottom: 10px;
 }
-
-.projekt-block:not([open]) .projekt-aktionen { display: none; }
 
 .hut-toggler > summary strong { color: var(--fehler); }
 .hut-toggler .projekt-teil-body { background: var(--fehler-flaeche); border-top-color: var(--fehler-rand); }
@@ -1297,8 +1318,8 @@ p.notiz.erledigt {
 
 /* Handy: Knöpfe der Projekte unter dem Titel, linksbündig */
 @media (max-width: 599px) {
-  .dash-kopf .kopf-knoepfe { margin-left: 0; width: 100%; flex-wrap: nowrap; gap: 6px; }
-  .projekt-aktionen { margin-left: 0; width: 100%; flex-wrap: wrap; }
+  .dash-kopf .kopf-knoepfe { margin-left: 0; width: 100%; flex-wrap: wrap; gap: 6px; }   /* Umbruch nur bei Platzmangel (0.34.8) */
+  .projekt-aktionen { justify-content: flex-start; flex-wrap: wrap; }
 }
 
 /* ---- 0.26.2: Umfragen als farbiger Kasten, angeheftete Kommentare ---- */
@@ -1675,7 +1696,7 @@ p.notiz.erledigt {
 /* Kopf der Monatsansicht: Monat mit Pfeilen, darunter Heute und Datumswahl */
 
 .kal-monatsnav { display: flex; align-items: center; justify-content: center; gap: 2px; }
-.kal-monatsnav h2 { margin: 0; min-width: 0; font-size: 16px; text-align: center; white-space: nowrap; }
+.kal-monatsnav h2 { margin: 0; min-width: 0; font-size: 16px; text-align: center; }   /* seit 0.34.8 Umbruch, wenn der Platz nicht reicht */
 
 .kal-taste {
   display: flex;
@@ -2312,8 +2333,9 @@ p.notiz.erledigt {
 .protokoll-knoepfe a.knopf { display: inline-flex; align-items: center; text-decoration: none; }
 
 /* ---- 0.30.2: Protokoll schreiben (Formular, am Handy Vollbild) ---- */
-.protokoll-form .pk-zwei { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
-.pk-gruppe { margin: 4px 0; padding: 8px 12px 12px; border: 1px solid var(--rand); border-radius: var(--radius); }
+.protokoll-form .pk-zwei { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.pk-gruppe { min-width: 0; margin: 4px 0; padding: 8px 12px 12px; border: 1px solid var(--rand); border-radius: var(--radius); }
+.protokoll-form .feld { min-width: 0; }   /* lange Projektnamen in der Auswahl sprengen das Formular nicht (0.34.8) */
 .pk-gruppe legend { padding: 0 6px; color: var(--text-leise); font-weight: 600; }
 .pk-rollen { display: grid; gap: 8px; }
 @media (min-width: 600px) {
@@ -2769,7 +2791,7 @@ p.notiz.erledigt {
   .mobi-ansicht { flex-wrap: nowrap; gap: 6px; }
   .kal-arten .kal-arten-gruppe { width: 100%; }
   .kal-arten .knopf { flex: 1 1 0; }
-  .dash-tops-titel { flex-wrap: nowrap; gap: 8px; }
+  .dash-tops-titel { flex-wrap: wrap; gap: 8px; }   /* bricht nur um, wenn der Platz nicht reicht (0.34.8) */
   .dash-tops-titel h2 { flex: none; }
   .dash-tops-titel .knopf { padding: 0 10px; font-size: 13px; white-space: nowrap; }
 }
@@ -2782,8 +2804,9 @@ p.notiz.erledigt {
 /* Name ändern und Abmelden nebeneinander, öffentliche Links in einer Zeile.
    Ist der Bildschirm trotzdem zu niedrig, lässt sich die Leiste scrollen. */
 @media (min-width: 960px) {
-  .seiten-fuss-knoepfe { display: flex; gap: 6px; }
-  .seiten-fuss-knoepfe .knopf { flex: 1 1 0; min-width: 0; padding: 0 6px; font-size: 14px; white-space: nowrap; }
+  /* Seit 0.34.8: Knöpfe so breit wie ihr Text, bei großer Schrift untereinander statt abgeschnitten */
+  .seiten-fuss-knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
+  .seiten-fuss-knoepfe .knopf { flex: 1 1 auto; padding: 0 6px; font-size: 14px; white-space: nowrap; }
   .seitenleiste .oeff-links { gap: 0 8px; margin-top: 0; font-size: 12px; }
   .seitenleiste .oeff-links a { min-height: 32px; }
 }

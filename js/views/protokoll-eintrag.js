@@ -218,7 +218,7 @@ export function baueProtokollFormular(opt) {
   if (bezug.value !== w.bezug) bezug.value = '';
 
   // Protokolltext
-  const text = el('textarea', { class: 'feld protokoll-feld', rows: '16', maxlength: String(MAX_TEXT) });
+  const text = el('textarea', { class: 'feld protokoll-feld', rows: '16', maxlength: String(MAX_TEXT), 'aria-labelledby': 'pk-text-label' });
   text.value = w.text;
   const zaehler = el('span', { class: 'leise pk-zaehler' });
 
@@ -652,7 +652,7 @@ export function baueProtokollFormular(opt) {
     feld('Projekt oder Veranstaltung (freiwillig)', bezug),
     topBox,
     el('div', { class: 'pk-text-kopf' },
-      el('span', { class: 'formlabel', text: 'Protokolltext' }),
+      el('span', { class: 'formlabel', id: 'pk-text-label', text: 'Protokolltext' }),   // Beschriftung des Felds für Bildschirmleser (0.34.8)
       el('span', { class: 'pk-ruecken-knoepfe' },
         rueckenKnopf('⇤', 'Stichpunkt ausrücken', true),
         rueckenKnopf('⇥', 'Stichpunkt einrücken', false))
