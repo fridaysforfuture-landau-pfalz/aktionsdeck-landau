@@ -66,7 +66,6 @@
   --wiki-entwicklung: #f3eee5;
   /* Team-Berg */
   --berg-hut: #4f5a56;
-  --berg-hut-alt: #8a9591;
   --berg-frei: #5a96df;
   /* Schatten und Abdunkeln */
   --schatten: rgba(0, 0, 0, 0.18);
@@ -77,6 +76,78 @@
   --hover-dunkel: rgba(0, 0, 0, 0.12);
   --hover-hell: rgba(255, 255, 255, 0.55);
   --link: #276650;
+}
+
+/* Dunkelmodus: Die Klasse „dunkel“ am <html> setzt js/darstellung-start.js (beim Öffnen) und js/ui/darstellung.js (Schalter).
+   Nur am Bildschirm: Gedruckt wird immer hell. Gruppen- und Terminfarben bleiben, die App wählt die Schrift darauf selbst. */
+@media screen {
+  :root.dunkel {
+    color-scheme: dark;
+    --gruen: #6cc4a1;
+    --gruen-hell: #1d3a30;
+    --gruppe: #368469;
+    --text: #e3e8e6;
+    --text-leise: #a3aeaa;
+    /* Hintergrund heller und grauer, damit sich die dunklen Kacheln abheben. Kacheln (--flaeche) bleiben. */
+    --hintergrund: #343a38;
+    --flaeche: #1b2220;
+    --rand: #36423e;
+    --flaeche-leise: #161c1a;
+    --flaeche-grau: #2a312e;
+    --flaeche-zart: #1e2523;
+    --spur: #2b3532;
+    --spur-zart: #27302d;
+    --linie-zart: #2c3633;
+    --kaestchen: #2c3633;
+    --kaestchen-voll: #66726e;
+    --grau-marke: #84908b;
+    --grau-hell: #5d6864;
+    --tabellenkopf-grau: #3c4643;
+    --logo-grund: #f2f5f4;
+    --auf-farbe: #ffffff;
+    --balken: #0b0f0e;
+    --balken-text: #ffffff;
+    --fehler: #ff8a80;
+    --fehler-flaeche: #3a1f1d;
+    --fehler-rand: #6b3430;
+    --warnung: #f0a840;
+    --warn-flaeche: #33280f;
+    --warn-rand: #6b5222;
+    --warnung-text: #f3c77a;
+    --planung-text: #f0b45a;
+    --hinweis-flaeche: #33290f;
+    --hinweis-text: #f0bf6a;
+    --hinweis-rand: #7a5a1e;
+    --kommentar-rand: #c8902a;
+    --fuer-dich-flaeche: #3a3010;
+    --fuer-dich-rand: #8a7020;
+    --fuer-dich-akzent: #f0a020;
+    --fuer-dich-linie: #5a4a18;
+    --fuer-dich-text: #e8d9a0;
+    --gruen-text: #8fd6b8;
+    --gruen-aktion: #4cc27f;
+    --blau-text: #b3beff;
+    --blau-flaeche: #1f2540;
+    --blau-flaeche-kraeftig: #262e52;
+    --pink: #f060c0;
+    --pink-flaeche: #3a1a32;
+    --rosa-flaeche: #3a1c28;
+    --frist-rosa: #f06292;
+    --frist-flaeche: #4a1f30;
+    --frist-text: #ffc2d6;
+    --wiki-anleitung: #1e2838;
+    --wiki-entwicklung: #2e2a22;
+    --berg-hut: #a8b3af;
+    --berg-frei: #6ea8ef;
+    --schatten: rgba(0, 0, 0, 0.5);
+    --schatten-gross: rgba(0, 0, 0, 0.6);
+    --schatten-ring: rgba(255, 255, 255, 0.15);
+    --abdunkeln: rgba(0, 0, 0, 0.6);
+    --lightbox-grund: rgba(0, 0, 0, 0.9);
+    --hover-dunkel: rgba(0, 0, 0, 0.18);
+    --hover-hell: rgba(255, 255, 255, 0.08);
+    --link: #6cc4a1;
+  }
 }
 
 * { box-sizing: border-box; }

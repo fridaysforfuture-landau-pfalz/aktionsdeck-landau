@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
 
-- Version der App: **0.34.11** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **0.34.12** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
-- Nächster Schritt: **12.15 CSS prüfen** (Bericht).
+- Nächster Schritt: **12.17 Abschluss und Version 1.0.0**.
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -65,11 +65,16 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
 - **Texte aus Daten nur mit `textContent`** (oder dem `el()`-Helfer mit `text:`) anzeigen. Nie `innerHTML` mit Daten.
 - **Links aus Daten** (zum Beispiel Canva-Link) nur öffnen, wenn sie mit `https://` oder `http://` beginnen (`sichereUrl`).
 - **CSS:** Alle Regeln stehen in `css/components.css` (dazu `css/base.css` für Variablen und `css/layout.css` für das Gerüst).
-  **Seit 0.34.6** (Wunsch der Person) gilt nicht mehr „neue Regeln ans Ende“: Neue Regeln kommen in den passenden Abschnitt, mit Kommentar
-  und Version. Gibt es für dieselbe Klasse schon eine Regel, änderst du die vorhandene, statt eine zweite anzulegen. Bevor du Regeln
-  zusammenlegst oder verschiebst: Bildschirmfotos und berechnete Stile vorher und nachher vergleichen, denn die Reihenfolge entscheidet,
-  welche Angabe gilt. Den Abschnitt musst du der Person nicht eigens nennen; sie fragt, wenn sie es wissen will.
-- **Farben:** nur über die Variablen in `css/base.css`; jede neue Farbe braucht auch einen dunklen Wert (Dunkelmodus, Block 0.33.8 in `css/components.css`).
+  **Seit 0.34.12 (Entscheidung 22):** `components.css` hat 14 Abschnitte in der Reihenfolge der Reiter: 1 Grundbausteine, 2 Kommentare,
+  3 Öffentliche Seiten, 4 Gerüst-Zusätze, 5 Start, 6 Projekte, 7 ToDos und Hüte, 8 Material, 9 Mobi, 10 Kalender, 11 Dokumentation,
+  12 Team, 13 Wiki, 14 Druck. Neue Regeln kommen in den Abschnitt ihres Reiters (zu den Grundbausteinen, wenn mehrere Reiter sie brauchen).
+  Regeln für eine Breite stehen im Block am Ende des Abschnitts (höchstens ein Block je Bedingung). Überschriften und Kommentare sagen,
+  *was* eine Regel tut, nicht seit welcher Version (das steht in der Geschichte). Gibt es für denselben Selektor unter derselben Bedingung
+  schon eine Regel, änderst du die vorhandene, statt eine zweite anzulegen; vor jedem Pull Request auf doppelte Selektoren prüfen.
+  Bevor du Regeln zusammenlegst oder verschiebst: Bildschirmfotos und berechnete Stile vorher und nachher vergleichen, denn bei gleich
+  starken Selektoren entscheidet die Reihenfolge, welche Angabe gilt (Beispiel: die Link-Farbe `a, .wiki-text a, …` steht im Abschnitt Wiki,
+  weil sie nach `.oeff-links a` und vor `.neu-titel a` kommen muss). Den Abschnitt musst du der Person nicht eigens nennen; sie fragt, wenn sie es wissen will.
+- **Farben:** nur über die Variablen in `css/base.css`; jede neue Farbe braucht auch einen dunklen Wert (Dunkelmodus, Block `:root.dunkel` in `css/base.css`).
 - **Kein Build, keine Pakete, kein Framework.** Reines HTML, CSS und JavaScript mit ES-Modulen. Relative Pfade.
   Keine externen Skripte oder Schriften laden.
 - **Hash-Routing:** `#/g/<kurzname>/<reiter>`. Unbekannte Adressen (`#/irgendwas`, `#/info/xyz`, `#/g/<unbekannt>`) zeigen „Seite nicht gefunden“
@@ -230,7 +235,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
   12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2),
   12.5 Geschwindigkeitsbericht (nur im Chat) mit dem Editor-Werkzeug `messenSkript` (0.34.3),
   12.6 Geschwindigkeit verbessert (0.34.4 App, 0.34.5 Zwischenspeicher im Skript), 12.7 Bericht Ungenutztes (nur im Chat),
-  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6, Skript bereitgestellt, `testenRechte` ok), 12.9 Layout am PC (0.34.7), 12.10 Bericht Barrierefreiheit (nur im Chat), 12.11 Barrierefreiheit verbessert (0.34.8), 12.12 App-Icon und Ladebildschirm (0.34.9), 12.13 Fehlerseite (0.34.10), 12.14 Tabs im Sheet sortieren (0.34.11).
+  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6, Skript bereitgestellt, `testenRechte` ok), 12.9 Layout am PC (0.34.7), 12.10 Bericht Barrierefreiheit (nur im Chat), 12.11 Barrierefreiheit verbessert (0.34.8), 12.12 App-Icon und Ladebildschirm (0.34.9), 12.13 Fehlerseite (0.34.10), 12.14 Tabs im Sheet sortieren (0.34.11), 12.15 Bericht CSS (nur im Chat), 12.16 CSS geordnet (0.34.12).
 - Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
   Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
@@ -362,7 +367,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - **Kontostand:** `Konto.gs`, Abruf bei `https://api.opencollective.com/graphql/v2` (nur Kontostand und Währung), Zeitauslöser montags.
   Werte in Skripteigenschaften, nicht im Sheet.
 - **Dunkelmodus** je Gerät (Schlüssel `aktionsdeck_darstellung` = hell | dunkel, ohne Eintrag „wie das Gerät“). Klasse `dunkel` am `<html>`,
-  gesetzt von `js/darstellung-start.js` (normales Skript im `<head>`, kein Modul). Dunkle Werte in den CSS-Blöcken 0.33.8 und 0.33.9.
+  gesetzt von `js/darstellung-start.js` (normales Skript im `<head>`, kein Modul). Dunkle Werte in `css/base.css` (`:root.dunkel`).
   Gedruckt wird hell. Gruppen- und Terminfarben bleiben.
 - Gestrichen in Etappe 11: Mein Bereich, Push, E-Mail, Sicherungskopien, Downloads.
 
@@ -433,7 +438,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - Hauptordner: `index.html`, `404.html` (Fehlerseite von GitHub Pages, seit 0.34.10), `manifest.webmanifest`, `sw.js`, `README.md`, `LICENSE`, `CLAUDE.md` (zeigt nur hierher).
 - `docs/`: `STAND.md` (diese Datei), bis zum Ende von Etappe 12 `PLAN-ETAPPE-12.md`.
 - `icons/`: `icon.svg` (Favicon, Ladebildschirm), `icon-192.png`, `icon-512.png`, `icon-maskable.svg`, `icon-maskable-192.png`, `icon-maskable-512.png` (vollflächig für Android, seit 0.34.9), `apple-touch-icon.png` (iPhone, vollflächig), `logo.svg`, `gruppen/`.
-- `css/`: `base.css` (alle Farb-Variablen), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, nach Themen).
+- `css/`: `base.css` (alle Farb-Variablen, hell und dunkel), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, nach Themen).
 - `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
   Team.gs, Wiki.gs, Konto.gs, Signal.gs, Setup.gs, Werkzeuge.gs (nur Editor-Werkzeuge, keine Bereitstellung nötig).
 - `js/`: app, config, api, store, cache, schema, vorlagen, kanaele, wiki-format, gruppeninfo, darstellung-start (normales Skript).
@@ -510,6 +515,10 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
     `js/views/nicht-gefunden.js` für unbekannte Adressen in der App (vorher still zum Start).
   - 12.14 (0.34.11): Editor-Werkzeuge `tabsSortieren` (System, dann wie die Reiter der App, Unbekanntes ans Ende) und `tabsSortierenAZ`,
     Farbe je Bereich. Keine Bereitstellung nötig.
+  - 12.15: Bericht CSS (nur im Chat), alles freigegeben.
+  - 12.16 (0.34.12): `components.css` nach Themen in 14 Abschnitten, Versionsnummern aus den Überschriften, je Abschnitt ein Block pro Breite.
+    7 doppelte Selektoren und 16 gleiche Regeln zusammengelegt, 17 wirkungslose Angaben und `--berg-hut-alt` gelöscht, dunkle Farben nach
+    `base.css`. Start: Die zugeklappte Kachel rechts ist nicht mehr auf 220 px begrenzt, „Alle anzeigen“ ragte sonst über den Rand.
 
 ---
 
