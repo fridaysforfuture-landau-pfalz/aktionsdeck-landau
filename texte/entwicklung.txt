@@ -23,6 +23,27 @@ Den Code schreibt die KI Claude (von Anthropic) nach den Wünschen und Entscheid
 
 Jede Etappe beginnt mit einem Plan und Rückfragen. Nach jedem Schritt prüft eine Person die neue Version am Handy und am PC und meldet Anmerkungen. Änderungen an der Tabelle und am Google-Skript werden von Hand eingespielt.
 
+## Neue Versionen
+
+Ab Version 1.0 steht hier jede neue Version mit einer kurzen Zeile, die neueste oben.
+
+- **1.0.0** (29.10.2026): Die erste fertige Version, nach einer gründlichen Prüfung in Etappe 12.
+
+## Etappe 12: Prüfung und Qualität, Version 1.0
+
+Version 0.33.16 bis 1.0.0, Pull Requests #75 bis #89.
+
+In dieser Etappe kam fast nichts Neues dazu. Die App wurde gründlich geprüft und verbessert. Zu jedem Thema gab es erst einen Bericht, dann wurde gebaut, was die Gruppe freigegeben hat.
+
+- **Sicherheit:** Prüfung des ganzen Codes und der Schnittstelle. Es gab keine schwere Lücke. Kleinere Funde sind behoben, zum Beispiel: Ein neuer PIN meldet alle alten Geräte ab, und der Browser lädt nur noch Dateien von der eigenen Seite.
+- **Schneller:** Die App öffnet sofort aus dem Speicher des Geräts. Gibt es eine neue Version, erscheint „Neue Version da“. Der Start braucht weniger Anfragen, und das Skript merkt sich gelesene Daten kurz.
+- **Aufgeräumt:** Ungenutzter Code, doppelte Regeln und alte Tabs im Sheet sind weg. Die Gestaltung (CSS) ist nach Reitern geordnet.
+- **Am PC:** Die App füllt den ganzen Bildschirm, auch beim Rauszoomen. Ist das Fenster zu niedrig, stehen Reiter unter „Mehr ▾“.
+- **Barrierefreiheit:** Die App lässt sich besser mit Tastatur und Bildschirmleser bedienen: Seitentitel, „Zum Inhalt springen“, Fokus in Fenstern, nichts ragt am kleinen Handy über den Rand.
+- **App-Icon und Ladebildschirm:** Das Icon füllt am Handy die ganze Fläche, beim Öffnen erscheint das Logo auf Dunkelgrau.
+- **Fehlerseite:** Falsche Adressen zeigen „Seite nicht gefunden“ mit einem Knopf zur Startseite.
+- **Tabs im Sheet** lassen sich mit einem Knopfdruck im Editor sortieren und nach Bereichen färben.
+
 ## Etappe 11: Komfort
 
 Version 0.33.0 bis 0.33.15, Pull Requests #60 bis #74.

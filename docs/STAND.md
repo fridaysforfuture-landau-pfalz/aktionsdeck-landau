@@ -2,13 +2,13 @@
 
 **Diese Datei ist die einzige Doku-Datei für den Agenten:** Arbeitsregeln, Aufbau, aktueller Stand, Festlegungen und Pläne.
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
-Bis zum Ende von Etappe 12 gibt es daneben noch den Plan `docs/PLAN-ETAPPE-12.md`.
+Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **0.34.12** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.0.0** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-- Laufende Etappe: **Etappe 12 „Prüfung und Qualität“**, Plan Fassung 3 in `docs/PLAN-ETAPPE-12.md`, letzter Schritt vor Version 1.0.
-- Nächster Schritt: **12.17 Abschluss und Version 1.0.0**.
+- Laufende Etappe: **keine**. Etappe 12 „Prüfung und Qualität“ ist mit Version 1.0.0 abgeschlossen (29.10.2026).
+- Nächster Schritt: offen. Die Person sammelt Ideen; eine neue Etappe beginnt mit einem Plan mit Rückfragen (Abschnitt 7).
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -48,14 +48,14 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
    Einzelheiten stehen im Pull Request.
    Ändert der Schritt, wie ein Reiter funktioniert, passe im selben Pull Request die Seite in `texte/anleitung/` an
    (Liste in `texte/anleitung/liste.txt`, Format wie im Wiki). Nach Version 1.0 bekommt `texte/entwicklung.txt` zusätzlich
-   je Version eine kurze Zeile (neueste oben). Dateien in `texte/` sind öffentlich abrufbar: nichts Internes hineinschreiben.
+   je Version eine kurze Zeile im Abschnitt „Neue Versionen“ (neueste oben). Dateien in `texte/` sind öffentlich abrufbar: nichts Internes hineinschreiben.
 8. Prüfe deine Arbeit (1.6), dann öffne den Pull Request mit dem Text aus 1.7.
 
 ### 1.4 Harte Regeln
 
 - **Version:** Bei jeder Änderung `VERSION` in `js/config.js` UND in `sw.js` gemeinsam hochzählen.
-  Beide müssen am Ende exakt gleich sein. Kleine Schritte zählen den letzten Teil hoch (0.29.4 → 0.29.5),
-  ein neuer Hauptschritt zählt den mittleren Teil hoch. Im Zweifel: letzten Teil hochzählen.
+  Beide müssen am Ende exakt gleich sein. Seit 1.0.0: Schritte und Nachbesserungen zählen den letzten Teil hoch (1.0.0 → 1.0.1),
+  eine neue Etappe den mittleren (1.0.4 → 1.1.0). Die erste Zahl ändert sich nur, wenn die Person es sagt. Im Zweifel: letzten Teil hochzählen.
   Jede Nachbesserung zählt die Version hoch, auch in einem noch offenen Pull Request.
 - **`js/config.js`:** Dort steht die echte `API_URL`. Die Datei nie ersetzen und nie neu schreiben.
   Ändere nur die Zeile mit `VERSION` und, falls im Plan verlangt, den Block `features`.
@@ -65,7 +65,7 @@ Sie prüft jede Änderung auf Handy und PC und übernimmt Änderungen am Google-
 - **Texte aus Daten nur mit `textContent`** (oder dem `el()`-Helfer mit `text:`) anzeigen. Nie `innerHTML` mit Daten.
 - **Links aus Daten** (zum Beispiel Canva-Link) nur öffnen, wenn sie mit `https://` oder `http://` beginnen (`sichereUrl`).
 - **CSS:** Alle Regeln stehen in `css/components.css` (dazu `css/base.css` für Variablen und `css/layout.css` für das Gerüst).
-  **Seit 0.34.12 (Entscheidung 22):** `components.css` hat 14 Abschnitte in der Reihenfolge der Reiter: 1 Grundbausteine, 2 Kommentare,
+  **Seit 0.34.12:** `components.css` hat 14 Abschnitte in der Reihenfolge der Reiter: 1 Grundbausteine, 2 Kommentare,
   3 Öffentliche Seiten, 4 Gerüst-Zusätze, 5 Start, 6 Projekte, 7 ToDos und Hüte, 8 Material, 9 Mobi, 10 Kalender, 11 Dokumentation,
   12 Team, 13 Wiki, 14 Druck. Neue Regeln kommen in den Abschnitt ihres Reiters (zu den Grundbausteinen, wenn mehrere Reiter sie brauchen).
   Regeln für eine Breite stehen im Block am Ende des Abschnitts (höchstens ein Block je Bedingung). Überschriften und Kommentare sagen,
@@ -157,6 +157,19 @@ Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abw
 - Keine Funktionen bauen, die nicht im Plan stehen. Ideen schreibst du unter „Rückfragen“.
 - Keine echten Personennamen oder Fotos mit Personen in Beispieldaten.
 
+### 1.9 Prüfungen (aus Etappe 12)
+
+- **Erst Bericht, dann bauen.** Eine Prüfung (Sicherheit, Geschwindigkeit, Ungenutztes, Barrierefreiheit, CSS) ändert die App nicht.
+  Der Bericht kommt als Datei in die Projektdateien im Chat (`pruefung/<thema>-bericht.md`), nie ins Repo. Je Fund: Ort, wie schlimm,
+  wer betroffen ist, Vorschlag, Aufwand. Die Person gibt frei, was gebaut wird. Sicherheitsfunde stehen nur im Bericht, bis sie behoben sind.
+- **Maßstäbe:** Barrierefreiheit nach WCAG 2.2, Stufe AA. Aussehen bleibt gleich, außer die Person will es anders; bei CSS entscheidet
+  ein Vergleich von Bildschirmfotos und berechneten Stilen vorher und nachher. Die Content-Security-Policy darf keine Funktion blockieren.
+- **Tests gegen das echte Skript** nur nach Absprache: wenige Anfragen (Tageskontingente von Google), nie nach PINs fragen, nichts löschen
+  oder überschreiben, was nicht vom Test stammt. Testeinträge löscht die Person danach.
+- **Prüfwerkzeuge** (Testbrowser, Messungen, Prüfung der Barrierefreiheit) laufen nur in der Testumgebung des Agenten, nicht im Repo.
+- **Nicht vom Agenten prüfbar:** echte Ladezeiten am Handy, Freigaben in Google und GitHub, Bildschirmleser auf echten Geräten,
+  Icon und Ladebildschirm auf dem echten Startbildschirm. Das prüft die Person.
+
 ---
 
 ## 2. Aufbau
@@ -231,19 +244,17 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
 
 - Etappen 0 bis 11 sind fertig und von der Person geprüft (bis 0.33.15, 28.10.2026). Kurzfassung in Abschnitt 8,
   ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
-- Etappe 12 läuft: 12.1 Plan Fassung 2 (0.33.16, #75), 12.2 Plan Fassung 3 und diese eine Doku-Datei (0.34.0),
-  12.3 Sicherheitsbericht (nur im Chat), 12.4 Funde behoben (0.34.1), Nachbesserung Fotos (0.34.2),
-  12.5 Geschwindigkeitsbericht (nur im Chat) mit dem Editor-Werkzeug `messenSkript` (0.34.3),
-  12.6 Geschwindigkeit verbessert (0.34.4 App, 0.34.5 Zwischenspeicher im Skript), 12.7 Bericht Ungenutztes (nur im Chat),
-  12.8 Ungenutztes und Doppeltes gelöscht (0.34.6, Skript bereitgestellt, `testenRechte` ok), 12.9 Layout am PC (0.34.7), 12.10 Bericht Barrierefreiheit (nur im Chat), 12.11 Barrierefreiheit verbessert (0.34.8), 12.12 App-Icon und Ladebildschirm (0.34.9), 12.13 Fehlerseite (0.34.10), 12.14 Tabs im Sheet sortieren (0.34.11), 12.15 Bericht CSS (nur im Chat), 12.16 CSS geordnet (0.34.12).
-- Skript: Stand aus Etappe 11 (Konto.gs, Signal.gs) ist bereitgestellt. Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt,
-  Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
+- Etappe 12 „Prüfung und Qualität“ ist fertig (0.33.16 bis 1.0.0, 28. und 29.10.2026). **Version 1.0.0** ist die erste fertige Version.
+  Berichte zu Sicherheit, Geschwindigkeit, Ungenutztem, Barrierefreiheit und CSS liegen nur in den Projektdateien im Chat (`pruefung/`), nicht im Repo.
+- Skript: Stand aus 12.8 ist bereitgestellt (`testenRechte` ok). `Werkzeuge.gs` (12.5, 12.14) braucht keine Bereitstellung.
+  Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt, Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
+- GitHub: Die Action „Deploy Jekyll …“ läuft grün (zuletzt geprüft 29.10.2026 nach #88).
 - Kalender-Abo in Google Kalender klappt. Apple Kalender kann die Person nicht testen; sie meldet sich, falls Probleme auftreten.
 
 ### 3.2 Offen
 
-- **Für die Person vor 1.0:** Testdaten im Sheet löschen (in 12.17; `testdatenListe` in `apps-script/Aufraeumen.gs` zeigt sie mit Zeilennummern),
-  auch Testeinträge aus der Sicherheitsprüfung 12.3. Datenschutztext von jemandem prüfen lassen, der sich auskennt.
+- **Für die Person:** Datenschutztext von jemandem prüfen lassen, der sich auskennt. Testdaten im Sheet löschen, falls noch welche da sind
+  (`testdatenListe` in `apps-script/Aufraeumen.gs` zeigt sie mit Zeilennummern, auch Testeinträge aus der Sicherheitsprüfung 12.3).
 - **Möglich nach 1.0 (aus 12.10, B19):** Schriftgrößen in `rem` statt `px`, damit auch die Einstellung „Schriftgröße“ im PC-Browser wirkt
   (Zoom geht schon). Viel Arbeit, nur mit Bildschirmfoto-Vergleich.
 - **Bewusst nicht geändert (12.10, Wunsch der Person):** Farben mit zu wenig Kontrast (B9 bis B13 im Bericht: Orange „heute“, Uhrzeit in
@@ -436,7 +447,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 ## 6. Dateiübersicht
 
 - Hauptordner: `index.html`, `404.html` (Fehlerseite von GitHub Pages, seit 0.34.10), `manifest.webmanifest`, `sw.js`, `README.md`, `LICENSE`, `CLAUDE.md` (zeigt nur hierher).
-- `docs/`: `STAND.md` (diese Datei), bis zum Ende von Etappe 12 `PLAN-ETAPPE-12.md`.
+- `docs/`: `STAND.md` (diese Datei); während einer Etappe ihr Plan.
 - `icons/`: `icon.svg` (Favicon, Ladebildschirm), `icon-192.png`, `icon-512.png`, `icon-maskable.svg`, `icon-maskable-192.png`, `icon-maskable-512.png` (vollflächig für Android, seit 0.34.9), `apple-touch-icon.png` (iPhone, vollflächig), `logo.svg`, `gruppen/`.
 - `css/`: `base.css` (alle Farb-Variablen, hell und dunkel), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, nach Themen).
 - `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
@@ -460,12 +471,10 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 
 ## 7. Pläne
 
-- **Etappe 12 „Prüfung und Qualität“** (jetzt): Schritte und Entscheidungen in `docs/PLAN-ETAPPE-12.md` (Fassung 3).
-  Reihenfolge: 12.3 Sicherheit prüfen → 12.4 beheben → 12.5 Geschwindigkeit prüfen → 12.6 verbessern → 12.7 Ungenutztes prüfen → 12.8 löschen →
-  12.9 Layout am PC → 12.10 Barrierefreiheit prüfen (mit Test am Bildschirmleser) → 12.11 verbessern → 12.12 App-Icon und Ladebildschirm →
-  12.13 Fehlerseite → 12.14 Tabs sortieren → 12.15 CSS prüfen → 12.16 CSS ordnen → 12.17 Abschluss, **Version 1.0.0**.
-  Berichte kommen nur in die Projektdateien im Chat (`pruefung/`), nicht ins Repo.
-- **Nach 1.0:** offen. Ideen sammelt die Person; jede neue Etappe beginnt mit einem Plan mit Rückfragen.
+- **Jetzt:** keine Etappe geplant. Ideen sammelt die Person. Jede neue Etappe beginnt mit einem Plan mit Rückfragen
+  (`docs/PLAN-ETAPPE-<n>.md`), dann Schritt für Schritt je ein Pull Request; nach jedem Schritt prüft die Person am Handy und am PC.
+- **Mögliche Aufgaben nach 1.0** (aus Etappe 12, Einzelheiten in 3.2): Schriftgrößen in `rem`, gemeinsamer Baustein für ähnliche Listen,
+  Hauptseite neben dem App-Ordner ansehen (Service Worker), Farben mit zu wenig Kontrast nur auf Wunsch.
 
 ---
 
@@ -483,42 +492,14 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
 - **Etappe 10** (0.31.10 bis 0.32.16): Wiki, Anleitung, öffentliches Wiki, Impressum, Info, Datenschutz, Kalender-Abo. Pull Requests #37 bis #59.
 - **Etappe 11** (0.32.10 bis 0.33.15): Komfort: Kontostand, Cloud, „Für dich“, Jahresübersicht, Drucken, Dunkelmodus, Signal-Knopf,
   Termine nach Veranstalter, GitHub Actions. Pull Requests #48 und #60 bis #74.
-- **Etappe 12** (ab 0.33.16):
-  - 12.1 (0.33.16, #75): Plan Fassung 2 mit den Wünschen der Person.
-  - 12.2 (0.34.0): Plan Fassung 3. Eine Doku-Datei: `docs/STAND.md` enthält jetzt Regeln, Stand, Festlegungen und Pläne; `CLAUDE.md` zeigt nur hierher.
-    Gelöscht: Pläne 7 bis 11, `STANDARD-TODOS.md` und `MOBI-STANDARD-BEITRAEGE.md` (jetzt Anhang A und B), vier Bildschirmfotos im Hauptordner.
-    `[Kontakt]` in `texte/anleitung/zustaendig.txt` entfernt (Signal-Knopf reicht).
-  - 12.3: Sicherheitsbericht (nur im Chat): keine schwere Lücke, zwei Funde im Skript, Hinweise zu Service Worker und App.
-  - 12.4 (0.34.1): Schutz vor Formeln beim Block-Schreiben, Anzeigename bereinigt, neuer PIN meldet alte Geräte ab, Zahlen strenger,
-    Kalender-Datei mit `\r`, Content-Security-Policy, Service Worker nur im App-Ordner, Gruppenwechsel leert den Zwischenspeicher, Editor-Test `testenRechte`.
-  - 0.34.2: Nachbesserung: Content-Security-Policy erlaubt Bilder von allen `https:`-Adressen (Fotos wurden blockiert).
-  - 12.5 (0.34.3): Geschwindigkeitsbericht (nur im Chat); neues Editor-Werkzeug `messenSkript` in `Werkzeuge.gs`.
-  - 12.6 (0.34.4): Service Worker zuerst Zwischenspeicher mit Hinweis „Neue Version da“, Start mit 5 statt 12 Anfragen
-    (beim Neuladen 2 statt 9), Kalender lädt gleichzeitig, Logo ohne vergebliche Anfrage, Service Worker nach dem Laden.
-  - 12.6b (0.34.5): Zwischenspeicher im Skript (`liesGemerkt`, 2 Minuten): Anmeldung und Listen ohne erneutes Lesen des Sheets.
-  - 12.7: Bericht Ungenutztes und Doppeltes (nur im Chat).
-  - 12.8 (0.34.6): Aufgeräumt: 4 tote Funktionen, 27 CSS-Klassen, alle überschriebenen CSS-Angaben, 56 doppelte CSS-Selektoren zusammengelegt,
-    9 ungenutzte Einträge in `js/schema.js`, `txt()` nur noch in `js/ui/dom.js` (vorher in 31 Dateien). Skript: Aktion `bootstrap`,
-    Tabs `Posts`, `Projekt_Team`, `Vorlagen_ToDo`, `Einstellungen`, Spalten `post_id` und `kanaele`, veraltete Editor-Tests;
-    `textVon` und `textKlein` statt vier gleicher Helfer. Die Regel „neue CSS ans Ende“ gilt nicht mehr.
-    Die Person hat das Skript bereitgestellt und die alten Tabs und Spalten im Sheet gelöscht.
-  - 12.9 (0.34.7): Layout am PC: keine Grenze von 1400 px mehr, Reiter rutschen bei wenig Höhe in „Mehr ▾“, Kacheln werden breiter,
-    Lesetexte und Formulare schmal und mittig.
-  - 12.10: Bericht Barrierefreiheit mit Anleitung für den Test mit Bildschirmleser (nur im Chat). Die Person gab alles frei außer Farben.
-    Den Test mit Bildschirmleser macht die Person nicht (29.10.2026: „Es reicht so.“).
-  - 12.11 (0.34.8): Seitentitel und Fokus nach Seitenwechsel, Sprung-Link „Zum Inhalt springen“, Fokus bleibt in Fenstern, Fokus und Esc
-    im Detailbereich, Projekt-Knöpfe aus der Kopfzeile in den aufgeklappten Teil, Beschriftung Protokolltext, `main` und `h1` auf öffentlichen
-    Seiten, Überschriften im Mobi, nichts ragt bei 320 px über den Rand, Knöpfe unten in der Seitenleiste bei großer Schrift untereinander.
-  - 12.12 (0.34.9): App-Icon vollflächig dunkelgrau (`icons/icon-maskable*.svg/png`, neues `apple-touch-icon.png`), Manifest mit
-    maskable Icons und `background_color` `#1a1e20`, Ladebildschirm in `index.html` (dunkelgrau mit Logo). Keine iPhone-Startbilder.
-  - 12.13 (0.34.10): Fehlerseite „Seite nicht gefunden“ mit Knopf „Zur Startseite“: `404.html` für falsche Adressen auf dem Server,
-    `js/views/nicht-gefunden.js` für unbekannte Adressen in der App (vorher still zum Start).
-  - 12.14 (0.34.11): Editor-Werkzeuge `tabsSortieren` (System, dann wie die Reiter der App, Unbekanntes ans Ende) und `tabsSortierenAZ`,
-    Farbe je Bereich. Keine Bereitstellung nötig.
-  - 12.15: Bericht CSS (nur im Chat), alles freigegeben.
-  - 12.16 (0.34.12): `components.css` nach Themen in 14 Abschnitten, Versionsnummern aus den Überschriften, je Abschnitt ein Block pro Breite.
-    7 doppelte Selektoren und 16 gleiche Regeln zusammengelegt, 17 wirkungslose Angaben und `--berg-hut-alt` gelöscht, dunkle Farben nach
-    `base.css`. Start: Die zugeklappte Kachel rechts ist nicht mehr auf 220 px begrenzt, „Alle anzeigen“ ragte sonst über den Rand.
+- **Etappe 12** (0.33.16 bis 1.0.0, Pull Requests #75 bis #89): Prüfung und Qualität, je Thema erst ein Bericht (nur im Chat), dann der Bau.
+  - Doku: eine Datei `docs/STAND.md`, alte Pläne und Anhänge eingearbeitet (12.2).
+  - Sicherheit (12.3, 12.4): Schutz vor Formeln beim Block-Schreiben, neuer PIN meldet alte Geräte ab, Content-Security-Policy, Editor-Test `testenRechte`.
+  - Geschwindigkeit (12.5, 12.6): Service Worker zuerst Zwischenspeicher mit „Neue Version da“, Start mit weniger Anfragen, Zwischenspeicher im Skript, Werkzeug `messenSkript`.
+  - Ungenutztes (12.7, 12.8): tote Funktionen, CSS-Klassen, Tabs und Spalten gelöscht, gleiche Helfer zusammengelegt.
+  - Layout am PC (12.9): ohne Grenze der Breite, „Mehr ▾“ in der Seitenleiste. Barrierefreiheit (12.10, 12.11): Seitentitel, Fokus, Sprung-Link, Fenster.
+  - App-Icon vollflächig und Ladebildschirm (12.12), Fehlerseite (12.13), Editor-Werkzeug zum Sortieren der Tabs (12.14), CSS in 14 Abschnitten (12.15, 12.16).
+  - 12.17 (1.0.0): Abschluss, Plan eingearbeitet und gelöscht, Anleitung und Entwicklung App ergänzt.
 
 ---
 

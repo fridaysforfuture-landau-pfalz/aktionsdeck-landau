@@ -36,4 +36,8 @@ Nur deine Gruppe (mit dem PIN). Öffentlich sind nur veröffentlichte Termine un
 
 ## Warum zeigt ein Reiter „Dieser Reiter ist noch in Arbeit“?
 
-Das kommt meist nach einem Update. Seite zweimal neu laden. Hilft das nicht, melde es ([[Zuständig für die App]]).
+Das kommt meist nach einem Update. Lade die Seite neu und tippe bei „Neue Version da“ auf „Jetzt neu laden“. Hilft das nicht, melde es ([[Zuständig für die App]]).
+
+## Warum steht da „Seite nicht gefunden“?
+
+Die Adresse gibt es nicht, zum Beispiel wegen eines Tippfehlers oder eines alten Links. Tipp auf „Zur Startseite“. Gehört der Link zu einer Gruppe, die es nicht mehr gibt, steht das dabei.
