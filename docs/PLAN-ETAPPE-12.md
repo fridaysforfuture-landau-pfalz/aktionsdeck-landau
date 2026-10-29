@@ -221,7 +221,7 @@ Version 0.34.11. Skript-Datei geändert, **keine neue Bereitstellung nötig**.
 
 **Prüfen:** Im Editor `tabsSortieren` ausführen: neue Reihenfolge und Farben, die App läuft wie vorher. Dann `tabsSortierenAZ` zum Vergleich.
 
-### 12.15 – CSS prüfen (Bericht, W3)
+### 12.15 – CSS prüfen (Bericht, W3) – erledigt
 
 Keine Änderung an der App, kein Pull Request.
 
@@ -230,7 +230,7 @@ Keine Änderung an der App, kein Pull Request.
 
 **Ergebnis:** `pruefung/css-bericht.md`. Die Person gibt frei.
 
-### 12.16 – CSS ordnen (W3)
+### 12.16 – CSS ordnen (W3) – erledigt (0.34.12)
 
 Version 0.34.12. Sheet und Skript bleiben unverändert.
 
@@ -272,8 +272,8 @@ Version 1.0.0. Sheet und Skript bleiben unverändert.
 | 12.12 | App-Icon und Ladebildschirm – erledigt | Bau | 0.34.9 | nein |
 | 12.13 | Fehlerseite – erledigt | Bau | 0.34.10 | nein |
 | 12.14 | Tabs im Sheet sortieren – erledigt | Bau | 0.34.11 | `Werkzeuge.gs`, keine Bereitstellung |
-| 12.15 | CSS prüfen | Bericht | – | nein |
-| 12.16 | CSS ordnen | Bau | 0.34.12 | nein |
+| 12.15 | CSS prüfen – erledigt | Bericht | – | nein |
+| 12.16 | CSS ordnen – erledigt | Bau | 0.34.12 | nein |
 | 12.17 | Abschluss | Doku | 1.0.0 | nein |
 
 Nachbesserungen zählen die Version hoch, dann verschieben sich die folgenden Nummern.

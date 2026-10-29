@@ -1,4 +1,8 @@
-/* Knöpfe, Karten, Eingabefelder, Fenster, Listen. Tippflächen mindestens 44 px. */
+/* css/components.css: alle Bausteine der App, nach Themen in der Reihenfolge der Reiter.
+   Neue Regeln kommen in den Abschnitt ihres Reiters; Regeln für eine bestimmte Breite in den Block am Ende des Abschnitts.
+   Tippflächen mindestens 44 px. Farben nur über die Variablen in css/base.css. */
+
+/* ==== 1. Grundbausteine: Knöpfe, Karten, Felder, Formulare, Listen, Tabellen, Aufklapper, Fenster, Detail, Meldungen, Foto ==== */
 
 .knopf {
   min-height: 44px;
@@ -11,21 +15,17 @@
   font-weight: 600;
   cursor: pointer;
 }
-
 .knopf:disabled { opacity: 0.5; cursor: default; }
-
 .knopf-hell {
   background: var(--flaeche);
   color: var(--text);
   border: 1px solid var(--gruppe);
 }
-
 .knopf-gefahr {
   background: var(--flaeche);
   color: var(--fehler);
   border: 1px solid var(--rand);
 }
-
 .karte {
   background: var(--flaeche);
   border: 1px solid var(--rand);
@@ -33,7 +33,6 @@
   padding: var(--abstand);
   margin-bottom: 12px;
 }
-
 .feld {
   display: block;
   width: 100%;
@@ -44,13 +43,9 @@
   font: inherit;
   background: var(--flaeche);
 }
-
 textarea.feld { min-height: 96px; resize: vertical; }
-
 .leise { color: var(--text-leise); }
-
 .fehler { color: var(--fehler); min-height: 1.4em; }
-
 .listenlink {
   display: flex;
   align-items: center;
@@ -58,11 +53,6 @@ textarea.feld { min-height: 96px; resize: vertical; }
   color: var(--text);
   text-decoration: none;
 }
-
-.mehr-knoepfe { display: grid; gap: 12px; margin-top: 16px; }
-
-.login-form { display: grid; gap: 12px; }
-
 .modal {
   position: fixed;
   inset: 0;
@@ -72,7 +62,6 @@ textarea.feld { min-height: 96px; resize: vertical; }
   background: var(--abdunkeln);
   z-index: 2000;
 }
-
 .modal-box {
   width: 90%;
   max-width: 420px;
@@ -82,8 +71,8 @@ textarea.feld { min-height: 96px; resize: vertical; }
   position: relative;
 }
 
-.modal-knoepfe { display: flex; gap: 12px; flex-wrap: wrap; }
-
+/* Knopfreihen unter Fenstern und Formularen */
+.modal-knoepfe, .form-knoepfe { display: flex; gap: 12px; flex-wrap: wrap; }
 .toast {
   position: fixed;
   left: 50%;
@@ -103,9 +92,6 @@ textarea.feld { min-height: 96px; resize: vertical; }
   pointer-events: none;
   animation: toast-ein 0.2s ease-out;
 }
-
-/* ---- Listen ---- */
-
 .kopfzeile {
   display: flex;
   align-items: center;
@@ -113,71 +99,43 @@ textarea.feld { min-height: 96px; resize: vertical; }
   gap: 12px;
   margin-bottom: var(--abstand);
 }
-
 .kopfzeile h1 { margin: 0; }
-/* Seit 0.34.8: Sehr schmal (kleines Handy oder Zoom): Knöpfe rutschen unter die Überschrift statt über den Rand */
-@media (max-width: 359px) {
-  .kopfzeile { flex-wrap: wrap; }
-}
-
 .filterzeile {
   display: grid;
   gap: 8px;
   margin-bottom: 12px;
 }
-
 .tabelle-wrap { display: none; }
-
 .tabelle {
   width: 100%;
   border-collapse: collapse;
   background: var(--flaeche);
   border: 1px solid var(--rand);
 }
-
-.tabelle th,
-.tabelle td {
+.tabelle th, .tabelle td {
   text-align: left;
   padding: 10px 12px;
   border-bottom: 1px solid var(--rand);
 }
-
 .tabelle th {
   background: var(--gruppe);
   color: var(--gruppe-text);
   font-size: 14px;
   font-weight: 600;
 }
-
 .tabelle .zahl { text-align: right; }
 .tabelle tbody tr:hover { background: var(--gruen-hell); }
 .klickbar { cursor: pointer; }
-
 .listenkarte { margin-bottom: 10px; }
 .listenkarte p { margin: 4px 0 0; }
-
-@media (min-width: 600px) {
-  .filterzeile { grid-template-columns: 2fr 1fr 1fr; }
-}
-
-@media (min-width: 960px) {
-  .tabelle-wrap { display: block; }
-  .karten-liste { display: none; }
-}
-
-/* ---- Detailansicht ---- */
-
 .detail-kopf { margin-bottom: 12px; }
-
 .detail-knoepfe {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   margin-bottom: 12px;
 }
-
 .detail-foto-box { margin-bottom: 12px; }
-
 .detail-foto {
   display: block;
   width: 100%;
@@ -186,55 +144,400 @@ textarea.feld { min-height: 96px; resize: vertical; }
   border-radius: var(--radius);
   background: var(--gruen-hell);
 }
-
 .detail-liste {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 6px 12px;
   margin: 12px 0;
 }
-
 .detail-liste dt { color: var(--text-leise); }
 .detail-liste dd { margin: 0; }
-
 .notiz { white-space: pre-wrap; }
-
 .verlauf { list-style: none; padding: 0; margin: 0; }
 .verlauf li { padding: 8px 0; border-bottom: 1px solid var(--rand); }
-
-/* ---- Formulare ---- */
-
 .formular { display: grid; gap: 14px; }
-
 .formfeld { display: grid; gap: 4px; }
-
 .formlabel { font-weight: 600; font-size: 14px; }
-
 .formfeld-bool {
   display: flex;
   align-items: center;
   gap: 10px;
   min-height: 44px;
 }
-
 .formfeld-bool input { width: 22px; height: 22px; }
+a.knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+.auswahl-leiste {
+  position: sticky;
+  bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--flaeche);
+  border: 2px solid var(--gruppe);
+  border-radius: var(--radius);
+  box-shadow: 0 2px 10px var(--schatten);
+}
+.auswahl-leiste[hidden] { display: none; }
+.auswahl-box {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+.tabelle .auswahl-spalte { width: 52px; text-align: center; }
+.karte.mit-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.mit-box .auswahl-box { margin-top: 2px; flex: none; }
+.karten-text { flex: 1; min-width: 0; }
+.gesperrt { opacity: 0.45; cursor: default; }
 
-.form-knoepfe { display: flex; gap: 12px; flex-wrap: wrap; }
+/* Sprung-Link „Zum Inhalt springen“, nur sichtbar mit Fokus */
+.sprung-link {
+  position: absolute;
+  left: 8px;
+  top: -200px;
+  z-index: 3000;
+  padding: 10px 14px;
+  border: 2px solid var(--gruppe);
+  border-radius: var(--radius);
+  background: var(--flaeche);
+  color: var(--text);
+  font-weight: 600;
+}
+.sprung-link:focus { top: 8px; }
 
-/* ---- Startseite (Gruppenwahl) ---- */
+/* Überschriften und Hauptbereich, die den Fokus nur zum Vorlesen bekommen: ohne Rahmen */
+.fokus-still:focus { outline: none; }
+.nur-leser {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.modal-gross {
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.foto-upload {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  margin-top: -6px;
+}
+.foto-upload p { margin: 0; font-size: 14px; }
+/* Meldungen mittig im Bildschirm */
+@keyframes toast-ein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
+/* Foto im Detail anklickbar */
+.foto-knopf {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+.foto-knopf:focus-visible { outline: 3px solid var(--gruppe); border-radius: var(--radius); }
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: var(--lightbox-grund);
+  cursor: zoom-out;
+}
+.lightbox-bild {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius);
+}
+.lightbox-fehler { color: var(--auf-farbe); font-size: 18px; }
+.lightbox-zu {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  right: 12px;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--flaeche);
+  color: var(--text);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Erledigte ToDos: grau und durchgestrichen, aber weiter sichtbar */
+.tabelle tr.erledigt td {
+  color: var(--text-leise);
+  text-decoration: line-through;
+  background: var(--flaeche-leise);
+}
+.karte.erledigt { background: var(--flaeche-leise); }
+.karte.erledigt .karten-text, .karte.erledigt .karten-text p {
+  color: var(--text-leise);
+  text-decoration: line-through;
+}
+p.notiz.erledigt {
+  color: var(--text-leise);
+  text-decoration: line-through;
+}
+.filterzeile.filter-todos { grid-template-columns: 1fr; }
+.filter-todos .suche-feld { grid-column: 1 / -1; }
+
+/* Überfällig = rot, heute fällig = orange (zusätzlich steht es im Text) */
+.tabelle tr.ueberfaellig td { color: var(--fehler); font-weight: 600; }
+.tabelle tr.ueberfaellig td:first-child { box-shadow: inset 6px 0 0 var(--fehler); }
+.tabelle tr.heute td:first-child { box-shadow: inset 6px 0 0 var(--warnung); }
+.tabelle tr.heute td { background: var(--warn-flaeche); }
+.karte.ueberfaellig { border-left: 6px solid var(--fehler); }
+.karte.heute { border-left: 6px solid var(--warnung); background: var(--warn-flaeche); }
+
+/* Abgehakte Kästchen in Grau */
+.tabelle tr.erledigt .auswahl-box,
+.karte.erledigt .auswahl-box,
+.dash-zeile.erledigt .auswahl-box {
+  accent-color: var(--grau-marke);
+}
+.kopf-knoepfe { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Eigene Tabelle "Erledigt": graue Kopfzeile */
+.liste-titel { margin: 28px 0 8px; font-size: 18px; color: var(--text-leise); }
+.liste-erledigt .tabelle th { background: var(--tabellenkopf-grau); color: var(--auf-farbe); }
+
+/* Filter */
+.filterzeile.filter-projekte { grid-template-columns: 1fr; }
+
+/* Pfeil zum Aufklappen */
+.projekt-pfeil, .teil-pfeil {
+  display: inline-block;
+  color: var(--text-leise);
+  transition: transform 0.15s ease;
+}
+.teil-aktionen {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.teil-titel-klein {
+  margin: 16px 0 4px;
+  font-size: 16px;
+  color: var(--text-leise);
+}
+
+/* Löschen-Knopf unten im Bearbeiten-Fenster */
+.fenster-loeschen {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rand);
+}
+.teil-pfeil.auf { transform: rotate(90deg); }
+
+/* Häkchenliste der Meilenstein-Vorlage im Formular */
+.vorlage-liste {
+  display: grid;
+  gap: 2px;
+  padding: 8px 0;
+  border-top: 1px solid var(--rand);
+  border-bottom: 1px solid var(--rand);
+}
+.vorlage-liste p { margin: 0 0 6px; font-size: 14px; }
+.vorlage-zeile {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 44px;
+  padding: 6px 0;
+  cursor: default;
+}
+.vorlage-zeile .auswahl-box { flex: none; margin-top: 2px; }
+.vorlage-text { display: grid; gap: 2px; }
+.vorlage-text .vorlage-datum { max-width: 200px; }
+
+/* Kleine Knöpfe */
+.knopf-klein, .detail .detail-knoepfe .knopf {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Farbfeld im Formular */
+.farbfeld {
+  width: 72px;
+  height: 44px;
+  padding: 2px;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  background: var(--flaeche);
+  cursor: pointer;
+}
+.farb-zusatz {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: -6px;
+}
+.formfeld-bool[hidden] { display: none; }
+
+/* ✕ oben rechts in jedem Fenster */
+.modal-box h2 { padding-right: 44px; }
+.fenster-x {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--text);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.fenster-x:hover { background: var(--gruen-hell); }
+.fenster-x:focus-visible { outline: 3px solid var(--gruppe); }
+.vorlage-text .leise { font-size: 13px; }
+.vorlage-liste > .knopf-klein { justify-self: start; margin-top: 6px; }
+
+/* Knopfreihen, eng (6 px Abstand) */
+.mobi-vorschau-felder,
+.kal-mobi-knoepfe,
+.pk-marken-leiste,
+.pk-vorschlag-reihe,
+.team-schnell,
+.team-rollen-wahl,
+.darstellung-knoepfe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Aufklapper: Kopfzeile mindestens 44 px hoch */
+.team-pausiert > summary,
+.team-rollen-teil > summary,
+.team-berg-zahlen > summary,
+.wiki-thema > summary,
+.wiki-formathilfe > summary,
+.wiki-mehr > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Kleine Links zum Weiterlesen */
+.team-hilfe-link a,
+.wiki-zurueck a,
+.wiki-andere a { display: inline-flex; align-items: center; min-height: 44px; }
+
+@media (max-width: 359px) {
+  /* Sehr schmal (kleines Handy oder Zoom): Knöpfe rutschen unter die Überschrift statt über den Rand */
+  .kopfzeile { flex-wrap: wrap; }
+}
+
+@media (min-width: 600px) {
+  .filterzeile { grid-template-columns: 2fr 1fr 1fr; }
+  .filterzeile.filter-todos { grid-template-columns: repeat(2, 1fr); }
+  .filterzeile.filter-projekte { grid-template-columns: 2fr 1fr; }
+}
+
+@media (min-width: 960px) {
+  .tabelle-wrap { display: block; }
+  .karten-liste { display: none; }
+  .auswahl-leiste { bottom: 16px; }
+  .filterzeile.filter-todos { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { animation: none; }
+}
+
+/* ==== 2. Kommentare (in mehreren Reitern) ==== */
+
+.kommentare h3 { margin: 12px 0 6px; }
+.kommentar-liste { list-style: none; padding: 0; margin: 8px 0; }
+.kommentar {
+  display: grid;
+  gap: 2px;
+  justify-items: start;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rand);
+}
+.kommentar-form {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  margin: 8px 0;
+}
+.kommentar-form .feld { min-height: 64px; }
+
+/* Kommentare im Detail und im Fenster: mit Trennstrich und Farbe abgesetzt */
+.detail .kommentare, .modal-box .kommentare {
+  margin-top: 24px;
+  padding: 4px 12px 12px;
+  border-top: 4px solid var(--gruppe);
+  border-radius: var(--radius);
+  background: var(--gruen-hell);
+}
+
+/* Angeheftete Kommentare in der Pinnwand */
+.kommentar.angeheftet {
+  padding: 8px 10px;
+  border: 1px solid var(--rand);
+  border-left: 6px solid var(--gruppe);
+  border-radius: var(--radius);
+  background: var(--gruen-hell);
+}
+
+/* Pinnwand: Veranstaltung als Kasten in der Veranstaltungsfarbe */
+.kommentar.kommentar-ver {
+  margin: 6px 0;
+  padding: 8px 10px;
+  border-bottom: 0;
+  border-radius: var(--radius);
+}
+.kommentar-ver .leise { color: inherit; opacity: 0.85; }
+
+/* ==== 3. Öffentliche Seiten: Balken oben, Gruppenwahl, öffentliche Termine, Anmeldung, Info ==== */
+
+.login-form { display: grid; gap: 12px; }
 .start-seite {
   max-width: 900px;
   margin: 0 auto;
   padding: var(--abstand);
   padding-top: 24px;
 }
-
 .gruppen-raster {
   display: grid;
   gap: 12px;
 }
-
 .gruppen-kachel {
   display: flex;
   align-items: center;
@@ -248,56 +551,24 @@ textarea.feld { min-height: 96px; resize: vertical; }
   text-decoration: none;
   border-bottom: 6px solid var(--gruen);
 }
-
 .gruppen-kachel:hover { background: var(--gruen-hell); }
-
 .gruppen-logo {
   width: 44px;
   height: 44px;
   flex: none;
   object-fit: contain;
 }
-
 .kachel-name { font-weight: 700; }
-
 .platzhalter-kachel {
   min-height: 64px;
   border-radius: var(--radius);
   background: var(--spur);
   animation: platzhalter-puls 1.4s ease-in-out infinite;
 }
-
 @keyframes platzhalter-puls {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .platzhalter-kachel { animation: none; }
-}
-
-@media (min-width: 960px) {
-  .gruppen-raster {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-
-  .gruppen-kachel {
-    flex-direction: column;
-    justify-content: center;
-    gap: 14px;
-    min-height: 220px;
-    padding: 28px 16px 22px;
-    text-align: center;
-  }
-
-  .gruppen-logo { width: 96px; height: 96px; }
-
-  .platzhalter-kachel { min-height: 220px; }
-}
-
-/* ---- Z3: Balken, Kacheln, Anmeldung, Info ---- */
-
 .app-balken {
   background: var(--balken);
   color: var(--balken-text);
@@ -305,7 +576,6 @@ textarea.feld { min-height: 96px; resize: vertical; }
   box-shadow: 0 0 0 100vmax var(--balken);
   clip-path: inset(0 -100vmax);
 }
-
 .app-balken-innen {
   display: flex;
   align-items: center;
@@ -315,7 +585,6 @@ textarea.feld { min-height: 96px; resize: vertical; }
   color: var(--balken-text);
   text-decoration: none;
 }
-
 .balken-logo {
   display: flex;
   width: 48px;
@@ -325,25 +594,15 @@ textarea.feld { min-height: 96px; resize: vertical; }
   border-radius: 0;
   background: none;
 }
-
 .balken-logo img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
-
 .balken-titel {
   font-size: 20px;
   font-weight: 700;
 }
-
-a.knopf {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-}
-
 .start-knoepfe {
   display: flex;
   flex-wrap: wrap;
@@ -351,27 +610,20 @@ a.knopf {
   gap: 12px;
   margin: 32px 0 16px;
 }
-
 .info-karte { margin-bottom: 16px; }
-
 .login-kopf {
   display: flex;
   align-items: center;
   gap: 14px;
   margin-bottom: var(--abstand);
 }
-
 .login-kopf h1 { margin: 0; }
-
 .login-kopf .gruppen-logo {
   width: 56px;
   height: 56px;
 }
-
 .pin-wrap { position: relative; }
-
 .pin-wrap .feld { padding-right: 52px; }
-
 .pin-auge {
   position: absolute;
   top: 0;
@@ -389,9 +641,7 @@ a.knopf {
   color: var(--text-leise);
   cursor: pointer;
 }
-
 .pin-auge:focus-visible { outline: 2px solid var(--gruppe); }
-
 .oeff-links {
   display: flex;
   flex-wrap: wrap;
@@ -400,7 +650,6 @@ a.knopf {
   margin-top: 8px;
   font-size: 14px;
 }
-
 .oeff-links a {
   display: inline-flex;
   align-items: center;
@@ -408,14 +657,240 @@ a.knopf {
   color: var(--text-leise);
 }
 
+/* Gruppenwahl: Gruppen links, Termine rechts (Handy: darunter) */
+.start-seite.start-breit { max-width: 1200px; }
+.start-haupt { min-width: 0; order: 1; }
+.start-termine[hidden] { display: none; }
+.start-termine h2 { margin: 0 0 10px; font-size: 18px; }
+
+/* Termin-Kästen */
+.oeff-liste { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 8px; }
+.oeff-termin {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+}
+.oeff-datum { font-size: 13px; font-weight: 600; opacity: 0.9; }
+.oeff-info { font-size: 14px; opacity: 0.9; }
+.oeff-termin p { margin: 6px 0 0; }
+.oeff-termin a { color: inherit; font-weight: 600; }
+.oeff-url { display: block; margin-bottom: 8px; font-size: 13px; word-break: break-all; }
+
+/* Gruppenwahl: Termine links in eigener Leiste, Gruppen daneben */
+.start-zwei { display: flex; flex-direction: column; gap: 24px; }
+
+/* Feste Kacheln auf der Termine-Seite */
+.oeff-kachel {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: var(--radius);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.oeff-kachel > * {
+  display: block;
+  min-height: 1.45em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.oeff-kachel:hover { filter: brightness(0.95); }
+.oeff-kachel:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+.oeff-links-liste {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+.oeff-links-liste a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+/* Strich der Terminleiste: AktionsDeck-Dunkelgrau wie der Balken oben */
+.start-termine {
+  order: 2;
+  margin-top: 0;
+  padding: 14px;
+  background: var(--flaeche);
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  border-top: 5px solid var(--balken);
+}
+
+/* Aktionskalender: Kachel mit Anheften-Knopf */
+.oeff-kachel-box {
+  display: grid;
+  border-radius: var(--radius);
+}
+.oeff-kachel-box .oeff-kachel { background: none; color: inherit; }
+.oeff-kachel-box:hover { filter: brightness(0.96); }
+.oeff-heften { justify-self: start; margin: 0 12px 10px; }
+.info-gruppen h2 { margin: 20px 0 8px; font-size: 20px; }
+.info-gruppe { padding: 8px 0; border-top: 1px solid var(--rand); }
+.info-gruppe h3 { margin: 0 0 4px; font-size: 17px; }
+.info-gruppe-links { display: flex; flex-wrap: wrap; gap: 0 16px; }
+.info-gruppe-links a { display: inline-flex; align-items: center; min-height: 44px; gap: 6px; }
+.info-version { margin-top: 16px; }
+.info-wiki { margin: 16px 0 0; }
+.abo-knoepfe { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.abo-knoepfe .knopf { min-height: 44px; }
+.info-symbol { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
+.oeff-auswahl { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.oeff-auswahl .feld { flex: 1 1 180px; width: auto; }
+.abo-knoepfe + .leise, .karte > select.feld { margin-bottom: 8px; }
+
+@media screen {
+  /* Gruppen-Logos auf einer hellen runden Fläche, damit dunkle Logos sichtbar bleiben */
+  .dunkel .gruppen-logo,
+  .dunkel .dash-logo,
+  .dunkel .seiten-logo {
+    padding: 4px;
+    border-radius: 50%;
+    background: var(--logo-grund);
+  }
+}
+
+@media (min-width: 600px) {
+  .oeff-liste.oeff-gross { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (min-width: 960px) {
+  .gruppen-raster {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .gruppen-kachel {
+    flex-direction: column;
+    justify-content: center;
+    gap: 14px;
+    min-height: 220px;
+    padding: 28px 16px 22px;
+    text-align: center;
+  }
+  .gruppen-logo { width: 96px; height: 96px; }
+  .platzhalter-kachel { min-height: 220px; }
   .app-balken-innen { padding: 18px var(--abstand); gap: 18px; }
   .balken-logo { width: 56px; height: 56px; }
   .balken-titel { font-size: 28px; }
   .start-seite { padding-top: 40px; }
+  .start-zwei { flex-direction: row; align-items: flex-start; }
+  .start-termine {
+    order: 0;
+    flex: none;
+    width: 320px;
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+  .start-haupt { flex: 1; }
+
+  /* Mit Terminen: zwei Gruppen pro Reihe */
+  .start-zwei.mit-termine .gruppen-raster { grid-template-columns: repeat(2, 1fr); }
+  .oeff-liste.oeff-gross { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* ---- Z4: Start-Dashboard und Logo in der Seitenleiste ---- */
+@media (prefers-reduced-motion: reduce) {
+  .platzhalter-kachel { animation: none; }
+}
+
+/* ==== 4. Gerüst-Zusätze: Seitenleiste, „Mehr“, Hell/Dunkel, Konto und Cloud, Signal, Hinweis „Neue Version“ ==== */
+
+.mehr-knoepfe { display: grid; gap: 12px; margin-top: 16px; }
+.seiten-kopf {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+.seiten-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+/* Logo links, Kurzname rechts daneben */
+.seiten-kopf span { font-size: 20px; }
+.konto-teil { padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--rand); }
+.konto-zeile { margin: 0 0 8px; }
+.cloud-knopf { margin-top: 12px; font-size: 18px; padding: 0 28px; }
+
+/* Schalter „Wie das Gerät | Hell | Dunkel“ (Mehr am Handy, Seitenleiste am PC) */
+.darstellung { display: flex; flex-direction: column; gap: 6px; margin: 16px 0; }
+.darstellung-knopf {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  background: var(--flaeche);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+.darstellung-knopf[aria-pressed="true"] { background: var(--gruppe); color: var(--gruppe-text); border-color: var(--gruppe); font-weight: 600; }
+
+/* Am PC in der schmalen Seitenleiste: alle drei Knöpfe in einer Reihe */
+.seiten-fuss .darstellung-knoepfe { flex-wrap: nowrap; gap: 4px; }
+.seiten-fuss .darstellung-knopf { flex: 1 1 auto; padding: 0 6px; font-size: 13px; white-space: nowrap; }
+
+/* Schalter: „Gerät“ als Wort, Hell und Dunkel als Punkt mit Rahmen */
+.darstellung-punkt { width: 44px; min-width: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.darstellung-punkt span { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--grau-marke); }
+.darstellung-punkt .punkt-hell { background: #ffffff; }
+.darstellung-punkt .punkt-dunkel { background: #000000; }
+.darstellung-punkt[aria-pressed="true"] { background: var(--flaeche); border: 3px solid var(--gruppe); }
+.seiten-fuss .darstellung-punkt { flex: 0 0 44px; padding: 0; }
+.signal-knopf { margin: 4px 0; }
+.signal-form .signal-frage { font-size: 1.2em; font-weight: 600; margin: 12px 0 8px; }
+.signal-form .feld { max-width: 160px; }
+.signal-form .knopf { margin-top: 4px; }
+.signal-form a.knopf { display: inline-flex; align-items: center; text-decoration: none; margin-top: 4px; }
+.neue-version {
+  position: fixed;
+  left: 50%;
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  /* Über der unteren Leiste */
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px 10px 16px;
+  border-radius: var(--radius);
+  background: var(--balken);
+  color: var(--balken-text);
+  box-shadow: 0 6px 24px var(--schatten-gross);
+  z-index: 2900;
+}
+.neue-version .knopf { margin: 0; white-space: nowrap; }
+
+@media (min-width: 960px) {
+  /* Name ändern und Abmelden nebeneinander, öffentliche Links in einer Zeile.
+   Ist der Bildschirm trotzdem zu niedrig, lässt sich die Leiste scrollen. */
+  /* Knöpfe so breit wie ihr Text, bei großer Schrift untereinander statt abgeschnitten */
+  .seiten-fuss-knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
+  .seiten-fuss-knoepfe .knopf { flex: 1 1 auto; padding: 0 6px; font-size: 14px; white-space: nowrap; }
+  .seitenleiste .oeff-links { gap: 0 8px; margin-top: 0; font-size: 12px; }
+  .seitenleiste .oeff-links a { min-height: 32px; }
+  .neue-version { bottom: 16px; }
+}
+
+@media (min-width: 960px) and (max-height: 760px) {
+  .seitenleiste .nav-link { min-height: 40px; }
+  .seiten-kopf { padding-bottom: 10px; margin-bottom: 4px; }
+}
+
+/* ==== 5. Start: Kopf, Für dich, Kacheln, Umfragen, Schwarzes Brett, Glocke ==== */
 
 .dash-kopf {
   display: flex;
@@ -424,307 +899,27 @@ a.knopf {
   margin-bottom: var(--abstand);
   flex-wrap: wrap;
 }
-
 .dash-kopf h1 { margin: 0; }
-
 .dash-logo {
   width: 56px;
   height: 56px;
   flex: none;
   object-fit: contain;
 }
-
 .dash-raster {
   display: grid;
   gap: 12px;
 }
-
 .dash-kachel {
   min-height: 100px;
   margin-bottom: 0;
   border-top: 5px solid var(--gruppe);
 }
-
 .dash-kachel h2 { margin: 0 0 6px; font-size: 18px; }
 .dash-kachel p { margin: 0; }
-
-.seiten-kopf {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
-}
-
-.seiten-logo {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-}
-
-@media (min-width: 600px) {
-  .dash-raster { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (min-width: 960px) {
-  .dash-raster { grid-template-columns: repeat(2, 1fr); }
-  /* Am PC steht das Logo schon in der Seitenleiste */
-  .dash-logo { display: none; }
-}
-
-/* ---- Z6: Sammel-Ausleihe ---- */
-
-.aktionsleiste {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.auswahl-leiste {
-  position: sticky;
-  bottom: calc(64px + env(safe-area-inset-bottom, 0px));
-  z-index: 120;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 16px;
-  padding: 12px 14px;
-  background: var(--flaeche);
-  border: 2px solid var(--gruppe);
-  border-radius: var(--radius);
-  box-shadow: 0 2px 10px var(--schatten);
-}
-
-.auswahl-leiste[hidden] { display: none; }
-
-.auswahl-box {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-}
-
-.tabelle .auswahl-spalte { width: 52px; text-align: center; }
-
-.karte.mit-box {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-
-.mit-box .auswahl-box { margin-top: 2px; flex: none; }
-.karten-text { flex: 1; min-width: 0; }
-
-.gesperrt { opacity: 0.45; cursor: default; }
-
-/* Seit 0.34.8 (Barrierefreiheit): Sprung-Link „Zum Inhalt springen“, nur sichtbar mit Fokus */
-.sprung-link {
-  position: absolute;
-  left: 8px;
-  top: -200px;
-  z-index: 3000;
-  padding: 10px 14px;
-  border: 2px solid var(--gruppe);
-  border-radius: var(--radius);
-  background: var(--flaeche);
-  color: var(--text);
-  font-weight: 600;
-}
-.sprung-link:focus { top: 8px; }
-/* Überschriften und Hauptbereich, die den Fokus nur zum Vorlesen bekommen: ohne Rahmen */
-.fokus-still:focus { outline: none; }
-
-.nur-leser {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
-.modal-gross {
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.buch-kopf {
-  display: grid;
-  gap: 14px;
-}
-
-.buch-liste {
-  display: grid;
-  border-top: 1px solid var(--rand);
-}
-
-.buch-zeile {
-  display: grid;
-  gap: 8px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--rand);
-}
-
-.buch-text { display: grid; gap: 2px; }
-
-.buch-felder { display: flex; flex-wrap: wrap; gap: 12px; }
-
-.buch-feld { display: grid; gap: 2px; font-size: 14px; }
-
-.mengen-feld { width: 110px; }
-
-@media (min-width: 600px) {
-  .buch-kopf { grid-template-columns: 1fr 2fr; }
-  .buch-zeile {
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 16px;
-  }
-}
-
-@media (min-width: 960px) {
-  .auswahl-leiste { bottom: 16px; }
-}
-
-/* ---- Z7/Z8 und Anpassungen ---- */
-
-/* Logo im Balken ohne weißen Rahmen */
-
-.gebucht-hinweis {
-  margin: 0 0 12px;
-  padding: 10px 12px;
-  border-left: 6px solid var(--gruppe);
-  border-radius: var(--radius);
-  background: var(--gruen-hell);
-  font-weight: 600;
-}
-
-.foto-upload {
-  display: grid;
-  gap: 6px;
-  justify-items: start;
-  margin-top: -6px;
-}
-
-.foto-upload p { margin: 0; font-size: 14px; }
-
-/* ---- 0.12.1: Seitenleiste, Meldungen mittig, Foto groß ---- */
-
-/* Logo links, Kurzname rechts daneben */
-.seiten-kopf span { font-size: 20px; }
-
-/* Meldungen mittig im Bildschirm */
-
-@keyframes toast-ein {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .toast { animation: none; }
-}
-
-/* Foto im Detail anklickbar */
-.foto-knopf {
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: zoom-in;
-}
-
-.foto-knopf:focus-visible { outline: 3px solid var(--gruppe); border-radius: var(--radius); }
-
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 2500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  background: var(--lightbox-grund);
-  cursor: zoom-out;
-}
-
-.lightbox-bild {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  border-radius: var(--radius);
-}
-
-.lightbox-fehler { color: var(--auf-farbe); font-size: 18px; }
-
-.lightbox-zu {
-  position: absolute;
-  top: calc(12px + env(safe-area-inset-top, 0px));
-  right: 12px;
-  width: 48px;
-  height: 48px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--flaeche);
-  color: var(--text);
-  font-size: 22px;
-  cursor: pointer;
-}
-
-/* ---- Etappe 3: ToDos ---- */
-
-/* Erledigte ToDos: grau und durchgestrichen, aber weiter sichtbar */
-.tabelle tr.erledigt td {
-  color: var(--text-leise);
-  text-decoration: line-through;
-  background: var(--flaeche-leise);
-}
-
-.karte.erledigt { background: var(--flaeche-leise); }
-
-.karte.erledigt .karten-text,
-.karte.erledigt .karten-text p {
-  color: var(--text-leise);
-  text-decoration: line-through;
-}
-
-p.notiz.erledigt {
-  color: var(--text-leise);
-  text-decoration: line-through;
-}
-
-/* ---- Etappe 3: Filter, Fälligkeit ---- */
-
-.filterzeile.filter-todos { grid-template-columns: 1fr; }
-.filter-todos .suche-feld { grid-column: 1 / -1; }
-
-@media (min-width: 600px) {
-  .filterzeile.filter-todos { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (min-width: 960px) {
-  .filterzeile.filter-todos { grid-template-columns: repeat(4, 1fr); }
-}
-
-/* Überfällig = rot, heute fällig = orange (zusätzlich steht es im Text) */
-.tabelle tr.ueberfaellig td { color: var(--fehler); font-weight: 600; }
-.tabelle tr.ueberfaellig td:first-child { box-shadow: inset 6px 0 0 var(--fehler); }
-.tabelle tr.heute td:first-child { box-shadow: inset 6px 0 0 var(--warnung); }
-.tabelle tr.heute td { background: var(--warn-flaeche); }
-
-.karte.ueberfaellig { border-left: 6px solid var(--fehler); }
-.karte.heute { border-left: 6px solid var(--warnung); background: var(--warn-flaeche); }
-
-/* ---- Etappe 3.4: Start-Kachel ToDos ---- */
-
 .dash-todos { grid-column: auto; }
-
 .dash-zahlen { font-weight: 600; margin: 0 0 8px; }
-
 .dash-todo-liste { list-style: none; padding: 0; margin: 8px 0; }
-
 .dash-todo {
   display: grid;
   gap: 2px;
@@ -735,34 +930,16 @@ p.notiz.erledigt {
   color: var(--text);
   text-decoration: none;
 }
-
 .dash-todo:hover { background: var(--gruen-hell); }
-
 .dash-todo.ueberfaellig { border-left-color: var(--fehler); }
 .dash-todo.heute { border-left-color: var(--warnung); background: var(--warn-flaeche); }
-
-.dash-todo.erledigt,
-.dash-todo.erledigt span {
+.dash-todo.erledigt, .dash-todo.erledigt span {
   color: var(--text-leise);
   text-decoration: line-through;
   background: var(--flaeche-leise);
 }
 
-/* ---- Etappe 3.5: ToDos Archiv, Start-Kachel ---- */
-
-/* Abgehakte Kästchen in Grau */
-.tabelle tr.erledigt .auswahl-box,
-.karte.erledigt .auswahl-box,
-.dash-zeile.erledigt .auswahl-box { accent-color: var(--grau-marke); }
-
-.kopf-knoepfe { display: flex; gap: 8px; flex-wrap: wrap; }
-
-/* Eigene Tabelle "Erledigt": graue Kopfzeile */
-.liste-titel { margin: 28px 0 8px; font-size: 18px; color: var(--text-leise); }
-.liste-erledigt .tabelle th { background: var(--tabellenkopf-grau); color: var(--auf-farbe); }
-
 /* Start-Kachel ToDos: halbe Breite am PC, Kopfzeile mit Link und Schalter */
-
 .dash-kachel-kopf {
   display: flex;
   align-items: center;
@@ -771,23 +948,19 @@ p.notiz.erledigt {
   gap: 4px 16px;
   margin-bottom: 8px;
 }
-
 .dash-kachel-titel {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 4px 16px;
 }
-
 .dash-kachel-kopf h2 { margin: 0; }
-
 .dash-kachel-titel a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
   font-weight: 600;
 }
-
 .dash-kachel-kopf .formfeld-bool { font-size: 14px; }
 
 /* ToDo-Zeile mit Kästchen */
@@ -797,131 +970,11 @@ p.notiz.erledigt {
   gap: 10px;
   border-bottom: 1px solid var(--rand);
 }
-
 .dash-zeile .auswahl-box { flex: none; margin: 0 0 0 2px; }
 .dash-zeile .dash-todo { flex: 1; min-width: 0; border-bottom: 0; }
 
-/* ---- Etappe 4.1: Projekte ---- */
-
-/* Fortschrittsbalken */
-.fortschritt { display: grid; gap: 4px; }
-
-.fortschritt-spur {
-  height: 12px;
-  border-radius: 6px;
-  background: var(--spur);
-  overflow: hidden;
-}
-
-.fortschritt-fuell {
-  height: 100%;
-  border-radius: 6px;
-  background: var(--gruppe);
-  transition: width 0.3s ease;
-}
-
-.fortschritt-text { font-size: 14px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .fortschritt-fuell { transition: none; }
-}
-
-/* Übersicht oben */
-.projekt-uebersicht { padding-bottom: 4px; }
-.projekt-uebersicht h2 { margin: 0 0 8px; font-size: 18px; }
-
-.uebersicht-zeile {
-  display: grid;
-  gap: 6px;
-  width: 100%;
-  min-height: 44px;
-  padding: 10px 8px;
-  border: 0;
-  border-bottom: 1px solid var(--rand);
-  background: none;
-  font: inherit;
-  color: var(--text);
-  text-align: left;
-  cursor: pointer;
-}
-
-.uebersicht-zeile:last-child { border-bottom: 0; }
-.uebersicht-zeile:hover { background: var(--gruen-hell); }
-.uebersicht-zeile:focus-visible { outline: 2px solid var(--gruppe); }
-
-.uebersicht-kopf {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 2px 12px;
-}
-
-/* Filter */
-.filterzeile.filter-projekte { grid-template-columns: 1fr; }
-
-@media (min-width: 600px) {
-  .filterzeile.filter-projekte { grid-template-columns: 2fr 1fr; }
-}
-
-/* Projektblock (aufklappbar) */
-.projekt-block {
-  padding: 0;
-  border-top: 5px solid var(--gruppe);
-  scroll-margin-top: 12px;
-}
-
-.projekt-block > summary {
-  display: grid;
-  gap: 6px;
-  min-height: 44px;
-  padding: 14px var(--abstand);
-  list-style: none;
-  cursor: pointer;
-}
-
-.projekt-block > summary::-webkit-details-marker { display: none; }
-.projekt-block > summary:focus-visible { outline: 2px solid var(--gruppe); }
-
-.projekt-titel-zeile {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  width: 100%;
-}
-
-.projekt-titel { font-size: 18px; font-weight: 700; }
-
-.projekt-pfeil {
-  display: inline-block;
-  color: var(--text-leise);
-  transition: transform 0.15s ease;
-}
-
-.projekt-block[open] .projekt-pfeil { transform: rotate(90deg); }
-
-.projekt-body {
-  padding: 12px var(--abstand) var(--abstand);
-  border-top: 1px solid var(--rand);
-}
-
-.status-marke {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: var(--spur);
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.status-aktiv { background: var(--gruen-hell); box-shadow: inset 0 0 0 1px var(--gruen); }
-.status-erledigt,
-.status-archiviert { background: var(--flaeche-grau); color: var(--text-leise); }
-
 /* Start-Kachel Projekte */
 .dash-projekt-liste { display: grid; margin-top: 8px; }
-
 .dash-projekt {
   display: grid;
   gap: 4px;
@@ -931,138 +984,15 @@ p.notiz.erledigt {
   color: var(--text);
   text-decoration: none;
 }
-
 .dash-projekt:last-of-type { border-bottom: 0; }
 .dash-projekt:hover { background: var(--gruen-hell); }
 .dash-projekt:focus-visible { outline: 2px solid var(--gruppe); }
 
-/* ---- Etappe 4.2: ToDos und Meilensteine im Projekt ---- */
-
-/* Teil (aufklappbar) im Projektblock */
-.projekt-teil {
-  margin: 12px 0;
-  border: 1px solid var(--rand);
-  border-radius: var(--radius);
-  background: var(--flaeche);
-}
-
-.projekt-teil > summary {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px 10px;
-  min-height: 44px;
-  padding: 8px 12px;
-  list-style: none;
-  cursor: pointer;
-}
-
-.projekt-teil > summary::-webkit-details-marker { display: none; }
-.projekt-teil > summary:focus-visible { outline: 2px solid var(--gruppe); }
-
-.teil-pfeil {
-  display: inline-block;
-  color: var(--text-leise);
-  transition: transform 0.15s ease;
-}
-
-.projekt-teil[open] > summary .teil-pfeil { transform: rotate(90deg); }
-
-.projekt-teil-body {
-  padding: 8px 12px 12px;
-  border-top: 1px solid var(--rand);
-}
-
-.teil-aktionen {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
-}
-
-.teil-titel-klein {
-  margin: 16px 0 4px;
-  font-size: 16px;
-  color: var(--text-leise);
-}
-
-/* Meilenstein */
-.meilenstein {
-  margin: 12px 0;
-  padding: 10px 12px;
-  border: 1px solid var(--rand);
-  border-left: 6px solid var(--gruppe);
-  border-radius: var(--radius);
-}
-
-.meilenstein.erreicht { background: var(--flaeche-leise); border-left-color: var(--grau-marke); }
-.meilenstein.ueberfaellig { border-left-color: var(--fehler); }
-.meilenstein.heute { border-left-color: var(--warnung); }
-
-.meilenstein-kopf {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px 10px;
-  margin-bottom: 6px;
-}
-
-.meilenstein-titel {
-  display: grid;
-  gap: 2px;
-  flex: 1;
-  min-width: 160px;
-}
-
-.meilenstein .auswahl-box { flex: none; }
-.meilenstein.erreicht .meilenstein-titel strong { color: var(--text-leise); }
-.meilenstein.ueberfaellig .meilenstein-titel .leise { color: var(--fehler); font-weight: 600; }
-
-/* ToDo-Zeile im Projekt: Text ist ein Knopf (öffnet das Bearbeiten-Fenster) */
-.pt-todo {
-  width: auto;
-  border-top: 0;
-  border-right: 0;
-  border-bottom: 0;
-  background: none;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.pt-todo:focus-visible { outline: 2px solid var(--gruppe); }
-
-/* Löschen-Knopf unten im Bearbeiten-Fenster */
-.fenster-loeschen {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid var(--rand);
-}
-
 /* Start-Kachel Projekte: Schalter "ToDos (n offen)" */
 .dash-projekt-knopf { margin: 8px 0 4px; }
-
 .dash-projekt-block { border-bottom: 1px solid var(--rand); }
 .dash-projekt-block:last-of-type { border-bottom: 0; }
 .dash-projekt-block .dash-projekt { border-bottom: 0; }
-
-/* ---- Etappe 4.2.1: Gruppen, Start-Schalter ---- */
-
-/* Aktiv / In Planung getrennt */
-.projekt-gruppe-titel { margin: 16px 0 8px; font-size: 18px; }
-.projekt-uebersicht .projekt-gruppe-titel {
-  margin: 14px 0 4px;
-  font-size: 15px;
-  color: var(--text-leise);
-}
-
-.projekt-gruppe-planung {
-  margin-top: 28px;
-  padding-top: 4px;
-  border-top: 3px dashed var(--rand);
-}
-
-.status-planung { background: var(--warn-flaeche); box-shadow: inset 0 0 0 1px var(--warnung); }
 
 /* Start-Kachel: Titel mit Marke, Schalter mit Pfeil */
 .dash-projekt-titel {
@@ -1071,7 +1001,6 @@ p.notiz.erledigt {
   flex-wrap: wrap;
   gap: 4px 8px;
 }
-
 .dash-schalter {
   display: flex;
   align-items: center;
@@ -1087,93 +1016,23 @@ p.notiz.erledigt {
   text-align: left;
   cursor: pointer;
 }
-
 .dash-schalter:hover { background: var(--gruen-hell); }
 .dash-schalter:focus-visible { outline: 2px solid var(--gruppe); }
-.teil-pfeil.auf { transform: rotate(90deg); }
-
-/* ---- Etappe 4.2.2 und 4.3: Vorlagen, Team und Hüte ---- */
-
-/* Häkchenliste der Meilenstein-Vorlage im Formular */
-.vorlage-liste {
-  display: grid;
-  gap: 2px;
-  padding: 8px 0;
-  border-top: 1px solid var(--rand);
-  border-bottom: 1px solid var(--rand);
-}
-
-.vorlage-liste p { margin: 0 0 6px; font-size: 14px; }
-
-.vorlage-zeile {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  min-height: 44px;
-  padding: 6px 0;
-  cursor: default;
-}
-
-.vorlage-zeile .auswahl-box { flex: none; margin-top: 2px; }
-.vorlage-text { display: grid; gap: 2px; }
-
-/* Hut (Zuständigkeit) mit Personen */
-.hut {
-  margin: 10px 0;
-  padding: 10px 12px;
-  border: 1px solid var(--rand);
-  border-left: 6px solid var(--gruppe);
-  border-radius: var(--radius);
-}
-
-.hut.frei { border-left-color: var(--warnung); background: var(--warn-flaeche); }
-
-.hut-knoepfe { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-
-/* ---- 0.21.1: Vorlage im Formular ---- */
-.vorlage-text .vorlage-datum { max-width: 200px; }
-
-/* ---- 0.21.3: Hüte = ToDos ohne Verantwortliche ---- */
 .dash-zeile.mit-hut { flex-wrap: nowrap; }
-.dash-zeile.mit-hut .hut-knoepfe { margin-bottom: 0; padding: 0 8px 0 0; flex: none; flex-basis: auto; margin: 0; flex-direction: column; align-items: stretch; gap: 4px; }
-.hut-toggler { margin: 12px 0; background: var(--fehler-flaeche); border-color: var(--fehler-rand); border-left: 6px solid var(--fehler); }
-
-/* ---- 0.21.4: kleine Hut-Knöpfe in der Zeile, zwei Schalter im Start ---- */
-.knopf-klein {
-  min-height: 32px;
-  padding: 0 10px;
-  font-size: 13px;
-  white-space: nowrap;
+.dash-zeile.mit-hut .hut-knoepfe {
+  margin-bottom: 0;
+  padding: 0 8px 0 0;
+  flex: none;
+  flex-basis: auto;
+  margin: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
 }
-
 .dash-projekt-spalten {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0 8px;
-}
-
-/* ---- 0.21.5: Projekt-Knöpfe, roter Hut-Toggler ---- */
-
-/* Seit 0.34.8 oben im aufgeklappten Teil (nicht mehr in der Kopfzeile), am PC rechts */
-.projekt-aktionen {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.hut-toggler > summary strong { color: var(--fehler); }
-.hut-toggler .projekt-teil-body { background: var(--fehler-flaeche); border-top-color: var(--fehler-rand); }
-.hut-toggler .dash-zeile { border-bottom-color: var(--fehler-rand); }
-
-/* ---- 0.21.6: dunklerer Hintergrund, kleine Knöpfe, rote Überfällig-Zeile ---- */
-
-/* Details im Reiter ToDos: alle Knöpfe klein */
-.detail .detail-knoepfe .knopf {
-  min-height: 32px;
-  padding: 0 10px;
-  font-size: 13px;
-  white-space: nowrap;
 }
 
 /* Überfällige ToDos: Infozeile (mit "Fällig … (überfällig)") rot */
@@ -1182,55 +1041,21 @@ p.notiz.erledigt {
   font-weight: 600;
 }
 
-/* ---- 0.25.0: Planung optisch getrennt ---- */
-.projekt-teil.projekt-gruppe-planung {
-  margin-top: 40px;
-  border: 2px dashed var(--warnung);
-  background: var(--warn-flaeche);
-}
-
-.projekt-gruppe-planung > summary strong { color: var(--planung-text); }
-.projekt-gruppe-planung > .projekt-teil-body { background: var(--warn-flaeche); border-top-color: var(--warnung); }
-.projekt-gruppe-planung .projekt-block { border-top-color: var(--warnung); }
-
-/* ---- 0.26.0: Etappe 5 (Start als Zentrale) und 4.7.1 ---- */
-
-/* Projekte: Übersicht und Learnings nebeneinander (Handy: untereinander) */
-.projekt-zwei {
-  display: grid;
-  gap: 12px;
-  align-items: start;
-}
-
-.projekt-zwei > * { min-width: 0; }
-
-@media (min-width: 960px) {
-  .projekt-zwei { grid-template-columns: 1fr 1fr; gap: 16px; }
-}
-
-/* Projektname klein unter dem Learning */
-.lern-projekt { font-size: 13px; }
-
 /* Start: Umfragen und Schwarzes Brett */
 .start-extra { margin-bottom: 12px; }
 .start-extra .dash-kachel { margin-bottom: 0; }
-
 .umfrage {
   padding: 12px 0;
   border-bottom: 1px solid var(--rand);
 }
-
 .umfrage:last-child { border-bottom: 0; }
-
 .umfrage-titel {
   display: grid;
   gap: 2px;
   flex: 1;
   min-width: 180px;
 }
-
 .umfrage-option { display: grid; gap: 2px; padding: 4px 0; }
-
 .umfrage-option-zeile {
   display: flex;
   align-items: center;
@@ -1238,7 +1063,6 @@ p.notiz.erledigt {
   min-height: 44px;
   cursor: pointer;
 }
-
 .mitteilung {
   margin: 10px 0;
   padding: 10px 12px;
@@ -1246,9 +1070,7 @@ p.notiz.erledigt {
   border-left: 6px solid var(--gruppe);
   border-radius: var(--radius);
 }
-
 .mitteilung.angeheftet { background: var(--gruen-hell); }
-
 .mitteilung-kopf {
   display: flex;
   align-items: flex-start;
@@ -1256,35 +1078,11 @@ p.notiz.erledigt {
   flex-wrap: wrap;
   gap: 6px 12px;
 }
-
 .mitteilung p { margin: 6px 0 0; }
 
 /* Kommentare und Pinnwand */
 .start-pinnwand { margin-top: 12px; border-top: 5px solid var(--gruppe); }
-
-.kommentare h3 { margin: 12px 0 6px; }
 .start-pinnwand .kommentare h3 { margin-top: 0; font-size: 18px; }
-
-.kommentar-liste { list-style: none; padding: 0; margin: 8px 0; }
-
-.kommentar {
-  display: grid;
-  gap: 2px;
-  justify-items: start;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--rand);
-}
-
-.kommentar-form {
-  display: grid;
-  gap: 8px;
-  justify-items: start;
-  margin: 8px 0;
-}
-
-.kommentar-form .feld { min-height: 64px; }
-
-/* ---- 0.26.1: Start-Kopf, Umfragen, Kommentare, Projekt-Info ---- */
 
 /* Start: Knöpfe in der Zeile mit "Hallo ..." (Handy: darunter, links) */
 .dash-kopf .kopf-knoepfe { margin-left: auto; }
@@ -1293,36 +1091,6 @@ p.notiz.erledigt {
 .umfrage-frist.ueberfaellig { color: var(--fehler); font-weight: 600; }
 .umfrage-frist.heute { color: var(--warnung); font-weight: 600; }
 .umfrage-frage { margin: 0 0 8px; }
-
-/* Kommentare im Detail und im Fenster: mit Trennstrich und Farbe abgesetzt */
-.detail .kommentare,
-.modal-box .kommentare {
-  margin-top: 24px;
-  padding: 4px 12px 12px;
-  border-top: 4px solid var(--gruppe);
-  border-radius: var(--radius);
-  background: var(--gruen-hell);
-}
-
-/* Projekt: Daten links, Learnings und Ideen zur Aktionsart rechts (Handy: darunter) */
-.projekt-info-zwei {
-  display: grid;
-  gap: 0 16px;
-}
-
-.projekt-info-zwei > * { min-width: 0; }
-
-@media (min-width: 960px) {
-  .projekt-info-zwei { grid-template-columns: 1fr 1fr; align-items: start; }
-}
-
-/* Handy: Knöpfe der Projekte unter dem Titel, linksbündig */
-@media (max-width: 599px) {
-  .dash-kopf .kopf-knoepfe { margin-left: 0; width: 100%; flex-wrap: wrap; gap: 6px; }   /* Umbruch nur bei Platzmangel (0.34.8) */
-  .projekt-aktionen { justify-content: flex-start; flex-wrap: wrap; }
-}
-
-/* ---- 0.26.2: Umfragen als farbiger Kasten, angeheftete Kommentare ---- */
 
 /* Umfrage-Zeile: leicht grün, heute = orange, überfällig = rot (ganzer Kasten) */
 .umfrage-zeile {
@@ -1333,45 +1101,20 @@ p.notiz.erledigt {
   border-radius: var(--radius);
   background: var(--gruen-hell);
 }
-
 .umfrage-zeile.heute {
   background: var(--warn-flaeche);
   border-color: var(--warn-rand);
   border-left-color: var(--warnung);
 }
-
 .umfrage-zeile.ueberfaellig {
   background: var(--fehler-flaeche);
   border-color: var(--fehler-rand);
   border-left-color: var(--fehler);
 }
-
 .umfrage-zeile .dash-todo { background: none; }
 
 /* Ergebnis einer beendeten Umfrage: schlichter Text */
 .umfrage-option strong { font-weight: 600; }
-
-/* Angeheftete Kommentare in der Pinnwand */
-.kommentar.angeheftet {
-  padding: 8px 10px;
-  border: 1px solid var(--rand);
-  border-left: 6px solid var(--gruppe);
-  border-radius: var(--radius);
-  background: var(--gruen-hell);
-}
-
-/* ---- 0.26.3: Start-Knöpfe am Handy in einer Zeile ---- */
-@media (max-width: 599px) {
-  .dash-kopf .kopf-knoepfe .knopf {
-    flex: 1;
-    min-width: 0;
-    padding: 0 6px;
-    font-size: 14px;
-    white-space: nowrap;
-  }
-}
-
-/* ---- 0.27.0: Glocke, Was ist neu ---- */
 .glocke { padding: 0 12px; font-size: 18px; }
 .glocke-zahl {
   margin-left: 2px;
@@ -1382,46 +1125,662 @@ p.notiz.erledigt {
 }
 .neu-titel { margin: 18px 0 4px; font-size: 16px; }
 .neu-titel a { color: var(--text); }
-
-@media (max-width: 599px) {
-  .dash-kopf .kopf-knoepfe .knopf.glocke { flex: none; padding: 0 10px; font-size: 18px; }
-}
-
-/* ---- 0.27.1: Archiv in zwei Spalten ---- */
 .archiv-zwei { display: grid; gap: 0 16px; align-items: start; }
 .archiv-zwei > * { min-width: 0; }
 
+/* Seiten-Knöpfe direkt neben der Seitenangabe */
+/* Start: drei Schalter (ToDos, Hüte, Mobi) */
+.dash-projekt-spalten.mit-mobi { grid-template-columns: repeat(3, 1fr); }
+
+/* Start: rechte Spalte mit ToDos und TOPs */
+.dash-rechts { display: grid; gap: 12px; align-content: start; }
+.dash-aufklapper { align-self: center; flex: none; margin-top: 4px; }
+.dash-tops .top-sammlung { margin-top: 8px; }
+
+/* Start: Umschalter unten in der Kachel */
+.dash-rechts > .dash-kachel { display: flex; flex-direction: column; }
+.start-team-weg {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  color: var(--text-leise);
+}
+.dash-tops-titel > .knopf:last-child { margin-left: auto; }
+.fuer-dich { margin-bottom: 16px; border-left: 4px solid var(--gruppe); }
+.fuer-dich .dash-kachel-titel { margin-bottom: 4px; }
+.fuer-dich-zeile a.dash-todo { color: inherit; text-decoration: none; }
+.fuer-dich-zeile a.dash-todo:hover strong { text-decoration: underline; }
+.karte.fuer-dich { background: var(--fuer-dich-flaeche); border-color: var(--fuer-dich-rand); border-top-color: var(--fuer-dich-akzent); border-left-color: var(--fuer-dich-akzent); }
+.fuer-dich .dash-zeile { border-bottom-color: var(--fuer-dich-linie); }
+.fuer-dich .leise { color: var(--fuer-dich-text); }
+
+@media (max-width: 599px) {
+  /* Handy: Knöpfe der Projekte unter dem Titel, linksbündig */
+  .dash-kopf .kopf-knoepfe { margin-left: 0; width: 100%; flex-wrap: wrap; gap: 6px; }   /* Umbruch nur bei Platzmangel */
+  .dash-kopf .kopf-knoepfe .knopf {
+    flex: 1;
+    min-width: 0;
+    padding: 0 6px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .dash-kopf .kopf-knoepfe .knopf.glocke { flex: none; padding: 0 10px; font-size: 18px; }
+}
+
+@media (max-width: 959px) {
+  .dash-tops-titel { flex-wrap: wrap; gap: 8px; }   /* Bricht nur um, wenn der Platz nicht reicht */
+  .dash-tops-titel h2 { flex: none; }
+  .dash-tops-titel .knopf { padding: 0 10px; font-size: 13px; white-space: nowrap; }
+}
+
+@media (min-width: 600px) {
+  .dash-raster { grid-template-columns: repeat(2, 1fr); }
+
+  /* Höhe kommt von der Kachel Projekte (gleiche Zeile im Raster), mindestens 340 px */
+  .dash-projekte { min-height: 480px; }
+  .dash-rechts { display: flex; flex-direction: column; height: 0; min-height: 100%; }
+
+  /* Eine Kachel ganz gezeigt: Spalte wächst mit, die andere bleibt kurz */
+  .dash-rechts.dash-rechts-offen { height: auto; }
+  .dash-rechts > .dash-kachel { flex: 1 1 0; min-height: 0; }
+  .dash-kachel-inhalt { flex: 1 1 0; min-height: 0; overflow: hidden; }
+  .dash-rechts > .dash-kachel.dash-offen { flex: none; }
+  .dash-offen > .dash-kachel-inhalt { flex: none; overflow: visible; }
+  .dash-rechts-offen > .dash-kachel:not(.dash-offen) { flex: none; }
+  .dash-rechts-offen > .dash-kachel:not(.dash-offen) > .dash-kachel-inhalt { flex: none; max-height: 180px; }
+}
+
 @media (min-width: 960px) {
+  .dash-raster { grid-template-columns: repeat(2, 1fr); }
+
+  /* Am PC steht das Logo schon in der Seitenleiste */
+  .dash-logo { display: none; }
   .archiv-zwei { grid-template-columns: 1fr 1fr; }
 }
-/* ---- 0.28.0: Kalender ---- */
+
+/* ==== 6. Projekte: Block, Teile, Meilensteine, Vorlagen, Jahresübersicht ==== */
+
+/* Fortschrittsbalken */
+.fortschritt { display: grid; gap: 4px; }
+.fortschritt-spur {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--spur);
+  overflow: hidden;
+}
+.fortschritt-fuell {
+  height: 100%;
+  border-radius: 6px;
+  background: var(--gruppe);
+  transition: width 0.3s ease;
+}
+.fortschritt-text { font-size: 14px; }
+
+/* Übersicht oben */
+.projekt-uebersicht { padding-bottom: 4px; }
+.projekt-uebersicht h2 { margin: 0 0 8px; font-size: 18px; }
+.uebersicht-zeile {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 8px;
+  border: 0;
+  border-bottom: 1px solid var(--rand);
+  background: none;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+.uebersicht-zeile:last-child { border-bottom: 0; }
+.uebersicht-zeile:hover { background: var(--gruen-hell); }
+.uebersicht-zeile:focus-visible { outline: 2px solid var(--gruppe); }
+.uebersicht-kopf {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+}
+
+/* Projektblock (aufklappbar) */
+.projekt-block {
+  padding: 0;
+  border-top: 5px solid var(--gruppe);
+  scroll-margin-top: 12px;
+}
+.projekt-block > summary {
+  display: grid;
+  gap: 6px;
+  min-height: 44px;
+  padding: 14px var(--abstand);
+  list-style: none;
+  cursor: pointer;
+}
+.projekt-block > summary::-webkit-details-marker { display: none; }
+.projekt-block > summary:focus-visible { outline: 2px solid var(--gruppe); }
+.projekt-titel-zeile {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+.projekt-titel { font-size: 18px; font-weight: 700; }
+.projekt-block[open] .projekt-pfeil { transform: rotate(90deg); }
+.projekt-body {
+  padding: 12px var(--abstand) var(--abstand);
+  border-top: 1px solid var(--rand);
+}
+.status-marke {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--spur);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.status-aktiv { background: var(--gruen-hell); box-shadow: inset 0 0 0 1px var(--gruen); }
+.status-erledigt, .status-archiviert {
+  background: var(--flaeche-grau);
+  color: var(--text-leise);
+}
+
+/* Teil (aufklappbar) im Projektblock */
+.projekt-teil {
+  margin: 12px 0;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  background: var(--flaeche);
+}
+.projekt-teil > summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  min-height: 44px;
+  padding: 8px 12px;
+  list-style: none;
+  cursor: pointer;
+}
+.projekt-teil > summary::-webkit-details-marker { display: none; }
+.projekt-teil > summary:focus-visible { outline: 2px solid var(--gruppe); }
+.projekt-teil[open] > summary .teil-pfeil { transform: rotate(90deg); }
+.projekt-teil-body {
+  padding: 8px 12px 12px;
+  border-top: 1px solid var(--rand);
+}
+
+/* Meilenstein */
+.meilenstein {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--rand);
+  border-left: 6px solid var(--gruppe);
+  border-radius: var(--radius);
+}
+.meilenstein.erreicht { background: var(--flaeche-leise); border-left-color: var(--grau-marke); }
+.meilenstein.ueberfaellig { border-left-color: var(--fehler); }
+.meilenstein.heute { border-left-color: var(--warnung); }
+.meilenstein-kopf {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-bottom: 6px;
+}
+.meilenstein-titel {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 160px;
+}
+.meilenstein .auswahl-box { flex: none; }
+.meilenstein.erreicht .meilenstein-titel strong { color: var(--text-leise); }
+.meilenstein.ueberfaellig .meilenstein-titel .leise { color: var(--fehler); font-weight: 600; }
+
+/* ToDo-Zeile im Projekt: Text ist ein Knopf (öffnet das Bearbeiten-Fenster) */
+.pt-todo {
+  width: auto;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.pt-todo:focus-visible { outline: 2px solid var(--gruppe); }
+
+/* Aktiv / In Planung getrennt */
+.projekt-gruppe-titel { margin: 16px 0 8px; font-size: 18px; }
+.projekt-uebersicht .projekt-gruppe-titel {
+  margin: 14px 0 4px;
+  font-size: 15px;
+  color: var(--text-leise);
+}
+.projekt-gruppe-planung {
+  margin-top: 28px;
+  padding-top: 4px;
+  border-top: 3px dashed var(--rand);
+}
+.status-planung { background: var(--warn-flaeche); box-shadow: inset 0 0 0 1px var(--warnung); }
+
+/* Oben im aufgeklappten Teil (nicht mehr in der Kopfzeile), am PC rechts */
+.projekt-aktionen {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.projekt-teil.projekt-gruppe-planung {
+  margin-top: 40px;
+  border: 2px dashed var(--warnung);
+  background: var(--warn-flaeche);
+}
+.projekt-gruppe-planung > summary strong { color: var(--planung-text); }
+.projekt-gruppe-planung > .projekt-teil-body { background: var(--warn-flaeche); border-top-color: var(--warnung); }
+.projekt-gruppe-planung .projekt-block { border-top-color: var(--warnung); }
+
+/* Projekte: Übersicht und Learnings nebeneinander (Handy: untereinander) */
+.projekt-zwei {
+  display: grid;
+  gap: 12px;
+  align-items: start;
+}
+.projekt-zwei > * { min-width: 0; }
+
+/* Projektname klein unter dem Learning */
+.lern-projekt { font-size: 13px; }
+
+/* Projekt: Daten links, Learnings und Ideen zur Aktionsart rechts (Handy: darunter) */
+.projekt-info-zwei {
+  display: grid;
+  gap: 0 16px;
+}
+.projekt-info-zwei > * { min-width: 0; }
+.jahr-knopf { display: flex; width: 100%; margin: 0 0 12px; }
+.jahr-karte { margin-bottom: 12px; }
+.jahr-karte > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  cursor: pointer;
+  list-style: none;
+}
+.jahr-karte > summary::-webkit-details-marker { display: none; }
+.jahr-karte[open] > summary .teil-pfeil { transform: rotate(90deg); }
+.jahr-inhalt { margin-top: 8px; }
+.jahr-abschnitt { padding: 10px 0; border-top: 1px solid var(--rand); }
+.jahr-abschnitt h3 { margin: 0 0 4px; font-size: 17px; }
+.jahr-abschnitt .dash-zahlen { margin: 0; }
+.jahr-liste { margin: 6px 0 0; padding-left: 20px; }
+.jahr-liste li { margin: 2px 0; }
+
+@media (max-width: 599px) {
+  .projekt-aktionen { justify-content: flex-start; flex-wrap: wrap; }
+}
+
+@media (min-width: 960px) {
+  .projekt-zwei { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .projekt-info-zwei { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fortschritt-fuell { transition: none; }
+}
+
+/* ==== 7. ToDos und Hüte ==== */
+
+/* Hut (Zuständigkeit) mit Personen */
+.hut {
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--rand);
+  border-left: 6px solid var(--gruppe);
+  border-radius: var(--radius);
+}
+.hut.frei { border-left-color: var(--warnung); background: var(--warn-flaeche); }
+.hut-knoepfe { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.hut-toggler { margin: 12px 0; background: var(--fehler-flaeche); border-color: var(--fehler-rand); border-left: 6px solid var(--fehler); }
+.hut-toggler > summary strong { color: var(--fehler); }
+.hut-toggler .projekt-teil-body { background: var(--fehler-flaeche); border-top-color: var(--fehler-rand); }
+.hut-toggler .dash-zeile { border-bottom-color: var(--fehler-rand); }
+
+/* ==== 8. Material: Sammel-Ausleihe, Buchen ==== */
+
+.aktionsleiste {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.buch-kopf {
+  display: grid;
+  gap: 14px;
+}
+.buch-liste {
+  display: grid;
+  border-top: 1px solid var(--rand);
+}
+.buch-zeile {
+  display: grid;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rand);
+}
+.buch-text { display: grid; gap: 2px; }
+.buch-felder { display: flex; flex-wrap: wrap; gap: 12px; }
+.buch-feld { display: grid; gap: 2px; font-size: 14px; }
+.mengen-feld { width: 110px; }
+
+/* Logo im Balken ohne weißen Rahmen */
+.gebucht-hinweis {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-left: 6px solid var(--gruppe);
+  border-radius: var(--radius);
+  background: var(--gruen-hell);
+  font-weight: 600;
+}
+
+@media (min-width: 600px) {
+  .buch-kopf { grid-template-columns: 1fr 2fr; }
+  .buch-zeile {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+/* ==== 9. Mobi: Liste, Kanban, Kacheln, Zeitstrahl, Vorlagen ==== */
+
+.mobi-punkt { width: 14px; height: 14px; flex: none; margin-left: 4px; border-radius: 50%; }
+.mobi-zaehler { font-size: 13px; }
+.mobi-zaehler.ueber { color: var(--fehler); font-weight: 600; }
+.mobi-analyse dd { white-space: pre-wrap; }
+.mobi-ansicht { display: flex; gap: 8px; margin-bottom: 12px; }
+.tabelle .mobi-punkt { display: inline-block; margin: 0 8px 0 0; vertical-align: middle; }
+.kanban {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+}
+.kanban-spalte {
+  flex: 0 0 270px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  background: var(--gruen-hell);
+  scroll-snap-align: start;
+}
+.kanban-kopf { margin: 0 0 8px; font-size: 15px; }
+.kanban-karten { display: grid; gap: 8px; }
+.kanban-karte {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 6px solid var(--gruppe);
+}
+.kanban-titel {
+  display: grid;
+  gap: 2px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.kanban-titel:focus-visible { outline: 2px solid var(--gruppe); }
+.kanban-karte .ueberfaellig { color: var(--fehler); font-weight: 600; }
+.kanban-karte .heute { color: var(--warnung); font-weight: 600; }
+.kanban-knoepfe { display: flex; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+.mobi-kanaele { margin: 4px 0 8px; font-size: 14px; line-height: 1.8; }
+.mobi-kanal-zahl { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; vertical-align: middle; }
+.mobi-kanaele .mobi-punkt, .mobi-kachel-kanal .mobi-punkt { width: 10px; height: 10px; margin-left: 0; }
+.mobi-titel-ueberfaellig, .tabelle td.mobi-titel-ueberfaellig {
+  color: var(--fehler);
+  font-weight: 700;
+}
+.mobi-titel-heute, .tabelle td.mobi-titel-heute {
+  color: var(--warnung);
+  font-weight: 700;
+}
+.mobi-spalten { display: grid; gap: 16px; }
+.mobi-spalte-kopf { margin: 0 0 8px; font-size: 15px; }
+.mobi-spalte.leer { display: none; }
+.mobi-kacheln { display: grid; gap: 8px; }
+.mobi-kachel {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border-left: 6px solid var(--gruppe);
+}
+.mobi-kachel-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.mobi-kachel-text {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px 8px 6px;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.mobi-kachel-text:focus-visible { outline: 2px solid var(--gruppe); }
+.mobi-kachel-kanal { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.mobi-kachel .mobi-datum-ueberfaellig { color: var(--fehler); font-weight: 600; }
+.mobi-kachel .mobi-datum-heute { color: var(--warnung); font-weight: 600; }
+.mobi-kachel.erledigt .mobi-kachel-text, .mobi-kachel.erledigt .mobi-kachel-text span {
+  color: var(--text-leise);
+}
+.mobi-kacheln-flaeche { margin-top: 8px; }
+.kanban-entwurf { justify-self: start; }
+.mobi-sammlung .vorlage-liste { margin-bottom: 8px; }
+.mobi-hinweis {
+  padding: 8px 10px;
+  border-left: 4px solid var(--warnung);
+  border-radius: var(--radius);
+  background: var(--warn-flaeche);
+}
+.mobi-vorschau .vorlage-text { flex: 1; min-width: 0; }
+.mobi-vorschau-felder .feld { width: auto; min-width: 0; flex: 1 1 130px; }
+.mobi-vorschau-felder .mobi-vorschau-titel { flex: 3 1 220px; }
+.mobi-vorschau.gibt-es .vorlage-text { opacity: 0.6; }
+.kanban-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.kanban-nav[hidden], .kanban-leiste[hidden] { display: none; }
+.kanban-nav .knopf { min-width: 44px; }
+
+/* Leiste zum Verschieben direkt über den Spalten (läuft mit dem Kanban mit) */
+.kanban-leiste { display: none; overflow-x: auto; overflow-y: hidden; margin-bottom: 4px; scrollbar-width: auto; scrollbar-color: var(--grau-marke) var(--gruen-hell); }
+.kanban-leiste-innen { height: 1px; }
+.kanban-leiste::-webkit-scrollbar { height: 12px; }
+.kanban-leiste::-webkit-scrollbar-track { border-radius: 6px; background: var(--gruen-hell); }
+.kanban-leiste::-webkit-scrollbar-thumb { border-radius: 6px; background: var(--grau-marke); }
+
+/* Sammel-ToDo: Platz statt Kästchen, mit Kanal-Punkt */
+.mobi-sammel-platz {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 26px;
+}
+.mobi-sammel-platz .mobi-punkt { margin: 0; }
+.mobi-warnungen { margin: 0 0 12px; }
+.mobi-warnungen[hidden] { display: none; }
+.mobi-warnung {
+  margin: 0 0 6px;
+  padding: 6px 10px;
+  border-left: 4px solid var(--warnung);
+  border-radius: var(--radius);
+  background: var(--warn-flaeche);
+  font-size: 14px;
+}
+.mobi-warnung-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.mobi-zs-box { margin: 8px 0 12px; display: grid; gap: 6px; justify-items: start; }
+.mobi-zeitstrahl { display: grid; gap: 2px; margin-top: 6px; }
+.mz-zeile { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 8px; min-height: 30px; }
+.mz-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: 13px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.mz-name .mobi-punkt { width: 10px; height: 10px; margin: 0; }
+.mz-bahn { position: relative; height: 30px; margin: 0 12px; border-bottom: 1px solid var(--rand); }
+.mz-achse { height: 30px; border-bottom: 0; font-size: 12px; color: var(--text-leise); }
+.mz-aktion-text { transform: translateX(-50%); color: var(--gruen); font-weight: 600; }
+.mz-linie, .mzb-linie { position: absolute; top: 0; bottom: 0; width: 0; }
+.mz-aktion { border-left: 2px solid var(--gruen); }
+.mz-heute { border-left: 2px dashed var(--grau-marke); }
+.mz-punkt {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  padding: 0;
+  border: 2px solid var(--flaeche);
+  border-radius: 50%;
+  background: var(--grau-hell);
+  color: var(--auf-farbe);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  box-shadow: 0 0 0 1px var(--schatten-ring);
+}
+
+/* Unsichtbar größere Tippfläche (44 px) um den kleinen Punkt */
+.mz-punkt::after { content: ''; position: absolute; inset: -13px; }
+.mz-punkt.mz-ueber { border-color: var(--fehler); }
+.mz-punkt.mz-fertig { background: var(--grau-hell); }
+.mz-punkt:focus-visible { outline: 2px solid var(--gruppe); outline-offset: 2px; }
+.mz-legende { margin: 4px 0 0; font-size: 12px; }
+.mz-name > span:last-child { overflow: hidden; text-overflow: ellipsis; }
+.mz-datum { position: absolute; top: 0; white-space: nowrap; transform: translateX(-50%); font-size: 12px; }
+.mz-heute-text { color: var(--text-leise); font-weight: 600; }
+.mz-strich { position: absolute; bottom: 0; width: 1px; height: 5px; background: var(--grau-hell); }
+.mz-strich-mo { height: 10px; background: var(--grau-marke); }
+.mz-woche { border-left: 1px solid var(--linie-zart); }
+.mobi-zeit-gruppe { margin-bottom: 20px; }
+.mobi-zeit-gruppe .teil-titel-klein { margin-bottom: 4px; }
+.mobi-zeitbalken { width: 100%; padding: 0 14px; box-sizing: border-box; }
+.mzb-balken {
+  position: relative;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--spur-zart);
+  overflow: hidden;
+}
+.mzb-abschnitt { position: absolute; top: 0; bottom: 0; min-width: 4px; background: var(--grau-hell); }
+.mzb-abschnitt.mzb-fertig { background: var(--grau-hell); }
+.mzb-aktion { border-left: 3px solid var(--gruen); }
+.mzb-heute { border-left: 2px dashed var(--text); }
+.mzb-achse { position: relative; height: 18px; margin-top: 2px; color: var(--text-leise); }
+.mz-mo-text { color: var(--text-leise); }
+
+@media (max-width: 599px) {
+  .mz-zeile { grid-template-columns: 76px 1fr; }
+  .mz-mo-text { display: none; }
+}
+
+@media (max-width: 959px) {
+  .mobi-kopf { flex-wrap: wrap; }
+  .mobi-kopf .kopf-knoepfe { width: 100%; justify-content: flex-end; gap: 6px; }
+  .mobi-ansicht { flex-wrap: nowrap; gap: 6px; }
+  .mobi-kopf .kopf-knoepfe .knopf { padding: 0 10px; font-size: 14px; white-space: nowrap; }
+  .mobi-ansicht .knopf { flex: 1 1 auto; min-width: 0; padding: 0 6px; font-size: 14px; }
+}
+
+@media (min-width: 960px) {
+  .kanban-spalte { flex: 1 0 220px; }
+  .mobi-spalten { grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; }
+  .mobi-spalte.leer { display: block; }
+  .mobi-kacheln-flaeche { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+  /* Alle Spalten sind sichtbar: Sie brechen bei Bedarf in eine zweite Reihe um, statt seitwärts zu scrollen */
+  .kanban {
+    scrollbar-width: none;
+  }
+
+  /* Wieder eine Reihe; die untere Leiste ist ausgeblendet, die obere bleibt */
+  .kanban::-webkit-scrollbar { display: none; }
+  .kanban-leiste:not([hidden]) { display: block; }
+}
+
+/* ==== 10. Kalender: Liste, Woche, Monat, Kacheln ==== */
+
 .kal-filter {
   display: flex;
   flex-wrap: wrap;
   gap: 0 16px;
   margin: 8px 0 12px;
 }
-
 .kal-filter .formfeld-bool { font-size: 14px; }
-
 .kal-zeile { border-left: 6px solid var(--gruppe); padding-right: 8px; flex-wrap: wrap; }
 .kal-zeile .dash-todo { border-left: 0; flex: 1 1 200px; }
 .kal-marke { font-size: 13px; }
-
 .kal-link {
   flex: none;
   font-size: 14px;
   font-weight: 600;
 }
-/* ---- 0.28.2: Monatsansicht ---- */
 .kal-ansicht { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
-
 .kal-raster {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0;
 }
-
 .kal-wt {
   padding: 4px 0;
   text-align: center;
@@ -1429,34 +1788,13 @@ p.notiz.erledigt {
   font-weight: 600;
   color: var(--text-leise);
 }
-
-.kal-tag {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 3px;
-  min-height: 60px;
-  padding: 4px;
-  background: var(--flaeche);
-  color: var(--text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  overflow: hidden;
-}
-
 .kal-tag:hover { background: var(--gruen-hell); }
 .kal-tag:focus-visible { outline: 2px solid var(--gruppe); }
 .kal-fremd { opacity: 0.5; }
-.kal-gewaehlt { border-color: var(--gruppe); }
-
 .kal-nr { font-size: 13px; font-weight: 600; }
-
 .kal-punkte { display: flex; flex-wrap: wrap; gap: 3px; }
 .kal-punkt { width: 8px; height: 8px; border-radius: 50%; }
-
 .kal-chips { display: none; }
-
 .kal-streifen {
   display: block;
   border-top: 5px solid var(--gruppe);
@@ -1469,7 +1807,6 @@ p.notiz.erledigt {
   margin: 0 -4px;
   padding: 0 4px;
 }
-
 .kal-chip {
   display: block;
   padding: 1px 4px;
@@ -1481,23 +1818,12 @@ p.notiz.erledigt {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .kal-chip.ueber { color: var(--fehler); font-weight: 600; }
 .kal-chip-mehr { font-size: 12px; }
-
 .kal-tagesliste { margin-top: 16px; }
 .kal-tagesliste h3 { margin: 0 0 6px; }
 .kal-hinweis { margin-top: 12px; }
-
-@media (min-width: 600px) {
-  .kal-tag { min-height: 104px; }
-  .kal-punkte { display: none; }
-  .kal-chips { display: flex; flex-direction: column; gap: 2px; }
-  .kal-streifen { font-size: 11px; }
-}
-/* ---- 0.28.4: Kalender Liste, Farben, Kacheln ---- */
-.kal-filter input[type="checkbox"],
-.kal-kachel input[type="checkbox"] {
+.kal-filter input[type="checkbox"], .kal-kachel input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
   display: inline-grid;
@@ -1511,9 +1837,7 @@ p.notiz.erledigt {
   background: var(--flaeche);
   cursor: pointer;
 }
-
-.kal-filter input[type="checkbox"]::after,
-.kal-kachel input[type="checkbox"]::after {
+.kal-filter input[type="checkbox"]::after, .kal-kachel input[type="checkbox"]::after {
   content: '';
   width: 6px;
   height: 12px;
@@ -1522,23 +1846,21 @@ p.notiz.erledigt {
   transform: translateY(-1px) rotate(45deg);
   opacity: 0;
 }
-
 .kal-filter input[type="checkbox"]:checked::after,
-.kal-kachel input[type="checkbox"]:checked::after { opacity: 1; }
-
+.kal-kachel input[type="checkbox"]:checked::after {
+  opacity: 1;
+}
 .kal-filter input[type="checkbox"]:focus-visible,
 .kal-kachel input[type="checkbox"]:focus-visible {
   outline: 3px solid var(--gruppe);
   outline-offset: 2px;
 }
-
 .kal-kachel input[type="checkbox"]:disabled { opacity: 0.5; cursor: default; }
 
 /* Kacheln für externe Veranstaltungen */
 .kal-kacheln { margin: 0 0 12px; }
 .kal-kacheln p { margin: 0 0 6px; font-size: 14px; }
 .kal-kacheln-liste { display: flex; flex-wrap: wrap; gap: 8px; }
-
 .kal-kachel {
   display: grid;
   gap: 4px;
@@ -1547,7 +1869,6 @@ p.notiz.erledigt {
   padding: 8px 10px;
   border-radius: var(--radius);
 }
-
 .kal-kachel-titel {
   padding: 0;
   border: 0;
@@ -1558,10 +1879,8 @@ p.notiz.erledigt {
   text-align: left;
   cursor: pointer;
 }
-
 .kal-kachel-titel:focus-visible { outline: 2px solid currentColor; }
 .kal-kachel-datum { font-size: 13px; }
-
 .kal-kachel label {
   display: flex;
   align-items: center;
@@ -1573,10 +1892,13 @@ p.notiz.erledigt {
 
 /* Veranstaltungen und Aktionen: ganzer Kasten in der Farbe */
 .kal-voll { margin: 6px 0; border-radius: var(--radius); border-bottom: 0; }
-.kal-voll .dash-todo,
-.kal-voll .kal-link { color: inherit; }
-.kal-voll .leise,
-.kal-voll .kal-marke { color: inherit; opacity: 0.85; }
+.kal-voll .dash-todo, .kal-voll .kal-link {
+  color: inherit;
+}
+.kal-voll .leise, .kal-voll .kal-marke {
+  color: inherit;
+  opacity: 0.85;
+}
 .kal-voll .dash-todo:hover { background: var(--hover-dunkel); }
 
 /* Deadlines: Pastell, dicker Rand, fett */
@@ -1586,45 +1908,34 @@ p.notiz.erledigt {
   border-bottom: 0;
   border-left-width: 10px;
 }
-
 .kal-frist strong { font-weight: 800; }
 .kal-frist .dash-todo:hover { background: var(--hover-hell); }
 
 /* Vorbei oder abgeschlossenes Projekt: grau */
 .kal-grau { margin: 6px 0; border-radius: var(--radius); border-bottom: 0; background: var(--flaeche-grau); }
 .kal-grau .dash-todo { background: none; }
-.kal-grau strong,
-.kal-grau .leise { color: var(--text-leise); }
-
-/* Farbfeld im Formular */
-.farbfeld {
-  width: 72px;
-  height: 44px;
-  padding: 2px;
-  border: 1px solid var(--rand);
-  border-radius: var(--radius);
-  background: var(--flaeche);
-  cursor: pointer;
+.kal-grau strong, .kal-grau .leise {
+  color: var(--text-leise);
 }
-
-.farb-zusatz {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: -6px;
-}
-/* ---- 0.28.5: Monatsansicht ---- */
-.formfeld-bool[hidden] { display: none; }
 
 /* Raster ohne Lücken, damit sich die Projektbalken berühren */
-
 .kal-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+  min-height: 60px;
+  padding: 4px;
+  background: var(--flaeche);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
   border: 0;
   border-radius: 0;
   box-shadow: inset 0 0 0 1px var(--rand);
 }
-
 .kal-heute { box-shadow: inset 0 0 0 2px var(--gruppe); }
 .kal-gewaehlt { background: var(--gruen-hell); box-shadow: inset 0 0 0 2px var(--gruppe); }
 
@@ -1647,42 +1958,16 @@ p.notiz.erledigt {
   background: var(--flaeche-grau);
   color: var(--text-leise);
 }
-/* ---- 0.28.6: Kopfzeile Monat, Datumswahl, großes Tagesfenster ---- */
 
 /* Großes Tagesfenster */
 .kal-gross .dash-todo-liste { margin: 0; }
-/* ---- 0.28.8: Anheften-Knopf in der Liste ---- */
 .kal-heften { flex: none; margin: 0 4px; }
-/* ---- 0.28.9: Anheften in Farbe, Kalender am Handy ---- */
-
-/* Pinnwand: Veranstaltung als Kasten in der Veranstaltungsfarbe */
-.kommentar.kommentar-ver {
-  margin: 6px 0;
-  padding: 8px 10px;
-  border-bottom: 0;
-  border-radius: var(--radius);
-}
-
-.kommentar-ver .leise { color: inherit; opacity: 0.85; }
-
-/* Kalender: Knopfreihe (Liste, Monat, Archiv, Vorlagen, Veranstaltung) */
-
-@media (min-width: 600px) {
-  .kal-ansicht .knopf { flex: none; }
-}
 
 /* Kalender: Suche mit Filter-Symbol */
 .kal-suchzeile { display: flex; align-items: center; gap: 8px; }
 .kal-suchzeile .feld { flex: 1; min-width: 0; }
 .kal-filterknopf { flex: none; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; }
-
 .kal-filter[hidden] { display: none; }
-
-@media (min-width: 600px) {
-  /* Am PC bleiben die Häkchen immer sichtbar */
-  .kal-filterknopf { display: none; }
-  .kal-filter[hidden] { display: flex; }
-}
 
 /* Monat am Handy: Veranstaltungen als Streifen über die ganze Tagesbreite */
 .kal-punkt-voll {
@@ -1694,10 +1979,8 @@ p.notiz.erledigt {
 }
 
 /* Kopf der Monatsansicht: Monat mit Pfeilen, darunter Heute und Datumswahl */
-
 .kal-monatsnav { display: flex; align-items: center; justify-content: center; gap: 2px; }
-.kal-monatsnav h2 { margin: 0; min-width: 0; font-size: 16px; text-align: center; }   /* seit 0.34.8 Umbruch, wenn der Platz nicht reicht */
-
+.kal-monatsnav h2 { margin: 0; min-width: 0; font-size: 16px; text-align: center; }   /* Umbruch, wenn der Platz nicht reicht */
 .kal-taste {
   display: flex;
   align-items: center;
@@ -1713,11 +1996,8 @@ p.notiz.erledigt {
   line-height: 1;
   cursor: pointer;
 }
-
 .kal-taste:focus-visible { outline: 3px solid var(--gruppe); outline-offset: 2px; }
-
 .kal-kopf-rechts { display: contents; align-items: center; justify-content: flex-end; gap: 8px; }
-
 .kal-datumknopf {
   position: relative;
   display: inline-flex;
@@ -1733,7 +2013,6 @@ p.notiz.erledigt {
   cursor: pointer;
   margin-left: auto;
 }
-
 .kal-datumknopf input {
   position: absolute;
   inset: 0;
@@ -1747,157 +2026,11 @@ p.notiz.erledigt {
   cursor: pointer;
 }
 
-@media (min-width: 600px) {
-  .kal-kopf { flex-direction: row; }
-}
-/* ---- 0.28.11: Öffentliche Termine ---- */
-
-/* Gruppenwahl: Gruppen links, Termine rechts (Handy: darunter) */
-.start-seite.start-breit { max-width: 1200px; }
-.start-haupt { min-width: 0; order: 1; }
-.start-termine[hidden] { display: none; }
-.start-termine h2 { margin: 0 0 10px; font-size: 18px; }
-
-@media (min-width: 960px) {
-  .start-zwei { display: flex; gap: 24px; }
-  .start-termine { margin-top: 0; }
-}
-
-/* Termin-Kästen */
-.oeff-liste { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 8px; }
-
-.oeff-termin {
-  display: grid;
-  gap: 2px;
-  padding: 10px 12px;
-  border-radius: var(--radius);
-}
-
-.oeff-datum { font-size: 13px; font-weight: 600; opacity: 0.9; }
-.oeff-info { font-size: 14px; opacity: 0.9; }
-.oeff-termin p { margin: 6px 0 0; }
-.oeff-termin a { color: inherit; font-weight: 600; }
-
-@media (min-width: 600px) {
-  .oeff-liste.oeff-gross { grid-template-columns: repeat(2, 1fr); }
-}
-
-.oeff-url { display: block; margin-bottom: 8px; font-size: 13px; word-break: break-all; }
-/* ---- 0.28.12: Aktionskalender, Seitenleiste, Kalender-Layout ---- */
-
-/* Gruppenwahl: Termine links in eigener Leiste, Gruppen daneben */
-.start-zwei { display: flex; flex-direction: column; gap: 24px; }
-
-.start-termine {
-  order: 2;
-  margin-top: 0;
-  padding: 14px;
-  background: var(--flaeche);
-  border: 1px solid var(--rand);
-  border-radius: var(--radius);
-}
-
-@media (min-width: 960px) {
-  .start-zwei { flex-direction: row; align-items: flex-start; }
-  .start-termine {
-    order: 0;
-    flex: none;
-    width: 320px;
-    position: sticky;
-    top: 16px;
-    max-height: calc(100vh - 32px);
-    overflow-y: auto;
-  }
-  .start-haupt { flex: 1; order: 1; }
-  /* Mit Terminen: zwei Gruppen pro Reihe */
-  .start-zwei.mit-termine .gruppen-raster { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* Feste Kacheln auf der Termine-Seite */
-.oeff-kachel {
-  display: grid;
-  gap: 2px;
-  width: 100%;
-  padding: 10px 12px;
-  border: 0;
-  border-radius: var(--radius);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.oeff-kachel > * {
-  display: block;
-  min-height: 1.45em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.oeff-kachel:hover { filter: brightness(0.95); }
-.oeff-kachel:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
-
-@media (min-width: 960px) {
-  .oeff-liste.oeff-gross { grid-template-columns: repeat(3, 1fr); }
-}
-
-.oeff-links-liste {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 8px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-}
-
-.oeff-links-liste a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-weight: 600;
-}
-
 /* Kalender: Liste, Monat, Aktionskalender links. Archiv, Vorlagen, + Veranstaltung rechts */
 .kal-ansicht-gruppe { display: flex; gap: 4px; min-width: 0; }
 .kal-ansicht-rechts { margin-left: auto; }
 
-/* Monatskopf: Monat mit Pfeilen mittig, Heute und Datumswahl rechtsbündig */
-
-@media (min-width: 600px) {
-  .kal-kopf {
-    justify-content: stretch;
-    align-items: center;
-  }
-}
-/* ---- 0.28.13: Seitenleiste grau, Kalender-Zeilen, ✕ im Fenster, Anheften auf Kachel ---- */
-
-/* Strich der Terminleiste: AktionsDeck-Dunkelgrau wie der Balken oben */
-.start-termine { border-top: 5px solid var(--balken); }
-
-/* ✕ oben rechts in jedem Fenster */
-.modal-box h2 { padding-right: 44px; }
-
-.fenster-x {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: none;
-  color: var(--text);
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.fenster-x:hover { background: var(--gruen-hell); }
-.fenster-x:focus-visible { outline: 3px solid var(--gruppe); }
-
 /* Kalender: Liste, Monat, Aktionskalender links, Vorlagen und + Veranstaltung rechts, eine Zeile */
-
 .kal-ansicht .knopf {
   flex: 0 1 auto;
   padding: 0 6px;
@@ -1906,11 +2039,6 @@ p.notiz.erledigt {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-@media (min-width: 600px) {
-  .kal-ansicht { gap: 6px; }
-  .kal-ansicht .knopf { padding: 0 16px; font-size: 15px; }
 }
 
 /* Monatskopf am Handy: ‹ Monat › und Heute links, Datumswahl rechts, alles in einer Zeile */
@@ -1924,225 +2052,6 @@ p.notiz.erledigt {
   justify-content: flex-start;
 }
 .kal-kopf .knopf { padding: 0 10px; }
-
-/* PC: Monat mittig, Heute und Datumswahl rechtsbündig */
-@media (min-width: 600px) {
-  .kal-kopf {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 8px;
-  }
-  .kal-monatsnav { grid-column: 2; gap: 4px; }
-  .kal-monatsnav h2 { min-width: 11ch; font-size: 18px; }
-  .kal-kopf-rechts { grid-column: 3; display: flex; justify-content: flex-end; gap: 8px; }
-  .kal-datumknopf { margin-left: 0; }
-  .kal-taste { width: 44px; }
-}
-
-/* Aktionskalender: Kachel mit Anheften-Knopf */
-.oeff-kachel-box {
-  display: grid;
-  border-radius: var(--radius);
-}
-
-.oeff-kachel-box .oeff-kachel { background: none; color: inherit; }
-.oeff-kachel-box:hover { filter: brightness(0.96); }
-.oeff-heften { justify-self: start; margin: 0 12px 10px; }
-
-/* ---- 0.29.2: Mobi ---- */
-.mobi-punkt { width: 14px; height: 14px; flex: none; margin-left: 4px; border-radius: 50%; }
-.mobi-zaehler { font-size: 13px; }
-.mobi-zaehler.ueber { color: var(--fehler); font-weight: 600; }
-.mobi-analyse dd { white-space: pre-wrap; }
-
-/* ---- 0.29.3: Reiter Mobi ---- */
-.mobi-ansicht { display: flex; gap: 8px; margin-bottom: 12px; }
-.tabelle .mobi-punkt { display: inline-block; margin: 0 8px 0 0; vertical-align: middle; }
-
-.kanban {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding-bottom: 8px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-}
-
-.kanban-spalte {
-  flex: 0 0 270px;
-  min-width: 0;
-  padding: 8px;
-  border: 1px solid var(--rand);
-  border-radius: var(--radius);
-  background: var(--gruen-hell);
-  scroll-snap-align: start;
-}
-
-.kanban-kopf { margin: 0 0 8px; font-size: 15px; }
-.kanban-karten { display: grid; gap: 8px; }
-
-.kanban-karte {
-  display: grid;
-  gap: 4px;
-  margin: 0;
-  padding: 8px 10px;
-  border-left: 6px solid var(--gruppe);
-}
-
-.kanban-titel {
-  display: grid;
-  gap: 2px;
-  min-height: 44px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.kanban-titel:focus-visible { outline: 2px solid var(--gruppe); }
-.kanban-karte .ueberfaellig { color: var(--fehler); font-weight: 600; }
-.kanban-karte .heute { color: var(--warnung); font-weight: 600; }
-.kanban-knoepfe { display: flex; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
-
-@media (min-width: 960px) {
-  .kanban-spalte { flex: 1 0 220px; min-width: 0; }
-}
-
-/* ---- 0.29.4: Mobi-Vorlagen ---- */
-.vorlage-text .leise { font-size: 13px; }
-.vorlage-liste > .knopf-klein { justify-self: start; margin-top: 6px; }
-
-/* ---- 0.29.5: Mobi Kanalzeile und überfällige Beiträge ---- */
-.mobi-kanaele { margin: 4px 0 8px; font-size: 14px; line-height: 1.8; }
-.mobi-kanal-zahl { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; vertical-align: middle; }
-.mobi-kanaele .mobi-punkt { width: 10px; height: 10px; margin-left: 0; }
-.mobi-titel-ueberfaellig,
-.tabelle td.mobi-titel-ueberfaellig { color: var(--fehler); font-weight: 700; }
-.mobi-titel-heute,
-.tabelle td.mobi-titel-heute { color: var(--warnung); font-weight: 700; }
-
-/* ---- 0.29.6: Mobi Kacheln in Spalten, Kanban je Kanal ---- */
-.mobi-spalten { display: grid; gap: 16px; }
-.mobi-spalte-kopf { margin: 0 0 8px; font-size: 15px; }
-.mobi-spalte.leer { display: none; }
-.mobi-kacheln { display: grid; gap: 8px; }
-
-.mobi-kachel {
-  display: flex;
-  align-items: flex-start;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  border-left: 6px solid var(--gruppe);
-}
-
-.mobi-kachel-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  min-width: 44px;
-  min-height: 44px;
-  cursor: pointer;
-}
-
-.mobi-kachel-text {
-  display: grid;
-  flex: 1;
-  gap: 2px;
-  min-width: 0;
-  min-height: 44px;
-  padding: 8px 10px 8px 6px;
-  border: 0;
-  background: none;
-  color: var(--text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.mobi-kachel-text:focus-visible { outline: 2px solid var(--gruppe); }
-.mobi-kachel-kanal { display: flex; align-items: center; gap: 6px; font-size: 13px; }
-.mobi-kachel-kanal .mobi-punkt { width: 10px; height: 10px; margin-left: 0; }
-.mobi-kachel .mobi-datum-ueberfaellig { color: var(--fehler); font-weight: 600; }
-.mobi-kachel .mobi-datum-heute { color: var(--warnung); font-weight: 600; }
-.mobi-kachel.erledigt .mobi-kachel-text,
-.mobi-kachel.erledigt .mobi-kachel-text span { color: var(--text-leise); }
-.mobi-kacheln-flaeche { margin-top: 8px; }
-.kanban-entwurf { justify-self: start; }
-
-@media (min-width: 960px) {
-  .mobi-spalten { grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start; }
-  .mobi-spalte.leer { display: block; }
-  .mobi-kacheln-flaeche { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-
-/* ---- 0.29.7: Mobi „+ Beiträge“, Kanban am PC ganz sichtbar ---- */
-.mobi-sammlung .vorlage-liste { margin-bottom: 8px; }
-.mobi-hinweis {
-  padding: 8px 10px;
-  border-left: 4px solid var(--warnung);
-  border-radius: var(--radius);
-  background: var(--warn-flaeche);
-}
-.mobi-vorschau .vorlage-text { flex: 1; min-width: 0; }
-.mobi-vorschau-felder { display: flex; flex-wrap: wrap; gap: 6px; }
-.mobi-vorschau-felder .feld { width: auto; min-width: 0; flex: 1 1 130px; }
-.mobi-vorschau-felder .mobi-vorschau-titel { flex: 3 1 220px; }
-.mobi-vorschau.gibt-es .vorlage-text { opacity: 0.6; }
-
-@media (min-width: 960px) {
-  /* Alle Spalten sind sichtbar: Sie brechen bei Bedarf in eine zweite Reihe um, statt seitwärts zu scrollen */
-  .kanban {
-    display: flex;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-}
-
-/* ---- 0.29.8: Kanban in einer Reihe mit Seiten-Knöpfen, Sammel-ToDos ---- */
-.kanban-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-.kanban-nav[hidden], .kanban-leiste[hidden] { display: none; }
-.kanban-nav .knopf { min-width: 44px; }
-
-/* Leiste zum Verschieben direkt über den Spalten (läuft mit dem Kanban mit) */
-.kanban-leiste { display: none; overflow-x: auto; overflow-y: hidden; margin-bottom: 4px; scrollbar-width: auto; scrollbar-color: var(--grau-marke) var(--gruen-hell); }
-.kanban-leiste-innen { height: 1px; }
-.kanban-leiste::-webkit-scrollbar { height: 12px; }
-.kanban-leiste::-webkit-scrollbar-track { border-radius: 6px; background: var(--gruen-hell); }
-.kanban-leiste::-webkit-scrollbar-thumb { border-radius: 6px; background: var(--grau-marke); }
-
-@media (min-width: 960px) {
-  /* Wieder eine Reihe (statt Raster aus 0.29.7); die untere Leiste ist ausgeblendet, die obere bleibt */
-  .kanban::-webkit-scrollbar { display: none; }
-  .kanban-leiste:not([hidden]) { display: block; }
-}
-
-/* Sammel-ToDo: Platz statt Kästchen, mit Kanal-Punkt */
-.mobi-sammel-platz {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: 26px;
-}
-.mobi-sammel-platz .mobi-punkt { margin: 0; }
-
-/* ---- 0.29.9: Kanban-Knöpfe, Start-Schalter Mobi, Kalender mit Mobi und Woche ---- */
-/* Seiten-Knöpfe direkt neben der Seitenangabe */
-
-/* Start: drei Schalter (ToDos, Hüte, Mobi) */
-.dash-projekt-spalten.mit-mobi { grid-template-columns: repeat(3, 1fr); }
 
 /* Mobi-Beitrag nach der Aktion (außer Danke/Rückblick): pink */
 .kal-zeile.kal-mobi-nach { background: var(--rosa-flaeche); }
@@ -2184,21 +2093,6 @@ p.notiz.erledigt {
 .kal-wchip.kal-chip-grau { background: var(--flaeche-grau); color: var(--text-leise); }
 .kal-wchip:focus-visible { outline: 2px solid var(--gruppe); }
 .kal-wneu { justify-self: start; }
-
-@media (min-width: 960px) {
-  .kal-woche { grid-template-columns: repeat(7, minmax(0, 1fr)); }
-  .kal-wtag { min-height: 160px; }
-}
-
-/* Kalender-Kopf am Handy: sechs Knöpfe passen nicht in eine Zeile.
-   Liste, Monat, Woche, Aktionskalender oben, Vorlagen und + Veranstaltung darunter (rechtsbündig). */
-@media (max-width: 599px) {
-  .kal-ansicht { flex-wrap: wrap; row-gap: 6px; }
-  .kal-ansicht .knopf { flex: none; overflow: visible; }
-}
-
-/* ---- 0.29.10: Kanban-Seiten mittig, Mobi-Kalender ---- */
-
 .kal-mobi-leiste {
   display: flex;
   flex-wrap: wrap;
@@ -2212,105 +2106,67 @@ p.notiz.erledigt {
   background: var(--pink-flaeche);
 }
 .kal-mobi-leiste[hidden] { display: none; }
-.kal-mobi-knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
 .kal-mobi-knoepfe a.knopf { display: inline-flex; align-items: center; text-decoration: none; }
-
-/* ---- 0.29.11: Mobi-Warnungen, Zeitstrahl ---- */
-.mobi-warnungen { margin: 0 0 12px; }
-.mobi-warnungen[hidden] { display: none; }
-.mobi-warnung {
-  margin: 0 0 6px;
-  padding: 6px 10px;
-  border-left: 4px solid var(--warnung);
-  border-radius: var(--radius);
-  background: var(--warn-flaeche);
-  font-size: 14px;
-}
-.mobi-warnung-link {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.mobi-zs-box { margin: 8px 0 12px; display: grid; gap: 6px; justify-items: start; }
-.mobi-zeitstrahl { display: grid; gap: 2px; margin-top: 6px; }
-.mz-zeile { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 8px; min-height: 30px; }
-.mz-name { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.mz-name .mobi-punkt { width: 10px; height: 10px; margin: 0; }
-.mz-bahn { position: relative; height: 30px; margin: 0 12px; border-bottom: 1px solid var(--rand); }
-.mz-achse { height: 30px; border-bottom: 0; font-size: 12px; color: var(--text-leise); }
-.mz-aktion-text { transform: translateX(-50%); color: var(--gruen); font-weight: 600; }
-.mz-linie { position: absolute; top: 0; bottom: 0; width: 0; }
-.mz-aktion { border-left: 2px solid var(--gruen); }
-.mz-heute { border-left: 2px dashed var(--grau-marke); }
-.mz-punkt {
-  position: absolute;
-  top: 50%;
-  width: 18px;
-  height: 18px;
-  min-height: 0;
-  padding: 0;
-  border: 2px solid var(--flaeche);
-  border-radius: 50%;
-  background: var(--grau-hell);
-  color: var(--auf-farbe);
-  font-size: 10px;
-  font-weight: 700;
-  line-height: 14px;
-  text-align: center;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  box-shadow: 0 0 0 1px var(--schatten-ring);
-}
-/* Unsichtbar größere Tippfläche (44 px) um den kleinen Punkt */
-.mz-punkt::after { content: ''; position: absolute; inset: -13px; }
-.mz-punkt.mz-ueber { border-color: var(--fehler); }
-.mz-punkt.mz-fertig { background: var(--grau-hell); }
-.mz-punkt:focus-visible { outline: 2px solid var(--gruppe); outline-offset: 2px; }
-.mz-legende { margin: 4px 0 0; font-size: 12px; }
+.kal-arten-gruppe { display: flex; gap: 6px; }
+.kal-arten { margin: 0 0 8px; }
 
 @media (max-width: 599px) {
-  .mz-zeile { grid-template-columns: 76px 1fr; }
-}
-.mz-name > span:last-child { overflow: hidden; text-overflow: ellipsis; }
-@media (max-width: 599px) {
-  .mz-aktion-text { font-size: 11px; }
-}
-
-/* ---- 0.29.12: Zeitstrahl im Reiter Mobi, Balken im Projekt ---- */
-.mz-datum { position: absolute; top: 0; white-space: nowrap; transform: translateX(-50%); font-size: 12px; }
-.mz-heute-text { color: var(--text-leise); font-weight: 600; }
-.mz-strich { position: absolute; bottom: 0; width: 1px; height: 5px; background: var(--grau-hell); }
-.mz-strich-mo { height: 10px; background: var(--grau-marke); }
-.mz-woche { border-left: 1px solid var(--linie-zart); }
-.mobi-zeit-gruppe { margin-bottom: 20px; }
-.mobi-zeit-gruppe .teil-titel-klein { margin-bottom: 4px; }
-.mobi-zeitbalken { width: 100%; padding: 0 14px; box-sizing: border-box; }
-.mzb-balken {
-  position: relative;
-  height: 16px;
-  border-radius: 8px;
-  background: var(--spur-zart);
-  overflow: hidden;
-}
-.mzb-abschnitt { position: absolute; top: 0; bottom: 0; min-width: 4px; background: var(--grau-hell); }
-.mzb-abschnitt.mzb-fertig { background: var(--grau-hell); }
-.mzb-linie { position: absolute; top: 0; bottom: 0; width: 0; }
-.mzb-aktion { border-left: 3px solid var(--gruen); }
-.mzb-heute { border-left: 2px dashed var(--text); }
-.mzb-achse { position: relative; height: 18px; margin-top: 2px; color: var(--text-leise); }
-.mz-mo-text { color: var(--text-leise); }
-@media (max-width: 599px) {
-  .mz-mo-text { display: none; }
+  /* Kalender-Kopf am Handy: sechs Knöpfe passen nicht in eine Zeile.
+   Liste, Monat, Woche, Aktionskalender oben, Vorlagen und + Veranstaltung darunter (rechtsbündig). */
+  .kal-ansicht { flex-wrap: wrap; row-gap: 6px; }
+  .kal-ansicht .knopf { flex: none; overflow: visible; }
 }
 
-/* ---- 0.30.1: Reiter Protokoll (Liste und Lesefenster) ---- */
+@media (max-width: 959px) {
+  .kal-arten .kal-arten-gruppe { width: 100%; }
+  .kal-arten .knopf { flex: 1 1 0; }
+}
+
+@media (min-width: 600px) {
+  .kal-tag { min-height: 104px; }
+  .kal-punkte { display: none; }
+  .kal-chips { display: flex; flex-direction: column; gap: 2px; }
+  .kal-streifen { font-size: 11px; }
+
+  /* Am PC bleiben die Häkchen immer sichtbar */
+  .kal-filterknopf { display: none; }
+  .kal-filter[hidden] { display: flex; }
+  .kal-ansicht { gap: 6px; }
+
+  /* Kalender: Knopfreihe (Liste, Monat, Archiv, Vorlagen, Veranstaltung) */
+  .kal-ansicht .knopf { padding: 0 16px; font-size: 15px; }
+
+  /* Monatskopf: Monat mit Pfeilen mittig, Heute und Datumswahl rechtsbündig */
+  /* PC: Monat mittig, Heute und Datumswahl rechtsbündig */
+  .kal-kopf {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 8px;
+  }
+  .kal-monatsnav { grid-column: 2; gap: 4px; }
+  .kal-monatsnav h2 { min-width: 11ch; font-size: 18px; }
+  .kal-kopf-rechts { grid-column: 3; display: flex; }
+  .kal-datumknopf { margin-left: 0; }
+  .kal-taste { width: 44px; }
+}
+
+@media (min-width: 960px) {
+  .kal-woche { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .kal-wtag { min-height: 160px; }
+}
+
+/* ==== 11. Dokumentation: Protokolle, TOPs, Vorschläge, Reden ==== */
+
 .protokoll-jahr { margin-top: 20px; }
-.protokoll-zeile { width: 100%; text-align: left; font: inherit; background: none; border-top: 0; border-right: 0; cursor: pointer; }
+.protokoll-zeile {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  background: none;
+  border-top: 0;
+  border-right: 0;
+  cursor: pointer;
+}
 .protokoll-marke {
   justify-self: start;
   margin-top: 2px;
@@ -2331,16 +2187,11 @@ p.notiz.erledigt {
 }
 .protokoll-knoepfe { flex-wrap: wrap; margin-top: 12px; }
 .protokoll-knoepfe a.knopf { display: inline-flex; align-items: center; text-decoration: none; }
-
-/* ---- 0.30.2: Protokoll schreiben (Formular, am Handy Vollbild) ---- */
 .protokoll-form .pk-zwei { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .pk-gruppe { min-width: 0; margin: 4px 0; padding: 8px 12px 12px; border: 1px solid var(--rand); border-radius: var(--radius); }
-.protokoll-form .feld { min-width: 0; }   /* lange Projektnamen in der Auswahl sprengen das Formular nicht (0.34.8) */
+.protokoll-form .feld { min-width: 0; }   /* Lange Projektnamen in der Auswahl sprengen das Formular nicht */
 .pk-gruppe legend { padding: 0 6px; color: var(--text-leise); font-weight: 600; }
 .pk-rollen { display: grid; gap: 8px; }
-@media (min-width: 600px) {
-  .pk-rollen { grid-template-columns: repeat(3, 1fr); }
-}
 .pk-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 4px; }
 .pk-chip {
   min-height: 44px;
@@ -2360,10 +2211,8 @@ p.notiz.erledigt {
 .pk-zaehler.fehler { font-weight: 600; }
 .pk-hinweis { font-size: 13px; margin: 0; }
 .pk-entwurf { display: grid; gap: 6px; justify-items: start; }
-
-/* ---- 0.30.3: Dokumentation mit Formular im Inhalt, TOP-Sammlung, Kachel TOPs auf dem Start ---- */
 .protokoll-form.karte { margin: 16px 0; border-top: 5px solid var(--gruppe); }
-.inhalt .protokoll-form.karte { max-width: 1100px; margin-inline: auto; }   /* breiter Bildschirm: mittig (seit 0.34.7) */
+.inhalt .protokoll-form.karte { max-width: 1100px; margin-inline: auto; }   /* Breiter Bildschirm: mittig */
 .protokoll-form h2 { margin: 0; }
 .pk-entwurf-frage { margin: 16px 0; }
 .top-karte h2 { margin: 0 0 8px; font-size: 18px; }
@@ -2374,33 +2223,15 @@ p.notiz.erledigt {
 .pk-ruecken { min-width: 44px; padding: 0 10px; font-size: 18px; }
 .detail .protokoll-knoepfe .knopf { flex: 1 1 auto; }
 
-/* Start: rechte Spalte mit ToDos und TOPs */
-.dash-rechts { display: grid; gap: 12px; align-content: start; }
-.dash-aufklapper { align-self: center; flex: none; margin-top: 4px; }
-@media (min-width: 600px) {
-  /* Höhe kommt von der Kachel Projekte (gleiche Zeile im Raster), mindestens 340 px */
-  .dash-projekte { min-height: 480px; }
-  .dash-rechts { display: flex; flex-direction: column; height: 0; min-height: 100%; }
-  /* Eine Kachel ganz gezeigt: Spalte wächst mit, die andere bleibt kurz */
-  .dash-rechts.dash-rechts-offen { height: auto; }
-  .dash-rechts-offen .dash-kachel:not(.dash-offen) { flex: none; max-height: 220px; }
-}
-
-/* ---- 0.30.4: Dokumentation zwei Spalten, Textansicht wie im Dokument, Umschalter in den Start-Kacheln ---- */
 /* Mehr Abstand zwischen Hinweistext und TOPs (die Chips lagen leicht über dem Text) */
-.pk-gruppe .pk-chips,
-.top-sammlung .pk-chips { margin: 6px 0 4px; }
-.dash-tops .top-sammlung { margin-top: 8px; }
-
+.pk-gruppe .pk-chips, .top-sammlung .pk-chips {
+  margin: 6px 0 4px;
+}
 .doku-kopf { display: grid; gap: 12px; margin-bottom: 12px; align-items: start; }
 .doku-links { display: grid; gap: 10px; }
 .doku-umschalter { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
 .doku-kopf .top-karte { margin: 0; padding: 12px; }
 .doku-kopf .top-karte h2 { font-size: 16px; }
-@media (min-width: 960px) {
-  .doku-kopf { grid-template-columns: 1fr 1fr; }
-}
-
 .protokoll-entwurf { background: var(--blau-flaeche); color: var(--blau-text); }
 
 /* Protokolltext wie im Dokument */
@@ -2410,51 +2241,26 @@ p.notiz.erledigt {
 .pk-ansicht-absatz { margin: 4px 0; }
 .pk-ansicht-liste { margin: 2px 0 6px; padding-left: 22px; }
 .pk-ansicht-liste .pk-ansicht-liste { margin: 2px 0; }
-
-/* Start: Umschalter unten in der Kachel (ersetzt „Ganz zeigen“ aus 0.30.3) */
-.dash-rechts > .dash-kachel { display: flex; flex-direction: column; }
-@media (min-width: 600px) {
-  .dash-rechts > .dash-kachel { flex: 1 1 0; min-height: 0; }
-  .dash-kachel-inhalt { flex: 1 1 0; min-height: 0; overflow: hidden; }
-  .dash-rechts > .dash-kachel.dash-offen { flex: none; }
-  .dash-offen > .dash-kachel-inhalt { flex: none; overflow: visible; }
-  .dash-rechts-offen > .dash-kachel:not(.dash-offen) { flex: none; }
-  .dash-rechts-offen > .dash-kachel:not(.dash-offen) > .dash-kachel-inhalt { flex: none; max-height: 180px; }
-}
-
-/* ---- 0.30.5: Markierungen im Protokolltext ---- */
-.pk-marken-leiste { display: flex; flex-wrap: wrap; gap: 6px; }
 .pk-marke-knopf { padding: 0 12px; font-size: 14px; }
 .pk-marke-panel { margin: 0; padding: 12px; border-left: 4px solid var(--gruppe); }
 .pk-marke-form { display: grid; gap: 10px; }
 .pk-marke-form h3 { margin: 0; }
 .pk-einfuegen-listen { display: grid; gap: 8px; max-height: 360px; overflow-y: auto; }
-@media (min-width: 960px) {
-  .pk-einfuegen-listen { grid-template-columns: 1fr 1fr; }
-}
 .pk-marken-uebersicht { display: grid; gap: 2px; font-size: 13px; }
 .pk-marken-fehler { font-size: 13px; }
 .pk-ansicht-beschluss { font-weight: 700; }
-
-/* ---- 0.30.8: Vorschläge aus dem Protokoll ---- */
 .pk-vorschlaege { margin: 16px 0; border-top: 5px solid var(--gruppe); display: grid; gap: 8px; }
 .pk-vorschlaege h2 { margin: 0; }
 .pk-vorschlag-teil { display: grid; gap: 6px; }
 .pk-vorschlag { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--rand); }
 .pk-vorschlag .auswahl-box { width: 22px; height: 22px; margin-top: 10px; flex: none; }
 .pk-vorschlag-felder { display: grid; gap: 6px; flex: 1; min-width: 0; }
-.pk-vorschlag-reihe { display: flex; flex-wrap: wrap; gap: 6px; }
 .pk-vorschlag-reihe .feld { flex: 1 1 140px; min-width: 0; }
 .pk-vorschlag-quelle { font-size: 12px; overflow-wrap: anywhere; }
 .pk-vorschlag-aus .pk-vorschlag-felder { opacity: 0.55; }
 .pk-vorschlag-art { margin: 8px 0 0; font-size: 15px; color: var(--gruppe); }
 .pk-vorschlag-fehler { margin: 0; font-size: 13px; }
-
-/* ---- 0.30.10: Reden-Archiv ---- */
 .reden-filter { grid-template-columns: 1fr; }
-@media (min-width: 600px) {
-  .reden-filter { grid-template-columns: 2fr 1fr 1fr; }
-}
 .rede-marke {
   justify-self: start;
   margin-top: 2px;
@@ -2468,8 +2274,6 @@ p.notiz.erledigt {
 .rede-probelesen { background: var(--hinweis-flaeche); color: var(--hinweis-text); }
 .rede-fertig { background: var(--gruen-hell); color: var(--gruen-text); }
 .rede-gehalten { background: var(--blau-flaeche-kraeftig); color: var(--blau-text); }
-
-/* ---- 0.30.12: Redetext mit Kommentaren je Absatz (im Formular) ---- */
 .rede-text { display: grid; gap: 0.75rem; }
 .rede-reihe { display: grid; gap: 0.5rem; }
 .rede-absatz-feld { resize: vertical; overflow: hidden; min-height: 48px; }
@@ -2488,12 +2292,22 @@ p.notiz.erledigt {
 .rede-schreibplatz { display: grid; gap: 0.25rem; }
 .rede-zitat { font-style: italic; }
 .rede-verschoben { margin: 0.5rem 0 0.25rem; }
+
+@media (min-width: 600px) {
+  .pk-rollen { grid-template-columns: repeat(3, 1fr); }
+  .reden-filter { grid-template-columns: 2fr 1fr 1fr; }
+}
+
 @media (min-width: 960px) {
+  .doku-kopf { grid-template-columns: 1fr 1fr; }
+  .pk-einfuegen-listen { grid-template-columns: 1fr 1fr; }
+
   /* PC: Absatz links, Kommentare rechts daneben */
   .rede-text-mit .rede-reihe { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: start; }
 }
 
-/* ---- 0.31.1: Reiter Team (Karten, Kapazität, Detail) ---- */
+/* ==== 12. Team: Karten, Rollen, Kapazität, Berg ==== */
+
 .team-filter { grid-template-columns: 1fr; }
 .team-raster { display: grid; gap: 12px; grid-template-columns: 1fr; }
 .team-karte {
@@ -2540,22 +2354,13 @@ p.notiz.erledigt {
 .team-notiz { font-size: 14px; }
 .team-hinweis, .leer-karte { border-style: dashed; }
 .team-pausiert { margin-top: 12px; }
-.team-pausiert > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 .team-detail h3 { margin: 1rem 0 0.4rem; font-size: 16px; }
 .team-rollen-liste, .team-verlauf { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
 .team-rollen-liste .team-marke { margin-left: 6px; }
 .team-verlauf-notiz { display: block; font-size: 14px; }
 .team-verlauf-abgelaufen, .team-verlauf-ueberholt { color: var(--text-leise); }
 .team-verlauf-gilt strong { color: var(--gruppe); }
-@media (min-width: 600px) {
-  .team-filter { grid-template-columns: 2fr 1fr; }
-  /* Höchstens 4 Spalten: Bei mehr Platz werden die Karten breiter (seit 0.34.7) */
-  .team-raster { grid-template-columns: repeat(auto-fill, minmax(max(240px, calc((100% - 36px) / 4)), 1fr)); }
-}
-
-/* ---- 0.31.2: Gruppen-Rollen bearbeiten ---- */
 .team-rollen-teil { margin-top: 16px; }
-.team-rollen-teil > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 .team-rollen-inhalt { display: grid; gap: 8px; margin-top: 8px; }
 .team-rollen-verwalten { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .team-rollen-verwalten li {
@@ -2570,8 +2375,6 @@ p.notiz.erledigt {
 .team-rollen-verwalten .knopf-klein { min-height: 44px; flex-shrink: 0; }
 .team-vorschlaege { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
 .team-vorschlaege .knopf-klein { min-height: 44px; }
-
-/* ---- 0.31.3: Team-Karte bearbeiten (Kapazität, Rollen, Eintragen) ---- */
 .team-eintrag { display: grid; gap: 8px; }
 .team-abschnitt { display: grid; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--rand); }
 .team-abschnitt:last-child { border-bottom: 0; }
@@ -2580,8 +2383,9 @@ p.notiz.erledigt {
 .team-wert[aria-pressed="true"] { background: var(--gruppe); color: var(--gruppe-text); border-color: var(--gruppe); }
 .team-wert-satz { margin: 0; }
 .team-datum-zeile { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.team-abschnitt > *, .team-datum-zeile > *, .team-datum-zeile input { min-width: 0; }
-.team-schnell, .team-rollen-wahl { display: flex; flex-wrap: wrap; gap: 6px; }
+.team-abschnitt > *,
+.team-datum-zeile > *,
+.team-datum-zeile input { min-width: 0; }
 .team-schnell .knopf-klein { min-height: 44px; }
 .team-rolle-knopf {
   min-height: 44px;
@@ -2602,8 +2406,6 @@ p.notiz.erledigt {
 .team-verlauf-bearbeiten .knopf-klein { min-height: 44px; flex-shrink: 0; }
 .team-fuer-andere { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
 .team-fuer-andere .knopf-klein { min-height: 44px; }
-
-/* ---- 0.31.4: Hüte je Person und freie Hüte im Team ---- */
 .team-huete-zahl { font-size: 14px; }
 .team-frei h2 { margin: 0 0 4px; font-size: 18px; }
 .team-frei { display: grid; gap: 8px; }
@@ -2616,18 +2418,11 @@ p.notiz.erledigt {
 .team-hut.ueberfaellig .team-hut-titel { color: var(--fehler); font-weight: 700; }
 .team-hut.heute .team-hut-titel { color: var(--warnung); font-weight: 700; }
 .team-ohne { margin-top: 12px; }
-@media (min-width: 960px) {
-  .team-frei .team-hut-liste li { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
-}
-
-/* ---- 0.31.5: Anpassungen 9.5a (Detail am Handy, Freie Hüte) ---- */
 .team-detail > .team-name { margin: 0 0 12px; }
 .team-detail-knoepfe { margin: 0 0 16px; }
 .team-detail-knoepfe .knopf { padding: 10px 18px; line-height: 1.3; text-align: center; white-space: normal; }
 .team-detail h3:first-of-type { margin-top: 4px; }
 .team-frei > .dash-schalter { padding-left: 0; }
-
-/* ---- 0.31.5: Diagramm Berg im Team ---- */
 .team-berg-karte h2 { margin: 0 0 4px; font-size: 18px; }
 .team-berg { display: grid; gap: 8px; }
 .team-berg-bild { width: 100%; }
@@ -2649,32 +2444,34 @@ p.notiz.erledigt {
 .berg-punkt { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
 .berg-strich-aktion { width: 3px; height: 14px; background: var(--gruen-aktion); display: inline-block; }
 .berg-strich-heute { width: 0; height: 14px; border-left: 2px dashed var(--text); display: inline-block; }
-.team-berg-zahlen > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 .team-berg-tabelle-wrap { overflow-x: auto; }
 .team-berg-tabelle { font-size: 13px; }
 .team-berg-tabelle td, .team-berg-tabelle th { padding: 4px 8px; text-align: left; vertical-align: top; }
 .berg-zeile-heute td { font-weight: 600; }
 .berg-punkt-eng { background: var(--warnung); }
-
-/* ---- 0.31.6: Anpassungen 9.6a (offene Aufgaben im Hüte-Balken) ---- */
 .berg-hut, .berg-frei { stroke: var(--flaeche); stroke-width: 2; }
+
 /* Farben geprüft (Farbsehschwächen, Kontrast): Grau mit Verantwortlichen, Blau offen, Orange eng */
 .berg-frei { fill: var(--berg-frei); }
 .berg-punkt-hut { background: var(--berg-hut); }
 .berg-punkt-frei { background: var(--berg-frei); }
-
-/* ---- 0.31.6: Verknüpfungen Team (Start-Zeile) ---- */
-.start-team-weg { min-width: 44px; min-height: 44px; border: 0; background: none; font: inherit; cursor: pointer; color: var(--text-leise); }
-
-/* ---- 0.31.7: Hilfe zum Team ---- */
 .team-hilfe-link { margin-top: 16px; }
-.team-hilfe-link a { display: inline-flex; align-items: center; min-height: 44px; }
-
-/* ---- 0.31.9: Anpassungen 9.8a (Gruppen-Rollen: wer hat sie, offene Rollen) ---- */
 .team-marke-offen { background: var(--hinweis-flaeche); color: var(--hinweis-text); }
 .team-rollen-wer .team-rollen-wahl { margin-top: 4px; }
 
-/* ---- 0.32.1: Wiki-Text (Textformat, Impressum, Info, Datenschutz) ---- */
+@media (min-width: 600px) {
+  .team-filter { grid-template-columns: 2fr 1fr; }
+
+  /* Höchstens 4 Spalten: Bei mehr Platz werden die Karten breiter */
+  .team-raster { grid-template-columns: repeat(auto-fill, minmax(max(240px, calc((100% - 36px) / 4)), 1fr)); }
+}
+
+@media (min-width: 960px) {
+  .team-frei .team-hut-liste li { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+}
+
+/* ==== 13. Wiki ==== */
+
 .wiki-text { max-width: 70ch; line-height: 1.55; overflow-wrap: anywhere; }
 .wiki-text h2 { margin: 20px 0 8px; font-size: 20px; }
 .wiki-text h3 { margin: 16px 0 6px; font-size: 17px; }
@@ -2691,20 +2488,27 @@ p.notiz.erledigt {
 .wiki-iv-titel { margin: 0 0 4px; font-weight: 600; }
 .wiki-iv ul { list-style: none; margin: 0; padding: 0; }
 .wiki-iv-unter { padding-left: 16px; }
-.wiki-iv-knopf { min-height: 44px; padding: 0; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
+.wiki-iv-knopf {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
 .wiki-iv-knopf:hover { text-decoration: underline; }
-.info-gruppen h2 { margin: 20px 0 8px; font-size: 20px; }
-.info-gruppe { padding: 8px 0; border-top: 1px solid var(--rand); }
-.info-gruppe h3 { margin: 0 0 4px; font-size: 17px; }
-.info-gruppe-links { display: flex; flex-wrap: wrap; gap: 0 16px; }
-.info-gruppe-links a { display: inline-flex; align-items: center; min-height: 44px; gap: 6px; }
-.info-version { margin-top: 16px; }
-
-/* ---- 0.32.2: Reiter Wiki (drei Bereiche, Liste, Seite) ---- */
 .wiki-bereiche { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 0 12px; }
 .wiki-bereich {
-  min-height: 48px; padding: 6px 8px; border: 1px solid var(--rand); border-radius: var(--radius);
-  font: inherit; font-weight: 600; color: var(--text); cursor: pointer; line-height: 1.2;
+  min-height: 48px;
+  padding: 6px 8px;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  line-height: 1.2;
 }
 .wiki-bereich-skillshare { background: var(--gruen-hell); }
 .wiki-bereich-anleitung { background: var(--wiki-anleitung); }
@@ -2713,28 +2517,21 @@ p.notiz.erledigt {
 .wiki-bereich:focus-visible { outline: 2px solid var(--gruppe); outline-offset: 2px; }
 .wiki-filter { grid-template-columns: 1fr; }
 .wiki-thema { margin: 0 0 8px; }
-.wiki-thema > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 .wiki-thema-liste { display: grid; gap: 8px; margin: 0 0 8px; }
 .wiki-eintrag { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; }
 .wiki-eintrag-titel { font-weight: 600; }
 .wiki-eintrag-zusatz { font-size: 14px; }
 .wiki-eigene h2 { margin: 20px 0 8px; font-size: 18px; }
 .wiki-zurueck { margin: 0 0 8px; }
-.wiki-zurueck a { display: inline-flex; align-items: center; min-height: 44px; }
 .wiki-artikel { max-width: 800px; }
-.inhalt .wiki-artikel { margin-inline: auto; }   /* Lesetext mittig in der App (seit 0.34.7) */
+.inhalt .wiki-artikel { margin-inline: auto; }   /* Lesetext mittig in der App */
 .wiki-titel { margin: 0 0 4px; font-size: 24px; }
 .wiki-stand { margin: 0 0 16px; font-size: 14px; }
-@media (max-width: 420px) {
-  .wiki-bereich { font-size: 14px; padding: 6px 4px; }
-}
-
-/* ---- 0.32.3: Wiki-Seiten schreiben ---- */
 .wiki-filter.mit-knopf { grid-template-columns: 1fr auto; align-items: center; }
 .wiki-filter.mit-knopf .knopf { white-space: nowrap; }
 .wiki-seiten-knoepfe { margin-top: 16px; }
 .wiki-form-karte { max-width: none; }
-.inhalt .wiki-form-karte { max-width: 1100px; }   /* breiter Bildschirm: mittig wie die Wiki-Seite (seit 0.34.7) */
+.inhalt .wiki-form-karte { max-width: 1100px; }   /* Breiter Bildschirm: mittig wie die Wiki-Seite */
 .wiki-werkzeuge { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 6px; }
 .wiki-werkzeuge .knopf { min-width: 44px; min-height: 44px; }
 .wiki-textfeld { width: 100%; min-height: 320px; font-family: inherit; line-height: 1.5; resize: vertical; }
@@ -2744,124 +2541,92 @@ p.notiz.erledigt {
 .wiki-warnung { margin: 0; padding: 8px 12px; border-radius: var(--radius); background: var(--hinweis-flaeche); color: var(--warnung-text); }
 .wiki-konflikt, .wiki-entwurf { padding: 10px 12px; border-radius: var(--radius); background: var(--hinweis-flaeche); border: 1px solid var(--hinweis-rand); }
 .wiki-konflikt p, .wiki-entwurf p { margin: 0 0 8px; }
-.wiki-formathilfe > summary, .wiki-mehr > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 .wiki-formathilfe ul { margin: 0 0 8px; padding-left: 1.2rem; font-size: 14px; }
 .wiki-umschalter { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.wiki-umschalter-knopf { min-height: 44px; border: 1px solid var(--rand); border-radius: var(--radius); background: var(--flaeche); font: inherit; cursor: pointer; }
+.wiki-umschalter-knopf {
+  min-height: 44px;
+  border: 1px solid var(--rand);
+  border-radius: var(--radius);
+  background: var(--flaeche);
+  font: inherit;
+  cursor: pointer;
+}
 .wiki-umschalter-knopf.aktiv { border: 2px solid var(--text); font-weight: 600; }
 .wiki-schreiben .wiki-vorschauteil { display: none; }
 .wiki-schreiben.zeigt-vorschau .wiki-schreibteil { display: none; }
 .wiki-schreiben.zeigt-vorschau .wiki-vorschauteil { display: block; }
+.wiki-formathilfe > summary::before,
+.wiki-mehr > summary::before,
+.wiki-thema > summary::before {
+  content: '▸';
+  display: inline-block;
+  width: 1.2em;
+}
+.wiki-formathilfe[open] > summary::before,
+.wiki-mehr[open] > summary::before,
+.wiki-thema[open] > summary::before { content: '▾'; }
+.wiki-kommentare { margin-top: 16px; }
+.wiki-kommentare h3 { margin-top: 0; }
+.wiki-code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--hintergrund);
+  border: 1px solid var(--rand);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+}
+.wiki-oeffentlich { display: grid; gap: 12px; }
+.wiki-oeffentlich > h1 { margin: 0; }
+.wiki-oeffentlich .wiki-artikel { max-width: none; }
+.wiki-gruppe h2 { margin: 0 0 4px; }
+.wiki-oeff-thema { margin: 12px 0 6px; font-size: 16px; }
+.wiki-form-knoepfe-loeschen { margin-left: auto; }
+.wiki-bild-knopf { display: block; padding: 0; border: 0; background: none; cursor: zoom-in; max-width: 100%; }
+.wiki-bild-knopf img { width: 100%; }
+
+/* Links: hell etwas dunkleres Grün (besser lesbar), dunkel wie bisher */
+a,
+.wiki-text a,
+.wiki-iv-knopf,
+.info-gruppe-links a { color: var(--link); }
+
+@media (max-width: 420px) {
+  .wiki-bereich { font-size: 14px; padding: 6px 4px; }
+}
+
+@media (min-width: 600px) {
+  .wiki-bild { max-width: 50%; }
+}
+
 @media (min-width: 960px) {
   .wiki-umschalter { display: none; }
   .wiki-schreiben { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
   .wiki-schreiben .wiki-vorschauteil, .wiki-schreiben.zeigt-vorschau .wiki-schreibteil { display: block; }
   .wiki-vorschau { max-height: 70vh; overflow-y: auto; }
 }
-.wiki-formathilfe > summary::before, .wiki-mehr > summary::before, .wiki-thema > summary::before { content: '▸'; display: inline-block; width: 1.2em; }
-.wiki-formathilfe[open] > summary::before, .wiki-mehr[open] > summary::before, .wiki-thema[open] > summary::before { content: '▾'; }
 
-/* ---- 0.32.4: Kommentare im Wiki ---- */
-.wiki-kommentare { margin-top: 16px; }
-.wiki-kommentare h3 { margin-top: 0; }
+/* ==== 14. Druck ==== */
 
-/* ---- 0.32.5: Beispiele in der Anleitung (Text zwischen Backticks) ---- */
-.wiki-code { padding: 1px 5px; border-radius: 4px; background: var(--hintergrund); border: 1px solid var(--rand); font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.92em; overflow-wrap: anywhere; }
-
-/* ---- 0.32.6: Öffentliches Wiki ---- */
-.wiki-oeffentlich { display: grid; gap: 12px; }
-.wiki-oeffentlich > h1 { margin: 0; }
-.wiki-oeffentlich .wiki-artikel { max-width: none; }
-.wiki-gruppe h2 { margin: 0 0 4px; }
-.wiki-oeff-thema { margin: 12px 0 6px; font-size: 16px; }
-.info-wiki { margin: 16px 0 0; }
-.wiki-andere a { display: inline-flex; align-items: center; min-height: 44px; }
-
-/* ---- 0.32.7: Kalender-Abo (Google, Apple, kopieren) ---- */
-.abo-knoepfe { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
-.abo-knoepfe .knopf { min-height: 44px; }
-
-/* ---- 0.32.9: Anpassungen am Handy (Mobi-Kopf, Kalender-Ansichten, Kachel TOPs) ---- */
-.kal-arten-gruppe { display: flex; gap: 6px; }
-.kal-arten { margin: 0 0 8px; }
-.dash-tops-titel > .knopf:last-child { margin-left: auto; }
-@media (max-width: 959px) {
-  .mobi-kopf { flex-wrap: wrap; }
-  .mobi-kopf .kopf-knoepfe { width: 100%; justify-content: flex-end; gap: 6px; }
-  .mobi-ansicht { flex-wrap: nowrap; gap: 6px; }
-  .kal-arten .kal-arten-gruppe { width: 100%; }
-  .kal-arten .knopf { flex: 1 1 0; }
-  .dash-tops-titel { flex-wrap: wrap; gap: 8px; }   /* bricht nur um, wenn der Platz nicht reicht (0.34.8) */
-  .dash-tops-titel h2 { flex: none; }
-  .dash-tops-titel .knopf { padding: 0 10px; font-size: 13px; white-space: nowrap; }
-}
-@media (max-width: 959px) {
-  .mobi-kopf .kopf-knoepfe .knopf { padding: 0 10px; font-size: 14px; white-space: nowrap; }
-  .mobi-ansicht .knopf { flex: 1 1 auto; min-width: 0; padding: 0 6px; font-size: 14px; }
-}
-
-/* ---- 0.32.14: Seitenleiste am PC kürzer, Listen im Wiki-Formular ---- */
-/* Name ändern und Abmelden nebeneinander, öffentliche Links in einer Zeile.
-   Ist der Bildschirm trotzdem zu niedrig, lässt sich die Leiste scrollen. */
-@media (min-width: 960px) {
-  /* Seit 0.34.8: Knöpfe so breit wie ihr Text, bei großer Schrift untereinander statt abgeschnitten */
-  .seiten-fuss-knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
-  .seiten-fuss-knoepfe .knopf { flex: 1 1 auto; padding: 0 6px; font-size: 14px; white-space: nowrap; }
-  .seitenleiste .oeff-links { gap: 0 8px; margin-top: 0; font-size: 12px; }
-  .seitenleiste .oeff-links a { min-height: 32px; }
-}
-@media (min-width: 960px) and (max-height: 760px) {
-  .seitenleiste .nav-link { min-height: 40px; }
-  .seiten-kopf { padding-bottom: 10px; margin-bottom: 4px; }
-}
-.wiki-form-knoepfe-loeschen { margin-left: auto; }
-
-/* ---- 0.32.16: Bilder im Wiki halb so breit, anklickbar ---- */
-.wiki-bild-knopf { display: block; padding: 0; border: 0; background: none; cursor: zoom-in; max-width: 100%; }
-.wiki-bild-knopf img { width: 100%; }
-@media (min-width: 600px) {
-  .wiki-bild { max-width: 50%; }
-}
-
-/* ---- 0.33.2: Kontostand in den Finanzen, Reiter Cloud ---- */
-.konto-teil { padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--rand); }
-.konto-zeile { margin: 0 0 8px; }
-.cloud-knopf { margin-top: 12px; font-size: 18px; padding: 0 28px; }
-
-/* ---- 0.33.3: Kachel „Für dich“ auf dem Start ---- */
-.fuer-dich { margin-bottom: 16px; border-left: 4px solid var(--gruppe); }
-.fuer-dich .dash-kachel-titel { margin-bottom: 4px; }
-.fuer-dich-zeile a.dash-todo { color: inherit; text-decoration: none; }
-.fuer-dich-zeile a.dash-todo:hover strong { text-decoration: underline; }
-
-/* ---- 0.33.4: Jahresübersicht ---- */
-.jahr-knopf { display: flex; width: 100%; margin: 0 0 12px; }
-.jahr-karte { margin-bottom: 12px; }
-.jahr-karte > summary { min-height: 44px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; cursor: pointer; list-style: none; }
-.jahr-karte > summary::-webkit-details-marker { display: none; }
-.jahr-karte[open] > summary .teil-pfeil { transform: rotate(90deg); }
-.jahr-inhalt { margin-top: 8px; }
-.jahr-abschnitt { padding: 10px 0; border-top: 1px solid var(--rand); }
-.jahr-abschnitt h3 { margin: 0 0 4px; font-size: 17px; }
-.jahr-abschnitt .dash-zahlen { margin: 0; }
-.jahr-liste { margin: 6px 0 0; padding-left: 20px; }
-.jahr-liste li { margin: 2px 0; }
-
-/* ---- 0.33.5: Kachel „Für dich“ gelb (11.4a) ---- */
-.karte.fuer-dich { background: var(--fuer-dich-flaeche); border-color: var(--fuer-dich-rand); border-top-color: var(--fuer-dich-akzent); border-left-color: var(--fuer-dich-akzent); }
-.fuer-dich .dash-zeile { border-bottom-color: var(--fuer-dich-linie); }
-.fuer-dich .leise { color: var(--fuer-dich-text); }
-
-/* ---- 0.33.6: Drucken ---- */
 /* Druckblatt (js/ui/druck.js): am Bildschirm unsichtbar, beim Drucken das Einzige auf dem Blatt. */
 .druckblatt { display: none; }
+
 @media print {
   html, body { background: #fff !important; color: #000 !important; }
+
   /* Alle Seiten: Leisten, Knöpfe, Meldungen und Fenster fallen weg */
-  .seitenleiste, .untenleiste, .detail, .toast, .modal, .knopf, .kopf-knoepfe, .teil-aktionen { display: none !important; }
+  .seitenleiste,
+  .untenleiste,
+  .detail,
+  .toast,
+  .modal,
+  .knopf,
+  .kopf-knoepfe,
+  .teil-aktionen { display: none !important; }
   .huelle, .inhalt { display: block !important; margin: 0 !important; padding: 0 !important; }
   .karte { background: #fff !important; border-color: #999 !important; box-shadow: none !important; }
   a { color: #000 !important; }
+
   /* Druckblatt */
   body.druckt > *:not(.druckblatt) { display: none !important; }
   body.druckt .druckblatt { display: block !important; font-size: 12pt; line-height: 1.35; }
@@ -2876,150 +2641,3 @@ p.notiz.erledigt {
   .druck-liste li.fertig strong { text-decoration: line-through; }
   .druck-fuss { margin-top: 16pt; font-size: 9pt; }
 }
-
-/* ---- 0.33.8: Dunkelmodus ---- */
-/* Die Klasse „dunkel“ am <html> setzt js/darstellung-start.js (beim Öffnen) und js/ui/darstellung.js (Schalter).
-   Nur am Bildschirm: Gedruckt wird immer hell. Gruppen- und Terminfarben bleiben, die App wählt die Schrift darauf selbst. */
-@media screen {
-  :root.dunkel {
-    color-scheme: dark;
-    --gruen: #6cc4a1;
-    --gruen-hell: #1d3a30;
-    --gruppe: #368469;
-    --text: #e3e8e6;
-    --text-leise: #a3aeaa;
-    --hintergrund: #343a38;
-    --flaeche: #1b2220;
-    --rand: #36423e;
-    --flaeche-leise: #161c1a;
-    --flaeche-grau: #2a312e;
-    --flaeche-zart: #1e2523;
-    --spur: #2b3532;
-    --spur-zart: #27302d;
-    --linie-zart: #2c3633;
-    --kaestchen: #2c3633;
-    --kaestchen-voll: #66726e;
-    --grau-marke: #84908b;
-    --grau-hell: #5d6864;
-    --tabellenkopf-grau: #3c4643;
-    --logo-grund: #f2f5f4;
-    --auf-farbe: #ffffff;
-    --balken: #0b0f0e;
-    --balken-text: #ffffff;
-    --fehler: #ff8a80;
-    --fehler-flaeche: #3a1f1d;
-    --fehler-rand: #6b3430;
-    --warnung: #f0a840;
-    --warn-flaeche: #33280f;
-    --warn-rand: #6b5222;
-    --warnung-text: #f3c77a;
-    --planung-text: #f0b45a;
-    --hinweis-flaeche: #33290f;
-    --hinweis-text: #f0bf6a;
-    --hinweis-rand: #7a5a1e;
-    --kommentar-rand: #c8902a;
-    --fuer-dich-flaeche: #3a3010;
-    --fuer-dich-rand: #8a7020;
-    --fuer-dich-akzent: #f0a020;
-    --fuer-dich-linie: #5a4a18;
-    --fuer-dich-text: #e8d9a0;
-    --gruen-text: #8fd6b8;
-    --gruen-aktion: #4cc27f;
-    --blau-text: #b3beff;
-    --blau-flaeche: #1f2540;
-    --blau-flaeche-kraeftig: #262e52;
-    --pink: #f060c0;
-    --pink-flaeche: #3a1a32;
-    --rosa-flaeche: #3a1c28;
-    --frist-rosa: #f06292;
-    --frist-flaeche: #4a1f30;
-    --frist-text: #ffc2d6;
-    --wiki-anleitung: #1e2838;
-    --wiki-entwicklung: #2e2a22;
-    --berg-hut: #a8b3af;
-    --berg-hut-alt: #a8b3af;
-    --berg-frei: #6ea8ef;
-    --schatten: rgba(0, 0, 0, 0.5);
-    --schatten-gross: rgba(0, 0, 0, 0.6);
-    --schatten-ring: rgba(255, 255, 255, 0.15);
-    --abdunkeln: rgba(0, 0, 0, 0.6);
-    --lightbox-grund: rgba(0, 0, 0, 0.9);
-    --hover-dunkel: rgba(0, 0, 0, 0.18);
-    --hover-hell: rgba(255, 255, 255, 0.08);
-    --link: #6cc4a1;
-    /* Hintergrund heller und grauer, damit sich die dunklen Kacheln abheben. Kacheln (--flaeche) bleiben. */
-  }
-  /* Gruppen-Logos auf einer hellen runden Fläche, damit dunkle Logos sichtbar bleiben */
-  .dunkel .gruppen-logo, .dunkel .dash-logo, .dunkel .seiten-logo {
-    padding: 4px;
-    border-radius: 50%;
-    background: var(--logo-grund);
-  }
-}
-
-/* Schalter „Wie das Gerät | Hell | Dunkel“ (Mehr am Handy, Seitenleiste am PC) */
-.darstellung { display: flex; flex-direction: column; gap: 6px; margin: 16px 0; }
-.darstellung-knoepfe { display: flex; flex-wrap: wrap; gap: 6px; }
-.darstellung-knopf {
-  min-height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--rand);
-  border-radius: 999px;
-  background: var(--flaeche);
-  color: var(--text);
-  font: inherit;
-  cursor: pointer;
-}
-.darstellung-knopf[aria-pressed="true"] { background: var(--gruppe); color: var(--gruppe-text); border-color: var(--gruppe); font-weight: 600; }
-/* Am PC in der schmalen Seitenleiste: alle drei Knöpfe in einer Reihe */
-.seiten-fuss .darstellung-knoepfe { flex-wrap: nowrap; gap: 4px; }
-.seiten-fuss .darstellung-knopf { flex: 1 1 auto; padding: 0 6px; font-size: 13px; white-space: nowrap; }
-
-/* ---- 0.33.9: Anmerkungen zum Dunkelmodus (11.8a) ---- */
-/* Links: hell etwas dunkleres Grün (besser lesbar), dunkel wie bisher */
-a, .wiki-text a, .wiki-iv-knopf, .info-gruppe-links a { color: var(--link); }
-
-/* Schalter: „Gerät“ als Wort, Hell und Dunkel als Punkt mit Rahmen */
-.darstellung-punkt { width: 44px; min-width: 44px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
-.darstellung-punkt span { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--grau-marke); }
-.darstellung-punkt .punkt-hell { background: #ffffff; }
-.darstellung-punkt .punkt-dunkel { background: #000000; }
-.darstellung-punkt[aria-pressed="true"] { background: var(--flaeche); border: 3px solid var(--gruppe); }
-.seiten-fuss .darstellung-punkt { flex: 0 0 44px; padding: 0; }
-
-/* ---- 0.33.10: Symbole an den Links der Gruppen (Info) ---- */
-.info-symbol { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; }
-
-/* ---- 0.33.11: Signal-Knopf mit Rechenaufgabe ---- */
-.signal-knopf { margin: 4px 0; }
-.signal-form .signal-frage { font-size: 1.2em; font-weight: 600; margin: 12px 0 8px; }
-.signal-form .feld { max-width: 160px; }
-.signal-form .knopf { margin-top: 4px; }
-
-/* ---- 0.33.12: Öffentliche Termine nach Veranstalter ---- */
-.oeff-auswahl { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-.oeff-auswahl .feld { flex: 1 1 180px; width: auto; }
-.abo-knoepfe + .leise, .karte > select.feld { margin-bottom: 8px; }
-
-/* ---- 0.33.13: Signal-Link vom Skript ---- */
-.signal-form a.knopf { display: inline-flex; align-items: center; text-decoration: none; margin-top: 4px; }
-
-/* ---- 0.34.4: Hinweis „Neue Version da“ ---- */
-.neue-version {
-  position: fixed;
-  left: 50%;
-  bottom: calc(72px + env(safe-area-inset-bottom, 0px));   /* über der unteren Leiste */
-  transform: translateX(-50%);
-  max-width: calc(100% - 24px);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px 10px 16px;
-  border-radius: var(--radius);
-  background: var(--balken);
-  color: var(--balken-text);
-  box-shadow: 0 6px 24px var(--schatten-gross);
-  z-index: 2900;
-}
-.neue-version .knopf { margin: 0; white-space: nowrap; }
-@media (min-width: 960px) { .neue-version { bottom: 16px; } }
