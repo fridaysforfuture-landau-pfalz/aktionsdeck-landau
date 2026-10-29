@@ -204,7 +204,7 @@ Version 0.34.9. Sheet und Skript bleiben unverändert.
 
 **Prüfen:** App vom Startbildschirm löschen und neu hinzufügen (Android und iPhone): Das Icon füllt die Fläche, kein weißer Kreis. Beim Öffnen erscheint ein dunkelgrauer Ladebildschirm mit Logo.
 
-### 12.13 – Fehlerseite „Seite nicht gefunden“ (W10)
+### 12.13 – Fehlerseite „Seite nicht gefunden“ (W10) – erledigt (0.34.10)
 
 Version 0.34.10. Sheet und Skript bleiben unverändert.
 
@@ -270,7 +270,7 @@ Version 1.0.0. Sheet und Skript bleiben unverändert.
 | 12.10 | Barrierefreiheit prüfen, Test mit Bildschirmleser – erledigt | Bericht | – | nein |
 | 12.11 | Barrierefreiheit verbessern – erledigt | Bau | 0.34.8 | nein |
 | 12.12 | App-Icon und Ladebildschirm – erledigt | Bau | 0.34.9 | nein |
-| 12.13 | Fehlerseite | Bau | 0.34.10 | nein |
+| 12.13 | Fehlerseite – erledigt | Bau | 0.34.10 | nein |
 | 12.14 | Tabs im Sheet sortieren | Bau | 0.34.11 | `Werkzeuge.gs`, keine Bereitstellung |
 | 12.15 | CSS prüfen | Bericht | – | nein |
 | 12.16 | CSS ordnen | Bau | 0.34.12 | nein |

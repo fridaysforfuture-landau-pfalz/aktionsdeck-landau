@@ -17,6 +17,7 @@ import { fokusImFensterHalten } from './ui/fokus.js';
 import * as gruppenView from './views/gruppen.js';
 import * as loginView from './views/login.js';
 import * as infoView from './views/info.js';
+import * as nichtGefundenView from './views/nicht-gefunden.js';
 
 let gruppenListe = null;   // frisch vom Server (einmal pro Seitenaufruf)
 let gruppenLaeuft = null;  // laufende Anfrage
@@ -166,6 +167,16 @@ async function route() {
     setzeRefresh: function (fn) { refreshFn = fn; }
   };
 
+  // 12.13: Unbekannte Adressen zeigen „Seite nicht gefunden“ (früher still zum Start).
+  const bekannt = ['', 'info', 'wiki', 'termine', 'g'].indexOf(teile[0]) >= 0 &&
+    !(teile[0] === 'info' && teile[1] && !OEFFENTLICH.some(function (x) { return x.id === teile[1]; }));
+  if (!bekannt) {
+    setzeFarbe('');
+    nichtGefundenView.render(container, ctx);
+    seiteFertig(nummer, 'nicht-gefunden', 'Seite nicht gefunden', container);
+    return;
+  }
+
   // Impressum, Info, Datenschutz: ohne Login
   if (teile[0] === 'info') {
     setzeFarbe('');
@@ -219,8 +230,17 @@ async function route() {
         if (neu && nummer === laufNummer && neu.farbe !== alt.farbe) setzeFarbe(neu.farbe);
       });
     } else {
-      g = finde(await ladeGruppen());
+      const liste = await ladeGruppen();
       if (nummer !== laufNummer) return;
+      g = finde(liste);
+      // 12.13: Liste geladen, Gruppe fehlt: „Seite nicht gefunden“. Ohne Liste (z. B. offline) wie bisher zum Start.
+      if (!g && liste) {
+        setzeFarbe('');
+        ctx.hinweis = 'Eine Gruppe mit dem Kürzel „' + teile[1] + '“ gibt es nicht. Vielleicht ist der Link alt oder falsch abgeschrieben.';
+        nichtGefundenView.render(container, ctx);
+        seiteFertig(nummer, 'nicht-gefunden', 'Seite nicht gefunden', container);
+        return;
+      }
     }
 
     if (!g) {
