@@ -2,21 +2,21 @@
 
 AktionsDeck Landau ist offen für alle Klima-Gruppen in Landau. Jede Gruppe bekommt einen eigenen Bereich mit eigenem PIN. Die anderen Gruppen sehen eure Daten nicht.
 
-Eine neue Gruppe können nur die Personen mit Adminzugriff anlegen. Melde dich bei ihnen:
+## So eröffnet ihr eure Gruppe
+
+1. Auf der Startseite unter den Gruppen auf **„+ Eigene Gruppe eröffnen“** tippen.
+2. Das Formular ausfüllen:
+   - den **Namen** der Gruppe, so wie er in der App stehen soll (zum Beispiel „Fridays for Future“)
+   - eine **Abkürzung** aus kleinen Buchstaben für die Adresse (zum Beispiel „fff“)
+   - eure **Farbe** (zum Beispiel aus eurem Logo)
+   - freiwillig eure **Webseite** und euren **Instagram-Kanal**, sie erscheinen unter „Info“
+3. Die kleine Rechenaufgabe lösen und „Antrag schicken“ tippen.
+4. Danach meldet ihr euch kurz über Signal bei uns und sagt, wer ihr seid. Schickt uns dabei gern euer **Logo** als Bild (am besten quadratisch, als PNG oder SVG):
 
 [Signal]
 
-## Was wir von euch brauchen
-
-- den **Namen** der Gruppe, so wie er in der App stehen soll (zum Beispiel „Fridays for Future“)
-- eine **Abkürzung** aus kleinen Buchstaben für die Adresse (zum Beispiel „fff“)
-- eure **Farbe** (zum Beispiel aus eurem Logo)
-- euer **Logo** als Bild (am besten quadratisch, als PNG oder SVG)
-- freiwillig eure **Webseite** und euren **Instagram-Kanal**, sie erscheinen unter „Info“
-- eine Person, die den PIN bekommt und ihn in der Gruppe weitergibt
-
 ## Wie es danach weitergeht
 
-1. Die Admins legen eure Gruppe an und setzen einen PIN.
-2. Ihr bekommt den PIN auf einem sicheren Weg, nie in einer öffentlichen Gruppe.
+1. Die Admins schalten eure Gruppe frei und setzen einen PIN.
+2. Ihr bekommt den PIN auf einem sicheren Weg, nie in einer öffentlichen Gruppe. Gebt ihn nur an Leute aus eurer Gruppe weiter.
 3. Ihr wählt auf der Startseite eure Gruppe, gebt den PIN ein und könnt loslegen. Hilfe zum Einstieg steht unter [[Erste Schritte]].

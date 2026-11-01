@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **1.1.0** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.1.1** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **13 „Gruppen eröffnen sich selbst“**, Plan in `docs/PLAN-ETAPPE-13.md`. Etappe 12 ist mit Version 1.0.0 abgeschlossen (29.10.2026).
-- Nächster Schritt: **13.2** (App: Kachel „+ Eigene Gruppe eröffnen“ und Seite `#/neue-gruppe`).
+- Nächster Schritt: **13.3** (Menü „Gruppe freischalten“ im Sheet, Foto-Ordner automatisch, Hinweis unter „Was ist neu?“).
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -188,7 +188,8 @@ Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abw
   **Handy (bis 959 px):** untere Leiste (Start, Projekte, ToDos, Mobi, Mehr), Details als Vollbild.
 - **Reiter:** Start, Projekte, ToDos, Mobi, Material, Kalender, Dokumentation (Kennung `protokoll`), Team, Wiki, Cloud
   (am Handy alle ab Material unter „Mehr“). Cloud erscheint nur, wenn die Gruppe einen Cloud-Link hat (`js/gruppeninfo.js`).
-- **Öffentlich ohne Login:** `#/info/<seite>` (Impressum, Info, Datenschutz; Texte in `texte/<seite>.txt`), `#/termine`, `#/wiki`.
+- **Öffentlich ohne Login:** `#/info/<seite>` (Impressum, Info, Datenschutz; Texte in `texte/<seite>.txt`), `#/termine`, `#/wiki`,
+  `#/neue-gruppe` (seit 1.1.1: Antrag einer neuen Gruppe, `js/views/neue-gruppe.js`, Kachel „+ Eigene Gruppe eröffnen“ auf der Startseite).
 - Meldungen (toast) mittig. Fenster über `js/ui/fenster.js` (`zeigeFenster(titel, inhalt, beiZu, { aussenKlick })`, mit ✕ oben rechts).
   ToDos und Material nutzen den Detailbereich rechts (mit „← Zurück“).
 - Grün als Grundfarbe, Gruppenfarbe aus dem Sheet (CSS-Variable). Ein gemeinsames App-Icon. Dunkelmodus je Gerät.
@@ -247,7 +248,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
 - Etappen 0 bis 11 sind fertig und von der Person geprüft (bis 0.33.15, 28.10.2026). Kurzfassung in Abschnitt 8,
   ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
 - Etappe 12 „Prüfung und Qualität“ ist fertig (0.33.16 bis 1.0.0, 28. und 29.10.2026). **Version 1.0.0** ist die erste fertige Version.
-- Etappe 13 läuft: 13.1 (1.1.0) Antrag im Skript (`apps-script/Antrag.gs`, Tab `Antraege`), Startseite alphabetisch. Noch ohne Formular in der App.
+- Etappe 13 läuft: 13.1 (1.1.0) Antrag im Skript (`apps-script/Antrag.gs`, Tab `Antraege`), Startseite alphabetisch. 13.2 (1.1.1) Formular `#/neue-gruppe` mit Rechenaufgabe, danach Signal-Knopf.
   Berichte zu Sicherheit, Geschwindigkeit, Ungenutztem, Barrierefreiheit und CSS liegen nur in den Projektdateien im Chat (`pruefung/`), nicht im Repo.
 - Skript: Stand aus 12.8 ist bereitgestellt (`testenRechte` ok). `Werkzeuge.gs` (12.5, 12.14) braucht keine Bereitstellung.
   Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt, Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
@@ -458,7 +459,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
   Team.gs, Wiki.gs, Konto.gs, Signal.gs, Antrag.gs (Anträge neuer Gruppen, seit 1.1.0), Setup.gs, Werkzeuge.gs (nur Editor-Werkzeuge, keine Bereitstellung nötig).
 - `js/`: app, config, api, store, cache, schema, vorlagen, kanaele, wiki-format, gruppeninfo, darstellung-start (normales Skript).
 - `js/ui/`: dom, toast, modal, nav, table, detail, form, logo, kopf, bild, lightbox, fenster, balken, kommentare, neu-seit, druck, darstellung, signal.
-- `js/views/`: gruppen, login, nicht-gefunden, start, start-umfragen, start-brett, mehr, info, platzhalter, ideen,
+- `js/views/`: gruppen, neue-gruppe, login, nicht-gefunden, start, start-umfragen, start-brett, mehr, info, platzhalter, ideen,
   material, material-detail, material-rechnen, material-buchen, material-vormerken,
   todos, todos-rechnen, todos-abhaken, todos-hut,
   projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, projekt-reden, projekt-team, uebersicht, uebersicht-rechnen,
@@ -506,6 +507,7 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 12.17 (1.0.0): Abschluss, Plan eingearbeitet und gelöscht, Anleitung und Entwicklung App ergänzt.
 - **Etappe 13** (ab 1.1.0): Gruppen eröffnen sich selbst.
   - 13.1 (1.1.0): Aktion `gruppeBeantragen` und Tab `Antraege`, Editor-Test `testenAntrag`, Startseite alphabetisch.
+  - 13.2 (1.1.1): Seite `#/neue-gruppe` mit Formular, Kachel auf der Startseite, Anleitung und Datenschutz angepasst.
 
 ---
 

@@ -6,7 +6,7 @@ In der App dürfen alle mit dem Gruppen-PIN alles anlegen, ändern und löschen.
 
 ## Eine neue Gruppe anlegen
 
-Was die Gruppe euch schicken soll, steht unter [[Neue Gruppe anlegen]]. So legst du sie an:
+Neue Gruppen beantragen ihren Bereich selbst auf der Startseite (siehe [[Neue Gruppe anlegen]]). Der Antrag steht danach im Tab `Antraege` mit `status` = `offen`. Bis es im Sheet ein Menü zum Freischalten gibt, übernimmst du die Angaben aus dem Antrag von Hand und setzt danach im Antrag `status` auf `freigeschaltet` (oder `abgelehnt`). So legst du die Gruppe an:
 
 1. **Im Sheet, Tab `Gruppen`:** eine neue Zeile am Ende. `gruppe_id` ist die nächste freie Nummer (zum Beispiel `g4`, nie eine alte wiederverwenden). `name` wie er in der App stehen soll. `kurzname` in kleinen Buchstaben ohne Leerzeichen (kommt in die Adresse, zum Beispiel `fff`). `farbe` als Farbcode mit `#` und sechs Zeichen (zum Beispiel `#1da64a`). `sortierung` kannst du leer lassen (die Startseite ordnet die Gruppen nach dem Alphabet). `aktiv` = `TRUE`. Freiwillig `webseite`, `instagram` und `weitere_links` (beginnen mit `https://`, erscheinen unter „Info“).
 2. **PIN setzen:** im Apps-Script-Editor `setupPins` ausführen (siehe unten „Einen neuen PIN setzen“). Bei den anderen Gruppen auf „Abbrechen“ klicken.

@@ -23,6 +23,14 @@ function kachel(g) {
   return a;
 }
 
+// Seit 1.1.1 (Schritt 13.2): eine neue Gruppe beantragt ihren Bereich selbst (#/neue-gruppe).
+function kachelNeu() {
+  return el('a', { class: 'gruppen-kachel kachel-neu', href: '#/neue-gruppe' },
+    el('span', { class: 'kachel-plus', 'aria-hidden': 'true', text: '+' }),
+    el('span', { class: 'kachel-name', text: 'Eigene Gruppe eröffnen' })
+  );
+}
+
 function infoKnoepfe() {
   return el('nav', { class: 'start-knoepfe', 'aria-label': 'Rechtliches und Info' },
     ...OEFFENTLICH.map(function (o) {
@@ -62,6 +70,7 @@ export async function render(container, ctx) {
   function zeige(liste) {
     leeren(raster);
     liste.forEach(function (g) { raster.append(kachel(g)); });
+    raster.append(kachelNeu());
   }
 
   const sofort = ctx.gruppenSofort();

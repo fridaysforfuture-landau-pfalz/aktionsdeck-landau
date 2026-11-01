@@ -81,6 +81,11 @@ Ohne Anmeldung sichtbar sind: öffentliche Termine (auch als Kalender-Abo), öff
 Was öffentlich ist, entscheidet die Gruppe mit dem Haken „Veröffentlichen“ bzw. „Öffentlich“. Öffentliche Seiten zeigen keine Namen von Personen, die etwas eingetragen haben.
 Bei öffentlichen Abrufen speichert das Skript keinen Namen.
 
+## Antrag für eine neue Gruppe
+
+Mit „Eigene Gruppe eröffnen“ auf der Startseite schickt eine Gruppe ihren Namen, eine Abkürzung, eine Farbe und freiwillig Webseite und Instagram. Das Skript speichert den Antrag in der Google-Tabelle. Namen von Personen oder Kontaktdaten werden dabei nicht abgefragt.
+Nach der Freischaltung sind Name, Farbe und Links öffentlich sichtbar (Startseite und „Info“). Abgelehnte Anträge werden gelöscht.
+
 ## Links zu anderen Seiten
 
 Klickst du auf einen Link zu einer anderen Seite (zum Beispiel Instagram, Canva oder Google Drive), gelten dort die Regeln dieser Seite.
@@ -96,4 +101,4 @@ Klickst du auf einen Link zu einer anderen Seite (zum Beispiel Instagram, Canva 
 Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Widerspruch und Datenübertragbarkeit (Art. 15 bis 21 DSGVO). Schreib dazu an die E-Mail-Adresse oben.
 Du kannst dich auch bei der Aufsichtsbehörde beschweren. In Rheinland-Pfalz ist das der Landesbeauftragte für den Datenschutz und die Informationsfreiheit: https://www.datenschutz.rlp.de
 
-Stand: 23.10.2026
+Stand: 01.11.2026
