@@ -525,7 +525,7 @@ p.notiz.erledigt {
 }
 .kommentar-ver .leise { color: inherit; opacity: 0.85; }
 
-/* ==== 3. Öffentliche Seiten: Balken oben, Gruppenwahl, öffentliche Termine, Anmeldung, Info ==== */
+/* ==== 3. Öffentliche Seiten: Balken oben, Gruppenwahl, Antrag neue Gruppe, öffentliche Termine, Anmeldung, Info ==== */
 
 .login-form { display: grid; gap: 12px; }
 .start-seite {
@@ -559,6 +559,37 @@ p.notiz.erledigt {
   object-fit: contain;
 }
 .kachel-name { font-weight: 700; }
+/* Kachel „+ Eigene Gruppe eröffnen“: gestrichelt, damit sie sich von den Gruppen abhebt */
+.gruppen-kachel.kachel-neu {
+  background: transparent;
+  border-style: dashed;
+  border-bottom-width: 1px;
+  color: var(--text-leise);
+}
+.kachel-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+}
+/* Seite #/neue-gruppe */
+.antrag-form { max-width: 560px; }
+.antrag-hinweis { font-size: 14px; }
+.antrag-frage { margin: 0; font-weight: 600; }
+.antrag-antwort { max-width: 160px; }
+/* Feld nur für Roboter: für Menschen und Bildschirmleser unsichtbar */
+.antrag-falle {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 .platzhalter-kachel {
   min-height: 64px;
   border-radius: var(--radius);
@@ -778,6 +809,7 @@ p.notiz.erledigt {
     text-align: center;
   }
   .gruppen-logo { width: 96px; height: 96px; }
+  .kachel-plus { width: 96px; height: 96px; font-size: 56px; }
   .platzhalter-kachel { min-height: 220px; }
   .app-balken-innen { padding: 18px var(--abstand); gap: 18px; }
   .balken-logo { width: 56px; height: 56px; }

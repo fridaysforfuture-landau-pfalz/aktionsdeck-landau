@@ -168,7 +168,7 @@ async function route() {
   };
 
   // 12.13: Unbekannte Adressen zeigen „Seite nicht gefunden“ (früher still zum Start).
-  const bekannt = ['', 'info', 'wiki', 'termine', 'g'].indexOf(teile[0]) >= 0 &&
+  const bekannt = ['', 'info', 'wiki', 'termine', 'neue-gruppe', 'g'].indexOf(teile[0]) >= 0 &&
     !(teile[0] === 'info' && teile[1] && !OEFFENTLICH.some(function (x) { return x.id === teile[1]; }));
   if (!bekannt) {
     setzeFarbe('');
@@ -213,6 +213,20 @@ async function route() {
       container.textContent = 'Die Termine konnten nicht geladen werden.';
     }
     seiteFertig(nummer, 'termine', 'Termine', container);
+    return;
+  }
+
+  // Antrag einer neuen Gruppe: ohne Login (seit 1.1.1, Schritt 13.2, wird erst bei Bedarf geladen)
+  if (teile[0] === 'neue-gruppe') {
+    setzeFarbe('');
+    try {
+      const ng = await import('./views/neue-gruppe.js');
+      if (nummer !== laufNummer) return;
+      ng.render(container, ctx);
+    } catch (e) {
+      container.textContent = 'Die Seite konnte nicht geladen werden.';
+    }
+    seiteFertig(nummer, 'neue-gruppe', 'Eigene Gruppe eröffnen', container);
     return;
   }
 
