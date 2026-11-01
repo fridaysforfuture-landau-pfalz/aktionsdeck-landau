@@ -128,7 +128,7 @@ function werkzeugZeiten(m) {
 // Bereiche in der Reihenfolge der Reiter der App, mit einer Farbe je Bereich.
 // Das Skript findet Tabs über ihren Namen, die Reihenfolge im Sheet ist ihm egal.
 var TAB_BEREICHE = [
-  { name: 'System', farbe: '#5f6a66', tabs: ['Gruppen', 'Zugang', 'Log'] },
+  { name: 'System', farbe: '#5f6a66', tabs: ['Gruppen', 'Zugang', 'Antraege', 'Log'] },
   { name: 'Start', farbe: '#368469', tabs: ['Mitteilungen', 'Umfragen', 'Umfrage_Antworten'] },
   { name: 'Projekte', farbe: '#2f6fb3', tabs: ['Projekte', 'Meilensteine', 'Projekt_Material', 'Finanzen', 'Learnings', 'Kommentare', 'Ideen'] },
   { name: 'ToDos', farbe: '#1b7340', tabs: ['ToDos'] },

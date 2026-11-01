@@ -22,10 +22,10 @@ function gruppeOeffentlich(z) {
   return { gruppe_id: z.gruppe_id, name: z.name, kurzname: z.kurzname, farbe: z.farbe };
 }
 
-// API "gruppen" (ohne Login): nur Name, Kurzname, Farbe
+// API "gruppen" (ohne Login): nur Name, Kurzname, Farbe. Seit 1.1.0 alphabetisch nach Name (Spalte sortierung wird nicht mehr gebraucht).
 function aktionGruppen(p) {
   var liste = liesGemerkt('Gruppen').zeilen.filter(function (z) { return truthy(z.aktiv); });   // 12.6
-  liste.sort(function (a, b) { return Number(a.sortierung) - Number(b.sortierung); });
+  liste.sort(function (a, b) { return textVon(a.name).localeCompare(textVon(b.name), 'de', { sensitivity: 'base' }); });
   return liste.map(gruppeOeffentlich);
 }
 
@@ -176,7 +176,7 @@ function testenRechte() {
     });
 
     // System-Tabs sind nicht lesbar
-    ['Zugang', 'Gruppen', 'Einstellungen', 'Log', '__proto__'].forEach(function (tab) {
+    ['Zugang', 'Gruppen', 'Antraege', 'Einstellungen', 'Log', '__proto__'].forEach(function (tab) {
       pruefe(gid + ': Tab ' + tab + ' gesperrt', wirft(function () { aktionList(ctx, { tabelle: tab }); }, 'ungueltig'));
     });
 
