@@ -63,21 +63,11 @@ function setupPinsLauf_(ui) {
     return;
   }
 
-  var zHead = setupKopf_(zSheet.getRange(1, 1, 1, Math.max(zSheet.getLastColumn(), 1)).getValues()[0]);
-  var zi = {
-    zugang_id: zHead.indexOf('zugang_id'),
-    gruppe_id: zHead.indexOf('gruppe_id'),
-    pin_salt: zHead.indexOf('pin_salt'),
-    pin_hash: zHead.indexOf('pin_hash'),
-    aktiv: zHead.indexOf('aktiv'),
-    gueltig_bis: zHead.indexOf('gueltig_bis')
-  };
-  for (var key in zi) {
-    if (zi[key] < 0) {
-      ui.alert('Im Tab "Zugang" fehlt die Spalte "' + key + '".\n' +
-        'Gefundene Spalten: ' + zHead.join(', '));
-      return;
-    }
+  var zi = zugangSpalten_(zSheet);
+  if (zi.fehlt) {
+    ui.alert('Im Tab "Zugang" fehlt die Spalte "' + zi.fehlt + '".\n' +
+      'Gefundene Spalten: ' + zi.kopf.join(', '));
+    return;
   }
 
   var liste = [];
@@ -112,32 +102,7 @@ function setupPinsLauf_(ui) {
       continue;
     }
 
-    var salt = Utilities.getUuid().replace(/-/g, '');
-    var hash = pinHash(salt, pin);   // aus Util.gs
-
-    var zWerte = zSheet.getDataRange().getValues();
-    var zeile = -1;
-    for (var k = 1; k < zWerte.length; k++) {
-      if (String(zWerte[k][zi.gruppe_id]).trim() === g.id) { zeile = k + 1; break; }
-    }
-    if (zeile === -1) zeile = Math.max(zSheet.getLastRow(), 1) + 1;
-    if (zeile > zSheet.getMaxRows()) {
-      zSheet.insertRowsAfter(zSheet.getMaxRows(), zeile - zSheet.getMaxRows());
-    }
-
-    var textCols = ['zugang_id', 'gruppe_id', 'pin_salt', 'pin_hash', 'gueltig_bis'];
-    textCols.forEach(function (c) {
-      zSheet.getRange(zeile, zi[c] + 1).setNumberFormat('@');
-    });
-    zSheet.getRange(zeile, zi.zugang_id + 1).setValue('z_' + g.id);
-    zSheet.getRange(zeile, zi.gruppe_id + 1).setValue(g.id);
-    zSheet.getRange(zeile, zi.pin_salt + 1).setValue(salt);
-    zSheet.getRange(zeile, zi.pin_hash + 1).setValue(hash);
-    zSheet.getRange(zeile, zi.gueltig_bis + 1).setValue('');
-    var aktivZelle = zSheet.getRange(zeile, zi.aktiv + 1);
-    aktivZelle.setNumberFormat('General');
-    aktivZelle.setValue(true);
-    SpreadsheetApp.flush();
+    zugangSchreiben_(zSheet, zi, g.id, pin);
 
     erledigt.push(g.name);
   }
@@ -147,4 +112,54 @@ function setupPinsLauf_(ui) {
     '\n\nPIN gesetzt für: ' + (erledigt.length ? erledigt.join(', ') : '(keine)') +
     (uebersprungen.length ? '\n\nÜbersprungen: ' + uebersprungen.join(', ') : '')
   );
+}
+
+// ---- Gemeinsam für setupPins und die Freischaltung neuer Gruppen (Antrag.gs, seit 1.1.2) ----
+
+// Spaltennummern im Tab "Zugang" (ab 0). Fehlt eine Spalte, steht ihr Name in .fehlt.
+function zugangSpalten_(zSheet) {
+  var zHead = setupKopf_(zSheet.getRange(1, 1, 1, Math.max(zSheet.getLastColumn(), 1)).getValues()[0]);
+  var zi = {
+    zugang_id: zHead.indexOf('zugang_id'),
+    gruppe_id: zHead.indexOf('gruppe_id'),
+    pin_salt: zHead.indexOf('pin_salt'),
+    pin_hash: zHead.indexOf('pin_hash'),
+    aktiv: zHead.indexOf('aktiv'),
+    gueltig_bis: zHead.indexOf('gueltig_bis')
+  };
+  for (var key in zi) {
+    if (zi[key] < 0) return { fehlt: key, kopf: zHead };
+  }
+  return zi;
+}
+
+// Schreibt Salt und Hash des PINs für eine Gruppe in "Zugang" (vorhandene Zeile der Gruppe oder neue Zeile).
+// Der PIN selbst wird nirgends gespeichert.
+function zugangSchreiben_(zSheet, zi, gid, pin) {
+  var salt = Utilities.getUuid().replace(/-/g, '');
+  var hash = pinHash(salt, pin);   // aus Util.gs
+
+  var zWerte = zSheet.getDataRange().getValues();
+  var zeile = -1;
+  for (var k = 1; k < zWerte.length; k++) {
+    if (String(zWerte[k][zi.gruppe_id]).trim() === gid) { zeile = k + 1; break; }
+  }
+  if (zeile === -1) zeile = Math.max(zSheet.getLastRow(), 1) + 1;
+  if (zeile > zSheet.getMaxRows()) {
+    zSheet.insertRowsAfter(zSheet.getMaxRows(), zeile - zSheet.getMaxRows());
+  }
+
+  var textCols = ['zugang_id', 'gruppe_id', 'pin_salt', 'pin_hash', 'gueltig_bis'];
+  textCols.forEach(function (c) {
+    zSheet.getRange(zeile, zi[c] + 1).setNumberFormat('@');
+  });
+  zSheet.getRange(zeile, zi.zugang_id + 1).setValue('z_' + gid);
+  zSheet.getRange(zeile, zi.gruppe_id + 1).setValue(gid);
+  zSheet.getRange(zeile, zi.pin_salt + 1).setValue(salt);
+  zSheet.getRange(zeile, zi.pin_hash + 1).setValue(hash);
+  zSheet.getRange(zeile, zi.gueltig_bis + 1).setValue('');
+  var aktivZelle = zSheet.getRange(zeile, zi.aktiv + 1);
+  aktivZelle.setNumberFormat('General');
+  aktivZelle.setValue(true);
+  SpreadsheetApp.flush();
 }

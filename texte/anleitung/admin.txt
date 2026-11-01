@@ -4,17 +4,27 @@
 
 In der App dürfen alle mit dem Gruppen-PIN alles anlegen, ändern und löschen. Was du direkt im Sheet änderst, zeigt die App nach höchstens 2 Minuten (das Skript merkt sich gelesene Tabs kurz, damit die App schneller ist). Einige Dinge gehen aber nur direkt im Google Sheet oder im Apps-Script-Editor: einen PIN ändern oder sperren, Gelöschtes zurückholen und Einträge endgültig entfernen. Arbeite im Sheet immer vorsichtig. Ändere nie die erste Zeile (die Spaltenköpfe) und nie die Spalte `id`.
 
-## Eine neue Gruppe anlegen
+## Eine neue Gruppe freischalten
 
-Neue Gruppen beantragen ihren Bereich selbst auf der Startseite (siehe [[Neue Gruppe anlegen]]). Der Antrag steht danach im Tab `Antraege` mit `status` = `offen`. Bis es im Sheet ein Menü zum Freischalten gibt, übernimmst du die Angaben aus dem Antrag von Hand und setzt danach im Antrag `status` auf `freigeschaltet` (oder `abgelehnt`). So legst du die Gruppe an:
+Neue Gruppen beantragen ihren Bereich selbst auf der Startseite mit „+ Eigene Gruppe eröffnen“ (siehe [[Neue Gruppe anlegen]]). Der Antrag steht danach im Tab `Antraege` mit `status` = `offen`. Die Gruppe meldet sich außerdem über Signal bei dir.
 
-1. **Im Sheet, Tab `Gruppen`:** eine neue Zeile am Ende. `gruppe_id` ist die nächste freie Nummer (zum Beispiel `g4`, nie eine alte wiederverwenden). `name` wie er in der App stehen soll. `kurzname` in kleinen Buchstaben ohne Leerzeichen (kommt in die Adresse, zum Beispiel `fff`). `farbe` als Farbcode mit `#` und sechs Zeichen (zum Beispiel `#1da64a`). `sortierung` kannst du leer lassen (die Startseite ordnet die Gruppen nach dem Alphabet). `aktiv` = `TRUE`. Freiwillig `webseite`, `instagram` und `weitere_links` (beginnen mit `https://`, erscheinen unter „Info“).
-2. **PIN setzen:** im Apps-Script-Editor `setupPins` ausführen (siehe unten „Einen neuen PIN setzen“). Bei den anderen Gruppen auf „Abbrechen“ klicken.
-3. **Logo:** auf GitHub im Ordner `icons/gruppen/` → „Add file“ → „Upload files“ eine Datei `<kurzname>.png` oder `<kurzname>.svg` hochladen (zum Beispiel `fff.png`). Ohne Logo zeigt die App das AktionsDeck-Logo.
-4. **Freiwillig, in den Skripteigenschaften** (Projekteinstellungen → Skripteigenschaften): `FOTO_ORDNER_<gruppe_id>` (Ordner für Fotos von Material und Wiki), `PROTOKOLL_DOK_<gruppe_id>` oder `PROTOKOLL_LINK_<gruppe_id>` (Protokolle), `OC_KONTO_<gruppe_id>` (Kontostand) und `CLOUD_LINK_<gruppe_id>` (Reiter Cloud).
-5. App neu laden: Die Gruppe steht auf der Startseite. Den PIN gibst du persönlich oder auf einem sicheren Weg an die Ansprechperson der Gruppe.
+1. Das Google Sheet öffnen. Oben in der Menüleiste steht **„AktionsDeck“** (erscheint ein paar Sekunden nach dem Öffnen).
+2. „AktionsDeck“ → **„Gruppe freischalten“** klicken. Beim allerersten Mal fragt Google nach einer Erlaubnis: zustimmen.
+3. Ein Fenster zeigt den ältesten offenen Antrag. **Ja** = freischalten, **Nein** = ablehnen (der Antrag wird gelöscht), **Abbrechen** = später entscheiden.
+4. Bei „Ja“: den PIN zweimal eintippen (mindestens 6 Zeichen, besser 8 oder mehr aus Buchstaben und Ziffern).
+5. Das Skript legt die Gruppe im Tab `Gruppen` an (nächste freie `gruppe_id`), setzt den Zugang im Tab `Zugang` und legt den Foto-Ordner in Google Drive an. Am Ende steht, was geklappt hat.
+6. Den PIN gibst du persönlich oder auf einem sicheren Weg an die Gruppe weiter. Nach höchstens 2 Minuten steht die Gruppe auf der Startseite.
+7. **Logo:** Schickt die Gruppe eins, lädst du es auf GitHub im Ordner `icons/gruppen/` → „Add file“ → „Upload files“ als `<kurzname>.png` oder `<kurzname>.svg` hoch (zum Beispiel `fff.png`). Ohne Logo zeigt die App das AktionsDeck-Logo.
+8. **Freiwillig, in den Skripteigenschaften** (Projekteinstellungen → Skripteigenschaften): `PROTOKOLL_DOK_<gruppe_id>` oder `PROTOKOLL_LINK_<gruppe_id>` (Protokolle), `OC_KONTO_<gruppe_id>` (Kontostand) und `CLOUD_LINK_<gruppe_id>` (Reiter Cloud).
 
 Für eine neue Gruppe muss das Skript nicht neu bereitgestellt werden.
+
+**Einstellungen dafür** (einmal, in den Skripteigenschaften):
+
+- `GRUPPEN_ORDNER`: Link oder ID des Drive-Ordners, in dem die Foto-Ordner der neuen Gruppen entstehen. Fehlt sie, wird die Gruppe trotzdem freigeschaltet, nur ohne Foto-Ordner.
+- `ADMIN_GRUPPE` und `ADMIN_NAME`: Wer mit dieser Gruppe (`gruppe_id` oder Abkürzung, zum Beispiel `fff`) und diesem Anzeigenamen angemeldet ist, sieht offene Anträge unter „Was ist neu?“. Mehrere Namen trennst du mit Komma. Der Anzeigename ist nicht geschützt; darum zeigt der Hinweis nur Name und Abkürzung der neuen Gruppe.
+
+**Ohne Menü (Notweg):** eine neue Zeile im Tab `Gruppen` von Hand anlegen (`gruppe_id` = nächste freie Nummer, nie eine alte wiederverwenden; `name`, `kurzname` in kleinen Buchstaben, `farbe` mit `#` und sechs Zeichen, `aktiv` = `TRUE`), dann `setupPins` im Apps-Script-Editor ausführen (siehe unten) und im Antrag `status` auf `freigeschaltet` setzen.
 
 ## Einen PIN ändern oder sperren
 

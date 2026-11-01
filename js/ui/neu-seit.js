@@ -6,6 +6,8 @@
 // Seit 9.7 neue Personen im Team (Abschnitt „Team“, nur „neu im Team“).
 // Seit 0.32.4 führen Kommentare zu Wiki-Seiten zur Seite (kein eigener Abschnitt „Wiki“).
 // Der Zeitpunkt des letzten Besuchs liegt im Gerät (store.js), pro Gruppe.
+// Seit 1.1.2 (Schritt 13.3) für die Admins (Skripteigenschaften ADMIN_GRUPPE und ADMIN_NAME) oben die offenen Anträge neuer Gruppen.
+// Sie stehen da, bis sie im Sheet freigeschaltet oder abgelehnt sind (nicht nur seit dem letzten Besuch).
 
 import { el, txt } from './dom.js';
 import { api } from '../api.js';
@@ -30,14 +32,16 @@ export async function holeNeu(token, gruppeId, kurzname, projekteHolen) {
   const r = await api('listMehrere', {
     tabellen: ['ToDos', 'Meilensteine', 'Mitteilungen', 'Umfragen', 'Kommentare', 'Projekte', 'Veranstaltungen', 'Mobi_Plan',
       'Protokolle', 'Reden', 'Personen'],
-    seit: seit
+    seit: seit,
+    mitAntraegen: true
   }, token);
   const stand = (r && r.serverzeit) || new Date().toISOString();
+  const antraege = antragItems(r && r.antraege);
 
   // Erster Besuch auf diesem Gerät: nur den Zeitpunkt merken
   if (!alt) {
     setLetzterBesuch(gruppeId, stand);
-    return { items: [], stand: stand };
+    return { items: antraege, stand: stand };
   }
 
   // Projekttitel aller Projekte (die Liste oben enthält nur geänderte)
@@ -183,7 +187,23 @@ export async function holeNeu(token, gruppeId, kurzname, projekteHolen) {
   });
 
   items.sort(function (a, b) { return String(b.zeit).localeCompare(String(a.zeit)); });
-  return { items: items.slice(0, 100), stand: stand };
+  return { items: antraege.concat(items.slice(0, 100)), stand: stand };
+}
+
+// Offene Anträge neuer Gruppen (nur für Admins vom Skript mitgeschickt). Ohne Link: Freigeschaltet wird im Sheet.
+function antragItems(liste) {
+  return (Array.isArray(liste) ? liste : []).slice(0, 20).map(function (a) {
+    return {
+      bereich: 'antrag',
+      art: 'Antrag',
+      was: 'wartet auf Freischaltung',
+      titel: '🌱 ' + kurz(a && a.name, 60) + (txt(a && a.kurzname) ? ' (' + kurz(a.kurzname, 12) + ')' : ''),
+      link: '',
+      wer: '',
+      zeit: txt(a && a.erstellt_am),
+      projektId: ''
+    };
+  });
 }
 
 // beiZu wird beim Schließen aufgerufen (dann gilt alles als gelesen)
@@ -196,11 +216,9 @@ export function zeigeNeu(items, beiZu) {
   function zeile(it) {
     const info = [it.art, it.was, it.wer ? 'von ' + it.wer : '', zeitKurz(it.zeit)]
       .filter(Boolean).join(' · ');
+    const teile = [el('strong', { text: it.titel }), el('span', { class: 'leise', text: info })];
     return el('li', { class: 'dash-zeile' },
-      el('a', { class: 'dash-todo', href: it.link, onclick: zu },
-        el('strong', { text: it.titel }),
-        el('span', { class: 'leise', text: info })
-      )
+      it.link ? el('a', { class: 'dash-todo', href: it.link, onclick: zu }, ...teile) : el('div', { class: 'dash-todo' }, ...teile)
     );
   }
 
@@ -228,6 +246,10 @@ export function zeigeNeu(items, beiZu) {
     }));
 
     function von(b) { return items.filter(function (i) { return i.bereich === b; }); }
+    if (von('antrag').length) {
+      abschnitt(titelText('Anträge neuer Gruppen'), von('antrag'));
+      inhalt.append(el('p', { class: 'leise', text: 'Freischalten oder ablehnen im Google Sheet: Menü „AktionsDeck“ → „Gruppe freischalten“.' }));
+    }
     abschnitt(titelText('Umfragen'), von('umfrage'));
     abschnitt(titelText('Mitteilungen'), von('mitteilung'));
     abschnitt(titelText('Veranstaltungen'), von('veranstaltung'));

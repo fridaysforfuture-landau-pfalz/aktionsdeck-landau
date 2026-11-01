@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **1.1.1** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.1.2** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-- Laufende Etappe: **13 „Gruppen eröffnen sich selbst“**, Plan in `docs/PLAN-ETAPPE-13.md`. Etappe 12 ist mit Version 1.0.0 abgeschlossen (29.10.2026).
-- Nächster Schritt: **13.3** (Menü „Gruppe freischalten“ im Sheet, Foto-Ordner automatisch, Hinweis unter „Was ist neu?“).
+- Laufende Etappe: **keine**. Etappe 13 „Gruppen eröffnen sich selbst“ ist mit Version 1.1.2 abgeschlossen (01.11.2026), Festlegungen in 4.11.
+- Nächster Schritt: offen. Die Person prüft 13.3 und sammelt Ideen; eine neue Etappe beginnt mit einem Plan mit Rückfragen (Abschnitt 7).
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -248,7 +248,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
 - Etappen 0 bis 11 sind fertig und von der Person geprüft (bis 0.33.15, 28.10.2026). Kurzfassung in Abschnitt 8,
   ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
 - Etappe 12 „Prüfung und Qualität“ ist fertig (0.33.16 bis 1.0.0, 28. und 29.10.2026). **Version 1.0.0** ist die erste fertige Version.
-- Etappe 13 läuft: 13.1 (1.1.0) Antrag im Skript (`apps-script/Antrag.gs`, Tab `Antraege`), Startseite alphabetisch. 13.2 (1.1.1) Formular `#/neue-gruppe` mit Rechenaufgabe, danach Signal-Knopf.
+- Etappe 13 „Gruppen eröffnen sich selbst“ ist fertig (1.1.0 bis 1.1.2, 01.11.2026): Antrag auf der Startseite, Freischalten im Sheet-Menü, Hinweis für Admins. Die Person prüft noch 13.3 im echten Sheet.
   Berichte zu Sicherheit, Geschwindigkeit, Ungenutztem, Barrierefreiheit und CSS liegen nur in den Projektdateien im Chat (`pruefung/`), nicht im Repo.
 - Skript: Stand aus 12.8 ist bereitgestellt (`testenRechte` ok). `Werkzeuge.gs` (12.5, 12.14) braucht keine Bereitstellung.
   Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt, Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
@@ -386,6 +386,21 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
   Gedruckt wird hell. Gruppen- und Terminfarben bleiben.
 - Gestrichen in Etappe 11: Mein Bereich, Push, E-Mail, Sicherungskopien, Downloads.
 
+### 4.11 Neue Gruppen (Etappe 13)
+
+- **Antrag** auf der Startseite: Kachel „+ Eigene Gruppe eröffnen“ → `#/neue-gruppe` (`js/views/neue-gruppe.js`). Felder: Name (2 bis 60), Abkürzung
+  (`a–z0–9`, 2 bis 12, nicht wie `g4`), Farbe, freiwillig Webseite (`https://`) und Instagram. Rechenaufgabe und unsichtbares Feld `falle`.
+  Keine Kontaktdaten: Danach meldet sich die Gruppe über den Signal-Knopf. Die App prüft wie das Skript (`antragPruefen`).
+- **Skript** (`apps-script/Antrag.gs`): Aktion `gruppeBeantragen` ohne Login, höchstens 5 offene Anträge und 5 neue pro Tag (`antraege_tag`).
+  Name und Abkürzung dürfen bei keiner Gruppe (auch inaktiv) und keinem offenen Antrag vorkommen. Tab `Antraege` ist ein System-Tab (über `list` nicht lesbar).
+- **Freischalten** nur im Sheet: Menü „AktionsDeck“ → „Gruppe freischalten“ (`onOpen`, `gruppeFreischalten`). Ja = freischalten (PIN zweimal),
+  Nein = ablehnen (Zeile wird gelöscht), Abbrechen = später. Reihenfolge beim Freischalten: Zugang, dann Gruppe, dann Antrag auf `freigeschaltet`,
+  dann Foto-Ordner in `GRUPPEN_ORDNER` und `FOTO_ORDNER_<gruppe_id>`. Nächste `gruppe_id` zählt auch Zeilen im Tab `Zugang` mit.
+  Der PIN-Teil ist mit `setupPins` gemeinsam (`zugangSpalten_`, `zugangSchreiben_` in `Setup.gs`). Kein Admin-PIN, keine Admin-Ansicht in der App.
+- **Hinweis für Admins:** `listMehrere` mit `mitAntraegen: true` (nur „Was ist neu?“) gibt `antraege` (Name, Abkürzung, Datum) mit, wenn Gruppe und
+  Anzeigename zu `ADMIN_GRUPPE` und `ADMIN_NAME` passen. Offene Anträge stehen oben im Fenster, bis sie erledigt sind, und zählen in der Glocke mit.
+- **Logo** weiter über GitHub (`icons/gruppen/`). Startseite und Gruppenliste alphabetisch nach Name (`sortierung` wird nicht mehr gebraucht).
+
 ---
 
 ## 5. Technik-Merkzettel
@@ -411,11 +426,11 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
   Text aus einem Wert: `textVon(v)`, zum Vergleichen `textKlein(v)` (beide `Util.gs`, seit 0.34.6); nicht in jeder Datei neu schreiben.
 - **Skripteigenschaften** (nur im Editor): `TOKEN_GEHEIMNIS`, `FOTO_ORDNER_g1/g2/g3`, `PROTOKOLL_DOK_g1`, `PROTOKOLL_DOK_g2`,
   freiwillig `PROTOKOLL_LINK_<gruppe_id>`, `OC_KONTO_<gruppe_id>`, `KONTO_STAND_<gruppe_id>` (nur vom Skript), `CLOUD_LINK_<gruppe_id>`, `SIGNAL_LINK`;
-  `antraege_tag` (nur vom Skript: Zähler der Anträge heute).
+  seit Etappe 13 `GRUPPEN_ORDNER`, `ADMIN_GRUPPE`, `ADMIN_NAME` und `antraege_tag` (nur vom Skript: Zähler der Anträge heute).
 - **Editor-Funktionen:** `formatieren` (Schema.gs); `aufraeumenTesten`, `aufraeumen` (löscht `geloescht=TRUE` älter als 90 Tage,
   Log älter als 180 Tage, alte Kapazitäten), `testdatenListe` (Aufraeumen.gs); `setupGeheimnis`, `setupPins` (Setup.gs);
   Tests `testenTermine`, `testenTermineSicher`, `testenProtokollDok`, `testenProtokollAnhaengen`, `testenTeam`, `testenWiki`, `testenWikiSicher`,
-  `testenFotoOrdner`, `testenFotoSchreiben`, `testenRechte` (Auth.gs, Rechte je Gruppe und Token), `testenAntrag` (Antrag.gs, Regeln für Anträge, schreibt nichts), `messenSkript` (Werkzeuge.gs, misst Laufzeiten, schreibt nichts),
+  `testenFotoOrdner`, `testenFotoSchreiben`, `testenRechte` (Auth.gs, Rechte je Gruppe und Token), `testenAntrag` (Antrag.gs, Regeln für Anträge, schreibt nichts), `gruppeFreischalten` (Antrag.gs, auch im Sheet-Menü „AktionsDeck“), `messenSkript` (Werkzeuge.gs, misst Laufzeiten, schreibt nichts),
   `tabsSortieren` und `tabsSortierenAZ` (Werkzeuge.gs, ordnen die Tabs nach Wichtigkeit oder Alphabet und färben sie je Bereich; ein neuer Tab gehört in `TAB_BEREICHE`), `kontoTesten`, `kontoAbrufen`, `kontoAusloeserEinrichten`.
 - **Zwischenspeicher (IndexedDB)** `ladeMitCache(key, ladeFn, anzeigen, zuerstCache)`, Schlüssel `<gruppe_id>:<name>`: todos, projekteliste, startextra,
   startmobi, startfuerdich, projekte, kalender, protokoll, reden, team, wiki, gruppeinfo, uebersicht. Öffentlich: `oeffentlich:termine`,
@@ -452,7 +467,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 ## 6. Dateiübersicht
 
 - Hauptordner: `index.html`, `404.html` (Fehlerseite von GitHub Pages, seit 0.34.10), `manifest.webmanifest`, `sw.js`, `README.md`, `LICENSE`, `CLAUDE.md` (zeigt nur hierher).
-- `docs/`: `STAND.md` (diese Datei); während einer Etappe ihr Plan (jetzt `PLAN-ETAPPE-13.md`).
+- `docs/`: `STAND.md` (diese Datei); während einer Etappe ihr Plan.
 - `icons/`: `icon.svg` (Favicon, Ladebildschirm), `icon-192.png`, `icon-512.png`, `icon-maskable.svg`, `icon-maskable-192.png`, `icon-maskable-512.png` (vollflächig für Android, seit 0.34.9), `apple-touch-icon.png` (iPhone, vollflächig), `logo.svg`, `gruppen/`.
 - `css/`: `base.css` (alle Farb-Variablen, hell und dunkel), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, nach Themen).
 - `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
@@ -476,7 +491,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 
 ## 7. Pläne
 
-- **Jetzt:** Etappe 13 „Gruppen eröffnen sich selbst“ (`docs/PLAN-ETAPPE-13.md`), Schritte 13.1 bis 13.3. Weitere Ideen sammelt die Person. Jede neue Etappe beginnt mit einem Plan mit Rückfragen
+- **Jetzt:** keine Etappe geplant. Ideen sammelt die Person. Jede neue Etappe beginnt mit einem Plan mit Rückfragen
   (`docs/PLAN-ETAPPE-<n>.md`), dann Schritt für Schritt je ein Pull Request; nach jedem Schritt prüft die Person am Handy und am PC.
 - **Mögliche Aufgaben nach 1.0** (aus Etappe 12, Einzelheiten in 3.2): Schriftgrößen in `rem`, gemeinsamer Baustein für ähnliche Listen,
   Hauptseite neben dem App-Ordner ansehen (Service Worker), Farben mit zu wenig Kontrast nur auf Wunsch.
@@ -505,9 +520,10 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - Layout am PC (12.9): ohne Grenze der Breite, „Mehr ▾“ in der Seitenleiste. Barrierefreiheit (12.10, 12.11): Seitentitel, Fokus, Sprung-Link, Fenster.
   - App-Icon vollflächig und Ladebildschirm (12.12), Fehlerseite (12.13), Editor-Werkzeug zum Sortieren der Tabs (12.14), CSS in 14 Abschnitten (12.15, 12.16).
   - 12.17 (1.0.0): Abschluss, Plan eingearbeitet und gelöscht, Anleitung und Entwicklung App ergänzt.
-- **Etappe 13** (ab 1.1.0): Gruppen eröffnen sich selbst.
+- **Etappe 13** (1.1.0 bis 1.1.2, Pull Requests #90 bis #92): Gruppen eröffnen sich selbst.
   - 13.1 (1.1.0): Aktion `gruppeBeantragen` und Tab `Antraege`, Editor-Test `testenAntrag`, Startseite alphabetisch.
   - 13.2 (1.1.1): Seite `#/neue-gruppe` mit Formular, Kachel auf der Startseite, Anleitung und Datenschutz angepasst.
+  - 13.3 (1.1.2): Sheet-Menü „Gruppe freischalten“, Foto-Ordner automatisch, Hinweis unter „Was ist neu?“, Plan eingearbeitet und gelöscht.
 
 ---
 
