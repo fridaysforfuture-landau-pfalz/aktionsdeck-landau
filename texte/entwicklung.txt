@@ -27,6 +27,7 @@ Jede Etappe beginnt mit einem Plan und Rückfragen. Nach jedem Schritt prüft ei
 
 Ab Version 1.0 steht hier jede neue Version mit einer kurzen Zeile, die neueste oben.
 
+- **1.1.0** (01.11.2026): Vorbereitung im Hintergrund, damit neue Gruppen ihren Bereich bald selbst beantragen können. Die Gruppen auf der Startseite stehen jetzt nach dem Alphabet.
 - **1.0.0** (29.10.2026): Die erste fertige Version, nach einer gründlichen Prüfung in Etappe 12.
 
 ## Etappe 12: Prüfung und Qualität, Version 1.0

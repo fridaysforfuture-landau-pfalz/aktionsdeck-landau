@@ -65,7 +65,9 @@ var TABELLEN = {
 var SYSTEM = {
   Gruppen: ['gruppe_id', 'name', 'kurzname', 'farbe', 'sortierung', 'aktiv', 'webseite', 'instagram', 'weitere_links'],
   Zugang: ['zugang_id', 'gruppe_id', 'pin_salt', 'pin_hash', 'aktiv', 'gueltig_bis'],
-  Log: ['zeit', 'gruppe_id', 'aktion', 'tabelle', 'datensatz_id', 'anzeigename']
+  Log: ['zeit', 'gruppe_id', 'aktion', 'tabelle', 'datensatz_id', 'anzeigename'],
+  // Anträge neuer Gruppen (seit 1.1.0, Antrag.gs). status = offen | freigeschaltet | abgelehnt
+  Antraege: ['antrag_id', 'erstellt_am', 'status', 'name', 'kurzname', 'farbe', 'webseite', 'instagram', 'erledigt_am', 'gruppe_id']
 };
 
 // Tabs, in die nur angehängt wird (kein Ändern, kein Löschen)
