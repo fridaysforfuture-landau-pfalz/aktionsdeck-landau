@@ -169,7 +169,13 @@ function aktionListMehrere(ctx, p) {
     var tab = tabelleCheck(name);
     ergebnis[tab] = listeFuerGruppe(tab, ctx.gruppe_id, seit);
   });
-  return { tabellen: ergebnis, serverzeit: zeit };
+  var antwort = { tabellen: ergebnis, serverzeit: zeit };
+  // Seit 1.1.2: offene Anträge neuer Gruppen für „Was ist neu?“, nur für die Admins (Antrag.gs)
+  if (p.mitAntraegen === true) {
+    var antraege = antraegeFuerAdmin(ctx, p);
+    if (antraege) antwort.antraege = antraege;
+  }
+  return antwort;
 }
 
 // ---- Schreiben ----
