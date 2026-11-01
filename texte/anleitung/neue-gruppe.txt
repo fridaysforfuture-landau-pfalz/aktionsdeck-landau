@@ -10,13 +10,14 @@ AktionsDeck Landau ist offen für alle Klima-Gruppen in Landau. Jede Gruppe beko
    - eine **Abkürzung** aus kleinen Buchstaben für die Adresse (zum Beispiel „fff“)
    - eure **Farbe** (zum Beispiel aus eurem Logo)
    - freiwillig eure **Webseite** und euren **Instagram-Kanal**, sie erscheinen unter „Info“
+   - unter **„Wer seid ihr?“** ein paar Sätze zu eurer Gruppe. Das lesen nur die Admins bei der Prüfung.
 3. Die kleine Rechenaufgabe lösen und „Antrag schicken“ tippen.
-4. Danach meldet ihr euch kurz über Signal bei uns und sagt, wer ihr seid. Schickt uns dabei gern euer **Logo** als Bild (am besten quadratisch, als PNG oder SVG):
+4. Den PIN bekommt ihr nicht über die App, sondern persönlich. Schreibt uns darum kurz über Signal, damit wir wissen, wohin wir ihn schicken. Schickt uns dabei gern euer **Logo** als Bild (am besten quadratisch, als PNG oder SVG):
 
 [Signal]
 
 ## Wie es danach weitergeht
 
 1. Die Admins schalten eure Gruppe frei und setzen einen PIN.
-2. Ihr bekommt den PIN auf einem sicheren Weg, nie in einer öffentlichen Gruppe. Gebt ihn nur an Leute aus eurer Gruppe weiter.
+2. Ihr bekommt den PIN über Signal, nie in einer öffentlichen Gruppe. Gebt ihn nur an Leute aus eurer Gruppe weiter.
 3. Ihr wählt auf der Startseite eure Gruppe, gebt den PIN ein und könnt loslegen. Hilfe zum Einstieg steht unter [[Erste Schritte]].

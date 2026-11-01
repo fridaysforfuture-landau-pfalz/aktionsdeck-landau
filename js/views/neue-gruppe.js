@@ -3,7 +3,7 @@
 // Eine neue Gruppe beantragt hier ihren Bereich. Das Skript (Aktion „gruppeBeantragen“, apps-script/Antrag.gs)
 // speichert den Antrag im Tab „Antraege“. Freigeschaltet wird er nur im Sheet (Schritt 13.3).
 // Ablauf: Rechenaufgabe holen → Formular ausfüllen → schicken → Danke mit Signal-Knopf (die Gruppe meldet sich dort für den PIN).
-// Keine Kontaktdaten im Formular. Das Feld „falle“ ist für Menschen unsichtbar und bleibt leer (Schutz gegen Roboter).
+// Keine Kontaktdaten im Formular. Seit 1.1.3 das Feld „Wer seid ihr?“ (nur für die Prüfung im Sheet, beim Freischalten geleert). Das Feld „falle“ ist für Menschen unsichtbar und bleibt leer (Schutz gegen Roboter).
 
 import { el, leeren, txt } from '../ui/dom.js';
 import { balken } from '../ui/kopf.js';
@@ -38,6 +38,8 @@ export function antragPruefen(d) {
   if (d.instagram && !/^https:\/\/\S+$/i.test(d.instagram) && !/^@?[A-Za-z0-9._]{1,30}$/.test(d.instagram)) {
     return 'Instagram bitte als Name (zum Beispiel @gruppe) oder als Link mit https:// angeben.';
   }
+  if (txt(d.beschreibung).length < 10) return 'Bitte schreibt kurz, wer ihr seid (mindestens 10 Zeichen).';
+  if (txt(d.beschreibung).length > 500) return 'Der Text „Wer seid ihr?“ ist zu lang (höchstens 500 Zeichen).';
   return '';
 }
 
@@ -69,6 +71,7 @@ export function render(container) {
   const farbe = el('input', { class: 'farbfeld', type: 'color', value: '#368469' });
   const webseite = el('input', { class: 'feld', type: 'url', inputmode: 'url', autocomplete: 'off', placeholder: 'https://' });
   const instagram = el('input', { class: 'feld', type: 'text', autocomplete: 'off', autocapitalize: 'none', placeholder: '@eure-gruppe' });
+  const beschreibung = el('textarea', { class: 'feld', maxlength: '500', rows: '4', required: 'required' });
   const falle = el('input', { type: 'text', name: 'falle', tabindex: '-1', autocomplete: 'off' });
   const frage = el('p', { class: 'antrag-frage', id: 'antrag-frage', text: 'Rechenaufgabe lädt …' });
   const antwort = el('input', {
@@ -110,7 +113,8 @@ export function render(container) {
     main.append(
       el('h1', { text: 'Danke für euren Antrag!' }),
       el('p', { text: 'Der Antrag für „' + gruppenName + '“ ist angekommen.' }),
-      el('p', { text: 'Bitte schreibt uns jetzt kurz über Signal, wer ihr seid. Dann schalten wir eure Gruppe frei und geben euch den PIN auf einem sicheren Weg.' }),
+      el('p', { text: 'Wir prüfen euren Antrag und schalten eure Gruppe frei.' }),
+      el('p', { class: 'antrag-pin', text: 'Den PIN bekommt ihr nicht über die App, sondern persönlich. Schreibt uns darum kurz über Signal, damit wir wissen, wohin wir ihn schicken. Nach der Freischaltung bekommt ihr dort den PIN. Auch bei Fragen oder Problemen erreicht ihr uns dort.' }),
       signal,
       el('p', { class: 'leise', text: 'Eure Gruppe erscheint auf der Startseite, sobald sie freigeschaltet ist.' }),
       zurueckLink()
@@ -132,7 +136,8 @@ export function render(container) {
         kurzname: txt(kurz.value).toLowerCase(),
         farbe: farbe.value,
         webseite: txt(webseite.value),
-        instagram: txt(instagram.value)
+        instagram: txt(instagram.value),
+        beschreibung: txt(beschreibung.value)
       };
       const problem = antragPruefen(d);
       if (problem) { meldung.textContent = problem; return; }
@@ -158,6 +163,8 @@ export function render(container) {
     feld('antrag-farbe', 'Farbe eurer Gruppe', farbe, 'Zum Beispiel aus eurem Logo.'),
     feld('antrag-webseite', 'Webseite (freiwillig)', webseite),
     feld('antrag-instagram', 'Instagram (freiwillig)', instagram),
+    feld('antrag-beschreibung', 'Wer seid ihr?', beschreibung,
+      'Ein paar Sätze für uns zur Prüfung: Was macht eure Gruppe, seit wann gibt es euch? Nur wir sehen den Text. Bitte keine Namen oder Telefonnummern.'),
     el('div', { class: 'antrag-falle', 'aria-hidden': 'true' },
       el('label', { text: 'Bitte leer lassen', for: 'antrag-falle' }), Object.assign(falle, { id: 'antrag-falle' })),
     el('div', { class: 'formfeld' }, frage, antwort),
@@ -167,7 +174,7 @@ export function render(container) {
 
   main.append(
     el('h1', { text: 'Eigene Gruppe eröffnen' }),
-    el('p', { text: 'Eure Klima-Gruppe aus Landau möchte das AktionsDeck nutzen? Füllt das Formular aus. Danach meldet ihr euch kurz über Signal bei uns, wir schalten eure Gruppe frei und geben euch den PIN.' }),
+    el('p', { text: 'Eure Klima-Gruppe aus Landau möchte das AktionsDeck nutzen? Füllt das Formular aus. Wir prüfen euren Antrag, schalten eure Gruppe frei und geben euch den PIN persönlich über Signal.' }),
     el('p', { class: 'leise', text: 'Name, Farbe und Links sind später für alle sichtbar (Startseite und „Info“). Euer Logo könnt ihr uns über Signal schicken.' }),
     form,
     zurueckLink()

@@ -4,7 +4,7 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **1.1.2** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.1.3** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **keine**. Etappe 13 „Gruppen eröffnen sich selbst“ ist mit Version 1.1.2 abgeschlossen (01.11.2026), Festlegungen in 4.11.
@@ -229,7 +229,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
 - System-Tabs: `Gruppen` (gruppe_id, name, kurzname, farbe, sortierung, aktiv, webseite, instagram, weitere_links),
   `Zugang` (zugang_id, gruppe_id, pin_salt, pin_hash, aktiv, gueltig_bis),
   `Log` (zeit, gruppe_id, aktion, tabelle, datensatz_id, anzeigename),
-  `Antraege` (antrag_id, erstellt_am, status, name, kurzname, farbe, webseite, instagram, erledigt_am, gruppe_id; seit 1.1.0, über `list` nicht lesbar).
+  `Antraege` (antrag_id, erstellt_am, status, name, kurzname, farbe, webseite, instagram, erledigt_am, gruppe_id, beschreibung; seit 1.1.0, über `list` nicht lesbar).
   Die Spalte `Gruppen.sortierung` wird seit 1.1.0 nicht mehr gebraucht (Startseite alphabetisch).
 - Daten-Tabs (Spalten siehe `Schema.gs`): Personen, Material, Ausleihe, ToDos, Projekte, Meilensteine, Projekt_Material, Finanzen,
   Protokolle, Reden, TOPs, Kommentare, Learnings, Umfragen, Umfrage_Antworten, Mitteilungen, Ideen,
@@ -389,8 +389,9 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 ### 4.11 Neue Gruppen (Etappe 13)
 
 - **Antrag** auf der Startseite: Kachel „+ Eigene Gruppe eröffnen“ → `#/neue-gruppe` (`js/views/neue-gruppe.js`). Felder: Name (2 bis 60), Abkürzung
-  (`a–z0–9`, 2 bis 12, nicht wie `g4`), Farbe, freiwillig Webseite (`https://`) und Instagram. Rechenaufgabe und unsichtbares Feld `falle`.
-  Keine Kontaktdaten: Danach meldet sich die Gruppe über den Signal-Knopf. Die App prüft wie das Skript (`antragPruefen`).
+  (`a–z0–9`, 2 bis 12, nicht wie `g4`), Farbe, freiwillig Webseite (`https://`) und Instagram, „Wer seid ihr?“ (`beschreibung`, 10 bis 500 Zeichen,
+  nur für die Prüfung im Sheet, beim Freischalten geleert). Rechenaufgabe und unsichtbares Feld `falle`.
+  Keine Kontaktdaten: Für den PIN meldet sich die Gruppe über den Signal-Knopf (Danke-Seite erklärt das). Die App prüft wie das Skript (`antragPruefen`).
 - **Skript** (`apps-script/Antrag.gs`): Aktion `gruppeBeantragen` ohne Login, höchstens 5 offene Anträge und 5 neue pro Tag (`antraege_tag`).
   Name und Abkürzung dürfen bei keiner Gruppe (auch inaktiv) und keinem offenen Antrag vorkommen. Tab `Antraege` ist ein System-Tab (über `list` nicht lesbar).
 - **Freischalten** nur im Sheet: Menü „AktionsDeck“ → „Gruppe freischalten“ (`onOpen`, `gruppeFreischalten`). Ja = freischalten (PIN zweimal),
@@ -520,10 +521,11 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - Layout am PC (12.9): ohne Grenze der Breite, „Mehr ▾“ in der Seitenleiste. Barrierefreiheit (12.10, 12.11): Seitentitel, Fokus, Sprung-Link, Fenster.
   - App-Icon vollflächig und Ladebildschirm (12.12), Fehlerseite (12.13), Editor-Werkzeug zum Sortieren der Tabs (12.14), CSS in 14 Abschnitten (12.15, 12.16).
   - 12.17 (1.0.0): Abschluss, Plan eingearbeitet und gelöscht, Anleitung und Entwicklung App ergänzt.
-- **Etappe 13** (1.1.0 bis 1.1.2, Pull Requests #90 bis #92): Gruppen eröffnen sich selbst.
+- **Etappe 13** (1.1.0 bis 1.1.3, Pull Requests #90 bis #93): Gruppen eröffnen sich selbst.
   - 13.1 (1.1.0): Aktion `gruppeBeantragen` und Tab `Antraege`, Editor-Test `testenAntrag`, Startseite alphabetisch.
   - 13.2 (1.1.1): Seite `#/neue-gruppe` mit Formular, Kachel auf der Startseite, Anleitung und Datenschutz angepasst.
   - 13.3 (1.1.2): Sheet-Menü „Gruppe freischalten“, Foto-Ordner automatisch, Hinweis unter „Was ist neu?“, Plan eingearbeitet und gelöscht.
+  - Nachbesserung (1.1.3): Feld „Wer seid ihr?“ im Antrag und in der Prüfung, Satz zum PIN auf der Danke-Seite.
 
 ---
 
