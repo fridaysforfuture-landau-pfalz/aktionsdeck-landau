@@ -3,7 +3,8 @@
 // Wege (ohne Login):
 //   POST { aktion:'gruppeBeantragen' }                              -> { aufgabe:'3 + 4', schluessel }
 //   POST { aktion:'gruppeBeantragen', schluessel, antwort:'7',
-//          name, kurzname, farbe, webseite, instagram, falle }      -> { gespeichert:true } oder Fehler
+//          name, kurzname, farbe, webseite, instagram, beschreibung, falle } -> { gespeichert:true } oder Fehler
+// beschreibung (seit 1.1.3): „Wer seid ihr?“, 10 bis 500 Zeichen, nur für die Prüfung im Sheet; beim Freischalten geleert.
 // Schutz gegen Roboter und Unsinn: Rechenaufgabe (wie Signal.gs, eigener Vorsatz "antrag"), unsichtbares Feld "falle",
 // höchstens ANTRAG_MAX_OFFEN offene Anträge und ANTRAG_MAX_TAG neue Anträge pro Tag (für alle zusammen).
 // Keine Kontaktdaten: Die Gruppe meldet sich danach selbst über Signal.
@@ -64,6 +65,7 @@ function aktionGruppeBeantragen(p) {
       farbe: d.farbe,
       webseite: d.webseite,
       instagram: d.instagram,
+      beschreibung: d.beschreibung,
       erledigt_am: '',
       gruppe_id: ''
     };
@@ -117,7 +119,13 @@ function antragDaten(p) {
     fehler('ungueltig', 'Instagram bitte als Name (zum Beispiel @gruppe) oder als Link mit https:// angeben.');
   }
 
-  return { name: name, kurzname: kurzname, farbe: farbe, webseite: webseite, instagram: instagram };
+  // Seit 1.1.3: „Wer seid ihr?“ (Zeilenumbrüche bleiben, andere Steuerzeichen nicht)
+  var beschreibung = String(p.beschreibung === undefined || p.beschreibung === null ? '' : p.beschreibung)
+    .replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, ' ').trim();
+  if (beschreibung.length < 10) fehler('ungueltig', 'Bitte schreibt kurz, wer ihr seid (mindestens 10 Zeichen).');
+  if (beschreibung.length > 500) fehler('ungueltig', 'Der Text „Wer seid ihr?“ ist zu lang (höchstens 500 Zeichen).');
+
+  return { name: name, kurzname: kurzname, farbe: farbe, webseite: webseite, instagram: instagram, beschreibung: beschreibung };
 }
 
 // Name und Abkürzung dürfen weder bei einer Gruppe (auch einer nicht aktiven) noch bei einem offenen Antrag vorkommen.
@@ -199,6 +207,7 @@ function antragText(a) {
     '\nFarbe: ' + textVon(a.farbe) +
     (textVon(a.webseite) ? '\nWebseite: ' + textVon(a.webseite) : '') +
     (textVon(a.instagram) ? '\nInstagram: ' + textVon(a.instagram) : '') +
+    (textVon(a.beschreibung) ? '\n\nWer seid ihr?\n' + textVon(a.beschreibung) + '\n' : '') +
     '\nEingegangen: ' + textVon(a.erstellt_am).slice(0, 10);
 }
 
@@ -281,6 +290,7 @@ function antragFreischalten(id, pin) {
     t.sh.getRange(a._zeile, spalte('status')).setValue('freigeschaltet');
     t.sh.getRange(a._zeile, spalte('erledigt_am')).setValue(jetzt());
     t.sh.getRange(a._zeile, spalte('gruppe_id')).setValue(gid);
+    t.sh.getRange(a._zeile, spalte('beschreibung')).setValue('');   // wird nach der Prüfung nicht mehr gebraucht
     protokoll({ gruppe_id: gid }, 'antrag_freigeschaltet', 'Antraege', [id], 'Admin im Sheet');
     var nochOffen = t.zeilen.filter(function (z) { return textKlein(z.status) === 'offen'; }).length - 1;
     return { gruppe_id: gid, name: d.name, nochOffen: nochOffen };
@@ -324,7 +334,7 @@ function testenAntrag() {
   function abgelehnt(fn) {
     try { fn(); return false; } catch (e) { return !!e.code; }
   }
-  var gut = { name: 'Test Gruppe', kurzname: 'tg', farbe: '#12aB34' };
+  var gut = { name: 'Test Gruppe', kurzname: 'tg', farbe: '#12aB34', beschreibung: 'Wir sind eine Testgruppe.' };
   function mit(extra) {
     var o = {};
     Object.keys(gut).forEach(function (k) { o[k] = gut[k]; });
@@ -361,6 +371,9 @@ function testenAntrag() {
   var signal = aufgabe.schluessel.split('.')[0] + '.' + signiere('signal|' + aufgabe.schluessel.split('.')[0] + '|' + summe);
   pruefe(20, 'Schlüssel vom Signal-Knopf gilt hier nicht', abgelehnt(function () { antragAufgabePruefen({ schluessel: signal, antwort: String(summe) }); }), true);
 
+  pruefe(23, 'Text „Wer seid ihr?“ zu kurz abgelehnt', abgelehnt(function () { antragDaten(mit({ beschreibung: 'kurz' })); }), true);
+  pruefe(24, 'Text „Wer seid ihr?“ zu lang abgelehnt', abgelehnt(function () { antragDaten(mit({ beschreibung: new Array(502).join('a') })); }), true);
+  pruefe(25, 'Zeilenumbruch im Text bleibt', antragDaten(mit({ beschreibung: 'Zeile eins\r\nZeile zwei' })).beschreibung, 'Zeile eins\nZeile zwei');
   pruefe(21, 'nächste gruppe_id nach g3 ist g4', antragNaechsteId([{ gruppe_id: 'g1' }, { gruppe_id: 'g3' }], [{ gruppe_id: 'g2' }]), 'g4');
   pruefe(22, 'alte Nummer im Tab Zugang zählt mit', antragNaechsteId([{ gruppe_id: 'g1' }], [{ gruppe_id: 'g5' }]), 'g6');
 

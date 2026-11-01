@@ -83,7 +83,8 @@ Bei öffentlichen Abrufen speichert das Skript keinen Namen.
 
 ## Antrag für eine neue Gruppe
 
-Mit „Eigene Gruppe eröffnen“ auf der Startseite schickt eine Gruppe ihren Namen, eine Abkürzung, eine Farbe und freiwillig Webseite und Instagram. Das Skript speichert den Antrag in der Google-Tabelle. Namen von Personen oder Kontaktdaten werden dabei nicht abgefragt.
+Mit „Eigene Gruppe eröffnen“ auf der Startseite schickt eine Gruppe ihren Namen, eine Abkürzung, eine Farbe, freiwillig Webseite und Instagram und unter „Wer seid ihr?“ einen kurzen Text zur Gruppe. Das Skript speichert den Antrag in der Google-Tabelle. Namen von Personen oder Kontaktdaten werden dabei nicht abgefragt.
+Den Text „Wer seid ihr?“ sehen nur die Admins. Er wird beim Freischalten gelöscht.
 Nach der Freischaltung sind Name, Farbe und Links öffentlich sichtbar (Startseite und „Info“). Abgelehnte Anträge werden gelöscht.
 
 ## Links zu anderen Seiten

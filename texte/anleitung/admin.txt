@@ -10,7 +10,7 @@ Neue Gruppen beantragen ihren Bereich selbst auf der Startseite mit „+ Eigene 
 
 1. Das Google Sheet öffnen. Oben in der Menüleiste steht **„AktionsDeck“** (erscheint ein paar Sekunden nach dem Öffnen).
 2. „AktionsDeck“ → **„Gruppe freischalten“** klicken. Beim allerersten Mal fragt Google nach einer Erlaubnis: zustimmen.
-3. Ein Fenster zeigt den ältesten offenen Antrag. **Ja** = freischalten, **Nein** = ablehnen (der Antrag wird gelöscht), **Abbrechen** = später entscheiden.
+3. Ein Fenster zeigt den ältesten offenen Antrag mit dem Text „Wer seid ihr?“. **Ja** = freischalten, **Nein** = ablehnen (der Antrag wird gelöscht), **Abbrechen** = später entscheiden.
 4. Bei „Ja“: den PIN zweimal eintippen (mindestens 6 Zeichen, besser 8 oder mehr aus Buchstaben und Ziffern).
 5. Das Skript legt die Gruppe im Tab `Gruppen` an (nächste freie `gruppe_id`), setzt den Zugang im Tab `Zugang` und legt den Foto-Ordner in Google Drive an. Am Ende steht, was geklappt hat.
 6. Den PIN gibst du persönlich oder auf einem sicheren Weg an die Gruppe weiter. Nach höchstens 2 Minuten steht die Gruppe auf der Startseite.
