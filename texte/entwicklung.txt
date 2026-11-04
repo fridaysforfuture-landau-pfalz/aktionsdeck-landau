@@ -27,6 +27,7 @@ Jede Etappe beginnt mit einem Plan und Rückfragen. Nach jedem Schritt prüft ei
 
 Ab Version 1.0 steht hier jede neue Version mit einer kurzen Zeile, die neueste oben.
 
+- **1.1.4** (04.11.2026): Wer den Link zur App verschickt (zum Beispiel über Signal oder WhatsApp), sieht jetzt eine Vorschau mit Bild und kurzer Beschreibung.
 - **1.1.3** (01.11.2026): Beim Antrag einer neuen Gruppe gibt es das Feld „Wer seid ihr?“. Die Danke-Seite erklärt, wie die Gruppe den PIN bekommt.
 - **1.1.2** (01.11.2026): Neue Gruppen werden mit wenigen Klicks im Google Sheet freigeschaltet. Offene Anträge erscheinen für die Admins unter „Was ist neu?“.
 - **1.1.1** (01.11.2026): Neue Gruppen können ihren Bereich auf der Startseite selbst beantragen („+ Eigene Gruppe eröffnen“).

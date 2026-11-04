@@ -4,7 +4,7 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **1.1.3** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.1.4** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **keine**. Etappe 13 „Gruppen eröffnen sich selbst“ ist mit Version 1.1.2 abgeschlossen (01.11.2026), Festlegungen in 4.11.
@@ -213,6 +213,8 @@ Hinweis für die Person in jeder Prüfliste: Nach dem Merge die Action grün abw
 - **Content-Security-Policy** als `<meta>` in `index.html`: Skripte und Stile nur von der eigenen Seite, Bilder von allen `https:`-Adressen (Google leitet Drive-Vorschaubilder auf wechselnde Adressen um; nur Drive und
   `googleusercontent.com` blockierte die Fotos in 0.34.1),
   Verbindungen nur zum Skript. Neue Adressen nach außen hier eintragen, sonst blockiert der Browser sie. Kein Inline-Skript, kein `style="…"` im HTML.
+  **Link-Vorschau (seit 1.1.4):** `index.html` hat `description`, Open-Graph-Tags (`og:…`) und `twitter:card`; Bild `icons/vorschau.png` (1200 x 630).
+  Bild und `og:url` brauchen die volle Adresse mit `https://`. Zieht die App um, beide Adressen anpassen. Das Bild steht nicht in `HUELLE` (die App braucht es nicht).
   `404.html` (seit 0.34.10) hat eine eigene, engere Policy und `<base href="/aktionsdeck-landau/">`: Zieht die App in einen anderen Ordner, dort anpassen.
 - **Gleichzeitiges Arbeiten:** Beim Ändern schickt die App den bekannten Wert `geaendert_am` als `bekannt` mit.
   Weicht er ab, zeigt sie einen Hinweis statt zu überschreiben. Löschen ist weich (`geloescht = TRUE`).
@@ -469,7 +471,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 
 - Hauptordner: `index.html`, `404.html` (Fehlerseite von GitHub Pages, seit 0.34.10), `manifest.webmanifest`, `sw.js`, `README.md`, `LICENSE`, `CLAUDE.md` (zeigt nur hierher).
 - `docs/`: `STAND.md` (diese Datei); während einer Etappe ihr Plan.
-- `icons/`: `icon.svg` (Favicon, Ladebildschirm), `icon-192.png`, `icon-512.png`, `icon-maskable.svg`, `icon-maskable-192.png`, `icon-maskable-512.png` (vollflächig für Android, seit 0.34.9), `apple-touch-icon.png` (iPhone, vollflächig), `logo.svg`, `gruppen/`.
+- `icons/`: `icon.svg` (Favicon, Ladebildschirm), `icon-192.png`, `icon-512.png`, `icon-maskable.svg`, `icon-maskable-192.png`, `icon-maskable-512.png` (vollflächig für Android, seit 0.34.9), `apple-touch-icon.png` (iPhone, vollflächig), `logo.svg`, `vorschau.png` (Bild der Link-Vorschau, 1200 x 630, seit 1.1.4), `gruppen/`.
 - `css/`: `base.css` (alle Farb-Variablen, hell und dunkel), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, nach Themen).
 - `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
   Team.gs, Wiki.gs, Konto.gs, Signal.gs, Antrag.gs (Anträge neuer Gruppen, seit 1.1.0), Setup.gs, Werkzeuge.gs (nur Editor-Werkzeuge, keine Bereitstellung nötig).
@@ -526,6 +528,7 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 13.2 (1.1.1): Seite `#/neue-gruppe` mit Formular, Kachel auf der Startseite, Anleitung und Datenschutz angepasst.
   - 13.3 (1.1.2): Sheet-Menü „Gruppe freischalten“, Foto-Ordner automatisch, Hinweis unter „Was ist neu?“, Plan eingearbeitet und gelöscht.
   - Nachbesserung (1.1.3): Feld „Wer seid ihr?“ im Antrag und in der Prüfung, Satz zum PIN auf der Danke-Seite.
+- **Einzelschritt** (1.1.4, 04.11.2026): Link-Vorschau mit Open-Graph-Tags und Bild `icons/vorschau.png`.
 
 ---
 
