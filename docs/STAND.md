@@ -4,7 +4,7 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **1.1.4** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.1.5** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **keine**. Etappe 13 „Gruppen eröffnen sich selbst“ ist mit Version 1.1.2 abgeschlossen (01.11.2026), Festlegungen in 4.11.
@@ -528,7 +528,7 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 13.2 (1.1.1): Seite `#/neue-gruppe` mit Formular, Kachel auf der Startseite, Anleitung und Datenschutz angepasst.
   - 13.3 (1.1.2): Sheet-Menü „Gruppe freischalten“, Foto-Ordner automatisch, Hinweis unter „Was ist neu?“, Plan eingearbeitet und gelöscht.
   - Nachbesserung (1.1.3): Feld „Wer seid ihr?“ im Antrag und in der Prüfung, Satz zum PIN auf der Danke-Seite.
-- **Einzelschritt** (1.1.4, 04.11.2026): Link-Vorschau mit Open-Graph-Tags und Bild `icons/vorschau.png`.
+- **Einzelschritt** (1.1.4 und 1.1.5, 04.11.2026): Link-Vorschau mit Open-Graph-Tags und Bild `icons/vorschau.png`.
 
 ---
 
