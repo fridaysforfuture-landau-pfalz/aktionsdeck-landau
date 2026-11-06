@@ -19,8 +19,8 @@ function schmal() {
   return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 599px)').matches;
 }
 
-// "20.10."
-function kurzDatum(d) {
+// "20.10." (auch im Zeitplan eines Projekts, projekt-zeitplan.js)
+export function kurzDatum(d) {
   return datumText(d).slice(0, 6);
 }
 
@@ -46,7 +46,8 @@ function zeitraum(beitraege, bezug) {
 
 // Beschriftungen ohne Überlappung: zuerst die wichtigen (Bezug, Heute), dann der Rest.
 // liste: [{ tag, text, klasse, wichtig }]. abstand: kleinster Abstand als Anteil der Breite.
-function beschriftungen(r, liste, abstand) {
+// r: { von, bis, anteil(tag), links(tag) }. Auch im Zeitplan eines Projekts benutzt.
+export function beschriftungen(r, liste, abstand) {
   const gewaehlt = [];
   liste.slice().sort(function (a, b) { return (b.wichtig ? 1 : 0) - (a.wichtig ? 1 : 0); })
     .forEach(function (x) {

@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **1.1.6** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.2.0** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-- Laufende Etappe: **keine**. Etappe 13 „Gruppen eröffnen sich selbst“ ist mit Version 1.1.2 abgeschlossen (01.11.2026), Festlegungen in 4.11.
-- Nächster Schritt: offen. Die Person prüft 13.3 und sammelt Ideen; eine neue Etappe beginnt mit einem Plan mit Rückfragen (Abschnitt 7).
+- Laufende Etappe: **14 „Zeitplan (Gantt-Diagramm) pro Projekt“**, Plan in `docs/PLAN-ETAPPE-14.md`. Etappe 13 ist mit Version 1.1.2 abgeschlossen (01.11.2026), Festlegungen in 4.11.
+- Nächster Schritt: 14.2 (nach Prüfung von 14.1 und den Antworten auf die Rückfragen im Plan).
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -251,6 +251,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
   ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
 - Etappe 12 „Prüfung und Qualität“ ist fertig (0.33.16 bis 1.0.0, 28. und 29.10.2026). **Version 1.0.0** ist die erste fertige Version.
 - Etappe 13 „Gruppen eröffnen sich selbst“ ist fertig (1.1.0 bis 1.1.2, 01.11.2026): Antrag auf der Startseite, Freischalten im Sheet-Menü, Hinweis für Admins. Die Person prüft noch 13.3 im echten Sheet.
+- Etappe 14 „Zeitplan pro Projekt“ läuft: 14.1 (1.2.0) Teil „Zeitplan“ im Projekt, nur Anzeige, Sheet unverändert.
   Berichte zu Sicherheit, Geschwindigkeit, Ungenutztem, Barrierefreiheit und CSS liegen nur in den Projektdateien im Chat (`pruefung/`), nicht im Repo.
 - Skript: Stand aus 12.8 ist bereitgestellt (`testenRechte` ok). `Werkzeuge.gs` (12.5, 12.14) braucht keine Bereitstellung.
   Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt, Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
@@ -300,7 +301,10 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 ### 4.2 Projekte (Etappe 4, 11)
 
 - Status `planung|aktiv|erledigt|archiviert`. Erledigt = Archiv (Filter Archiv). „In Planung“ als Aufklapper unten, nie im Kalender.
-- Teile im Block: ToDos (mit Meilensteinen und „Offene Hüte“), Material, Finanzen, Learnings, Reden, Team, Mobi. Sprung per `#/g/<kurz>/projekte/<id>`.
+- **Zeitplan** (seit 1.2.0, `js/views/projekt-zeitplan.js`): erster Teil im Block, Gantt-Diagramm nur zur Anzeige. Zeilen Projekt (Start bis Aktion, sonst erstes bis
+  letztes Datum), je Meilenstein Balken und Raute, ToDos je Meilenstein zum Aufklappen, „Ohne Meilenstein“, Sammelzeile Mobi (ohne „Idee“).
+  Anfang eines Meilensteins berechnet (`zeitplanDaten`): erstes fälliges ToDo, sonst Meilenstein davor, sonst Projektstart. Antippen zeigt ein Info-Fenster.
+- Teile im Block: Zeitplan, ToDos (mit Meilensteinen und „Offene Hüte“), Material, Finanzen, Learnings, Reden, Team, Mobi. Sprung per `#/g/<kurz>/projekte/<id>`.
 - Abschließen gesperrt, wenn festes Material draußen ist. Warnung bei offenen ToDos und nicht beschafftem Material.
 - `projektLoeschen` (Skript) prüft zuerst Material draußen (Code `draussen`), löscht weich alle abhängigen Tabs; Learnings und Protokolle bleiben.
 - **Standard-ToDos** beim Anlegen (Anhang A, `js/vorlagen.js` `STANDARD_TODOS`), Fälligkeit vom Aktionsdatum.
@@ -412,7 +416,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - **Hilfsmodule, die du vor dem Neubauen suchst und wiederverwendest:** `js/ui/dom.js` (`el`, `leeren`, `txt`; seit 0.34.6 `txt` nur noch dort), `js/ui/fenster.js` (`zeigeFenster`),
   `js/ui/form.js` (`baueFormular`; Feldtypen text, zahl, datum, zeit, farbe, langtext, auswahl, bool, foto; Vorschlag darf `{ wert, label }` sein),
   `js/ui/table.js` (`zeigeListe`), `js/ui/toast.js`, `js/ui/kommentare.js` (`baueKommentare`), `js/views/todos-rechnen.js`,
-  `js/views/kalender-rechnen.js`, `js/views/mobi-rechnen.js`, `js/wiki-format.js` (`zeichneText`), `js/views/wiki-rechnen.js`,
+  `js/views/kalender-rechnen.js`, `js/views/mobi-rechnen.js`, `js/views/mobi-zeitstrahl.js` (`beschriftungen`, `kurzDatum`: Zeitachse, auch im Zeitplan), `js/wiki-format.js` (`zeichneText`), `js/views/wiki-rechnen.js`,
   `js/gruppeninfo.js` (Kontostand und Cloud-Link), `js/views/erinnerungen-rechnen.js`, `js/views/uebersicht-rechnen.js`,
   `js/ui/druck.js` (`drucke`), `js/ui/darstellung.js` (`istDunkel`), `js/views/team-namen.js` (Namen mit Rollen für andere Reiter).
   Lies die Datei, bevor du sie benutzt. Rate keine Signaturen.
@@ -471,7 +475,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 ## 6. Dateiübersicht
 
 - Hauptordner: `index.html`, `404.html` (Fehlerseite von GitHub Pages, seit 0.34.10), `manifest.webmanifest`, `sw.js`, `README.md`, `LICENSE`, `CLAUDE.md` (zeigt nur hierher).
-- `docs/`: `STAND.md` (diese Datei); während einer Etappe ihr Plan.
+- `docs/`: `STAND.md` (diese Datei); während einer Etappe ihr Plan (jetzt `PLAN-ETAPPE-14.md`).
 - `icons/`: `icon.svg` (Favicon, Ladebildschirm), `icon-192.png`, `icon-512.png`, `icon-maskable.svg`, `icon-maskable-192.png`, `icon-maskable-512.png` (vollflächig für Android, seit 0.34.9), `apple-touch-icon.png` (iPhone, vollflächig), `logo.svg`, `vorschau.png` (Bild der Link-Vorschau, 1200 x 630, seit 1.1.4), `gruppen/`.
 - `css/`: `base.css` (alle Farb-Variablen, hell und dunkel), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, nach Themen).
 - `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
@@ -481,7 +485,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - `js/views/`: gruppen, neue-gruppe, login, nicht-gefunden, start, start-umfragen, start-brett, mehr, info, platzhalter, ideen,
   material, material-detail, material-rechnen, material-buchen, material-vormerken,
   todos, todos-rechnen, todos-abhaken, todos-hut,
-  projekte, projekt-rechnen, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, projekt-reden, projekt-team, uebersicht, uebersicht-rechnen,
+  projekte, projekt-rechnen, projekt-zeitplan, projekt-todos, projekt-material, projekt-finanzen, projekt-learnings, projekt-reden, projekt-team, uebersicht, uebersicht-rechnen,
   kalender, kalender-rechnen, kalender-vorlagen, termine, termine-liste,
   mobi, mobi-plan, mobi-eintrag, mobi-rechnen, mobi-kachel, mobi-sammlung, mobi-todo, mobi-zeitstrahl,
   protokoll, protokoll-rechnen, protokoll-eintrag, protokoll-marken, protokoll-vorschlaege, tops, reden, rede-eintrag, rede-text,
@@ -495,7 +499,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 
 ## 7. Pläne
 
-- **Jetzt:** keine Etappe geplant. Ideen sammelt die Person. Jede neue Etappe beginnt mit einem Plan mit Rückfragen
+- **Jetzt:** Etappe 14 „Zeitplan pro Projekt“ (`docs/PLAN-ETAPPE-14.md`). Ideen sammelt die Person. Jede neue Etappe beginnt mit einem Plan mit Rückfragen
   (`docs/PLAN-ETAPPE-<n>.md`), dann Schritt für Schritt je ein Pull Request; nach jedem Schritt prüft die Person am Handy und am PC.
 - **Mögliche Aufgaben nach 1.0** (aus Etappe 12, Einzelheiten in 3.2): Schriftgrößen in `rem`, gemeinsamer Baustein für ähnliche Listen,
   Hauptseite neben dem App-Ordner ansehen (Service Worker), Farben mit zu wenig Kontrast nur auf Wunsch.
@@ -531,6 +535,8 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - Nachbesserung (1.1.3): Feld „Wer seid ihr?“ im Antrag und in der Prüfung, Satz zum PIN auf der Danke-Seite.
 - **Einzelschritt** (1.1.4 und 1.1.5, 04.11.2026): Link-Vorschau mit Open-Graph-Tags und Bild `icons/vorschau.png`.
 - **Einzelschritt** (1.1.6, 06.11.2026): Filter „Ort“ im Reiter Material (alle Gruppen). Dazu Greenpeace-Materialliste als Zeilen fürs Sheet (nur in den Projektdateien, `material/`).
+- **Etappe 14** (ab 1.2.0, 06.11.2026): Zeitplan (Gantt-Diagramm) pro Projekt.
+  - 14.1 (1.2.0): Teil „Zeitplan“ im Projekt, Anleitung ergänzt.
 
 ---
 

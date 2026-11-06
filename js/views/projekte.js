@@ -28,6 +28,7 @@ import { baueTeamTeil } from './projekt-team.js';
 import { ladeTeamKlein, teamKlein } from './team-namen.js';
 import { baueIdeenTeil } from './ideen.js';
 import { baueMobiTeil } from './mobi-plan.js';
+import { baueZeitplanTeil } from './projekt-zeitplan.js';
 import { STANDARD_TODOS, faelligAus } from '../vorlagen.js';
 import * as jahresUebersicht from './uebersicht.js';
 
@@ -294,6 +295,18 @@ export async function render(container, ctx) {
       else delete offen[id];
     });
 
+    // Zeitplan (Gantt-Diagramm, 14.1): nur Anzeige aus Projekt, Meilensteinen, ToDos und Mobi
+    const planKey = id + ':zeitplan';
+    const zeitplanTeil = baueZeitplanTeil({
+      projekt: p,
+      holeDaten: function () { return daten; },
+      offen: !!merk.teile[planKey],
+      beiToggle: function (o) {
+        if (o) merk.teile[planKey] = true;
+        else delete merk.teile[planKey];
+      }
+    });
+
     const teilKey = id + ':todos';
     const todoTeil = baueTodoTeil({
       ctx: ctx,
@@ -439,6 +452,7 @@ export async function render(container, ctx) {
           ]),
           aehnliche(p)
         ),
+        zeitplanTeil,
         todoTeil,
         materialTeil,
         mobiTeil,
