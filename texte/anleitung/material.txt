@@ -4,6 +4,10 @@
 
 Festes Material, zum Beispiel ein Pavillon oder ein Megafon, kommt nach der Aktion zurück. Die App zählt, wie viel davon gerade draußen ist. Verbrauchsmaterial wie Flyer oder Kreide wird weniger, wenn ihr etwas mitnehmt, und wieder mehr, wenn ihr Reste zurückbringt. Verfügbar ist also immer der Bestand minus das, was mitgenommen wurde, plus das, was zurückkam.
 
+## Suchen und filtern
+
+Oben im Reiter suchst du nach einem Namen oder Wort. Daneben filterst du nach Kategorie, nach Ort (zum Beispiel nur das Material im Keller) und danach, ob das Material aktiv ist. Die Listen für Kategorie und Ort zeigen alles, was im Material eurer Gruppe eingetragen ist.
+
 ## Ausleihen und zurückgeben
 
 Mit „Ausleihen“ trägst du ein, wer das Material mitnimmt und wann. Auf Wunsch gibst du dazu ein Projekt an. Beim Zurückgeben trägst du die Anzahl ein. Bei festem Material kannst du angeben, ob etwas davon kaputt ist.

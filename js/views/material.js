@@ -48,6 +48,7 @@ export async function render(container, ctx) {
     class: 'feld', type: 'search', placeholder: 'Suchen …', 'aria-label': 'Suchen'
   });
   const kat = el('select', { class: 'feld', 'aria-label': 'Kategorie' });
+  const ortWahl = el('select', { class: 'feld', 'aria-label': 'Ort' });
   const stat = el('select', { class: 'feld', 'aria-label': 'Status' },
     el('option', { value: 'aktiv', text: 'Aktive' }),
     el('option', { value: 'inaktiv', text: 'Nicht aktive' }),
@@ -91,7 +92,7 @@ export async function render(container, ctx) {
     el('div', { class: 'kopfzeile' }, el('h1', { text: 'Material' }), neuKnopf),
     normal,
     hinweis,
-    el('div', { class: 'filterzeile' }, suche, kat, stat),
+    el('div', { class: 'filterzeile filter-material' }, suche, kat, ortWahl, stat),
     status,
     box,
     leiste
@@ -226,6 +227,16 @@ export async function render(container, ctx) {
     kat.append(el('option', { value: '', text: 'Alle Kategorien' }));
     liste.forEach(function (k) { kat.append(el('option', { value: k, text: k })); });
     kat.value = liste.indexOf(gewaehltK) >= 0 ? gewaehltK : '';
+  }
+
+  // Filter „Ort“: alle Orte, die im Material vorkommen
+  function orteAufbauen() {
+    const gewaehltO = ortWahl.value;
+    const liste = werteVon('ort');
+    leeren(ortWahl);
+    ortWahl.append(el('option', { value: '', text: 'Alle Orte' }));
+    liste.forEach(function (o) { ortWahl.append(el('option', { value: o, text: o })); });
+    ortWahl.value = liste.indexOf(gewaehltO) >= 0 ? gewaehltO : '';
   }
 
   // ---- Detail ----
@@ -383,6 +394,7 @@ export async function render(container, ctx) {
     const out = ausgeliehen(daten.ausleihe);
     const q = suche.value.trim().toLowerCase();
     const k = kat.value;
+    const o = ortWahl.value;
     const st = stat.value;
 
     const zeilen = daten.material.map(function (m) {
@@ -397,6 +409,7 @@ export async function render(container, ctx) {
         if (st === 'inaktiv' && !inaktiv) return false;
       }
       if (k && String(z.kategorie || '').trim() !== k) return false;
+      if (o && String(z.ort || '').trim() !== o) return false;
       if (!q) return true;
       return [z.name, z.kategorie, z.unterkategorie, z.ort, z.notiz]
         .join(' ').toLowerCase().indexOf(q) >= 0;
@@ -471,6 +484,7 @@ export async function render(container, ctx) {
     if (!neu.projekte) neu.projekte = [];
     daten = neu;
     kategorienAufbauen();
+    orteAufbauen();
     if (modus) {
       // Auswahl aufräumen: nur was noch da und wählbar ist
       const out = ausgeliehen(daten.ausleihe);
@@ -516,6 +530,7 @@ export async function render(container, ctx) {
 
   suche.addEventListener('input', zeichne);
   kat.addEventListener('change', zeichne);
+  ortWahl.addEventListener('change', zeichne);
   stat.addEventListener('change', zeichne);
   modusAnzeige();
   ctx.setzeRefresh(function () { return laden(false); });
