@@ -4,7 +4,7 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **1.1.5** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.1.6** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **keine**. Etappe 13 „Gruppen eröffnen sich selbst“ ist mit Version 1.1.2 abgeschlossen (01.11.2026), Festlegungen in 4.11.
@@ -323,6 +323,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
   Verfügbar = anzahl − Summe mitgenommen + Summe zurueck.
 - `buchen`: `{ art, person, datum, projekt_id, notiz, positionen:[{material_id, anzahl, defekt, projekt_id}] }`, höchstens 100.
   Fehlercodes: ungueltig, zuwenig, nicht_gefunden, beschaeftigt. Ausleihe wird nur angehängt, nur über `buchen`.
+- Filter oben: Suche, Kategorie, Ort (seit 1.1.6), Status. Kategorie und Ort bieten alle Werte an, die im Material der Gruppe stehen.
 - Vormerken: Zeile in Projekt_Material, senkt die Verfügbarkeit nie. „Auch vorgemerkt für …“ nennt nur aktive Projekte.
 - Foto-Upload: Browser verkleinert auf 1000 px, Skript prüft JPEG, speichert in `FOTO_ORDNER_<gruppe_id>`.
 
@@ -529,6 +530,7 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 13.3 (1.1.2): Sheet-Menü „Gruppe freischalten“, Foto-Ordner automatisch, Hinweis unter „Was ist neu?“, Plan eingearbeitet und gelöscht.
   - Nachbesserung (1.1.3): Feld „Wer seid ihr?“ im Antrag und in der Prüfung, Satz zum PIN auf der Danke-Seite.
 - **Einzelschritt** (1.1.4 und 1.1.5, 04.11.2026): Link-Vorschau mit Open-Graph-Tags und Bild `icons/vorschau.png`.
+- **Einzelschritt** (1.1.6, 06.11.2026): Filter „Ort“ im Reiter Material (alle Gruppen). Dazu Greenpeace-Materialliste als Zeilen fürs Sheet (nur in den Projektdateien, `material/`).
 
 ---
 

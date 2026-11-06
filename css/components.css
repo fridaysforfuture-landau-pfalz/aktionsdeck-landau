@@ -466,6 +466,7 @@ p.notiz.erledigt {
   .filterzeile { grid-template-columns: 2fr 1fr 1fr; }
   .filterzeile.filter-todos { grid-template-columns: repeat(2, 1fr); }
   .filterzeile.filter-projekte { grid-template-columns: 2fr 1fr; }
+  .filterzeile.filter-material { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (min-width: 960px) {
@@ -473,6 +474,7 @@ p.notiz.erledigt {
   .karten-liste { display: none; }
   .auswahl-leiste { bottom: 16px; }
   .filterzeile.filter-todos { grid-template-columns: repeat(4, 1fr); }
+  .filterzeile.filter-material { grid-template-columns: 2fr 1fr 1fr 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
