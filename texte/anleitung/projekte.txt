@@ -28,9 +28,10 @@ ToDos ohne Fälligkeitsdatum stehen nicht im Zeitplan. Der Zeitplan speichert ni
 
 ## Drucken
 
-In den Teilen „ToDos“ und „Material“ eines Projekts gibt es den Knopf „🖨 Drucken“. Er öffnet den Druckdialog deines Geräts mit einem schlichten Blatt, schwarz auf weiß und ohne Leisten und Knöpfe. Statt zu drucken kannst du dort auch „Als PDF speichern“ wählen.
+In den Teilen „Zeitplan“, „ToDos“ und „Material“ eines Projekts gibt es den Knopf „🖨 Drucken“. Er öffnet den Druckdialog deines Geräts mit einem schlichten Blatt, schwarz auf weiß und ohne Leisten und Knöpfe. Statt zu drucken kannst du dort auch „Als PDF speichern“ wählen.
 
 - **Material** druckt eine Packliste: alle Positionen mit Menge, Ort im Lager und einem leeren Kästchen zum Abhaken beim Packen.
+- **Zeitplan** druckt das Diagramm quer und in Farbe, mit allen ToDos aufgeklappt.
 - **ToDos** druckt alle ToDos des Projekts, geordnet nach Meilensteinen, mit Verantwortlichen und Fälligkeit. Erledigte sind angekreuzt und durchgestrichen.
 
 ## Ein Projekt abschließen
