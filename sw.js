@@ -3,7 +3,7 @@
 // Eine neue Version lädt im Hintergrund und wartet, bis die App „Jetzt neu laden“ schickt (js/app.js).
 // Daten der API liegen nicht hier, sondern in IndexedDB (js/cache.js).
 
-const VERSION = '1.1.6';
+const VERSION = '1.2.0';
 const CACHE = 'aktionsdeck-' + VERSION;
 
 const HUELLE = [
@@ -63,6 +63,7 @@ const HUELLE = [
   'js/views/uebersicht-rechnen.js',
   'js/views/projekt-rechnen.js',
   'js/views/projekt-todos.js',
+  'js/views/projekt-zeitplan.js',
   'js/views/projekt-material.js',
   'js/views/projekt-finanzen.js',
   'js/views/projekt-learnings.js',

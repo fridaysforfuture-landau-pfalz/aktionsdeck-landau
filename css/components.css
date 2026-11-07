@@ -1457,8 +1457,86 @@ p.notiz.erledigt {
 .jahr-liste { margin: 6px 0 0; padding-left: 20px; }
 .jahr-liste li { margin: 2px 0; }
 
+/* Zeitplan (Gantt-Diagramm): Name links, Bahn rechts; Achse, Striche und Linien wie im Mobi-Zeitstrahl (mz-…) */
+.zeitplan { display: grid; gap: 2px; margin-top: 4px; }
+.zp-zeile { display: grid; grid-template-columns: 200px 1fr; align-items: center; gap: 8px; min-height: 30px; }
+.zp-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.zp-name > span:last-child { overflow: hidden; text-overflow: ellipsis; }
+.zp-name-fett { font-weight: 700; }
+.zp-name-todo { padding-left: 22px; color: var(--text-leise); }
+.zp-name-knopf {
+  min-height: 44px;
+  margin: -7px 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.zp-name-knopf:focus-visible { outline: 2px solid var(--gruppe); outline-offset: 2px; }
+.zp-pfeil-auf { transform: rotate(90deg); }
+.zp-bahn .mz-linie { z-index: 1; pointer-events: none; }
+.zp-frist { border-left: 2px solid var(--frist-rosa); }
+.zp-frist-text { color: var(--frist-rosa); font-weight: 600; }
+.zp-balken {
+  position: absolute;
+  top: 7px;
+  height: 16px;
+  min-width: 6px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: var(--gruppe);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Unsichtbar größere Tippfläche (44 px hoch) um den schmalen Balken */
+.zp-balken::after { content: ''; position: absolute; inset: -14px 0; }
+.zp-balken:focus-visible, .zp-raute:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.zp-ms { background: var(--gruen-hell); box-shadow: inset 0 0 0 1px var(--gruen); }
+.zp-ms.zp-erreicht { background: var(--grau-hell); box-shadow: none; }
+.zp-ms.zp-ueber { box-shadow: inset 0 0 0 2px var(--fehler); }
+.zp-fuell { position: absolute; top: 0; bottom: 0; left: 0; background: var(--gruen); }
+.zp-raute {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 14px;
+  height: 14px;
+  min-height: 0;
+  padding: 0;
+  border: 2px solid var(--flaeche);
+  background: var(--gruen);
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow: 0 0 0 1px var(--schatten-ring);
+  cursor: pointer;
+}
+.zp-raute::after { content: ''; position: absolute; inset: -13px; }
+.zp-raute.zp-erreicht { background: var(--grau-hell); }
+.zp-raute.zp-ueber { border-color: var(--fehler); }
+.zp-bahn .mz-punkt { z-index: 2; }
+.mz-punkt.zp-offen { background: var(--gruppe); }
+.mz-punkt.zp-mobi { background: var(--pink); }
+
 @media (max-width: 599px) {
   .projekt-aktionen { justify-content: flex-start; flex-wrap: wrap; }
+
+  /* Zeitplan am Handy: Name über der Bahn */
+  .zp-zeile { grid-template-columns: 1fr; gap: 0; }
+  .zp-kopf .zp-name { display: none; }
+  .zp-name-todo { padding-left: 14px; }
 }
 
 @media (min-width: 960px) {
