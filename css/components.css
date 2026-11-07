@@ -2753,4 +2753,10 @@ a,
   .druck-info { font-size: 10pt; }
   .druck-liste li.fertig strong { text-decoration: line-through; }
   .druck-fuss { margin-top: 16pt; font-size: 9pt; }
+
+  /* Zeitplan (Gantt) quer und mit Farben; eine Zeile bricht nicht über zwei Seiten */
+  @page quer { size: A4 landscape; margin: 12mm; }
+  body.druckt .druckblatt.quer { page: quer; }
+  .druckblatt .zeitplan { -webkit-print-color-adjust: exact; print-color-adjust: exact; font-size: 10pt; }
+  .druckblatt .zp-zeile { break-inside: avoid; }
 }

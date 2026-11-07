@@ -27,6 +27,7 @@ Jede Etappe beginnt mit einem Plan und Rückfragen. Nach jedem Schritt prüft ei
 
 Ab Version 1.0 steht hier jede neue Version mit einer kurzen Zeile, die neueste oben.
 
+- **1.2.2** (07.11.2026): Den Zeitplan eines Projekts kannst du jetzt drucken oder als PDF speichern, quer und in Farbe.
 - **1.2.1** (07.11.2026): Im Zeitplan eines Projekts kannst du ToDos und Meilensteine direkt bearbeiten und abhaken.
 - **1.2.0** (06.11.2026): Jedes Projekt hat jetzt einen Teil „Zeitplan“. Er zeigt Projekt, Meilensteine, ToDos und Mobi-Beiträge auf einer Zeitachse (ein Gantt-Diagramm).
 - **1.1.6** (06.11.2026): Im Reiter Material kannst du jetzt auch nach Ort filtern, zum Beispiel nur das Material im Keller.
