@@ -1,6 +1,6 @@
 # Plan: Zeitplan (Gantt-Diagramm) pro Projekt
 
-Stand: 06.11.2026 · **Etappe 14** · 14.1 gebaut mit Version 1.2.0 (nach den Vorschlägen unten). Die Rückfragen in Abschnitt 5 sind noch offen.
+Stand: 07.11.2026 · **Etappe 14** · 14.1 (1.2.0) und 14.2 (1.2.1) gebaut. Antworten auf die Rückfragen in Abschnitt 5.
 
 ## 1. Worum es geht
 
@@ -73,6 +73,9 @@ Weitere Lücken (keine Änderung nötig, nur gut zu wissen):
 Nach jedem Schritt prüfst du am Handy und am PC, dann kommt der nächste.
 
 ## 5. Rückfragen
+
+**Antworten (07.11.2026):** 1 ja, Etappe 14 mit 1.2.0. 2 Weg A (berechnet, keine neue Spalte). 3 Mobi nur als Sammelzeile.
+4 ToDos zugeklappt. 5 Teil über „ToDos“ okay. 6 kein gemeinsamer Zeitplan aller Projekte. Damit entfällt Weg B in 14.2.
 
 1. **Etappe oder Einzelschritt?** Ich schlage Etappe 14 mit Version 1.2.0 vor (neue Etappe = mittlere Zahl). Passt das?
 2. **Anfang der Meilenstein-Balken:** Weg A (berechnet, ohne Sheet-Änderung) oder gleich Weg B (neue Spalte `start_datum`)?

@@ -7,7 +7,11 @@
 // frühestes Fälligkeitsdatum seiner ToDos, sonst das Datum des Meilensteins davor, sonst der Projektstart.
 // Wird von projekte.js benutzt. Der Teil klappt auf und zu (Zustand liegt in projekte.js).
 //
-// opt: { projekt, holeDaten() -> { todos, meilensteine, mobi }, offen (Teil aufgeklappt?), beiToggle(offen) }
+// Seit 14.2: Im Fenster eines ToDos oder Meilensteins gibt es „Bearbeiten“ und „Erledigt“ (Meilenstein nur ohne ToDos).
+// Die Formulare und das Speichern kommen aus dem Teil „ToDos“ (projekt-todos.js füllt opt.aktionen).
+//
+// opt: { projekt, holeDaten() -> { todos, meilensteine, mobi }, offen (Teil aufgeklappt?), beiToggle(offen),
+//        aktionen: { todoBearbeiten(t), todoAbhaken(t, wert), meilensteinBearbeiten(m), meilensteinAbhaken(m, wert) } }
 
 import { el, txt } from '../ui/dom.js';
 import { zeigeFenster } from '../ui/fenster.js';
@@ -139,11 +143,26 @@ function paare(liste) {
   return dl;
 }
 
-function infoFenster(titel, liste, hinweis) {
-  zeigeFenster(titel, el('div', null,
+// knoepfe: [{ text, klasse, aktion }] (freiwillig). Ein Knopf schließt zuerst das Fenster.
+function infoFenster(titel, liste, hinweis, knoepfe) {
+  let fenster = null;
+  const reihe = (knoepfe || []).filter(function (k) { return typeof k.aktion === 'function'; });
+  fenster = zeigeFenster(titel, el('div', null,
     paare(liste),
-    hinweis ? el('p', { class: 'leise', text: hinweis }) : null
+    hinweis ? el('p', { class: 'leise', text: hinweis }) : null,
+    reihe.length ? el('div', { class: 'modal-knoepfe zp-knoepfe' }, ...reihe.map(function (k) {
+      return el('button', {
+        class: 'knopf ' + (k.klasse || ''), type: 'button', text: k.text,
+        onclick: function () { fenster.schliessen(); k.aktion(); }
+      });
+    })) : null
   ), null, { aussenKlick: true });
+}
+
+// Knopf nur, wenn der Teil „ToDos“ die Aktion bereitstellt
+function aktion(akt, name) {
+  const fn = akt && akt[name];
+  return typeof fn === 'function' ? fn : null;
 }
 
 function todoStand(t) {
@@ -152,13 +171,19 @@ function todoStand(t) {
   return f === 'ueberfaellig' ? 'Offen, überfällig' : f === 'heute' ? 'Offen, heute fällig' : 'Offen';
 }
 
-function todoInfo(t, meilensteinTitel) {
+function todoInfo(t, meilensteinTitel, akt) {
+  const fertig = istWahr(t.erledigt);
+  const abhaken = aktion(akt, 'todoAbhaken');
+  const bearbeiten = aktion(akt, 'todoBearbeiten');
   infoFenster(txt(t.text) || 'ToDo', [
     ['Fällig', datumText(t.faellig_am)],
     ['Verantwortlich', txt(t.verantwortlich) || 'Noch niemand'],
     ['Stand', todoStand(t)],
     ['Meilenstein', meilensteinTitel || 'Ohne Meilenstein']
-  ], 'Ändern kannst du das ToDo im Teil „ToDos“.');
+  ], '', [
+    { text: fertig ? 'Wieder öffnen' : '✓ Erledigt', aktion: abhaken && function () { abhaken(t, !fertig); } },
+    { text: 'Bearbeiten', klasse: 'knopf-hell', aktion: bearbeiten && function () { bearbeiten(t); } }
+  ]);
 }
 
 const QUELLE_TEXT = {
@@ -167,14 +192,20 @@ const QUELLE_TEXT = {
   start: 'Der Balken beginnt beim Start des Projekts (seine ToDos haben kein früheres Datum).'
 };
 
-function meilensteinInfo(z) {
+function meilensteinInfo(z, akt) {
   const st = z.stand;
+  const bearbeiten = aktion(akt, 'meilensteinBearbeiten');
+  // Abhaken von Hand nur ohne ToDos (wie im Teil „ToDos“); mit ToDos ist er erreicht, wenn alle erledigt sind
+  const abhaken = st.gesamt ? null : aktion(akt, 'meilensteinAbhaken');
   infoFenster('🏁 ' + (txt(z.m.titel) || 'Meilenstein'), [
     ['Bis', z.ziel ? datumText(z.ziel) + (z.ueber ? ' (überfällig)' : '') : 'Ohne Datum'],
     ['Anfang', z.von && z.von !== z.ziel ? datumText(z.von) : ''],
     ['Verantwortlich', txt(z.m.verantwortlich)],
     ['Stand', st.erreicht ? 'Erreicht' : st.gesamt ? st.erledigt + ' von ' + st.gesamt + ' ToDos erledigt' : 'Noch nicht erreicht']
-  ], QUELLE_TEXT[z.quelle] || '');
+  ], QUELLE_TEXT[z.quelle] || '', [
+    { text: st.erreicht ? 'Wieder öffnen' : '✓ Erreicht', aktion: abhaken && function () { abhaken(z.m, !st.erreicht); } },
+    { text: 'Bearbeiten', klasse: 'knopf-hell', aktion: bearbeiten && function () { bearbeiten(z.m); } }
+  ]);
 }
 
 function projektInfo(p, d) {
@@ -204,7 +235,7 @@ function auswahl(titel, liste) {
 }
 
 // Baut das Diagramm. Gibt null zurück ohne Daten.
-function baueDiagramm(p, d, neuZeichnen) {
+function baueDiagramm(p, d, neuZeichnen, akt) {
   const pid = String(p.id);
   const heute = heuteIso();
   const anteil = function (tag) { return tageZwischen(d.von, tag) / d.spanne; };
@@ -284,7 +315,7 @@ function baueDiagramm(p, d, neuZeichnen) {
       ueber: faelligStatus(t) === 'ueberfaellig',
       titel: kurz(txt(t.text), 60),
       info: [datumText(t.faellig_am), txt(t.verantwortlich), todoStand(t)].filter(Boolean).join(' · '),
-      oeffnen: function () { todoInfo(t, msTitel); }
+      oeffnen: function () { todoInfo(t, msTitel, akt); }
     };
   }
 
@@ -338,7 +369,7 @@ function baueDiagramm(p, d, neuZeichnen) {
     if (z.von && z.bis && z.von !== z.bis) {
       const knopf = balken(z.von, z.bis, 'zp-ms' + klasse,
         titel + ': ' + datumText(z.von) + ' bis ' + datumText(z.bis) + (st.erreicht ? ', erreicht' : ''),
-        function () { meilensteinInfo(z); });
+        function () { meilensteinInfo(z, akt); });
       if (!st.erreicht && st.gesamt) {
         const fuell = el('span', { class: 'zp-fuell', 'aria-hidden': 'true' });
         fuell.style.width = st.prozent + '%';
@@ -348,7 +379,7 @@ function baueDiagramm(p, d, neuZeichnen) {
     }
     if (z.ziel) {
       b.append(raute(z.ziel, klasse, titel + ': bis ' + datumText(z.ziel) + (st.erreicht ? ', erreicht' : z.ueber ? ', überfällig' : ''),
-        function () { meilensteinInfo(z); }));
+        function () { meilensteinInfo(z, akt); }));
     }
     linienDazu(b);
 
@@ -445,7 +476,7 @@ export function baueZeitplanTeil(opt) {
       }));
       return d;
     }
-    body.append(baueDiagramm(p, d, zeichne));
+    body.append(baueDiagramm(p, d, zeichne, opt.aktionen));
     if (fokus) {
       const k = body.querySelector('[data-zp="' + fokus + '"]');
       if (k) k.focus();

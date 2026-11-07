@@ -5,7 +5,8 @@
 // Wird von projekte.js benutzt. Der Teil klappt auf und zu (Zustand liegt in projekte.js).
 //
 // opt: { ctx, token, projekt, holeDaten() -> { todos, meilensteine }, arbeitet (Objekt),
-//        offen (Teil aufgeklappt?), beiToggle(offen), neuZeichnen(), neuLaden() -> Promise, merken() }
+//        offen (Teil aufgeklappt?), beiToggle(offen), neuZeichnen(), neuLaden() -> Promise, merken(),
+//        aktionen (freiwillig, Objekt): wird mit Bearbeiten und Abhaken gefüllt, für den Teil „Zeitplan“ (14.2) }
 
 import { el } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -634,6 +635,16 @@ export function baueTodoTeil(opt) {
   if (ohne.length || sammel.length) {
     if (ms.length) body.append(el('h3', { class: 'teil-titel-klein', text: 'Ohne Meilenstein' }));
     body.append(todoListe(ohne.concat(sammel)));
+  }
+
+  // Für den Teil „Zeitplan“: dieselben Formulare und dasselbe Abhaken wie hier
+  if (opt.aktionen) {
+    Object.assign(opt.aktionen, {
+      todoBearbeiten: function (t) { todoFormZeigen(t, ''); },
+      todoAbhaken: abhaken,
+      meilensteinBearbeiten: function (m) { meilensteinFormZeigen(m, null); },
+      meilensteinAbhaken: meilensteinAbhaken
+    });
   }
 
   const teil = el('details', { class: 'projekt-teil' });
