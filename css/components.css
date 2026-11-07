@@ -1529,6 +1529,7 @@ p.notiz.erledigt {
 .zp-bahn .mz-punkt { z-index: 2; }
 .mz-punkt.zp-offen { background: var(--gruppe); }
 .mz-punkt.zp-mobi { background: var(--pink); }
+.zp-knoepfe { margin-top: 12px; }
 
 @media (max-width: 599px) {
   .projekt-aktionen { justify-content: flex-start; flex-wrap: wrap; }

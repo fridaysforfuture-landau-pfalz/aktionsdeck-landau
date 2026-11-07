@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **1.2.0** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.2.1** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
 - Laufende Etappe: **14 „Zeitplan (Gantt-Diagramm) pro Projekt“**, Plan in `docs/PLAN-ETAPPE-14.md`. Etappe 13 ist mit Version 1.1.2 abgeschlossen (01.11.2026), Festlegungen in 4.11.
-- Nächster Schritt: 14.2 (nach Prüfung von 14.1 und den Antworten auf die Rückfragen im Plan).
+- Nächster Schritt: 14.3 (Drucken des Zeitplans und Abschluss der Etappe), nach Prüfung von 14.2.
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -251,7 +251,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
   ausführlich für alle Leser in `texte/entwicklung.txt` (Wiki → Entwicklung App).
 - Etappe 12 „Prüfung und Qualität“ ist fertig (0.33.16 bis 1.0.0, 28. und 29.10.2026). **Version 1.0.0** ist die erste fertige Version.
 - Etappe 13 „Gruppen eröffnen sich selbst“ ist fertig (1.1.0 bis 1.1.2, 01.11.2026): Antrag auf der Startseite, Freischalten im Sheet-Menü, Hinweis für Admins. Die Person prüft noch 13.3 im echten Sheet.
-- Etappe 14 „Zeitplan pro Projekt“ läuft: 14.1 (1.2.0) Teil „Zeitplan“ im Projekt, nur Anzeige, Sheet unverändert.
+- Etappe 14 „Zeitplan pro Projekt“ läuft: 14.1 (1.2.0) Teil „Zeitplan“ im Projekt, 14.2 (1.2.1) Bearbeiten und Abhaken aus dem Zeitplan. Sheet unverändert.
   Berichte zu Sicherheit, Geschwindigkeit, Ungenutztem, Barrierefreiheit und CSS liegen nur in den Projektdateien im Chat (`pruefung/`), nicht im Repo.
 - Skript: Stand aus 12.8 ist bereitgestellt (`testenRechte` ok). `Werkzeuge.gs` (12.5, 12.14) braucht keine Bereitstellung.
   Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt, Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
@@ -303,7 +303,9 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - Status `planung|aktiv|erledigt|archiviert`. Erledigt = Archiv (Filter Archiv). „In Planung“ als Aufklapper unten, nie im Kalender.
 - **Zeitplan** (seit 1.2.0, `js/views/projekt-zeitplan.js`): erster Teil im Block, Gantt-Diagramm nur zur Anzeige. Zeilen Projekt (Start bis Aktion, sonst erstes bis
   letztes Datum), je Meilenstein Balken und Raute, ToDos je Meilenstein zum Aufklappen, „Ohne Meilenstein“, Sammelzeile Mobi (ohne „Idee“).
-  Anfang eines Meilensteins berechnet (`zeitplanDaten`): erstes fälliges ToDo, sonst Meilenstein davor, sonst Projektstart. Antippen zeigt ein Info-Fenster.
+  Anfang eines Meilensteins berechnet (`zeitplanDaten`): erstes fälliges ToDo, sonst Meilenstein davor, sonst Projektstart (keine Spalte `start_datum`, Entscheidung 07.11.2026).
+  Antippen zeigt ein Info-Fenster; seit 1.2.1 mit „Bearbeiten“ und „✓ Erledigt“ (Meilenstein nur ohne ToDos). Formulare und Speichern liefert `projekt-todos.js` über `opt.aktionen`.
+  Kein gemeinsamer Zeitplan aller Projekte (Entscheidung 07.11.2026).
 - Teile im Block: Zeitplan, ToDos (mit Meilensteinen und „Offene Hüte“), Material, Finanzen, Learnings, Reden, Team, Mobi. Sprung per `#/g/<kurz>/projekte/<id>`.
 - Abschließen gesperrt, wenn festes Material draußen ist. Warnung bei offenen ToDos und nicht beschafftem Material.
 - `projektLoeschen` (Skript) prüft zuerst Material draußen (Code `draussen`), löscht weich alle abhängigen Tabs; Learnings und Protokolle bleiben.
@@ -537,6 +539,7 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
 - **Einzelschritt** (1.1.6, 06.11.2026): Filter „Ort“ im Reiter Material (alle Gruppen). Dazu Greenpeace-Materialliste als Zeilen fürs Sheet (nur in den Projektdateien, `material/`).
 - **Etappe 14** (ab 1.2.0, 06.11.2026): Zeitplan (Gantt-Diagramm) pro Projekt.
   - 14.1 (1.2.0): Teil „Zeitplan“ im Projekt, Anleitung ergänzt.
+  - 14.2 (1.2.1): Bearbeiten und Abhaken von ToDos und Meilensteinen aus dem Zeitplan.
 
 ---
 

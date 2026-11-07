@@ -21,7 +21,8 @@ Den Anfang eines Meilensteins rechnet die App selbst aus: Er beginnt beim ersten
 - Tippst du auf einen Meilenstein mit ▸, siehst du seine ToDos als Punkte an ihrem Fälligkeitstag.
 - „Ohne Meilenstein“ zeigt die übrigen ToDos, „Mobi“ die geplanten Beiträge (ohne Status „Idee“). Liegen mehrere an einem Tag, steht eine Zahl im Punkt.
 - Grau heißt erledigt, ein roter Rand heißt überfällig. Die grüne Linie ist die Aktion, die pinke die Deadline, die gestrichelte heute.
-- Tippst du auf einen Balken, eine Raute oder einen Punkt, siehst du Datum, Verantwortliche und Stand. Ändern kannst du alles wie gewohnt in den Teilen „ToDos“ und „Mobi“.
+- Tippst du auf einen Balken, eine Raute oder einen Punkt, siehst du Datum, Verantwortliche und Stand.
+- Bei einem ToDo stehen dort „✓ Erledigt“ und „Bearbeiten“. Bei einem Meilenstein gibt es „Bearbeiten“, und „✓ Erreicht“ nur, wenn er keine ToDos hat (sonst ist er erreicht, wenn alle seine ToDos erledigt sind). Mobi-Beiträge änderst du wie gewohnt im Teil „Mobi“.
 
 ToDos ohne Fälligkeitsdatum stehen nicht im Zeitplan. Der Zeitplan speichert nichts, er wird immer aus den Daten des Projekts berechnet.
 

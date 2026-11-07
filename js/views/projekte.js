@@ -295,10 +295,13 @@ export async function render(container, ctx) {
       else delete offen[id];
     });
 
-    // Zeitplan (Gantt-Diagramm, 14.1): nur Anzeige aus Projekt, Meilensteinen, ToDos und Mobi
+    // Zeitplan (Gantt-Diagramm, 14.1): Anzeige aus Projekt, Meilensteinen, ToDos und Mobi.
+    // aktionen füllt der Teil „ToDos“ (14.2: Bearbeiten und Abhaken aus dem Zeitplan).
+    const aktionen = {};
     const planKey = id + ':zeitplan';
     const zeitplanTeil = baueZeitplanTeil({
       projekt: p,
+      aktionen: aktionen,
       holeDaten: function () { return daten; },
       offen: !!merk.teile[planKey],
       beiToggle: function (o) {
@@ -310,6 +313,7 @@ export async function render(container, ctx) {
     const teilKey = id + ':todos';
     const todoTeil = baueTodoTeil({
       ctx: ctx,
+      aktionen: aktionen,
       token: s.token,
       projekt: p,
       holeDaten: function () { return daten; },
