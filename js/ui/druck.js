@@ -4,6 +4,7 @@
 //
 // blatt: { titel, unterzeile, abschnitte: [{ titel, zeilen: [{ text, info, fertig }] }] }
 // fertig = true druckt ein angekreuztes Kästchen (☑), sonst ein leeres (☐).
+// Freiwillig: inhalt = fertiges Element unter der Unterzeile (Zeitplan, 14.3), quer = true druckt im Querformat.
 
 import { el } from './dom.js';
 
@@ -11,9 +12,10 @@ export function drucke(blatt) {
   const alt = document.getElementById('druckblatt');
   if (alt) alt.remove();
 
-  const box = el('div', { id: 'druckblatt', class: 'druckblatt' },
+  const box = el('div', { id: 'druckblatt', class: 'druckblatt' + (blatt.quer ? ' quer' : '') },
     el('h1', { text: String(blatt.titel || '') }),
-    blatt.unterzeile ? el('p', { class: 'druck-unter', text: String(blatt.unterzeile) }) : null
+    blatt.unterzeile ? el('p', { class: 'druck-unter', text: String(blatt.unterzeile) }) : null,
+    blatt.inhalt || null
   );
   (blatt.abschnitte || []).forEach(function (a) {
     if (!a.zeilen || !a.zeilen.length) return;

@@ -7,6 +7,7 @@
 // frühestes Fälligkeitsdatum seiner ToDos, sonst das Datum des Meilensteins davor, sonst der Projektstart.
 // Wird von projekte.js benutzt. Der Teil klappt auf und zu (Zustand liegt in projekte.js).
 //
+// Seit 14.3: „🖨 Drucken“ druckt den Zeitplan quer, mit allen ToDos aufgeklappt (js/ui/druck.js).
 // Seit 14.2: Im Fenster eines ToDos oder Meilensteins gibt es „Bearbeiten“ und „Erledigt“ (Meilenstein nur ohne ToDos).
 // Die Formulare und das Speichern kommen aus dem Teil „ToDos“ (projekt-todos.js füllt opt.aktionen).
 //
@@ -18,7 +19,8 @@ import { zeigeFenster } from '../ui/fenster.js';
 import { istWahr } from '../schema.js';
 import { normDatum, datumText, heuteIso, faelligStatus, kurz } from './todos-rechnen.js';
 import { addTage, tageZwischen, wochentagNr } from './kalender-rechnen.js';
-import { meilensteinStand, sortiereMeilensteine, meilensteinFaellig } from './projekt-rechnen.js';
+import { meilensteinStand, sortiereMeilensteine, meilensteinFaellig, terminText } from './projekt-rechnen.js';
+import { drucke } from '../ui/druck.js';
 import { istVeroeffentlicht, faelligStatus as mobiFaellig, sortiereBeitraege, beitragInfo } from './mobi-rechnen.js';
 import { beschriftungen, kurzDatum } from './mobi-zeitstrahl.js';
 
@@ -235,7 +237,8 @@ function auswahl(titel, liste) {
 }
 
 // Baut das Diagramm. Gibt null zurück ohne Daten.
-function baueDiagramm(p, d, neuZeichnen, akt) {
+// alleAuf = alle Meilensteine aufgeklappt (zum Drucken)
+function baueDiagramm(p, d, neuZeichnen, akt, alleAuf) {
   const pid = String(p.id);
   const heute = heuteIso();
   const anteil = function (tag) { return tageZwischen(d.von, tag) / d.spanne; };
@@ -385,7 +388,7 @@ function baueDiagramm(p, d, neuZeichnen, akt) {
 
     let name;
     if (z.todos.length) {
-      const offen = !!auf[schluessel];
+      const offen = alleAuf || !!auf[schluessel];
       name = el('button', {
         class: 'zp-name zp-name-knopf', type: 'button', title: titel,
         'aria-expanded': offen ? 'true' : 'false',
@@ -405,7 +408,7 @@ function baueDiagramm(p, d, neuZeichnen, akt) {
     }
     box.append(zeile('zp-zeile-ms', name, b));
 
-    if (z.todos.length && auf[schluessel]) {
+    if (z.todos.length && (alleAuf || auf[schluessel])) {
       z.todos.forEach(function (t) {
         const tb = bahn();
         punkte(tb, [todoPunkt(t, titel)], 'zp-offen', titel);
@@ -476,7 +479,24 @@ export function baueZeitplanTeil(opt) {
       }));
       return d;
     }
-    body.append(baueDiagramm(p, d, zeichne, opt.aktionen));
+    body.append(
+      el('div', { class: 'teil-aktionen' },
+        el('button', {
+          class: 'knopf knopf-hell', type: 'button', text: '🖨 Drucken',
+          onclick: function () {
+            const neu = rechnen();
+            if (!neu) return;
+            drucke({
+              titel: 'Zeitplan: ' + (txt(p.titel) || 'Projekt'),
+              unterzeile: terminText(p),
+              inhalt: baueDiagramm(p, neu, function () {}, null, true),
+              quer: true
+            });
+          }
+        })
+      ),
+      baueDiagramm(p, d, zeichne, opt.aktionen)
+    );
     if (fokus) {
       const k = body.querySelector('[data-zp="' + fokus + '"]');
       if (k) k.focus();
