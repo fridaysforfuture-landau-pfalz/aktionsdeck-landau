@@ -28,7 +28,7 @@ import { ladeTeamKlein } from './team-namen.js';
 import { heuteIso as teamHeute, datumText as teamDatum } from './todos-rechnen.js';
 import { holeNeu, zeigeNeu } from '../ui/neu-seit.js';
 import { istWahr } from '../schema.js';
-import { zeitText } from './material-rechnen.js';
+import { zeitText, fremdMarkieren, nurEigene } from './material-rechnen.js';
 import { abhakWerte, abhakenSpeichern } from './todos-abhaken.js';
 import { istOffenerHut, huetKnoepfe } from './todos-hut.js';
 import {
@@ -98,7 +98,8 @@ export async function render(container, ctx) {
   let paket = null;   // laufende Paket-Anfrage, sonst null
 
   function paketHolen() {
-    const p = api('listMehrere', { tabellen: PAKET_TABS }, s.token).then(function (r) {
+    // mitGeteilt (seit 1.3.0): Namen von geteiltem Material anderer Gruppen für „Für dich“
+    const p = api('listMehrere', { tabellen: PAKET_TABS, mitGeteilt: true }, s.token).then(function (r) {
       return (r && r.tabellen) || {};
     });
     paket = p;
@@ -561,7 +562,8 @@ export async function render(container, ctx) {
         s.gruppe_id + ':startfuerdich',
         async function () {
           const x = await ausPaket(p, ['Ausleihe', 'Material']);
-          return { ausleihe: x[0], material: x[1] };
+          // Nur eigene Ausleihen, aber Namen auch von geteiltem Material anderer Gruppen
+          return { ausleihe: nurEigene(fremdMarkieren(x[0], s.gruppe_id)), material: x[1] };
         },
         function (daten) {
           ausleihDaten = daten;

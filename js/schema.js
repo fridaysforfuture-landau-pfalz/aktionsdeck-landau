@@ -16,7 +16,8 @@ export const SCHEMA = {
       { name: 'ort', label: 'Ort', typ: 'text' },
       { name: 'foto_id', label: 'Foto', typ: 'foto' },
       { name: 'notiz', label: 'Notiz', typ: 'langtext' },
-      { name: 'aktiv', label: 'Aktiv', typ: 'bool' }
+      { name: 'aktiv', label: 'Aktiv', typ: 'bool' },
+      { name: 'geteilt', label: 'Für alle Gruppen (andere Gruppen sehen es und können es ausleihen)', typ: 'bool', standard: false }
     ]
   },
   ToDos: {

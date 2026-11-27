@@ -31,14 +31,59 @@ export function ausgeliehen(ausleihen) {
   return m;
 }
 
-// Ergänzt: _verfuegbar, _draussen, _verbrauch
-export function mitVerfuegbar(m, out) {
+// Seit 1.3.0: Geteiltes Material anderer Gruppen (Material.geteilt, zum Beispiel der Bollerwagen von FFF).
+// Zeilen einer anderen Gruppe bekommen _fremd = true. Ausleihen anderer Gruppen zählen für den Bestand,
+// aber nicht für die eigene Rückgabe (ausgeliehenProjekt, _eigenDraussen).
+export function fremdMarkieren(zeilen, gid) {
+  return (zeilen || []).map(function (z) {
+    return Object.assign({}, z, { _fremd: String(z.gruppe_id) !== String(gid) });
+  });
+}
+
+export function nurEigene(zeilen) {
+  return (zeilen || []).filter(function (z) { return !z._fremd; });
+}
+
+// Name der Gruppe zu einer gruppe_id (Liste aus ctx.gruppenSofort()), sonst „andere Gruppe“
+export function gruppenName(gruppen, gid) {
+  const g = (gruppen || []).find(function (x) { return String(x.gruppe_id) === String(gid); });
+  return g ? String(g.name) : 'andere Gruppe';
+}
+
+// Wer hat dieses Material gerade? Je Gruppe die Menge draußen (mitgenommen minus zurück minus defekt)
+// und der Name aus der letzten Ausleihe dieser Gruppe. Gibt [{ gruppe_id, _fremd, person, anzahl }] zurück.
+export function beiWem(ausleihen, materialId) {
+  const je = {};
+  (ausleihen || []).forEach(function (a) {
+    if (String(a.material_id) !== String(materialId)) return;
+    const g = String(a.gruppe_id || '');
+    if (!je[g]) je[g] = { gruppe_id: g, _fremd: !!a._fremd, person: '', zeit: '', anzahl: 0 };
+    const x = je[g];
+    if (a.art === 'mitgenommen') {
+      x.anzahl += zahl(a.anzahl);
+      const t = String(a.erstellt_am || a.datum || '');
+      if (t >= x.zeit) { x.zeit = t; x.person = String(a.person || '').trim(); }
+    } else if (a.art === 'zurueck' || a.art === 'defekt') {
+      x.anzahl -= zahl(a.anzahl);
+    }
+  });
+  return Object.keys(je).map(function (g) {
+    const x = je[g];
+    return { gruppe_id: x.gruppe_id, _fremd: x._fremd, person: x.person, anzahl: runden(x.anzahl) };
+  }).filter(function (x) { return x.anzahl > 0; })
+    .sort(function (a, b) { return Number(a._fremd) - Number(b._fremd) || b.anzahl - a.anzahl; });
+}
+
+// Ergänzt: _verfuegbar, _draussen, _verbrauch, _eigenDraussen
+// out = ausgeliehen(alle Ausleihen), outEigen = ausgeliehen(nur eigene); ohne outEigen gilt out.
+export function mitVerfuegbar(m, out, outEigen) {
   const verbrauch = istVerbrauch(m);
   const hat = !(m.anzahl === '' || m.anzahl === undefined || m.anzahl === null);
   const draussen = verbrauch ? 0 : (out[String(m.id)] || 0);
+  const eigen = verbrauch ? 0 : (outEigen ? (outEigen[String(m.id)] || 0) : draussen);
   let v = '';
   if (hat) v = verbrauch ? runden(zahl(m.anzahl)) : runden(zahl(m.anzahl) - draussen);
-  return Object.assign({}, m, { _verfuegbar: v, _draussen: draussen, _verbrauch: verbrauch });
+  return Object.assign({}, m, { _verfuegbar: v, _draussen: draussen, _verbrauch: verbrauch, _eigenDraussen: eigen });
 }
 
 // Darf dieses Material für die Aktion ausgewählt werden? z kommt aus mitVerfuegbar.
@@ -50,7 +95,7 @@ export function auswaehlbar(z, art) {
     if (z._verbrauch) return z._verfuegbar !== '' && z._verfuegbar > 0;
     return z._verfuegbar === '' || z._verfuegbar > 0;
   }
-  return z._verbrauch ? true : z._draussen > 0;
+  return z._verbrauch ? true : (z._eigenDraussen === undefined ? z._draussen : z._eigenDraussen) > 0;
 }
 
 // Namen für die Vorschläge: dein Name plus alle aus früheren Buchungen
@@ -74,6 +119,7 @@ export function zeitText(iso) {
 export function ausgeliehenProjekt(ausleihen) {
   const m = {};
   ausleihen.forEach(function (a) {
+    if (a._fremd) return;   // seit 1.3.0: nur eigene Ausleihen
     const id = String(a.material_id);
     const pid = String(a.projekt_id === undefined || a.projekt_id === null ? '' : a.projekt_id).trim();
     let d;

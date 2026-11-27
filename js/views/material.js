@@ -2,6 +2,7 @@
 // Reiter Material: Liste mit Suche, Kategorie- und Status-Filter, Details, Anlegen, Ändern,
 // Löschen, Sammel-Ausleihe (Ausleihen / Zurückgeben) und Vormerken für Projekte.
 // Die Auswahl bleibt beim Reiterwechsel erhalten (Merker außerhalb von render).
+// Seit 1.3.0: Geteiltes Material anderer Gruppen (zum Beispiel der Bollerwagen von FFF) steht mit „von …“ in der Liste.
 
 import { el, leeren } from '../ui/dom.js';
 import { api } from '../api.js';
@@ -17,9 +18,9 @@ import { zeigeBuchenDialog } from './material-buchen.js';
 import { zeigeVormerkDialog } from './material-vormerken.js';
 import {
   ausgeliehen, mitVerfuegbar, auswaehlbar, personenAus, zeitText,
-  ausgeliehenProjekt, herkunftText, nachHerkunft
+  ausgeliehenProjekt, herkunftText, nachHerkunft, fremdMarkieren, nurEigene, gruppenName, beiWem
 } from './material-rechnen.js';
-import { istFalsch, SCHEMA } from '../schema.js';
+import { istFalsch, istWahr, SCHEMA } from '../schema.js';
 
 // Bleibt beim Reiterwechsel erhalten. Neue Anmeldung (anderes Token) = leer.
 let merk = { token: '', modus: null, gewaehlt: {} };
@@ -138,7 +139,7 @@ export async function render(container, ctx) {
   // Vom Detail aus: dieses Material gleich auswählen
   function startMitMaterial(art, m) {
     modusSetzen(art);
-    const z = mitVerfuegbar(m, ausgeliehen(daten.ausleihe));
+    const z = mitStand(m);
     if (auswaehlbar(z, art)) {
       gewaehlt[m.id] = true;
     } else if (art === 'mitgenommen') {
@@ -160,6 +161,21 @@ export async function render(container, ctx) {
     return laden(false);
   }
   
+  // Verfügbar und draußen zählen alle Gruppen (geteiltes Material), zurückgeben nur die eigene.
+  function staende() {
+    return { alle: ausgeliehen(daten.ausleihe), eigen: ausgeliehen(nurEigene(daten.ausleihe)) };
+  }
+  function mitStand(m, st) {
+    const x = st || staende();
+    return mitVerfuegbar(m, x.alle, x.eigen);
+  }
+  function gruppeVon(gid) {
+    return gruppenName(ctx.gruppenSofort ? ctx.gruppenSofort() : [], gid);
+  }
+  function nameText(z) {
+    return String(z.name) + (z._fremd ? ' · von ' + gruppeVon(z.gruppe_id) : '') + (istFalsch(z.aktiv) ? ' (nicht aktiv)' : '');
+  }
+
   function titelMap() {
     const t = {};
     daten.projekte.forEach(function (p) { t[String(p.id)] = String(p.titel); });
@@ -174,10 +190,10 @@ export async function render(container, ctx) {
   }
   
   function buchenOeffnen() {
-    const out = ausgeliehen(daten.ausleihe);
+    const st = staende();
     let items = daten.material
       .filter(function (m) { return gewaehlt[m.id]; })
-      .map(function (m) { return mitVerfuegbar(m, out); })
+      .map(function (m) { return mitStand(m, st); })
       .sort(function (a, b) { return String(a.name).localeCompare(String(b.name), 'de'); });
     if (!items.length) return;
 
@@ -200,8 +216,8 @@ export async function render(container, ctx) {
       proProjekt: function () { return ausgeliehenProjekt(daten.ausleihe); },
       neuLaden: function () { return laden(false); },
       frisch: function () {
-        const aktuell = ausgeliehen(daten.ausleihe);
-        return daten.material.map(function (m) { return mitVerfuegbar(m, aktuell); });
+        const st = staende();
+        return daten.material.map(function (m) { return mitStand(m, st); });
       },
       onFertig: fertig
     });
@@ -248,10 +264,16 @@ export async function render(container, ctx) {
       schliesseDetail(ctx.detail);
       return;
     }
-    const z = mitVerfuegbar(m, ausgeliehen(daten.ausleihe));
+    const z = mitStand(m);
+    // Ausleihen anderer Gruppen (geteiltes Material) mit dem Namen der Gruppe
     const verlauf = daten.ausleihe.filter(function (a) {
       return String(a.material_id) === String(m.id);
+    }).map(function (a) {
+      return a._fremd ? Object.assign({}, a, { person: (a.person ? a.person + ' ' : '') + '(' + gruppeVon(a.gruppe_id) + ')' }) : a;
     });
+    const bei = beiWem(daten.ausleihe, m.id).map(function (b) {
+      return gruppeVon(b.gruppe_id) + (b.person ? ' (' + b.person + ')' : '') + ': ' + b.anzahl;
+    }).join(', ');
     const inhalt = el('div', null,
       el('div', { class: 'detail-knoepfe' },
         el('button', {
@@ -267,20 +289,23 @@ export async function render(container, ctx) {
           onclick: function () { startMitMaterial('vormerken', m); }
         })
       ),
-      el('div', { class: 'detail-knoepfe' },
-        el('button', {
-          class: 'knopf knopf-hell', type: 'button', text: 'Bearbeiten',
-          onclick: function () { formZeigen(m); }
-        }),
-        el('button', {
-          class: 'knopf knopf-gefahr', type: 'button', text: 'Löschen',
-          onclick: function () { loeschen(m); }
-        })
-      ),
+      m._fremd
+        ? el('p', { class: 'leise', text: 'Gehört ' + gruppeVon(m.gruppe_id) + ' und ist für alle Gruppen freigegeben. Ändern kann nur ' + gruppeVon(m.gruppe_id) + '.' })
+        : el('div', { class: 'detail-knoepfe' },
+          el('button', {
+            class: 'knopf knopf-hell', type: 'button', text: 'Bearbeiten',
+            onclick: function () { formZeigen(m); }
+          }),
+          el('button', {
+            class: 'knopf knopf-gefahr', type: 'button', text: 'Löschen',
+            onclick: function () { loeschen(m); }
+          })
+        ),
+      !m._fremd && istWahr(m.geteilt) ? el('p', { class: 'leise', text: 'Für alle Gruppen freigegeben: Andere Gruppen sehen es und können es ausleihen.' }) : null,
       istFalsch(m.aktiv)
         ? el('p', { class: 'fehler', text: 'Dieses Material ist nicht aktiv. Zum Zurückholen: Bearbeiten und „Aktiv“ anhaken.' })
         : null,
-      baueDetail(z, verlauf, herkunftText(ausgeliehenProjekt(daten.ausleihe)[String(m.id)], titelMap()))
+      baueDetail(z, verlauf, herkunftText(ausgeliehenProjekt(daten.ausleihe)[String(m.id)], titelMap()), bei)
     );
     zeigeDetail(ctx.detail, String(m.name), inhalt, function () { offenId = null; }, neu);
   }
@@ -391,14 +416,14 @@ export async function render(container, ctx) {
   // ---- Liste ----
 
   function zeichne() {
-    const out = ausgeliehen(daten.ausleihe);
+    const stand = staende();
     const q = suche.value.trim().toLowerCase();
     const k = kat.value;
     const o = ortWahl.value;
     const st = stat.value;
 
     const zeilen = daten.material.map(function (m) {
-      return mitVerfuegbar(m, out);
+      return mitStand(m, stand);
     }).filter(function (z) {
       if (modus === 'zurueck') {
         // Nur was draußen ist (fest) und Verbrauchsmaterial. Status-Filter gilt hier nicht.
@@ -437,9 +462,7 @@ export async function render(container, ctx) {
         {
           name: 'name',
           label: 'Name',
-          wert: function (z) {
-            return String(z.name) + (istFalsch(z.aktiv) ? ' (nicht aktiv)' : '');
-          }
+          wert: nameText
         },
         { name: 'kategorie', label: 'Kategorie' },
         { name: 'ort', label: 'Ort' },
@@ -462,7 +485,7 @@ export async function render(container, ctx) {
             : 'Verfügbar: ' + z._verfuegbar + ' von ' + z.anzahl + einheit;
         }
         return {
-          titel: String(z.name) + (istFalsch(z.aktiv) ? ' (nicht aktiv)' : ''),
+          titel: nameText(z),
           zeilen: [
             [z.kategorie, z.ort, z._verbrauch ? 'Verbrauch' : ''].filter(Boolean).join(' · '),
             mengen,
@@ -487,10 +510,10 @@ export async function render(container, ctx) {
     orteAufbauen();
     if (modus) {
       // Auswahl aufräumen: nur was noch da und wählbar ist
-      const out = ausgeliehen(daten.ausleihe);
+      const st = staende();
       Object.keys(gewaehlt).forEach(function (id) {
         const m = daten.material.find(function (x) { return String(x.id) === id; });
-        if (!m || !auswaehlbar(mitVerfuegbar(m, out), modus)) delete gewaehlt[id];
+        if (!m || !auswaehlbar(mitStand(m, st), modus)) delete gewaehlt[id];
       });
       leisteAktualisieren();
     }
@@ -509,10 +532,14 @@ export async function render(container, ctx) {
         s.gruppe_id + ':material',
         async function () {
           const r = await api('listMehrere', {
-            tabellen: ['Material', 'Ausleihe', 'Projekte']
+            tabellen: ['Material', 'Ausleihe', 'Projekte'], mitGeteilt: true
           }, s.token);
           const t = (r && r.tabellen) || {};
-          return { material: t.Material || [], ausleihe: t.Ausleihe || [], projekte: t.Projekte || [] };
+          return {
+            material: fremdMarkieren(t.Material, s.gruppe_id),
+            ausleihe: fremdMarkieren(t.Ausleihe, s.gruppe_id),
+            projekte: t.Projekte || []
+          };
         },
         zeigen,
         zuerstCache

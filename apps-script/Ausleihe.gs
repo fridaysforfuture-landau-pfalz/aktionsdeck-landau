@@ -14,6 +14,8 @@
 //   Mitnehmen senkt anzahl. Rückgabe ist der Rest und erhöht anzahl.
 // Ein Material darf mehrfach in einer Buchung stehen, aber nur einmal je Projekt.
 // Für abgeschlossene Projekte (erledigt, archiviert) kann nichts mitgenommen werden, nur zurückgegeben.
+// Seit 1.3.0: Geteiltes Material (Material.geteilt) anderer Gruppen darf jede Gruppe buchen. Der Bestand zählt die Ausleihen
+//   aller Gruppen; zurückgeben kann eine Gruppe nur, was sie selbst ausgeliehen hat.
 
 function bRunde(n) {
   return Math.round(n * 100) / 100;
@@ -42,12 +44,12 @@ function bDefekt(v, wo) {
   return bRunde(n);
 }
 
-// Pro Material und Projekt: mitgenommen minus zurueck minus defekt (nur diese Gruppe).
+// Pro Material und Projekt: mitgenommen minus zurueck minus defekt (nur diese Gruppe, gid = null: alle Gruppen).
 // Ergebnis: { materialId: { projektId: menge } }. projektId '' = ohne Projekt.
 function bAusgeliehenProjekt(zeilen, gid) {
   var m = {};
   zeilen.forEach(function (a) {
-    if (String(a.gruppe_id) !== String(gid) || truthy(a.geloescht)) return;
+    if ((gid !== null && String(a.gruppe_id) !== String(gid)) || truthy(a.geloescht)) return;
     var id = String(a.material_id);
     var pid = textVon(a.projekt_id);
     var n = Number(a.anzahl);
@@ -63,6 +65,16 @@ function bAusgeliehenProjekt(zeilen, gid) {
     Object.keys(m[id]).forEach(function (pid) { m[id][pid] = bRunde(m[id][pid]); });
   });
   return m;
+}
+
+// Material der eigenen Gruppe oder geteiltes Material einer anderen Gruppe (seit 1.3.0)
+function bMaterialFinden(mat, ctx, id) {
+  for (var i = 0; i < mat.zeilen.length; i++) {
+    var z = mat.zeilen[i];
+    if (String(z.id) !== String(id) || truthy(z.geloescht)) continue;
+    if (String(z.gruppe_id) === String(ctx.gruppe_id) || truthy(z.geteilt)) return z;
+  }
+  fehler('nicht_gefunden', 'Eintrag nicht gefunden (vielleicht wurde er gelöscht).');
 }
 
 // Summe über alle Projekte (wie früher: mitgenommen minus zurueck minus defekt)
@@ -95,7 +107,8 @@ function aktionBuchen(ctx, p) {
     pruefeKopf('Ausleihe', ausl.kopf);
     var projekte = lies('Projekte');
     pruefeKopf('Projekte', projekte.kopf);
-    var draussen = bAusgeliehenProjekt(ausl.zeilen, ctx.gruppe_id);
+    var draussen = bAusgeliehenProjekt(ausl.zeilen, ctx.gruppe_id);   // eigene Gruppe: für die Rückgabe
+    var alleDraussen = bAusgeliehenProjekt(ausl.zeilen, null);         // alle Gruppen: für den Bestand (geteiltes Material)
 
     // 1) Alles prüfen und planen. Geschrieben wird erst danach.
     var gesehen = {};
@@ -113,7 +126,7 @@ function aktionBuchen(ctx, p) {
       if (gesehen[schluessel]) fehler('ungueltig', 'Ein Material steht für dasselbe Projekt doppelt in der Liste.');
       gesehen[schluessel] = true;
 
-      var z = eintragFinden(mat, ctx, id);
+      var z = bMaterialFinden(mat, ctx, id);
       var name = String(z.name);
       var projektZ = pid ? projektAus(projekte, ctx, pid) : null;
       var wo = projektZ ? 'Projekt "' + String(projektZ.titel) + '"' : 'ohne Projekt';
@@ -127,7 +140,7 @@ function aktionBuchen(ctx, p) {
           typ: bTyp(z),
           hatBestand: hatB,
           bestand: hatB ? Number(z.anzahl) : 0,
-          out: bGesamt(draussen[id] || {}),
+          out: bGesamt(alleDraussen[id] || {}),
           geaendert: false
         };
         reihe.push(id);

@@ -16,6 +16,14 @@ Mit „Ausleihen“ trägst du ein, wer das Material mitnimmt und wann. Auf Wuns
 
 Mit „Vormerken“ planst du Material für ein Projekt ein, das erst später gebraucht wird. Das senkt die Verfügbarkeit nicht. Im Projekt steht dann, was dafür vorgemerkt ist.
 
+## Material für alle Gruppen
+
+Manches Material teilen sich die Gruppen, zum Beispiel den Bollerwagen von Fridays for Future. Es steht bei jeder Gruppe in der Liste, mit dem Zusatz „von …“ und der Gruppe, der es gehört. Jede Gruppe kann es selbst ausleihen und zurückgeben. In den Details siehst du unter „Gerade bei“, welche Gruppe es hat und wer es mitgenommen hat. Ändern oder löschen kann es nur die Gruppe, der es gehört.
+
+Fragt vorher über den Signal-Knopf an, wenn ihr geteiltes Material für eine Aktion braucht.
+
+Eigenes Material gebt ihr für alle frei, indem ihr es bearbeitet und „Für alle Gruppen“ anhakt.
+
 ## Material anlegen
 
 Mit „+ Neu“ legst du ein neues Stück Material an: Name, Kategorie, Art (fest oder Verbrauch), Anzahl, Einheit, Ort und eine Notiz. Dazu kannst du ein Foto machen. Die App verkleinert es und speichert es im Drive-Ordner der Gruppe.
