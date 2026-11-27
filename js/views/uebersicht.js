@@ -9,6 +9,7 @@ import { ladeMitCache } from '../cache.js';
 import { toast } from '../ui/toast.js';
 import { datumText } from './todos-rechnen.js';
 import { jahreAus, jahresZahlen, alsText, euro, protokollArt } from './uebersicht-rechnen.js';
+import { fremdMarkieren, nurEigene } from './material-rechnen.js';
 
 const TABELLEN = ['Projekte', 'ToDos', 'Finanzen', 'Ausleihe', 'Material', 'Veranstaltungen', 'Mobi_Plan', 'Protokolle', 'Reden', 'Learnings'];
 
@@ -124,10 +125,10 @@ export async function render(container, ctx) {
       const frisch = await ladeMitCache(
         s.gruppe_id + ':uebersicht',
         async function () {
-          const r = await api('listMehrere', { tabellen: TABELLEN }, s.token);
+          const r = await api('listMehrere', { tabellen: TABELLEN, mitGeteilt: true }, s.token);
           const t = (r && r.tabellen) || {};
           return {
-            projekte: t.Projekte || [], todos: t.ToDos || [], finanzen: t.Finanzen || [], ausleihe: t.Ausleihe || [],
+            projekte: t.Projekte || [], todos: t.ToDos || [], finanzen: t.Finanzen || [], ausleihe: nurEigene(fremdMarkieren(t.Ausleihe, s.gruppe_id)),
             material: t.Material || [], veranstaltungen: t.Veranstaltungen || [], mobi: t.Mobi_Plan || [],
             protokolle: t.Protokolle || [], reden: t.Reden || [], learnings: t.Learnings || []
           };

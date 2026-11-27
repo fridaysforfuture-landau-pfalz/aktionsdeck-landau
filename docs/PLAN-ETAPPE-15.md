@@ -1,6 +1,6 @@
 # Plan: Bollerwagen (Unterreiter im Material, Aufbau-Anleitung, Wiki-Seite)
 
-Stand: 27.11.2026 · **Etappe 15** · noch nichts gebaut. Antworten der Person zu den ersten Rückfragen sind eingearbeitet (Abschnitt 6). Offen: Weg für „alle Gruppen“ (Abschnitt 2a).
+Stand: 27.11.2026 · **Etappe 15** · 15.0 gebaut mit Version 1.3.0 (Weg A). Antworten der Person sind eingearbeitet (Abschnitt 6).
 
 ## 1. Worum es geht
 
@@ -43,7 +43,7 @@ Heute sieht jede Gruppe **nur ihr eigenes Material** (das Skript filtert jede Ze
 `buchen` in `apps-script/Ausleihe.gs` bucht nur Material der eigenen Gruppe). Für den gemeinsamen Bollerwagen braucht es darum
 eine Änderung am Skript. Zwei Wege:
 
-- **Weg A, gemeinsames Material (Vorschlag):** Neue Spalte `geteilt` im Tab `Material`. Material mit `geteilt = TRUE` (der Bollerwagen
+- **Weg A, gemeinsames Material (gewählt am 27.11.2026):** Neue Spalte `geteilt` im Tab `Material`. Material mit `geteilt = TRUE` (der Bollerwagen
   und seine Teile, Besitzer FFF) erscheint in der Materialliste **jeder** Gruppe, mit dem Zusatz „von FFF“. Jede Gruppe kann es selbst
   ausleihen und zurückgeben; die Ausleihe trägt automatisch die Gruppe ein, dazu den Namen von Hand. Bestand und „draußen“ zählt das Skript
   über alle Gruppen. Ändern und Löschen darf nur FFF. Vorher fragt die Gruppe über Signal an.
@@ -51,8 +51,8 @@ eine Änderung am Skript. Zwei Wege:
   „Anfragen“. Ausleihen bucht immer FFF, dabei wählt FFF die Gruppe aus oder tippt einen Namen ein. Weniger Änderung am Skript,
   aber FFF muss jede Ausleihe selbst eintragen.
 
-Für beide Wege: Sheet-Spalte `geteilt` (Material) und eine neue Spalte `an_gruppe` (Ausleihe) zum Anzeigen „an wen“; Abschnitt
-„Von Hand zu erledigen“ im Pull Request. Andere Gruppen sehen bei geteiltem Material die Namen aus dessen Ausleihen (nur diese, sonst nichts von FFF).
+Gebaut (Weg A): nur die Sheet-Spalte `Material.geteilt`. Eine Spalte `an_gruppe` braucht es nicht: Die Ausleihe trägt schon die `gruppe_id`
+der Gruppe, die ausleiht. Andere Gruppen sehen bei geteiltem Material die Namen aus dessen Ausleihen (nur diese, sonst nichts von FFF).
 
 ## 3. Am Handy und am PC
 
@@ -64,8 +64,8 @@ Für beide Wege: Sheet-Spalte `geteilt` (Material) und eine neue Spalte `an_grup
 
 | Schritt | Version | Was | Sheet / Skript |
 |---|---|---|---|
-| 15.0 | 1.3.0 | Gemeinsames Material (Abschnitt 2a): Spalten `Material.geteilt` und `Ausleihe.an_gruppe`, Skript `Daten.gs`, `Ausleihe.gs`, `Schema.gs`, Anzeige „von FFF“ und „an wen“ im Material. | **ja**, von Hand |
-| 15.1 | 1.3.1 | Plan ins Repo. `texte/bollerwagen/inhalt.txt`. Unterreiter „Bollerwagen“ im Material (neue Datei `js/views/material-bollerwagen.js`), Knopf erscheint, wenn der Wagen draußen ist, „Fehlendes ausleihen“. Anleitung `texte/anleitung/material.txt`. | unverändert |
+| 15.0 | 1.3.0 | Gemeinsames Material (Abschnitt 2a, gebaut): Spalte `Material.geteilt`, Skript `Daten.gs`, `Ausleihe.gs`, `Schema.gs`, Anzeige „von FFF“ und „an wen“ im Material. | **ja**, von Hand |
+| 15.1 | 1.3.1 | `texte/bollerwagen/inhalt.txt`. Unterreiter „Bollerwagen“ im Material (neue Datei `js/views/material-bollerwagen.js`), Knopf erscheint, wenn der Wagen draußen ist, „Fehlendes ausleihen“. Anleitung `texte/anleitung/material.txt`. | unverändert |
 | 15.2 | 1.3.2 | Aufbau-Anleitung Schritt für Schritt (Zeichnung je Schritt, Foto bei Bedarf) (`js/views/bollerwagen-aufbau.js`, `texte/bollerwagen/aufbau.txt`), öffentlich, Knopf im Unterreiter. | unverändert |
 | 15.3 | 1.3.3 | Wiki-Seite „Bollerwagen“ mit Inhaltsliste, Knopf Aufbau, Knopf Anfragen. Abschluss: Plan in `docs/STAND.md` einarbeiten und löschen. | unverändert |
 
@@ -87,6 +87,7 @@ Beantwortet am 27.11.2026:
 4. Wiki-Seite **öffentlich**.
 5. Anfragen über den **vorhandenen Signal-Knopf**.
 
+6. Für alle Gruppen: **Weg A** (jede Gruppe leiht selbst aus).
+
 Offen:
-6. Weg A oder Weg B für „alle Gruppen“ (Abschnitt 2a)?
-7. Etappe 15 mit Version 1.3.0: passt das?
+7. Etappe 15 mit Version 1.3.0: passt das? (So gebaut.)

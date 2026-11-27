@@ -4,11 +4,11 @@
 Lies sie zuerst, bei jeder Aufgabe. `CLAUDE.md` im Hauptordner zeigt nur hierher.
 Für eine neue Etappe kommt ein eigener Plan dazu (`docs/PLAN-ETAPPE-<n>.md`); am Ende der Etappe wird er hier eingearbeitet und gelöscht.
 
-- Version der App: **1.2.2** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
+- Version der App: **1.3.0** (gleich in `js/config.js` und `sw.js`: beide Dateien prüfen)
 - Repo: https://github.com/fridaysforfuture-landau-pfalz/aktionsdeck-landau
 - Seite (App): https://fridaysforfuture-landau.de/aktionsdeck-landau/
-- Laufende Etappe: **keine**. Etappe 14 „Zeitplan (Gantt-Diagramm) pro Projekt“ ist mit Version 1.2.2 abgeschlossen (07.11.2026), Festlegungen in 4.2.
-- Nächster Schritt: offen. Die Person prüft 14.3 und sammelt Ideen; eine neue Etappe beginnt mit einem Plan mit Rückfragen (Abschnitt 7).
+- Laufende Etappe: **15 „Bollerwagen“**, Plan in `docs/PLAN-ETAPPE-15.md`. 15.0 „Gemeinsames Material“ gebaut mit 1.3.0 (27.11.2026).
+- Nächster Schritt: Die Person legt die Spalte `geteilt` an, spielt das Skript ein und prüft 15.0. Danach 15.1 (Unterreiter „Bollerwagen“).
 
 Inhalt: 1 Arbeitsregeln · 2 Aufbau · 3 Aktueller Stand und Offen · 4 Festlegungen je Bereich · 5 Technik-Merkzettel ·
 6 Dateiübersicht · 7 Pläne · 8 Geschichte · Anhang A Standard-ToDos · Anhang B Mobi-Standard-Beiträge
@@ -252,6 +252,7 @@ die App mit `baueFormular` baut (seit 0.34.6). Neue Spalte: Eintrag in `Schema.g
 - Etappe 12 „Prüfung und Qualität“ ist fertig (0.33.16 bis 1.0.0, 28. und 29.10.2026). **Version 1.0.0** ist die erste fertige Version.
 - Etappe 13 „Gruppen eröffnen sich selbst“ ist fertig (1.1.0 bis 1.1.2, 01.11.2026): Antrag auf der Startseite, Freischalten im Sheet-Menü, Hinweis für Admins. Die Person prüft noch 13.3 im echten Sheet.
 - Etappe 14 „Zeitplan pro Projekt“ ist fertig (1.2.0 bis 1.2.2, 06. und 07.11.2026): Teil „Zeitplan“ im Projekt, Bearbeiten und Abhaken daraus, Drucken quer. Sheet unverändert. Die Person prüft noch 14.3.
+- Etappe 15 „Bollerwagen“ läuft (Plan `docs/PLAN-ETAPPE-15.md`): 15.0 (1.3.0) geteiltes Material für alle Gruppen, neue Spalte `Material.geteilt`.
   Berichte zu Sicherheit, Geschwindigkeit, Ungenutztem, Barrierefreiheit und CSS liegen nur in den Projektdateien im Chat (`pruefung/`), nicht im Repo.
 - Skript: Stand aus 12.8 ist bereitgestellt (`testenRechte` ok). `Werkzeuge.gs` (12.5, 12.14) braucht keine Bereitstellung.
   Skripteigenschaften `CLOUD_LINK_g1` und `SIGNAL_LINK` sind gesetzt, Zeitauslöser `kontoAbrufen` (Montag früh) läuft.
@@ -331,6 +332,11 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 - `buchen`: `{ art, person, datum, projekt_id, notiz, positionen:[{material_id, anzahl, defekt, projekt_id}] }`, höchstens 100.
   Fehlercodes: ungueltig, zuwenig, nicht_gefunden, beschaeftigt. Ausleihe wird nur angehängt, nur über `buchen`.
 - Filter oben: Suche, Kategorie, Ort (seit 1.1.6), Status. Kategorie und Ort bieten alle Werte an, die im Material der Gruppe stehen.
+- **Geteiltes Material** (seit 1.3.0, Etappe 15): `Material.geteilt = TRUE` (Haken „Für alle Gruppen“ im Formular, ohne Wert aus) zeigt das Material in allen Gruppen
+  mit „von <Gruppe>“. Lesen nur mit `listMehrere` und `mitGeteilt: true` (`geteiltFremd` in `Daten.gs`): andere Gruppen bekommen nur geteiltes Material und dessen Ausleihen.
+  `buchen` nimmt eigenes oder geteiltes Material (`bMaterialFinden`); der Bestand zählt die Ausleihen **aller** Gruppen, zurückgeben nur, was die eigene Gruppe hat.
+  Ändern und Löschen nur die Besitzer-Gruppe. In der App: Zeilen anderer Gruppen haben `_fremd` (`fremdMarkieren`), `ausgeliehenProjekt` zählt nur eigene,
+  `mitVerfuegbar(m, alle, eigen)` setzt `_eigenDraussen`; Details zeigen „Gerade bei“ (`beiWem`). Start (Für dich) und Jahresübersicht zählen nur eigene Ausleihen.
 - Vormerken: Zeile in Projekt_Material, senkt die Verfügbarkeit nie. „Auch vorgemerkt für …“ nennt nur aktive Projekte.
 - Foto-Upload: Browser verkleinert auf 1000 px, Skript prüft JPEG, speichert in `FOTO_ORDNER_<gruppe_id>`.
 
@@ -478,7 +484,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 ## 6. Dateiübersicht
 
 - Hauptordner: `index.html`, `404.html` (Fehlerseite von GitHub Pages, seit 0.34.10), `manifest.webmanifest`, `sw.js`, `README.md`, `LICENSE`, `CLAUDE.md` (zeigt nur hierher).
-- `docs/`: `STAND.md` (diese Datei); während einer Etappe ihr Plan.
+- `docs/`: `STAND.md` (diese Datei); während einer Etappe ihr Plan (jetzt `PLAN-ETAPPE-15.md`).
 - `icons/`: `icon.svg` (Favicon, Ladebildschirm), `icon-192.png`, `icon-512.png`, `icon-maskable.svg`, `icon-maskable-192.png`, `icon-maskable-512.png` (vollflächig für Android, seit 0.34.9), `apple-touch-icon.png` (iPhone, vollflächig), `logo.svg`, `vorschau.png` (Bild der Link-Vorschau, 1200 x 630, seit 1.1.4), `gruppen/`.
 - `css/`: `base.css` (alle Farb-Variablen, hell und dunkel), `layout.css` (Gerüst), `components.css` (alle übrigen Regeln, nach Themen).
 - `apps-script/`: Code.gs, Auth.gs, Daten.gs, Schema.gs, Util.gs, Ausleihe.gs, Upload.gs, Aufraeumen.gs, Termine.gs, Mobi.gs, Protokoll.gs,
@@ -502,7 +508,7 @@ Diese Regeln gelten. Wer etwas daran ändert, ändert es hier mit.
 
 ## 7. Pläne
 
-- **Jetzt:** keine Etappe geplant. Ideen sammelt die Person. Jede neue Etappe beginnt mit einem Plan mit Rückfragen
+- **Jetzt:** Etappe 15 „Bollerwagen“ (`docs/PLAN-ETAPPE-15.md`). Ideen sammelt die Person. Jede neue Etappe beginnt mit einem Plan mit Rückfragen
   (`docs/PLAN-ETAPPE-<n>.md`), dann Schritt für Schritt je ein Pull Request; nach jedem Schritt prüft die Person am Handy und am PC.
 - **Mögliche Aufgaben nach 1.0** (aus Etappe 12, Einzelheiten in 3.2): Schriftgrößen in `rem`, gemeinsamer Baustein für ähnliche Listen,
   Hauptseite neben dem App-Ordner ansehen (Service Worker), Farben mit zu wenig Kontrast nur auf Wunsch.
@@ -542,6 +548,8 @@ Ausführlich für alle: `texte/entwicklung.txt`. Einzelheiten je Schritt: Pull R
   - 14.1 (1.2.0): Teil „Zeitplan“ im Projekt, Anleitung ergänzt.
   - 14.2 (1.2.1): Bearbeiten und Abhaken von ToDos und Meilensteinen aus dem Zeitplan.
   - 14.3 (1.2.2): Zeitplan drucken (quer, mit Farben), Plan eingearbeitet und gelöscht.
+- **Etappe 15** (ab 1.3.0, 27.11.2026, Pull Request #99): Bollerwagen.
+  - 15.0 (1.3.0): Geteiltes Material für alle Gruppen (Spalte `Material.geteilt`, Skript `Daten.gs`, `Ausleihe.gs`, `Schema.gs`).
 
 ---
 

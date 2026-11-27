@@ -1,5 +1,6 @@
 // Daten.gs – list, listMehrere, create, update, delete, batchCreate, projektLoeschen.
 // Jeder Schreibzugriff läuft in einer Sperre. Es sieht nur Daten der eigenen Gruppe.
+// Ausnahme seit 1.3.0: geteiltes Material anderer Gruppen und die Ausleihen dazu (nur lesen, nur mit mitGeteilt, siehe geteiltFremd).
 
 // Diese Tabs brauchen immer ein Projekt (projekt_id darf nicht leer sein)
 // (Protokolle seit 0.30.0 nicht mehr: Projekt freiwillig, siehe protokollBezugPruefen in Protokoll.gs)
@@ -150,6 +151,34 @@ function listeFuerGruppe(tab, gid, seit) {
   }).map(sauber);
 }
 
+// ---- Geteiltes Material (seit 1.3.0, Etappe 15) ----
+// Material mit geteilt = TRUE (zum Beispiel der Bollerwagen von FFF) sehen alle Gruppen und können es ausleihen (buchen in Ausleihe.gs).
+// Andere Gruppen bekommen nur diese Material-Zeilen und die Ausleihe-Zeilen dazu, sonst nichts. Ändern und Löschen bleibt bei der Besitzer-Gruppe.
+var GETEILT_TABS = ['Material', 'Ausleihe'];
+
+// IDs des geteilten Materials (alle Gruppen, ohne gelöschtes)
+function geteilteIds() {
+  var ids = {};
+  liesGemerkt('Material').zeilen.forEach(function (z) {
+    if (truthy(z.geteilt) && !truthy(z.geloescht)) ids[String(z.id)] = true;
+  });
+  return ids;
+}
+
+// Zeilen anderer Gruppen: geteiltes Material bzw. Ausleihen von geteiltem Material
+function geteiltFremd(tab, gid, seit, ids) {
+  return liesGemerkt(tab).zeilen.filter(function (z) {
+    if (String(z.gruppe_id) === String(gid)) return false;
+    if (tab === 'Material') {
+      if (!truthy(z.geteilt)) return false;
+    } else if (!ids[String(z.material_id)]) {
+      return false;
+    }
+    if (seit) return String(z.geaendert_am) >= seit;
+    return !truthy(z.geloescht);
+  }).map(sauber);
+}
+
 function aktionList(ctx, p) {
   var tab = tabelleCheck(p.tabelle);
   var zeit = jetzt();
@@ -169,6 +198,15 @@ function aktionListMehrere(ctx, p) {
     var tab = tabelleCheck(name);
     ergebnis[tab] = listeFuerGruppe(tab, ctx.gruppe_id, seit);
   });
+  // Seit 1.3.0: Mit { mitGeteilt: true } kommt geteiltes Material anderer Gruppen dazu (Material und Ausleihe)
+  if (p.mitGeteilt === true) {
+    var ids = null;
+    GETEILT_TABS.forEach(function (tab) {
+      if (!ergebnis.hasOwnProperty(tab)) return;
+      if (tab === 'Ausleihe' && !ids) ids = geteilteIds();
+      ergebnis[tab] = ergebnis[tab].concat(geteiltFremd(tab, ctx.gruppe_id, seit, ids));
+    });
+  }
   var antwort = { tabellen: ergebnis, serverzeit: zeit };
   // Seit 1.1.2: offene Anträge neuer Gruppen für „Was ist neu?“, nur für die Admins (Antrag.gs)
   if (p.mitAntraegen === true) {

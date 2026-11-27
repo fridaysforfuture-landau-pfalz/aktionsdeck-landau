@@ -52,7 +52,9 @@ function fotoBereich(feld, fotoFn) {
 function eingabe(f, wert, vorschlaege, fotoFn) {
   if (f.typ === 'bool') {
     const cb = el('input', { type: 'checkbox', name: f.name });
-    cb.checked = wert === undefined || wert === null ? true : !istFalsch(wert);
+    // Ohne Wert angehakt, außer das Feld sagt standard: false (seit 1.3.0, zum Beispiel Material.geteilt)
+    const leer = wert === undefined || wert === null || wert === '';
+    cb.checked = leer ? f.standard !== false : !istFalsch(wert);
     return { feld: cb, lesen: function () { return cb.checked; } };
   }
   if (f.typ === 'farbe') {

@@ -90,7 +90,8 @@ function verlaufListe(verlauf) {
 
 // m = Material aus mitVerfuegbar (mit _verfuegbar, _draussen, _verbrauch)
 // verlauf = Ausleihe-Zeilen dieses Materials
-export function baueDetail(m, verlauf, herkunft) {
+// bei = Text „wer hat es gerade“ (seit 1.3.0, je Gruppe mit Namen), freiwillig
+export function baueDetail(m, verlauf, herkunft, bei) {
   const einheit = m.einheit ? ' ' + m.einheit : '';
   const kat = [m.kategorie, m.unterkategorie].filter(Boolean).join(' › ');
   const hat = m.anzahl !== '' && m.anzahl !== undefined && m.anzahl !== null;
@@ -105,6 +106,7 @@ export function baueDetail(m, verlauf, herkunft) {
   if (!m._verbrauch) {
     zeilen.push(['Verfügbar', m._verfuegbar === '' ? '' : m._verfuegbar + einheit]);
     zeilen.push(['Gerade ausgeliehen', m._draussen + einheit + (herkunft ? ' (' + herkunft + ')' : '')]);
+    if (bei && m._draussen > 0) zeilen.push(['Gerade bei', bei]);
   }
   if (letzte) {
     zeilen.push(['Zuletzt mitgenommen',

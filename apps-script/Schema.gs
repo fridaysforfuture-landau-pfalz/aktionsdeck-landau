@@ -6,6 +6,7 @@ var BASIS = ['id', 'gruppe_id', 'erstellt_am', 'erstellt_von',
 
 // Daten-Tabs: nur die eigenen Spalten (BASIS kommt automatisch davor)
 // Material: typ = fest | verbrauch (leer zählt als fest)
+//   geteilt = für alle Gruppen sichtbar und ausleihbar (seit 1.3.0, zum Beispiel der Bollerwagen von FFF; siehe geteiltFremd in Daten.gs)
 // Ausleihe: art = mitgenommen | zurueck | defekt
 // ToDos: text = Titel, details = weitere Informationen, meilenstein_id = Meilenstein im Projekt
 // Protokolle: Protokoll eines Plenums, einer AG oder Aktion (Etappe 8). projekt_id und veranstaltung_id sind freiwillig.
@@ -31,7 +32,7 @@ var BASIS = ['id', 'gruppe_id', 'erstellt_am', 'erstellt_von',
 //   stelle = Absatz im Redetext, zu dem der Kommentar gehört ("Nummer|Anfang des Absatzes", seit 0.30.12).
 var TABELLEN = {
   Personen: ['name', 'aktiv', 'rollen', 'notiz'],
-  Material: ['name', 'kategorie', 'unterkategorie', 'anzahl', 'einheit', 'ort', 'foto_id', 'notiz', 'aktiv', 'typ'],
+  Material: ['name', 'kategorie', 'unterkategorie', 'anzahl', 'einheit', 'ort', 'foto_id', 'notiz', 'aktiv', 'typ', 'geteilt'],
   Ausleihe: ['material_id', 'projekt_id', 'person', 'art', 'anzahl', 'datum', 'notiz'],
   ToDos: ['projekt_id', 'text', 'verantwortlich', 'faellig_am', 'erledigt', 'erledigt_am', 'erledigt_von', 'prioritaet', 'sortierung', 'details', 'meilenstein_id', 'mobi_id'],
   Projekte: ['titel', 'beschreibung', 'ort', 'status', 'start_datum', 'aktionsdatum', 'deadline', 'budget_geplant', 'aktionsart','zielgruppe', 'werbeart', 'kampagnenziel', 'handlungsaufruf'],
@@ -95,7 +96,7 @@ function maxLaenge(tab, sp) {
 var ZAHL_SPALTEN = ['anzahl', 'menge', 'einzelpreis', 'betrag_geplant',
                     'betrag_tatsaechlich', 'budget_geplant', 'sortierung', 'kapazitaet'];
 var BOOL_SPALTEN = ['aktiv', 'geloescht', 'erledigt', 'beschafft', 'bezahlt', 'mehrfach', 'angeheftet', 'beendet', 'namentlich', 'oeffentlich',
-                    'im_dokument', 'vorschlaege_erledigt', 'entwurf', 'gewaehlt'];
+                    'im_dokument', 'vorschlaege_erledigt', 'entwurf', 'gewaehlt', 'geteilt'];
 
 function spaltenTyp(sp) {
   if (ZAHL_SPALTEN.indexOf(sp) >= 0) return 'zahl';

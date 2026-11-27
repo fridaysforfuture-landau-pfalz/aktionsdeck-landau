@@ -14,7 +14,7 @@ import { fortschrittsBalken } from '../ui/balken.js';
 import { baueFormular } from '../ui/form.js';
 import { toast } from '../ui/toast.js';
 import { SCHEMA, istWahr } from '../schema.js';
-import { zeitText, ausgeliehenProjekt, istVerbrauch } from './material-rechnen.js';
+import { zeitText, ausgeliehenProjekt, istVerbrauch, fremdMarkieren } from './material-rechnen.js';
 import { datumText } from './todos-rechnen.js';
 import {
   statusText, istAbgeschlossen, fortschritt, fortschrittText, sortiereProjekte, terminText
@@ -819,15 +819,16 @@ export async function render(container, ctx) {
         s.gruppe_id + ':projekte',
         async function () {
           const r = await api('listMehrere', {
-              tabellen: ['Projekte', 'ToDos', 'Meilensteine', 'Material', 'Ausleihe', 'Projekt_Material', 'Finanzen', 'Learnings', 'Ideen', 'Kommentare', 'Mobi_Plan', 'Reden']
+              tabellen: ['Projekte', 'ToDos', 'Meilensteine', 'Material', 'Ausleihe', 'Projekt_Material', 'Finanzen', 'Learnings', 'Ideen', 'Kommentare', 'Mobi_Plan', 'Reden'],
+              mitGeteilt: true   // seit 1.3.0: geteiltes Material anderer Gruppen (Bollerwagen)
           }, s.token);
           const t = (r && r.tabellen) || {};
           return {
             projekte: t.Projekte || [],
             todos: t.ToDos || [],
             meilensteine: t.Meilensteine || [],
-            material: t.Material || [],
-            ausleihe: t.Ausleihe || [],
+            material: fremdMarkieren(t.Material, s.gruppe_id),
+            ausleihe: fremdMarkieren(t.Ausleihe, s.gruppe_id),
             pm: t.Projekt_Material || [],
             fin: t.Finanzen || [],
             learnings: t.Learnings || [],
